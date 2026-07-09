@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MetricLayerKey, ZipMetrics } from "@cineborough/data";
+import { CINEMATIC_CAMERAS } from "@cineborough/geo";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
@@ -90,6 +91,8 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
 
   const handleCloseDetail = () => setSelectedZip(null);
 
+  const cameraTarget = CINEMATIC_CAMERAS[activeSection];
+
   return (
     <div className="cinematic">
       <aside className="cinematic__sidebar">
@@ -102,6 +105,7 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
           activeMetric={activeMetric}
           selectedZip={selectedZip}
           onZipSelect={setSelectedZip}
+          cameraTarget={cameraTarget}
         />
       </div>
 

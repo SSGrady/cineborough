@@ -1,7 +1,7 @@
 ---
 id: T008
 title: Enhanced map camera transitions
-status: open
+status: done
 type: feature
 priority: P1
 epic: E002
@@ -20,3 +20,10 @@ acceptance:
 ## Description
 
 Expose imperative camera control on MapView and wire to GSAP ScrollTrigger section progression. Metro overview uses flat pitch; neighborhood descent adds pitch/bearing for cinematic feel.
+
+## Completion (2026-07-08)
+
+- `MapCameraTarget` type and `CINEMATIC_CAMERAS` presets in `@cineborough/geo`
+- MapView `cameraTarget` prop triggers smooth flyTo with pitch/bearing
+- CinematicDiscovery passes camera per scroll section
+- ZIP click flyTo enhanced with pitch 45

@@ -8,6 +8,42 @@ export const DC_METRO_CENTER: [number, number] = [-77.0369, 38.9072];
 
 export const DEFAULT_ZOOM = 10;
 
+/** Clarendon / 22201 focal point for cinematic descent */
+export const ARLINGTON_CLARENDON_CENTER: [number, number] = [-77.096, 38.886];
+
+export interface MapCameraTarget {
+  center: [number, number];
+  zoom: number;
+  pitch?: number;
+  bearing?: number;
+  duration?: number;
+}
+
+/** Scroll-section camera presets — see ADR-008 */
+export const CINEMATIC_CAMERAS = {
+  metro: {
+    center: DC_METRO_CENTER,
+    zoom: DEFAULT_ZOOM,
+    pitch: 0,
+    bearing: 0,
+    duration: 1800,
+  },
+  neighborhood: {
+    center: ARLINGTON_CLARENDON_CENTER,
+    zoom: 12.5,
+    pitch: 45,
+    bearing: -20,
+    duration: 2000,
+  },
+  detail: {
+    center: ARLINGTON_CLARENDON_CENTER,
+    zoom: 13.5,
+    pitch: 60,
+    bearing: -15,
+    duration: 2000,
+  },
+} as const satisfies Record<string, MapCameraTarget>;
+
 export interface ColorStop {
   min: number;
   max: number;

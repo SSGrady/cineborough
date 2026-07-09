@@ -11,6 +11,7 @@ import {
   colorForNormalizedScore,
   DC_METRO_CENTER,
   DEFAULT_ZOOM,
+  type MapCameraTarget,
 } from "@cineborough/geo";
 import { ColorLegend } from "./ColorLegend";
 
@@ -22,6 +23,8 @@ interface MapViewProps {
   activeMetric?: MetricLayerKey;
   selectedZip?: string | null;
   onZipSelect?: (zipCode: string | null) => void;
+  /** External camera control for scroll-driven fly-throughs (ADR-008). */
+  cameraTarget?: MapCameraTarget | null;
 }
 
 export function MapView({
@@ -29,6 +32,7 @@ export function MapView({
   activeMetric = "opportunityScore",
   selectedZip = null,
   onZipSelect,
+  cameraTarget = null,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -90,8 +94,10 @@ export function MapView({
       if (map && info.coordinate) {
         map.flyTo({
           center: [info.coordinate[0], info.coordinate[1]],
-          zoom: 12,
-          duration: 1200,
+          zoom: 12.5,
+          pitch: 45,
+          bearing: -20,
+          duration: 1400,
         });
       }
     },
@@ -136,6 +142,20 @@ export function MapView({
   useEffect(() => {
     overlayRef.current?.setProps({ layers: [layer], onClick: handleClick });
   }, [layer, handleClick]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !cameraTarget || !mapReady) return;
+
+    map.flyTo({
+      center: cameraTarget.center,
+      zoom: cameraTarget.zoom,
+      pitch: cameraTarget.pitch ?? 0,
+      bearing: cameraTarget.bearing ?? 0,
+      duration: cameraTarget.duration ?? 1600,
+      essential: true,
+    });
+  }, [cameraTarget, mapReady]);
 
   if (!MAPBOX_TOKEN || MAPBOX_TOKEN === "your_mapbox_token_here") {
     return (
