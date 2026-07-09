@@ -4,7 +4,7 @@ export * from "./opportunity-index-examples";
 export * from "./metric-utils";
 export * from "./boundaries";
 export * from "./loaders";
+export * from "./dc-metro-geojson";
 export * from "./locale-quotes";
 export * from "./paths";
-export * from "./locale-quotes";
 export * from "./validation";
