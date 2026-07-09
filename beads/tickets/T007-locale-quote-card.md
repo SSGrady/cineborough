@@ -1,7 +1,7 @@
 ---
 id: T007
 title: Locale quote card component
-status: open
+status: done
 type: feature
 priority: P1
 epic: E002
@@ -24,3 +24,9 @@ Hope-core locale quote overlay per user journey vision: blurred city photography
 ## Reference Quote (22201)
 
 > "It has better access to green and blue spaces than most big cities though." — r/washingtondc
+
+## Completion (2026-07-08)
+
+- `LocaleQuoteCard` with blurred gradient background and Reddit-style attribution
+- Mock quote data in `data/mock/locale-quotes.json`; loader in `packages/data`
+- Card renders in detail scroll section for ZIP 22201

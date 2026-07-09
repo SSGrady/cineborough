@@ -4,4 +4,4 @@ export * from "./opportunity-index-examples";
 export * from "./metric-utils";
 export * from "./boundaries";
 export * from "./loaders";
-export * from "./validation";
+export * from "./locale-quotes";

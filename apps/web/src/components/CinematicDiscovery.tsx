@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { MetricLayerKey, ZipMetrics } from "@cineborough/data";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
+import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 
 gsap.registerPlugin(ScrollTrigger);
@@ -118,6 +119,9 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
               </span>
               <h2>{section.title}</h2>
               <p>{section.description}</p>
+              {section.id === "detail" && (
+                <LocaleQuoteCard zip={selectedZip ?? "22201"} />
+              )}
               {section.id === "detail" && selected && (
                 <ZipDetailPanel
                   zip={selected}
