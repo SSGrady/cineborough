@@ -4,5 +4,5 @@ import type { ZipBoundaryCollection } from "./geojson-types";
 export type ZipBoundaries = ZipBoundaryCollection;
 
 export function loadZipBoundaries(): ZipBoundaries {
-  return boundaries;
+  return boundaries as unknown as ZipBoundaries;
 }

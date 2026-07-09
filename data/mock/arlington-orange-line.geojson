@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Orange Line (Clarendon corridor)",
+        "type": "transit",
+        "zip": "22201"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-77.118, 38.887],
+          [-77.108, 38.886],
+          [-77.096, 38.886],
+          [-77.084, 38.887],
+          [-77.072, 38.894]
+        ]
+      }
+    }
+  ]
+}

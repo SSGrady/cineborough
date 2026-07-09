@@ -1,7 +1,7 @@
 ---
 id: T009
 title: Route/path overlay on map
-status: open
+status: done
 type: feature
 priority: P2
 epic: E002
@@ -20,3 +20,21 @@ acceptance:
 ## Description
 
 Trace a mock Arlington path (Orange Line corridor or Clarendon walk path) using Deck.gl PathLayer. Path fades in when user scrolls to neighborhood section.
+
+## Completion (2026-07-08)
+
+- Mock Orange Line corridor in `data/mock/arlington-orange-line.geojson`
+- `loadTransitPaths()` loader; Deck.gl PathLayer with green glow styling
+- Path visible during neighborhood and detail scroll sections
+
+## Completion (2026-07-08)
+
+- Mock Orange Line corridor in `data/mock/arlington-orange-line.geojson`
+- `loadTransitPaths()` in `@cineborough/data`
+- MapView PathLayer with green glow; visible in neighborhood/detail sections
+
+## Completion (2026-07-08)
+
+- Mock Orange Line corridor in `data/mock/arlington-orange-line.geojson`
+- `loadTransitPaths()` loader in `@cineborough/data`
+- Deck.gl PathLayer with green glow; visible in neighborhood/detail scroll sections

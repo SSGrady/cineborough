@@ -3,8 +3,11 @@ declare module "*.geojson" {
     type: "FeatureCollection";
     features: Array<{
       type: "Feature";
-      properties: { zip: string; name: string };
-      geometry: { type: "Polygon"; coordinates: number[][][] };
+      properties: Record<string, string>;
+      geometry: {
+        type: string;
+        coordinates: number[][][] | [number, number][];
+      };
     }>;
   };
   export default value;

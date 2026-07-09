@@ -16,3 +16,23 @@ export interface ZipBoundaryCollection {
   type: "FeatureCollection";
   features: ZipBoundaryFeature[];
 }
+
+export interface TransitPathProperties {
+  name: string;
+  type: string;
+  zip?: string;
+}
+
+export interface TransitPathFeature {
+  type: "Feature";
+  properties: TransitPathProperties;
+  geometry: {
+    type: "LineString";
+    coordinates: [number, number][];
+  };
+}
+
+export interface TransitPathCollection {
+  type: "FeatureCollection";
+  features: TransitPathFeature[];
+}

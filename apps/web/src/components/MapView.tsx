@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
-import { GeoJsonLayer } from "@deck.gl/layers";
+import { GeoJsonLayer, PathLayer } from "@deck.gl/layers";
 import type { PickingInfo } from "@deck.gl/core";
 import type { MetricLayerKey, ZipMetrics } from "@cineborough/data";
-import { getNormalizedMetricValues, loadZipBoundaries, METRIC_LAYERS } from "@cineborough/data";
+import { getNormalizedMetricValues, loadZipBoundaries, loadTransitPaths, METRIC_LAYERS } from "@cineborough/data";
 import {
   colorForNormalizedScore,
   DC_METRO_CENTER,
@@ -25,6 +25,8 @@ interface MapViewProps {
   onZipSelect?: (zipCode: string | null) => void;
   /** External camera control for scroll-driven fly-throughs (ADR-008). */
   cameraTarget?: MapCameraTarget | null;
+  /** Show mock transit path overlay (neighborhood descent section). */
+  pathVisible?: boolean;
 }
 
 export function MapView({
@@ -33,6 +35,7 @@ export function MapView({
   selectedZip = null,
   onZipSelect,
   cameraTarget = null,
+  pathVisible = false,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -47,7 +50,7 @@ export function MapView({
     [zips, activeMetric],
   );
 
-  const layer = useMemo(() => {
+  const choroplethLayer = useMemo(() => {
     const boundaries = loadZipBoundaries();
     return new GeoJsonLayer({
       id: "zip-choropleth",
@@ -81,6 +84,29 @@ export function MapView({
       },
     });
   }, [colorByZip, selectedZip]);
+
+  const pathLayer = useMemo(() => {
+    const paths = loadTransitPaths();
+    return new PathLayer({
+      id: "transit-path",
+      data: paths.features,
+      pickable: false,
+      getPath: (feature) => feature.geometry.coordinates,
+      getColor: [34, 197, 94, pathVisible ? 220 : 0],
+      getWidth: 5,
+      widthMinPixels: 3,
+      capRounded: true,
+      jointRounded: true,
+      updateTriggers: {
+        getColor: [pathVisible],
+      },
+    });
+  }, [pathVisible]);
+
+  const layers = useMemo(
+    () => (pathVisible ? [choroplethLayer, pathLayer] : [choroplethLayer]),
+    [choroplethLayer, pathLayer, pathVisible],
+  );
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -119,7 +145,7 @@ export function MapView({
 
     const overlay = new MapboxOverlay({
       interleaved: true,
-      layers: [layer],
+      layers,
       onClick: handleClick,
     });
 
@@ -140,8 +166,8 @@ export function MapView({
   }, []);
 
   useEffect(() => {
-    overlayRef.current?.setProps({ layers: [layer], onClick: handleClick });
-  }, [layer, handleClick]);
+    overlayRef.current?.setProps({ layers, onClick: handleClick });
+  }, [layers, handleClick]);
 
   useEffect(() => {
     const map = mapRef.current;

@@ -92,6 +92,7 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
   const handleCloseDetail = () => setSelectedZip(null);
 
   const cameraTarget = CINEMATIC_CAMERAS[activeSection];
+  const pathVisible = activeSection === "neighborhood" || activeSection === "detail";
 
   return (
     <div className="cinematic">
@@ -106,6 +107,7 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
           selectedZip={selectedZip}
           onZipSelect={setSelectedZip}
           cameraTarget={cameraTarget}
+          pathVisible={pathVisible}
         />
       </div>
 
