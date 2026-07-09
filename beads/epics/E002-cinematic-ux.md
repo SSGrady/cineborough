@@ -1,7 +1,7 @@
 ---
 id: E002
 title: Cinematic UX
-status: in_progress
+status: done
 priority: P1
 sprints:
   - S002

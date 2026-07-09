@@ -23,7 +23,7 @@ Phased delivery for the hope-core real estate discovery engine.
 
 **Exit criteria:** User can toggle Opportunity Index heatmap across 5 ZIPs and see zip-level signals for a selected area.
 
-## Phase 2: Cinematic UX (Current)
+## Phase 2: Cinematic UX (Complete — 3D tiles deferred)
 
 **Goal:** Scroll-driven camera fly-throughs, locale quotes, route overlays, real ZCTA boundaries.
 
