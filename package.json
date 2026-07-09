@@ -1,0 +1,13 @@
+{
+  "name": "cineborough",
+  "private": true,
+  "scripts": {
+    "dev": "pnpm --filter @cineborough/web dev",
+    "build": "pnpm --filter @cineborough/web build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm --filter @cineborough/web lint"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0"
+  }
+}

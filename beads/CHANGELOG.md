@@ -1,0 +1,17 @@
+# Beads Changelog
+
+Aggregated progress log for Cineborough development.
+
+---
+
+## 2026-07-08
+
+### Scaffold Complete
+
+- Created repo structure: AGENTS.md, 8 ADRs, docs/schema, beads hierarchy
+- Seeded Epic E001 (MVP DC Metro Discovery Map) and Sprint S001 (Phase 1 Data Engine)
+- Created 5 starter tickets (T001–T005)
+- Added mock data for 5 DC-area ZIPs
+- Next.js + Deck.gl + Mapbox skeleton in `apps/web`
+
+**Status:** T001 (repo scaffold) → `done`. Remaining tickets → `open`.
