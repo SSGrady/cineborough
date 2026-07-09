@@ -1,5 +1,5 @@
 import type { ZipMetrics, ZipMetricsCollection } from "./types";
-import { computeOpportunityScore, withNormalizedOpportunityScores } from "./opportunity-index";
+import { computeOpportunityScore, enrichWithOpportunityScores } from "./opportunity-index";
 import { validateZipMetricsCollection, type ZipMetricsInput } from "./validation";
 
 import mockData from "../../../data/mock/zip-metrics.json";
@@ -12,7 +12,7 @@ function enrichZip(zip: ZipMetricsInput): ZipMetrics {
 export function loadMockZipMetrics(): ZipMetricsCollection {
   const validated = validateZipMetricsCollection(mockData);
   const zips = validated.zips.map(enrichZip);
-  const withNormalized = withNormalizedOpportunityScores(zips);
+  const withNormalized = enrichWithOpportunityScores(zips);
 
   return {
     metro: validated.metro,

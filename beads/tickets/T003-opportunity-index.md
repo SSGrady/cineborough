@@ -1,7 +1,7 @@
 ---
 id: T003
 title: Opportunity Index calculation
-status: open
+status: done
 type: feature
 priority: P1
 epic: E001
@@ -20,6 +20,8 @@ acceptance:
 
 Implement the composite Opportunity Index: `homePriceForecast1yr + remoteWorkPct − overvaluationPct`, with normalization across loaded ZIPs for choropleth rendering.
 
-## Notes
+## Completion (2026-07-08)
 
-Core functions scaffolded in packages/data. Wire into map layer in T004.
+- Formula verified against docs for ZIPs 22201, 22204, 20001
+- `enrichWithOpportunityScores` alias wired in loaders
+- `getOpportunityScoreExamples()` and `assertOpportunityScoresValid()` exported for verification

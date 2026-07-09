@@ -25,3 +25,6 @@ export function withNormalizedOpportunityScores<T extends Pick<ZipMetrics, "oppo
     opportunityScoreNormalized: normalized[i],
   }));
 }
+
+/** Alias used by loaders — computes raw score + 0–100 normalization. */
+export const enrichWithOpportunityScores = withNormalizedOpportunityScores;

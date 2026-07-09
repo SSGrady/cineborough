@@ -6,7 +6,7 @@ Last updated: 2026-07-08
 
 - [x] **T001** — Repo scaffold (AGENTS.md, ADRs, beads, packages, apps/web skeleton)
 - [x] **T002** — Mock data for 5 DC ZIPs
-- [ ] **T003** — Opportunity Index calculation
+- [x] **T003** — Opportunity Index calculation
 - [ ] **T004** — Mapbox + Deck.gl choropleth base map
 - [ ] **T005** — Sidebar metric taxonomy UI
 
@@ -18,6 +18,7 @@ Last updated: 2026-07-08
 - Mock data JSON created with realistic values modeled on Reventure screenshots.
 - Next.js skeleton ready; needs `pnpm install` + Mapbox token to run.
 - T002: validation layer added; loaders validate sandbox ZIPs on load.
+- T003: opportunity index formula verified; examples exported for all 5 ZIPs.
 
 ## Blockers
 
@@ -25,4 +26,4 @@ None.
 
 ## Velocity
 
-2/5 tickets done (40%).
+3/5 tickets done (60%).

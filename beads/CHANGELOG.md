@@ -23,3 +23,11 @@ Aggregated progress log for Cineborough development.
 - Verified mock JSON matches `docs/schema/metrics-taxonomy.md`
 
 **Status:** T002 → `done`.
+
+### T003 — Opportunity Index
+
+- Verified formula: `homePriceForecast1yr + remoteWorkPct − overvaluationPct`
+- Added `enrichWithOpportunityScores` alias and example exports
+- Documented raw scores match 22201 (32.4), 22204 (23.6), 20001 (22.7)
+
+**Status:** T003 → `done`.
