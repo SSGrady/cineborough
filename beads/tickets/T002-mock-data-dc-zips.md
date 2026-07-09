@@ -1,7 +1,7 @@
 ---
 id: T002
 title: Mock data for 5 DC ZIPs
-status: open
+status: done
 type: task
 priority: P1
 epic: E001
@@ -21,6 +21,8 @@ acceptance:
 
 Create static mock JSON for the DC metro sandbox ZIPs (22201, 22202, 22204, 20814, 20001) with realistic metrics modeled on Reventure screenshots.
 
-## Notes
+## Completion (2026-07-08)
 
-Initial mock data created in T001 scaffold. Verify values against docs/schema/metrics-taxonomy.md when wiring UI.
+- Validated `data/mock/zip-metrics.json` against types and metrics taxonomy
+- Added `validation.ts` with type guards and sandbox ZIP checks
+- `loadMockZipMetrics()` validates on load and enriches with opportunity scores

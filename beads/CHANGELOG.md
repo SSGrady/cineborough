@@ -15,3 +15,11 @@ Aggregated progress log for Cineborough development.
 - Next.js + Deck.gl + Mapbox skeleton in `apps/web`
 
 **Status:** T001 (repo scaffold) → `done`. Remaining tickets → `open`.
+
+### T002 — Mock Data Loader
+
+- Added `packages/data/src/validation.ts` with type guards for investor/hope-core metrics
+- `loadMockZipMetrics()` validates all 5 sandbox ZIPs on load
+- Verified mock JSON matches `docs/schema/metrics-taxonomy.md`
+
+**Status:** T002 → `done`.
