@@ -40,6 +40,61 @@ export interface ZipMetricsCollection {
   zips: ZipMetrics[];
 }
 
+export interface PolygonGeometry {
+  type: "Polygon";
+  coordinates: number[][][];
+}
+
+/** Unified Deck.gl feature properties — see docs/schema/deck-gl-geojson.md */
+export interface DcMetroFeatureProperties {
+  zipCode: string;
+  neighborhoodName: string;
+  state: string;
+  medianHomeValue: number;
+  oneYearForecastPct: number;
+  overvaluationPct: number;
+  capRatePct: number;
+  daysOnMarket: number;
+  sellerDesperationScore: number;
+  marketPsf: number;
+  homeValueGrowthYoy: number;
+  priceCutCount: number;
+  remoteWorkPct: number;
+  homeowners25to44Pct: number;
+  populationGrowthRate: number;
+  medianAge: number;
+  walkScore: number;
+  collegeDegreeRate: number;
+  localQuote: string;
+  primaryVibe: string;
+  opportunityScore: number;
+  opportunityScoreNormalized: number;
+  fillColor: string;
+  fillColorRgb: [number, number, number];
+  labelLng: number;
+  labelLat: number;
+}
+
+export interface DcMetroFeature {
+  type: "Feature";
+  properties: DcMetroFeatureProperties;
+  geometry: PolygonGeometry;
+}
+
+export interface DcMetroGeoJsonMetadata {
+  metro: string;
+  dataAsOf: string;
+  dataAsOfLabel: string;
+  sandboxZips: string[];
+  generatedAt: string;
+}
+
+export interface DcMetroGeoJson {
+  type: "FeatureCollection";
+  metadata: DcMetroGeoJsonMetadata;
+  features: DcMetroFeature[];
+}
+
 export type MetricLayerKey =
   | "opportunityScore"
   | "homePriceForecast1yr"

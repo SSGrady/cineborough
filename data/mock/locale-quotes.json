@@ -4,7 +4,36 @@
       "zip": "22201",
       "neighborhood": "Arlington (Clarendon)",
       "text": "It has better access to green and blue spaces than most big cities though.",
-      "source": "r/washingtondc"
+      "source": "r/washingtondc",
+      "primaryVibe": "Walkable nightlife hub"
+    },
+    {
+      "zip": "22202",
+      "neighborhood": "Arlington (Crystal City)",
+      "text": "Amazon HQ2 changed the vibe — lots of new restaurants and bike paths along the waterfront.",
+      "source": "r/arlingtonva",
+      "primaryVibe": "Transit-connected corporate edge"
+    },
+    {
+      "zip": "22204",
+      "neighborhood": "Arlington (Glencarlyn)",
+      "text": "Quieter than Clarendon but you still get Metro access without the premium price tag.",
+      "source": "r/arlingtonva",
+      "primaryVibe": "Quiet suburban value play"
+    },
+    {
+      "zip": "20814",
+      "neighborhood": "Bethesda",
+      "text": "Walkable downtown, great schools, and you're on the Red Line in minutes.",
+      "source": "r/montgomerycountymd",
+      "primaryVibe": "Affluent walkable suburb"
+    },
+    {
+      "zip": "20001",
+      "neighborhood": "Washington DC (Shaw/U Street)",
+      "text": "The restaurant scene is incredible but prices feel stretched compared to five years ago.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Urban culture corridor"
     }
   ]
 }

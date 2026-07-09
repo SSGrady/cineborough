@@ -9,7 +9,8 @@
     ".": "./src/index.ts"
   },
   "scripts": {
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "build:geojson": "node --experimental-strip-types src/build-geojson.ts"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

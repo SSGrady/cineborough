@@ -5,6 +5,7 @@ export interface LocaleQuote {
   neighborhood: string;
   text: string;
   source: string;
+  primaryVibe?: string;
 }
 
 export function getLocaleQuote(zip: string): LocaleQuote | undefined {
