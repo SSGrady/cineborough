@@ -1,4 +1,4 @@
-import type { ZipMetrics } from "@cineborough/data";
+import type { DcMetroFeatureProperties, ZipMetrics } from "@cineborough/data";
 import { formatCurrency, formatPercent } from "@/lib/format";
 
 interface ZipDetailPanelProps {
@@ -7,21 +7,34 @@ interface ZipDetailPanelProps {
   onClose: () => void;
   /** When true, renders inside cinematic scroll panel (no outer chrome). */
   embedded?: boolean;
+  /** Inline vibe/quote from unified GeoJSON feature properties */
+  featureProps?: DcMetroFeatureProperties;
 }
 
-export function ZipDetailPanel({ zip, metroAvgPsf, onClose, embedded = false }: ZipDetailPanelProps) {
+export function ZipDetailPanel({
+  zip,
+  metroAvgPsf,
+  onClose,
+  embedded = false,
+  featureProps,
+}: ZipDetailPanelProps) {
   const psfVsMarket =
     metroAvgPsf > 0 ? ((zip.marketPsf - metroAvgPsf) / metroAvgPsf) * 100 : 0;
 
+  const forecastPct = featureProps?.oneYearForecastPct ?? zip.homePriceForecast1yr;
+  const gaugeRotation = Math.max(-45, Math.min(45, forecastPct * 10));
+
   return (
-    <section className={embedded ? "zip-detail zip-detail--embedded" : "zip-detail"}>
+    <section className={embedded ? "zip-detail zip-detail--embedded zip-detail--stacked" : "zip-detail zip-detail--stacked"}>
       <header className="zip-detail__header">
         <div>
           <h2>
             {zip.zip} — {zip.name}
           </h2>
           <p className="zip-detail__subtitle">
-            Level 2 · {zip.state} · Opportunity {zip.opportunityScoreNormalized?.toFixed(0) ?? "—"}
+            {zip.state}
+            {featureProps?.primaryVibe ? ` · ${featureProps.primaryVibe}` : ""}
+            {" · "}Opportunity {zip.opportunityScoreNormalized?.toFixed(0) ?? "—"}
           </p>
         </div>
         <button type="button" className="zip-detail__close" onClick={onClose} aria-label="Close">
@@ -29,43 +42,61 @@ export function ZipDetailPanel({ zip, metroAvgPsf, onClose, embedded = false }: 
         </button>
       </header>
 
-      <div className="zip-detail__cards">
-        <article className="zip-detail__card">
-          <h3>Forecast &amp; Valuation</h3>
-          <dl className="metric-grid">
-            <div>
-              <dt>1-Year Forecast</dt>
-              <dd>{formatPercent(zip.homePriceForecast1yr)}</dd>
+      <div className="zip-detail__stack">
+        <article className="zip-detail__block zip-detail__block--investor">
+          <h3>Investor Signals</h3>
+
+          <div className="zip-detail__gauge-row">
+            <div className="forecast-gauge" aria-label={`1-year forecast ${formatPercent(forecastPct)}`}>
+              <div className="forecast-gauge__dial">
+                <div
+                  className="forecast-gauge__needle"
+                  style={{ transform: `rotate(${gaugeRotation}deg)` }}
+                />
+              </div>
+              <div className="forecast-gauge__value">{formatPercent(forecastPct)}</div>
+              <div className="forecast-gauge__label">1-Year Forecast</div>
             </div>
-            <div>
-              <dt>Home Value Growth YoY</dt>
-              <dd>{formatPercent(zip.homeValueGrowthYoy)}</dd>
-            </div>
-            <div>
-              <dt>Over / Undervaluation</dt>
-              <dd>{formatPercent(zip.overvaluationPct)}</dd>
-            </div>
-            <div>
-              <dt>Market PSF</dt>
-              <dd>${zip.marketPsf}/sqft</dd>
-            </div>
-            <div>
-              <dt>% vs Market PSF</dt>
-              <dd>{formatPercent(psfVsMarket)}</dd>
-            </div>
-            <div>
-              <dt>Market Score</dt>
-              <dd>{zip.sellerDesperationScore}/100</dd>
-            </div>
-          </dl>
+
+            <dl className="metric-grid metric-grid--compact">
+              <div>
+                <dt>Median Home Value</dt>
+                <dd>{formatCurrency(zip.medianHomeValue)}</dd>
+              </div>
+              <div>
+                <dt>Cap Rate</dt>
+                <dd>{formatPercent(zip.capRate)}</dd>
+              </div>
+              <div>
+                <dt>Days on Market</dt>
+                <dd>{zip.daysOnMarket}</dd>
+              </div>
+              <div>
+                <dt>Seller Desperation</dt>
+                <dd>{zip.sellerDesperationScore}/100</dd>
+              </div>
+              <div>
+                <dt>Over / Undervaluation</dt>
+                <dd>{formatPercent(zip.overvaluationPct)}</dd>
+              </div>
+              <div>
+                <dt>Market PSF</dt>
+                <dd>${zip.marketPsf}/sqft ({formatPercent(psfVsMarket)} vs metro)</dd>
+              </div>
+            </dl>
+          </div>
         </article>
 
-        <article className="zip-detail__card">
-          <h3>Demographics &amp; Hope-Core</h3>
+        <article className="zip-detail__block zip-detail__block--hope">
+          <h3>Hope-Core Discovery</h3>
           <dl className="metric-grid">
             <div>
               <dt>Remote Work %</dt>
               <dd>{zip.remoteWorkPct.toFixed(1)}%</dd>
+            </div>
+            <div>
+              <dt>Walk Score</dt>
+              <dd>{featureProps?.walkScore ?? zip.walkabilityScore}/100</dd>
             </div>
             <div>
               <dt>Homeowners 25–44 %</dt>
@@ -74,10 +105,6 @@ export function ZipDetailPanel({ zip, metroAvgPsf, onClose, embedded = false }: 
             <div>
               <dt>Median Age</dt>
               <dd>{zip.medianAge.toFixed(1)} yrs</dd>
-            </div>
-            <div>
-              <dt>Walkability Score</dt>
-              <dd>{zip.walkabilityScore}/100</dd>
             </div>
             <div>
               <dt>Population Growth</dt>

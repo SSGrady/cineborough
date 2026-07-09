@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
@@ -26,19 +26,19 @@ const SCROLL_SECTIONS: ScrollSection[] = [
     id: "metro",
     title: "Metro Overview",
     description:
-      "Scan the DC metro sandbox for opportunity zones. Toggle investor and hope-core layers in the sidebar.",
+      "Scroll to descend into neighborhoods. Click any ZIP on the map to jump ahead to detail.",
   },
   {
     id: "neighborhood",
     title: "Neighborhood Descent",
     description:
-      "Scroll deeper into Arlington — Clarendon (22201) leads the sandbox on Opportunity Index.",
+      "Arlington corridors come into focus. Click ZIPs to compare metrics without scrolling.",
   },
   {
     id: "detail",
     title: "Neighborhood Detail",
     description:
-      "Click a ZIP to compare metrics. Zip-level signals reveal where the math works and people like you are buying.",
+      "Click ZIPs on the map or use chips below to compare. Sidebar toggles re-color the choropleth instantly.",
   },
 ];
 
@@ -57,6 +57,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const selected = useMemo(
     () => zips.find((z) => z.zip === selectedZip),
     [zips, selectedZip],
+  );
+
+  const selectedFeature = useMemo(
+    () => geoJson.features.find((f) => f.properties.zipCode === selectedZip)?.properties,
+    [geoJson, selectedZip],
   );
 
   const metroAvgPsf = useMemo(() => {
@@ -95,6 +100,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
   }, [activeSection]);
 
+  const handleZipSelect = useCallback((zipCode: string | null) => {
+    setSelectedZip(zipCode);
+    if (zipCode) {
+      setActiveSection("detail");
+      setGeography("zip");
+    }
+  }, []);
+
   const handleCloseDetail = () => setSelectedZip(null);
 
   const cameraTarget = CINEMATIC_CAMERAS[activeSection];
@@ -120,7 +133,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           geoJson={geoJson}
           activeMetric={activeMetric}
           selectedZip={selectedZip}
-          onZipSelect={setSelectedZip}
+          onZipSelect={handleZipSelect}
           cameraTarget={cameraTarget}
           pathVisible={pathVisible}
         />
@@ -140,16 +153,38 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
               </span>
               <h2>{section.title}</h2>
               <p>{section.description}</p>
-              {section.id === "detail" && (
-                <LocaleQuoteCard zip={selectedZip ?? "22201"} />
+
+              {(section.id === "neighborhood" || section.id === "detail") && (
+                <div className="zip-chips" role="group" aria-label="Quick ZIP compare">
+                  {zips.map((z) => (
+                    <button
+                      key={z.zip}
+                      type="button"
+                      className={`zip-chip${selectedZip === z.zip ? " zip-chip--active" : ""}`}
+                      onClick={() => handleZipSelect(z.zip)}
+                    >
+                      {z.zip}
+                    </button>
+                  ))}
+                </div>
               )}
+
               {section.id === "detail" && selected && (
-                <ZipDetailPanel
-                  zip={selected}
-                  metroAvgPsf={metroAvgPsf}
-                  onClose={handleCloseDetail}
-                  embedded
-                />
+                <>
+                  <ZipDetailPanel
+                    zip={selected}
+                    metroAvgPsf={metroAvgPsf}
+                    onClose={handleCloseDetail}
+                    embedded
+                    featureProps={selectedFeature}
+                  />
+                  <LocaleQuoteCard
+                    zip={selected.zip}
+                    quoteText={selectedFeature?.localQuote}
+                    primaryVibe={selectedFeature?.primaryVibe}
+                    neighborhood={selectedFeature?.neighborhoodName}
+                  />
+                </>
               )}
             </div>
           </section>
