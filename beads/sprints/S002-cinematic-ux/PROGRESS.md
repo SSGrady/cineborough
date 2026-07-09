@@ -4,7 +4,7 @@ Last updated: 2026-07-08
 
 ## Ticket Status
 
-- [ ] **T006** — Scroll-driven page layout shell
+- [x] **T006** — Scroll-driven page layout shell
 - [ ] **T007** — Locale quote card component
 - [ ] **T008** — Enhanced map camera transitions
 - [ ] **T009** — Route/path overlay on map

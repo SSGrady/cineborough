@@ -6,4 +6,4 @@ export { ColorLegend } from "./ColorLegend";
 export { DiscoveryClient } from "./DiscoveryClient";
 export { Sidebar } from "./Sidebar";
 export { ZipDetailPanel } from "./ZipDetailPanel";
-export { PhaseOneHero } from "./PhaseOneHero";
+export { CinematicDiscovery } from "./CinematicDiscovery";

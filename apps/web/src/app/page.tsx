@@ -1,18 +1,18 @@
 import { loadMockZipMetrics } from "@cineborough/data";
-import { DiscoveryClient } from "@/components/DiscoveryClient";
+import { CinematicDiscovery } from "@/components/CinematicDiscovery";
 
 export default function HomePage() {
   const { zips, metro } = loadMockZipMetrics();
 
   return (
-    <main className="page page--discovery">
-      <header className="discovery-header">
+    <main className="page page--cinematic">
+      <header className="cinematic-header">
         <h1>Cineborough</h1>
         <p>
-          {metro} · {zips.length} sandbox ZIPs
+          {metro} · scroll to explore
         </p>
       </header>
-      <DiscoveryClient zips={zips} />
+      <CinematicDiscovery zips={zips} />
     </main>
   );
 }

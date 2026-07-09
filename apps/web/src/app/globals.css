@@ -18,6 +18,160 @@ body {
   margin: 0 auto;
 }
 
+.page--cinematic {
+  max-width: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.cinematic-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  padding: 0.75rem 1.25rem;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.6);
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.cinematic-header h1 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.cinematic-header p {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin-top: 0.125rem;
+}
+
+.cinematic {
+  position: relative;
+  flex: 1;
+  min-height: 100vh;
+}
+
+.cinematic__sidebar {
+  position: fixed;
+  top: 3.25rem;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  z-index: 30;
+  overflow: hidden;
+}
+
+.cinematic__sidebar .sidebar {
+  height: 100%;
+  border-right: 1px solid #334155;
+}
+
+.cinematic__map {
+  position: fixed;
+  top: 3.25rem;
+  left: 280px;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+}
+
+.cinematic__map .map-view,
+.cinematic__map .map-placeholder {
+  height: 100%;
+}
+
+.cinematic__scroll {
+  position: relative;
+  margin-left: 280px;
+  margin-top: 3.25rem;
+  z-index: 10;
+}
+
+.cinematic__section {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-end;
+  padding: 2rem;
+  pointer-events: none;
+}
+
+.cinematic__section-panel {
+  pointer-events: auto;
+  max-width: 440px;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid #334155;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+}
+
+.cinematic__section-step {
+  display: inline-block;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #22c55e;
+  margin-bottom: 0.5rem;
+}
+
+.cinematic__section-panel h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.cinematic__section-panel > p {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+.cinematic__progress {
+  position: fixed;
+  right: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 35;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.cinematic__progress-dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: #475569;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.cinematic__progress-dot--active {
+  background: #22c55e;
+  transform: scale(1.35);
+}
+
+.zip-detail--embedded {
+  background: transparent;
+  border: none;
+  padding: 1rem 0 0;
+  max-height: none;
+  margin-top: 1rem;
+}
+
+.zip-detail--embedded .zip-detail__header h2 {
+  font-size: 0.9375rem;
+}
+
 .page--discovery {
   max-width: none;
   padding: 0;

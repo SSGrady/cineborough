@@ -1,7 +1,7 @@
 ---
 id: T006
 title: Scroll-driven page layout shell
-status: open
+status: done
 type: feature
 priority: P1
 epic: E002
@@ -23,3 +23,10 @@ Replace the fixed-viewport Phase 1 layout with a cinematic scroll shell per ADR-
 ## Notes
 
 Google 3D tiles not required for this ticket — 2D Mapbox backdrop is sufficient.
+
+## Completion (2026-07-08)
+
+- `CinematicDiscovery` with three scroll sections (metro → neighborhood → detail)
+- GSAP ScrollTrigger tracks active section; progress dots on right edge
+- Map fixed behind scroll panels; sidebar remains accessible
+- `page.tsx` switched to cinematic layout; gsap dependency added

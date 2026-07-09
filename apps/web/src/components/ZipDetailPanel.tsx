@@ -5,14 +5,16 @@ interface ZipDetailPanelProps {
   zip: ZipMetrics;
   metroAvgPsf: number;
   onClose: () => void;
+  /** When true, renders inside cinematic scroll panel (no outer chrome). */
+  embedded?: boolean;
 }
 
-export function ZipDetailPanel({ zip, metroAvgPsf, onClose }: ZipDetailPanelProps) {
+export function ZipDetailPanel({ zip, metroAvgPsf, onClose, embedded = false }: ZipDetailPanelProps) {
   const psfVsMarket =
     metroAvgPsf > 0 ? ((zip.marketPsf - metroAvgPsf) / metroAvgPsf) * 100 : 0;
 
   return (
-    <section className="zip-detail">
+    <section className={embedded ? "zip-detail zip-detail--embedded" : "zip-detail"}>
       <header className="zip-detail__header">
         <div>
           <h2>
