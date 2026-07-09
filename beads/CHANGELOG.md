@@ -85,3 +85,13 @@ Aggregated progress log for Cineborough development.
 - Census TIGER/Line 2020 ZCTA shapes replace approximate squares
 
 **Status:** T010 → `done`. Sprint S002 complete (5/5).
+
+### E003 / S003 — Reventure-Light UX Refactor
+
+- ADR-009 + `docs/schema/deck-gl-geojson.md` lock unified FeatureCollection contract
+- `data/mock/dc-metro.geojson` with precomputed opportunity scores and fill colors
+- `loadDcMetroGeoJson()` primary loader; legacy zip-metrics/boundaries deprecated
+- Reventure-light UI: Mapbox light-v11, white shell, radio sidebar, on-map labels, bottom bar
+- Hybrid navigation: scroll journey + click ZIP compare; stacked detail with forecast gauge
+
+**Status:** T011–T015 → `done`. Sprint S003 complete (5/5).
