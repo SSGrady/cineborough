@@ -9,7 +9,7 @@ Phased delivery for the hope-core real estate discovery engine.
 - Mock financial data until ingest pipelines are proven
 - Schema-first: metrics defined in `docs/schema/` before UI implementation
 
-## Phase 1: Data Engine (Current)
+## Phase 1: Data Engine (Complete)
 
 **Goal:** Reventure-style flat choropleth landing page with hybrid investor + hope-core sidebar.
 
@@ -23,11 +23,19 @@ Phased delivery for the hope-core real estate discovery engine.
 
 **Exit criteria:** User can toggle Opportunity Index heatmap across 5 ZIPs and see zip-level signals for a selected area.
 
-## Phase 2: Cinematic UX (Deferred)
+## Phase 2: Cinematic UX (Current)
 
-**Goal:** Scroll-driven camera fly-throughs, 3D tiles, locale quotes.
+**Goal:** Scroll-driven camera fly-throughs, locale quotes, route overlays, real ZCTA boundaries.
 
-See [ADR-008](./docs/adr/008-cinematic-ux-deferred.md). Do not start until Phase 1 exit criteria met.
+See [ADR-008](./docs/adr/008-cinematic-ux-deferred.md). Epic E002 / Sprint S002 (T006–T010). Google 3D tiles deferred.
+
+| Step | Deliverable | Beads Ticket |
+|------|-------------|--------------|
+| 2.1 | Scroll-driven page layout shell | T006 |
+| 2.2 | Locale quote card component | T007 |
+| 2.3 | Enhanced map camera transitions | T008 |
+| 2.4 | Route/path overlay (Deck.gl PathLayer) | T009 |
+| 2.5 | Real ZCTA boundary GeoJSON | T010 |
 
 ## Phase 3: Valuation Leap (Mock → Live)
 

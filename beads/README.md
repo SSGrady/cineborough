@@ -64,5 +64,5 @@ When completing a ticket:
 
 ## Current Active Work
 
-- **Epic:** [E001 — MVP DC Metro Discovery Map](./epics/E001-mvp-dc-metro-discovery-map.md)
-- **Sprint:** [S001 — Phase 1 Data Engine](./sprints/S001-phase-1-data-engine/sprint.md)
+- **Epic:** [E002 — Cinematic UX](./epics/E002-cinematic-ux.md)
+- **Sprint:** [S002 — Phase 2 Cinematic UX](./sprints/S002-cinematic-ux/sprint.md)

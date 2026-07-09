@@ -47,3 +47,11 @@ Aggregated progress log for Cineborough development.
 - ZipDetailPanel shows Forecast & Valuation + Demographics on ZIP select
 
 **Status:** T005 → `done`. Sprint S001 complete (5/5).
+
+### Phase 2 Kickoff — Epic E002 / Sprint S002
+
+- Created Epic E002 (Cinematic UX) and Sprint S002 with tickets T006–T010
+- E001 marked complete; PLAN.md updated to Phase 2 current
+- Google 3D Photorealistic Tiles deferred to post-S002 ticket
+
+**Status:** S002 opened. T006–T010 → `open`.

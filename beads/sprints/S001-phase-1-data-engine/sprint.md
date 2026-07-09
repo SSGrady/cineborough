@@ -1,7 +1,7 @@
 ---
 id: S001
 title: Phase 1 — Data Engine
-status: in_progress
+status: done
 priority: P1
 epic: E001
 start_date: 2026-07-08

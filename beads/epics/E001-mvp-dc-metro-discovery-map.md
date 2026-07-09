@@ -1,7 +1,7 @@
 ---
 id: E001
 title: MVP — DC Metro Discovery Map
-status: in_progress
+status: done
 priority: P1
 sprints:
   - S001
@@ -15,17 +15,17 @@ Deliver a Reventure-style choropleth map for the DC metro sandbox that intersect
 
 ## Success Criteria
 
-- [ ] 5 DC-area ZIPs render on choropleth map with Opportunity Index default layer
-- [ ] Sidebar toggles investor and hope-core metric layers
-- [ ] ZIP selection shows zip-level signals (forecast + demographics)
-- [ ] Mock data powers all metrics (no live API dependency)
-- [ ] Schema and types are documented and enforced
+- [x] 5 DC-area ZIPs render on choropleth map with Opportunity Index default layer
+- [x] Sidebar toggles investor and hope-core metric layers
+- [x] ZIP selection shows zip-level signals (forecast + demographics)
+- [x] Mock data powers all metrics (no live API dependency)
+- [x] Schema and types are documented and enforced
 
 ## Sprints
 
 | Sprint | Goal | Status |
 |--------|------|--------|
-| [S001](../sprints/S001-phase-1-data-engine/sprint.md) | Phase 1 Data Engine | In Progress |
+| [S001](../sprints/S001-phase-1-data-engine/sprint.md) | Phase 1 Data Engine | Complete |
 
 ## Tickets
 
