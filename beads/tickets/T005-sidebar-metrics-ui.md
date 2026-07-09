@@ -1,7 +1,7 @@
 ---
 id: T005
 title: Sidebar metric taxonomy UI
-status: open
+status: done
 type: feature
 priority: P2
 epic: E001
@@ -21,6 +21,8 @@ acceptance:
 
 Reventure-style sidebar with metric layer picker and zip-level signals panel. Organize investor and hope-core halves per docs/schema/metrics-taxonomy.md.
 
-## Notes
+## Completion (2026-07-08)
 
-Deferred until T004 map base is working. Use METRIC_LAYERS from @cineborough/data.
+- Sidebar with Popular / Investor / Hope-Core metric groups from METRIC_LAYERS
+- Metric toggle re-colors choropleth via getNormalizedMetricValues
+- ZipDetailPanel with Forecast & Valuation and Demographics cards on ZIP select

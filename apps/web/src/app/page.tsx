@@ -1,5 +1,4 @@
 import { loadMockZipMetrics } from "@cineborough/data";
-import { PhaseOneHero } from "@/components/PhaseOneHero";
 import { DiscoveryClient } from "@/components/DiscoveryClient";
 
 export default function HomePage() {
@@ -7,7 +6,12 @@ export default function HomePage() {
 
   return (
     <main className="page page--discovery">
-      <PhaseOneHero metro={metro} zipCount={zips.length} />
+      <header className="discovery-header">
+        <h1>Cineborough</h1>
+        <p>
+          {metro} · {zips.length} sandbox ZIPs
+        </p>
+      </header>
       <DiscoveryClient zips={zips} />
     </main>
   );

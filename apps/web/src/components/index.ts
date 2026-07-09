@@ -4,4 +4,6 @@ export { MapPlaceholder } from "./MapPlaceholder";
 export { MapView } from "./MapView";
 export { ColorLegend } from "./ColorLegend";
 export { DiscoveryClient } from "./DiscoveryClient";
+export { Sidebar } from "./Sidebar";
+export { ZipDetailPanel } from "./ZipDetailPanel";
 export { PhaseOneHero } from "./PhaseOneHero";

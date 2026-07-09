@@ -8,7 +8,7 @@ Last updated: 2026-07-08
 - [x] **T002** — Mock data for 5 DC ZIPs
 - [x] **T003** — Opportunity Index calculation
 - [x] **T004** — Mapbox + Deck.gl choropleth base map
-- [ ] **T005** — Sidebar metric taxonomy UI
+- [x] **T005** — Sidebar metric taxonomy UI
 
 ## Notes
 
@@ -20,6 +20,7 @@ Last updated: 2026-07-08
 - T002: validation layer added; loaders validate sandbox ZIPs on load.
 - T003: opportunity index formula verified; examples exported for all 5 ZIPs.
 - T004: MapView with Deck.gl choropleth; ZIP click triggers Level 2 flyTo.
+- T005: Sidebar + ZipDetailPanel complete; metric toggle re-colors map.
 
 ## Blockers
 
@@ -27,4 +28,4 @@ None.
 
 ## Velocity
 
-4/5 tickets done (80%).
+5/5 tickets done (100%). Sprint S001 complete.

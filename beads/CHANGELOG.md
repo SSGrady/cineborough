@@ -39,3 +39,11 @@ Aggregated progress log for Cineborough development.
 - Color legend and Level 2 flyTo on ZIP click
 
 **Status:** T004 → `done`.
+
+### T005 — Sidebar & Zip Detail Panel
+
+- Reventure-style sidebar with Popular / Investor / Hope-Core groups
+- Metric layer toggle re-colors choropleth
+- ZipDetailPanel shows Forecast & Valuation + Demographics on ZIP select
+
+**Status:** T005 → `done`. Sprint S001 complete (5/5).
