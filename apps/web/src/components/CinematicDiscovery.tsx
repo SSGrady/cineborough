@@ -3,10 +3,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { MetricLayerKey, ZipMetrics } from "@cineborough/data";
+import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
+import { zipMetricsFromGeoJson } from "@cineborough/data";
 import { CINEMATIC_CAMERAS } from "@cineborough/geo";
 import { MapView } from "./MapView";
-import { Sidebar } from "./Sidebar";
+import { Sidebar, type GeographyLevel } from "./Sidebar";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 
@@ -37,19 +38,21 @@ const SCROLL_SECTIONS: ScrollSection[] = [
     id: "detail",
     title: "Neighborhood Detail",
     description:
-      "Zip-level signals reveal where the math works and people like you are buying.",
+      "Click a ZIP to compare metrics. Zip-level signals reveal where the math works and people like you are buying.",
   },
 ];
 
 interface CinematicDiscoveryProps {
-  zips: ZipMetrics[];
+  geoJson: DcMetroGeoJson;
 }
 
-export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
+export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const zips = useMemo(() => zipMetricsFromGeoJson(geoJson), [geoJson]);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("opportunityScore");
   const [activeSection, setActiveSection] = useState<CinematicSection>("metro");
+  const [geography, setGeography] = useState<GeographyLevel>("metro");
 
   const selected = useMemo(
     () => zips.find((z) => z.zip === selectedZip),
@@ -86,6 +89,9 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
   useEffect(() => {
     if (activeSection === "neighborhood" || activeSection === "detail") {
       setSelectedZip((prev) => prev ?? "22201");
+      setGeography("zip");
+    } else {
+      setGeography("metro");
     }
   }, [activeSection]);
 
@@ -93,16 +99,25 @@ export function CinematicDiscovery({ zips }: CinematicDiscoveryProps) {
 
   const cameraTarget = CINEMATIC_CAMERAS[activeSection];
   const pathVisible = activeSection === "neighborhood" || activeSection === "detail";
+  const sidebarMode = activeSection === "metro" ? "full" : "slim";
 
   return (
     <div className="cinematic">
       <aside className="cinematic__sidebar">
-        <Sidebar activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+        <Sidebar
+          activeMetric={activeMetric}
+          onMetricChange={setActiveMetric}
+          mode={sidebarMode}
+          geography={geography}
+          onGeographyChange={setGeography}
+          selectedZip={selectedZip}
+          zips={zips}
+        />
       </aside>
 
       <div className="cinematic__map" aria-hidden="true">
         <MapView
-          zips={zips}
+          geoJson={geoJson}
           activeMetric={activeMetric}
           selectedZip={selectedZip}
           onZipSelect={setSelectedZip}

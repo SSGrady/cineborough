@@ -1,16 +1,18 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import type { MetricLayerKey, ZipMetrics } from "@cineborough/data";
+import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
+import { zipMetricsFromGeoJson } from "@cineborough/data";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 
 interface DiscoveryClientProps {
-  zips: ZipMetrics[];
+  geoJson: DcMetroGeoJson;
 }
 
-export function DiscoveryClient({ zips }: DiscoveryClientProps) {
+export function DiscoveryClient({ geoJson }: DiscoveryClientProps) {
+  const zips = useMemo(() => zipMetricsFromGeoJson(geoJson), [geoJson]);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("opportunityScore");
 
@@ -28,10 +30,10 @@ export function DiscoveryClient({ zips }: DiscoveryClientProps) {
 
   return (
     <div className="discovery">
-      <Sidebar activeMetric={activeMetric} onMetricChange={setActiveMetric} />
+      <Sidebar activeMetric={activeMetric} onMetricChange={setActiveMetric} zips={zips} />
       <div className="discovery__main">
         <MapView
-          zips={zips}
+          geoJson={geoJson}
           activeMetric={activeMetric}
           selectedZip={selectedZip}
           onZipSelect={setSelectedZip}

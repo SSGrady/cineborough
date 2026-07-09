@@ -2,7 +2,7 @@ import "mapbox-gl/dist/mapbox-gl.css";
 
 export { MapPlaceholder } from "./MapPlaceholder";
 export { MapView } from "./MapView";
-export { ColorLegend } from "./ColorLegend";
+export { BottomBar } from "./BottomBar";
 export { DiscoveryClient } from "./DiscoveryClient";
 export { Sidebar } from "./Sidebar";
 export { ZipDetailPanel } from "./ZipDetailPanel";
