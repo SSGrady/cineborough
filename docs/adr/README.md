@@ -16,6 +16,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [006](./006-map-ux-three-zoom-levels.md) | Map UX: Three Zoom Levels | Accepted | 2026-07-08 |
 | [007](./007-beads-project-tracking.md) | Beads Project Tracking System | Accepted | 2026-07-08 |
 | [008](./008-cinematic-ux-deferred.md) | Cinematic UX (Phase 2, Deferred) | Accepted | 2026-07-08 |
+| [009](./009-ui-ux-and-geojson-schema.md) | Reventure-Light UI and Unified GeoJSON | Accepted | 2026-07-08 |
 
 ---
 
@@ -93,3 +94,13 @@ Documents the north-star visual experience without implementing it in MVP:
 - Locale quotes (Reddit-style community sentiment overlays)
 - Route-accurate navigation lines over satellite imagery
 - Explicit non-goals for Phase 1; requires Phase 1 exit criteria first
+
+### ADR 009 — Reventure-Light UI and Unified GeoJSON
+
+Locks the Phase 1 UX refresh and data contract for Deck.gl:
+
+- Single enriched `dc-metro.geojson` with geometry + flat camelCase metrics in `properties`
+- Precomputed `opportunityScore`, `opportunityScoreNormalized`, `fillColor` / `fillColorRgb` at build time
+- Reventure-light aesthetic: white shell, Mapbox light-v11, pink/red accents, on-map ZIP labels
+- Contextual sidebar (full at metro, slim at detail), geography toggles (Metro/Zip enabled only)
+- Hybrid navigation: scroll for journey, click for ZIP compare; stacked story detail panel
