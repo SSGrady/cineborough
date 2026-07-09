@@ -1,7 +1,7 @@
 ---
 id: T004
 title: Mapbox + Deck.gl choropleth
-status: open
+status: done
 type: feature
 priority: P1
 epic: E001
@@ -22,6 +22,9 @@ acceptance:
 
 Build the Phase 1 landing map: Mapbox base tiles + Deck.gl choropleth layer colored by Opportunity Index. Replace MapPlaceholder component.
 
-## Notes
+## Completion (2026-07-08)
 
-Requires GeoJSON boundaries for sandbox ZIPs. Consider Mapbox boundaries tileset or static GeoJSON in data/mock/.
+- `MapView` component with Mapbox GL JS + Deck.gl GeoJsonLayer
+- Approximate ZIP boundaries in `data/mock/zip-boundaries.geojson`
+- Default Opportunity Index choropleth with color legend
+- ZIP click logs selection and flies to Level 2 zoom

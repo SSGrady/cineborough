@@ -18,6 +18,15 @@ body {
   margin: 0 auto;
 }
 
+.page--discovery {
+  max-width: none;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  height: 100vh;
+}
+
 .hero {
   margin-bottom: 2.5rem;
 }
@@ -70,4 +79,79 @@ body {
 .zip-list .score {
   font-size: 0.875rem;
   color: #64748b;
+}
+
+.map-view {
+  position: relative;
+  flex: 1;
+  min-height: 480px;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid #334155;
+}
+
+.map-view__canvas {
+  width: 100%;
+  height: 100%;
+  min-height: 480px;
+}
+
+.map-placeholder {
+  flex: 1;
+  min-height: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #1e293b;
+  border: 1px dashed #475569;
+  border-radius: 0.75rem;
+  color: #94a3b8;
+  text-align: center;
+  padding: 2rem;
+}
+
+.map-placeholder__hint {
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
+.color-legend {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid #334155;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.8125rem;
+}
+
+.color-legend__title {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #e2e8f0;
+}
+
+.color-legend__stops {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  color: #94a3b8;
+}
+
+.color-legend__stops li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.color-legend__swatch {
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 2px;
+  flex-shrink: 0;
 }

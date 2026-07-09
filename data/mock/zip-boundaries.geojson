@@ -1,0 +1,75 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "zip": "22201", "name": "Arlington (Clarendon)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.108, 38.876],
+          [-77.084, 38.876],
+          [-77.084, 38.896],
+          [-77.108, 38.896],
+          [-77.108, 38.876]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "22202", "name": "Arlington (Crystal City)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.063, 38.847],
+          [-77.039, 38.847],
+          [-77.039, 38.867],
+          [-77.063, 38.867],
+          [-77.063, 38.847]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "22204", "name": "Arlington (Glencarlyn)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.134, 38.851],
+          [-77.110, 38.851],
+          [-77.110, 38.871],
+          [-77.134, 38.871],
+          [-77.134, 38.851]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "20814", "name": "Bethesda" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.120, 38.974],
+          [-77.096, 38.974],
+          [-77.096, 38.994],
+          [-77.120, 38.994],
+          [-77.120, 38.974]
+        ]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "20001", "name": "Washington DC (Shaw/U Street)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[
+          [-77.031, 38.897],
+          [-77.007, 38.897],
+          [-77.007, 38.917],
+          [-77.031, 38.917],
+          [-77.031, 38.897]
+        ]]
+      }
+    }
+  ]
+}

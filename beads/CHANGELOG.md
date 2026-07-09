@@ -31,3 +31,11 @@ Aggregated progress log for Cineborough development.
 - Documented raw scores match 22201 (32.4), 22204 (23.6), 20001 (22.7)
 
 **Status:** T003 → `done`.
+
+### T004 — Choropleth Map
+
+- MapView with Mapbox dark-v11 + Deck.gl GeoJsonLayer
+- Mock ZIP boundaries GeoJSON for 5 sandbox ZIPs
+- Color legend and Level 2 flyTo on ZIP click
+
+**Status:** T004 → `done`.
