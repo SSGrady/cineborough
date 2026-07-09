@@ -1,7 +1,7 @@
 ---
 id: T010
 title: Real ZCTA boundary GeoJSON
-status: open
+status: done
 type: feature
 priority: P2
 epic: E002
@@ -23,3 +23,9 @@ Replace approximate square polygons in `data/mock/zip-boundaries.geojson` with s
 ## Notes
 
 Full nationwide ZCTA ingest is out of scope — 5 sandbox ZIPs only per ADR-004.
+
+## Completion (2026-07-08)
+
+- Replaced square polygons with Census TIGER/Line 2020 ZCTA shapes (via TIGERweb)
+- `zip-boundaries.geojson` includes metadata source attribution
+- All 5 sandbox ZIPs verified; choropleth rendering unchanged

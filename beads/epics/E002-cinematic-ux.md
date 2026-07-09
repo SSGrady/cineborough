@@ -15,28 +15,28 @@ Deliver scroll-driven neighborhood immersion per [ADR-008](../../docs/adr/008-ci
 
 ## Success Criteria
 
-- [ ] Scroll-driven page layout with metro → neighborhood → detail sections
-- [ ] Locale quote card with blurred background (static mock for 22201)
-- [ ] Smooth map camera transitions integrated with scroll sections
-- [ ] Deck.gl PathLayer route overlay (mock Arlington transit/walk path)
-- [ ] Real ZCTA boundary GeoJSON replacing approximate squares
+- [x] Scroll-driven page layout with metro → neighborhood → detail sections
+- [x] Locale quote card with blurred background (static mock for 22201)
+- [x] Smooth map camera transitions integrated with scroll sections
+- [x] Deck.gl PathLayer route overlay (mock Arlington transit/walk path)
+- [x] Real ZCTA boundary GeoJSON replacing approximate squares
 - [ ] Google 3D tiles stubbed/deferred (documented in ticket notes)
 
 ## Sprints
 
 | Sprint | Goal | Status |
 |--------|------|--------|
-| [S002](../sprints/S002-cinematic-ux/sprint.md) | Phase 2 Cinematic UX (no 3D tiles) | In Progress |
+| [S002](../sprints/S002-cinematic-ux/sprint.md) | Phase 2 Cinematic UX (no 3D tiles) | Complete |
 
 ## Tickets
 
 | ID | Title | Status |
 |----|-------|--------|
-| [T006](../tickets/T006-scroll-layout-shell.md) | Scroll-driven page layout shell | open |
-| [T007](../tickets/T007-locale-quote-card.md) | Locale quote card component | open |
-| [T008](../tickets/T008-map-camera-transitions.md) | Enhanced map camera transitions | open |
-| [T009](../tickets/T009-route-path-overlay.md) | Route/path overlay on map | open |
-| [T010](../tickets/T010-zcta-boundaries.md) | Real ZCTA boundary GeoJSON | open |
+| [T006](../tickets/T006-scroll-layout-shell.md) | Scroll-driven page layout shell | done |
+| [T007](../tickets/T007-locale-quote-card.md) | Locale quote card component | done |
+| [T008](../tickets/T008-map-camera-transitions.md) | Enhanced map camera transitions | done |
+| [T009](../tickets/T009-route-path-overlay.md) | Route/path overlay on map | done |
+| [T010](../tickets/T010-zcta-boundaries.md) | Real ZCTA boundary GeoJSON | done |
 
 ## Deferred (Post-S002)
 

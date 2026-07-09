@@ -8,7 +8,7 @@ Last updated: 2026-07-08
 - [x] **T007** — Locale quote card component
 - [x] **T008** — Enhanced map camera transitions
 - [x] **T009** — Route/path overlay on map
-- [ ] **T010** — Real ZCTA boundary GeoJSON
+- [x] **T010** — Real ZCTA boundary GeoJSON
 
 ## Notes
 
@@ -23,4 +23,4 @@ None.
 
 ## Velocity
 
-0/5 tickets done (0%).
+5/5 tickets done (100%). Sprint S002 complete.

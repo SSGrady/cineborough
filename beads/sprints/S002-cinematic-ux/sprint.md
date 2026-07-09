@@ -1,7 +1,7 @@
 ---
 id: S002
 title: Phase 2 — Cinematic UX
-status: in_progress
+status: done
 priority: P1
 epic: E002
 start_date: 2026-07-08
@@ -22,7 +22,7 @@ Build scroll-driven cinematic discovery per ADR-008, using GSAP ScrollTrigger + 
 | [T007](../../tickets/T007-locale-quote-card.md) | Locale quote card component | P1 | done |
 | [T008](../../tickets/T008-map-camera-transitions.md) | Enhanced map camera transitions | P1 | done |
 | [T009](../../tickets/T009-route-path-overlay.md) | Route/path overlay on map | P2 | done |
-| [T010](../../tickets/T010-zcta-boundaries.md) | Real ZCTA boundary GeoJSON | P2 | open |
+| [T010](../../tickets/T010-zcta-boundaries.md) | Real ZCTA boundary GeoJSON | P2 | done |
 
 ## Progress
 

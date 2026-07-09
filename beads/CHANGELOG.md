@@ -55,3 +55,33 @@ Aggregated progress log for Cineborough development.
 - Google 3D Photorealistic Tiles deferred to post-S002 ticket
 
 **Status:** S002 opened. T006–T010 → `open`.
+
+### T006 — Scroll Layout Shell
+
+- `CinematicDiscovery` with GSAP ScrollTrigger sections over fixed map backdrop
+
+**Status:** T006 → `done`.
+
+### T007 — Locale Quote Card
+
+- `LocaleQuoteCard` with blurred gradient background for 22201
+
+**Status:** T007 → `done`.
+
+### T008 — Map Camera Transitions
+
+- `CINEMATIC_CAMERAS` presets; scroll sections drive flyTo with pitch/bearing
+
+**Status:** T008 → `done`.
+
+### T009 — Route Path Overlay
+
+- Deck.gl PathLayer for mock Arlington Orange Line corridor
+
+**Status:** T009 → `done`.
+
+### T010 — ZCTA Boundaries
+
+- Census TIGER/Line 2020 ZCTA shapes replace approximate squares
+
+**Status:** T010 → `done`. Sprint S002 complete (5/5).
