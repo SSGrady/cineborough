@@ -1,0 +1,100 @@
+{
+  "source": "census-acs-5year",
+  "attribution": "Demographics from U.S. Census Bureau American Community Survey 5-Year Estimates.",
+  "downloadedAt": "2026-07-11T19:32:41.965Z",
+  "vintage": "2023",
+  "priorVintage": "2022",
+  "recordCount": 9,
+  "records": {
+    "20001": {
+      "zipCode": "20001",
+      "name": "ZCTA5 20001",
+      "population": 44022,
+      "medianAge": 32.8,
+      "remoteWorkPct": 34,
+      "homeowners25to44Pct": 53.4,
+      "collegeDegreeRate": 77.7,
+      "populationGrowthRate": -0.1
+    },
+    "20814": {
+      "zipCode": "20814",
+      "name": "ZCTA5 20814",
+      "population": 30822,
+      "medianAge": 41.3,
+      "remoteWorkPct": 33.6,
+      "homeowners25to44Pct": 21.1,
+      "collegeDegreeRate": 84.3,
+      "populationGrowthRate": 1.9
+    },
+    "22201": {
+      "zipCode": "22201",
+      "name": "ZCTA5 22201",
+      "population": 38419,
+      "medianAge": 31.4,
+      "remoteWorkPct": 35.2,
+      "homeowners25to44Pct": 41.7,
+      "collegeDegreeRate": 86.1,
+      "populationGrowthRate": 1.1
+    },
+    "22202": {
+      "zipCode": "22202",
+      "name": "ZCTA5 22202",
+      "population": 27352,
+      "medianAge": 35.4,
+      "remoteWorkPct": 31.4,
+      "homeowners25to44Pct": 27.7,
+      "collegeDegreeRate": 84.3,
+      "populationGrowthRate": -2.6
+    },
+    "22204": {
+      "zipCode": "22204",
+      "name": "ZCTA5 22204",
+      "population": 51971,
+      "medianAge": 36.1,
+      "remoteWorkPct": 24,
+      "homeowners25to44Pct": 35.5,
+      "collegeDegreeRate": 62,
+      "populationGrowthRate": -0.7
+    },
+    "32801": {
+      "zipCode": "32801",
+      "name": "ZCTA5 32801",
+      "population": 16251,
+      "medianAge": 35.6,
+      "remoteWorkPct": 22,
+      "homeowners25to44Pct": 44.4,
+      "collegeDegreeRate": 63.1,
+      "populationGrowthRate": 10
+    },
+    "32803": {
+      "zipCode": "32803",
+      "name": "ZCTA5 32803",
+      "population": 22703,
+      "medianAge": 37.6,
+      "remoteWorkPct": 22.9,
+      "homeowners25to44Pct": 36.1,
+      "collegeDegreeRate": 58.6,
+      "populationGrowthRate": 2.9
+    },
+    "32804": {
+      "zipCode": "32804",
+      "name": "ZCTA5 32804",
+      "population": 21076,
+      "medianAge": 38.5,
+      "remoteWorkPct": 20.2,
+      "homeowners25to44Pct": 33.7,
+      "collegeDegreeRate": 61.4,
+      "populationGrowthRate": 2.6
+    },
+    "32806": {
+      "zipCode": "32806",
+      "name": "ZCTA5 32806",
+      "population": 26423,
+      "medianAge": 40.9,
+      "remoteWorkPct": 17.8,
+      "homeowners25to44Pct": 31.3,
+      "collegeDegreeRate": 55.1,
+      "populationGrowthRate": -1.9
+    }
+  }
+}

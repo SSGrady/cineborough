@@ -22,8 +22,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const INGEST_ROOT = resolve(__dirname, "../../../../data/ingest/census-acs");
 const OUT_PATH = resolve(INGEST_ROOT, "normalized/zip-latest.json");
 
-function loadDotEnv(): void {
-  const envPath = resolve(__dirname, "../../../../.env");
+function loadEnvFile(envPath: string): void {
   if (!existsSync(envPath)) return;
   for (const line of readFileSync(envPath, "utf8").split("\n")) {
     const trimmed = line.trim();
@@ -34,6 +33,12 @@ function loadDotEnv(): void {
     const value = trimmed.slice(eq + 1).trim();
     if (!process.env[key]) process.env[key] = value;
   }
+}
+
+function loadDotEnv(): void {
+  const repoRoot = resolve(__dirname, "../../../..");
+  loadEnvFile(resolve(repoRoot, ".env"));
+  loadEnvFile(resolve(repoRoot, "apps/web/.env.local"));
 }
 
 loadDotEnv();
@@ -59,24 +64,33 @@ async function fetchAcsVintage(
   apiKey: string,
 ): Promise<Map<string, ReturnType<typeof parseAcsApiRow>>> {
   const vars = ["NAME", ...ACS_HOPE_CORE_VARIABLES].join(",");
-  const geo = zipCodes.map((z) => z).join(",");
-  const url =
-    `https://api.census.gov/data/${vintage}/acs/acs5` +
-    `?get=${vars}&for=zip%20code%20tabulation%20area:${geo}&key=${encodeURIComponent(apiKey)}`;
-
-  const res = await fetch(url);
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Census ACS ${vintage} failed: HTTP ${res.status} — ${body.slice(0, 200)}`);
-  }
-
-  const data = (await res.json()) as string[][];
-  const headers = data[0];
   const map = new Map<string, NonNullable<ReturnType<typeof parseAcsApiRow>>>();
 
-  for (let i = 1; i < data.length; i++) {
-    const parsed = parseAcsApiRow(headers, data[i]);
-    if (parsed) map.set(parsed.zipCode, parsed);
+  for (const zip of zipCodes) {
+    const url =
+      `https://api.census.gov/data/${vintage}/acs/acs5` +
+      `?get=${vars}&for=zip%20code%20tabulation%20area:${zip}&key=${encodeURIComponent(apiKey)}`;
+
+    const res = await fetch(url);
+    const body = await res.text();
+    if (!res.ok) {
+      throw new Error(`Census ACS ${vintage} ZCTA ${zip} failed: HTTP ${res.status} — ${body.slice(0, 200)}`);
+    }
+
+    let data: string[][];
+    try {
+      data = JSON.parse(body) as string[][];
+    } catch {
+      throw new Error(
+        `Census ACS ${vintage} ZCTA ${zip} returned non-JSON (check API key / rate limits): ${body.slice(0, 200)}`,
+      );
+    }
+
+    const headers = data[0];
+    for (let i = 1; i < data.length; i++) {
+      const parsed = parseAcsApiRow(headers, data[i]);
+      if (parsed) map.set(parsed.zipCode, parsed);
+    }
   }
 
   return map;
