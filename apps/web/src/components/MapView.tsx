@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import { GeoJsonLayer, PathLayer, TextLayer } from "@deck.gl/layers";
+import { MVTLayer } from "@deck.gl/geo-layers";
 import type { PickingInfo, Layer } from "@deck.gl/core";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
 import {
@@ -11,6 +12,8 @@ import {
   getRawMetricFromFeature,
   loadTransitPaths,
   METRIC_LAYERS,
+  getMetroTileConfig,
+  isMetroTilesEnabled,
 } from "@cineborough/data";
 import {
   colorForNormalizedScore,
@@ -26,8 +29,10 @@ import type { GeographyLevel } from "./Sidebar";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
 import { buildTrailPaths, extractOuterRings } from "@/lib/selection-border";
+import { createPmtilesFetch } from "@/lib/pmtiles-fetch";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+const METRO_TILES_URL = process.env.NEXT_PUBLIC_METRO_TILES_URL ?? null;
 const MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
 /** Seconds for one full lap — constant rate, arc-length geometry. */
 const TRAIL_LAP_SEC_ZIP = 3.1;
@@ -129,6 +134,11 @@ export function MapView({
   onUserMapMoveRef.current = onUserMapMove;
 
   const isNationalView = geographyLevel === "national";
+  const metroTileConfig = useMemo(
+    () => (isNationalView ? getMetroTileConfig(METRO_TILES_URL) : null),
+    [isNationalView],
+  );
+  const useMetroTiles = isNationalView && isMetroTilesEnabled(METRO_TILES_URL);
 
   const metricLabel =
     METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Opportunity Index";
@@ -198,6 +208,51 @@ export function MapView({
       },
     });
   }, [geoJson, colorByZip, selectedZip, activeMetric, isNationalView]);
+
+  const metroMvtLayer = useMemo(() => {
+    if (!useMetroTiles || !metroTileConfig) return null;
+
+    const fetch = createPmtilesFetch(metroTileConfig.url);
+
+    return new MVTLayer({
+      id: "metro-mvt",
+      data: [`pmtiles://${metroTileConfig.url}/{z}/{x}/{y}.mvt`],
+      minZoom: 3,
+      maxZoom: metroTileConfig.maxZoom,
+      pickable: true,
+      filled: true,
+      stroked: true,
+      binary: false,
+      uniqueIdProperty: "GEOID",
+      fetch,
+      getFillColor: (feature) => {
+        const props = feature?.properties as Record<string, string | number> | undefined;
+        const zip = props?.zipCode as string | undefined;
+        const isSelected = zip === selectedZip;
+        const r = Number(props?.fillR ?? 148);
+        const g = Number(props?.fillG ?? 163);
+        const b = Number(props?.fillB ?? 184);
+        const alpha = isSelected ? 150 : 85;
+        return [r, g, b, alpha];
+      },
+      getLineColor: (feature) => {
+        const zip = (feature?.properties as { zipCode?: string })?.zipCode;
+        if (zip === selectedZip) return [255, 255, 255, 110];
+        return [30, 41, 59, 180];
+      },
+      getLineWidth: (feature) => {
+        const zip = (feature?.properties as { zipCode?: string })?.zipCode;
+        return zip === selectedZip ? 1.25 : 1;
+      },
+      lineWidthMinPixels: 0.75,
+      lineWidthMaxPixels: 2,
+      updateTriggers: {
+        getFillColor: [selectedZip, isNationalView],
+        getLineColor: [selectedZip],
+        getLineWidth: [selectedZip],
+      },
+    });
+  }, [useMetroTiles, metroTileConfig, selectedZip, isNationalView]);
 
   const selectionBorderLayers = useMemo(() => {
     if (!selectedZip || selectionRings.length === 0) return [];
@@ -294,11 +349,12 @@ export function MapView({
   }, [pathVisible]);
 
   const layers = useMemo(() => {
-    const stack: Layer[] = [choroplethLayer, ...selectionBorderLayers];
+    const base = useMetroTiles && metroMvtLayer ? metroMvtLayer : choroplethLayer;
+    const stack: Layer[] = [base, ...selectionBorderLayers];
     if (pathVisible) stack.push(pathLayer);
     if (labelLayer) stack.push(labelLayer);
     return stack;
-  }, [choroplethLayer, selectionBorderLayers, pathLayer, labelLayer, pathVisible]);
+  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, labelLayer, pathVisible]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -540,11 +596,11 @@ export function MapView({
       if (!overlay) return;
       const pick = overlay.pickObject({ x: e.point.x, y: e.point.y, radius: 4 });
       const props = pick?.object?.properties as
-        | { zipCode?: string; neighborhoodName?: string }
+        | { zipCode?: string; neighborhoodName?: string; name?: string }
         | undefined;
       if (props?.zipCode) {
         const value = labelData.find((d) => d.zipCode === props.zipCode);
-        const title = isNationalView ? props.neighborhoodName : props.neighborhoodName;
+        const title = props.neighborhoodName ?? props.name ?? props.zipCode;
         popup
           .setLngLat(e.lngLat)
           .setHTML(

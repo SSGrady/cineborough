@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
-import { getPropertiesByZip, getPropertyById, zipMetricsFromGeoJson, loadUsMetrosGeoJson, DC_METRO_CBSA, ORLANDO_METRO_CBSA, loadMetroShard, sandboxCbsaForZip, METRIC_LAYERS } from "@cineborough/data";
+import { getPropertiesByZip, getPropertyById, zipMetricsFromGeoJson, loadUsMetrosGeoJson, DC_METRO_CBSA, ORLANDO_METRO_CBSA, loadMetroShard, fetchMetroShard, sandboxCbsaForZip, METRIC_LAYERS } from "@cineborough/data";
 import {
   resolveMapCamera,
   US_CONTINENTAL_BOUNDS,
@@ -255,7 +255,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             window.scrollTo({ top: 0, behavior: "smooth" });
             requestAnimationFrame(() => ScrollTrigger.refresh());
           }
+          return;
         }
+
+        void fetchMetroShard(regionId, {
+          apiBaseUrl: process.env.NEXT_PUBLIC_METRO_API_BASE_URL,
+        }).then((shard) => {
+          if (!shard) return;
+          setActiveSandboxCbsa(regionId);
+          setGeography("metro");
+          setGeographyOverride(true);
+          setStoryCameraActive(false);
+          setSelectedZip(null);
+          setSelectedPropertyId(null);
+          setUsInsetRegion("continental");
+        });
         return;
       }
 

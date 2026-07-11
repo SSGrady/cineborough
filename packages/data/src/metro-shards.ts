@@ -10,6 +10,48 @@ const METRO_SHARD_SOURCES: Record<string, DcMetroGeoJson> = {
   [ORLANDO_METRO_CBSA]: orlandoMetroGeoJson as unknown as DcMetroGeoJson,
 };
 
+const shardCache = new Map<string, DcMetroGeoJson>();
+
+export interface FetchMetroShardOptions {
+  /** API base URL — defaults to NEXT_PUBLIC_METRO_API_BASE_URL when set */
+  apiBaseUrl?: string;
+}
+
+/**
+ * Future API shape (ADR-011):
+ * GET {apiBaseUrl}/metros/{cbsa}/geojson → 200 DcMetroGeoJson | 404
+ */
+export async function fetchMetroShard(
+  cbsaCode: string,
+  options?: FetchMetroShardOptions,
+): Promise<DcMetroGeoJson | undefined> {
+  const bundled = loadMetroShard(cbsaCode);
+  if (bundled) {
+    shardCache.set(cbsaCode, bundled);
+    return bundled;
+  }
+
+  const cached = shardCache.get(cbsaCode);
+  if (cached) return cached;
+
+  const base = options?.apiBaseUrl;
+  if (!base) return undefined;
+
+  try {
+    const res = await fetch(`${base.replace(/\/$/, "")}/metros/${cbsaCode}/geojson`);
+    if (!res.ok) return undefined;
+    const data = (await res.json()) as DcMetroGeoJson;
+    shardCache.set(cbsaCode, data);
+    return data;
+  } catch {
+    return undefined;
+  }
+}
+
+export function clearMetroShardCache(): void {
+  shardCache.clear();
+}
+
 export function loadMetroShard(cbsaCode: string): DcMetroGeoJson | undefined {
   return METRO_SHARD_SOURCES[cbsaCode];
 }
