@@ -17,6 +17,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [007](./007-beads-project-tracking.md) | Beads Project Tracking System | Accepted | 2026-07-08 |
 | [008](./008-cinematic-ux-deferred.md) | Cinematic UX (Phase 2, Deferred) | Accepted | 2026-07-08 |
 | [009](./009-ui-ux-and-geojson-schema.md) | Reventure-Light UI and Unified GeoJSON | Accepted | 2026-07-08 |
+| [010](./010-national-geography-scale.md) | National Geography Scale Architecture | Accepted | 2026-07-11 |
 
 ---
 
@@ -104,3 +105,12 @@ Locks the Phase 1 UX refresh and data contract for Deck.gl:
 - Reventure-light aesthetic: white shell, Mapbox light-v11, pink/red accents, on-map ZIP labels
 - Contextual sidebar (full at metro, slim at detail), geography toggles (Metro/Zip enabled only)
 - Hybrid navigation: scroll for journey, click for ZIP compare; stacked story detail panel
+
+### ADR 010 — National Geography Scale Architecture
+
+Addresses map jank and navigation toward national / 3,100+ metro scale:
+
+- Story mode vs Explore map toggle — pan/zoom without scroll conflict
+- Deck.gl sync fixes: `interleaved: false`, redraw on move, cancel stacked flyTo
+- All geography toggles enabled; cameras fly to National/State/Metro/County/Zip
+- Data remains DC sandbox until metro shard ingest (Epic E005 T025–T026)
