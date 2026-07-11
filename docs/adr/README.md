@@ -10,7 +10,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 |-----|-------|--------|------|
 | [001](./001-project-vision-and-mvp-scope.md) | Project Vision and MVP Scope | Accepted | 2026-07-08 |
 | [002](./002-tech-stack-next-deck-mapbox.md) | Tech Stack: Next.js + Deck.gl + Mapbox | Accepted | 2026-07-08 |
-| [003](./003-data-sourcing-mock-first.md) | Data Sourcing: Mock-First Strategy | Accepted | 2026-07-08 |
+| [003](./003-data-sourcing-mock-first.md) | Data Sourcing: Mock-First Strategy | Superseded | 2026-07-08 |
 | [004](./004-dc-metro-geographic-sandbox.md) | DC Metro Geographic Sandbox | Accepted | 2026-07-08 |
 | [005](./005-data-schema-metric-taxonomy.md) | Data Schema and Metric Taxonomy | Accepted | 2026-07-08 |
 | [006](./006-map-ux-three-zoom-levels.md) | Map UX: Three Zoom Levels | Accepted | 2026-07-08 |
@@ -19,6 +19,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [009](./009-ui-ux-and-geojson-schema.md) | Reventure-Light UI and Unified GeoJSON | Accepted | 2026-07-08 |
 | [010](./010-national-geography-scale.md) | National Geography Scale Architecture | Accepted | 2026-07-11 |
 | [011](./011-national-metro-tile-strategy.md) | National Metro Tile Strategy (3,100+ CBSAs) | Accepted | 2026-07-11 |
+| [012](./012-public-bulk-data-ingest.md) | Data Sourcing: Public Bulk Ingest | Accepted | 2026-07-11 |
 
 ---
 
@@ -45,12 +46,19 @@ Locks the web stack for Phase 1 with 3D-ready foundations:
 
 ### ADR 003 — Data Sourcing: Mock-First Strategy
 
-Sequences data integration to avoid premature API costs and legal risk:
+**Superseded by ADR-012.** Originally sequenced mock → free APIs → paid APIs. Revoked 2026-07-11.
 
-- Phase 1: static JSON in `data/mock/` for 5 DC ZIPs
-- Phase 2: live U.S. Census ACS + BLS + OpenStreetMap (free, licensed)
-- Phase 3: ATTOM DataTree or Redfin Data Center for property-level comps
-- Explicit ban on Zillow scraping
+### ADR 012 — Data Sourcing: Public Bulk Ingest
+
+Replaces mock-first with periodic public bulk downloads:
+
+- **Census ACS** — demographics, remote work, age cohorts, income growth
+- **Zillow Research ZHVI** — bulk CSV home value index (ZIP/metro/city); no scraping
+- **FHFA HPI + HUD FMR** — growth and rent proxies for cap rate / overvaluation models
+- **Derived metrics** — forecast, overvaluation, opportunity score computed at build
+- **Mock** demoted to dev/CI fixtures only
+- **Paid APIs (ATTOM)** gated until S010 journey validated
+
 
 ### ADR 004 — DC Metro Geographic Sandbox
 

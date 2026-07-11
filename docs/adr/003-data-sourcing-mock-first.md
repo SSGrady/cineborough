@@ -1,8 +1,10 @@
 # ADR 003: Data Sourcing — Mock-First Strategy
 
+> **Superseded by [ADR-012](./012-public-bulk-data-ingest.md)** (2026-07-11). Mock-first is revoked; public bulk ingest is now the production path.
+
 ## Status
 
-Accepted
+Superseded by [ADR-012](./012-public-bulk-data-ingest.md)
 
 ## Date
 

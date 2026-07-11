@@ -32,7 +32,9 @@ cineborough/
 │   ├── data/              ← shared types, mock loaders, metric helpers
 │   └── geo/               ← geospatial utilities (bounds, color scales)
 ├── data/
-│   └── mock/              ← static JSON for DC metro ZIPs (MVP data source)
+│   ├── ingest/            ← live bulk pulls (Census, ZHVI, FHFA) per ADR-012
+│   ├── metros/            ← enriched GeoJSON shards
+│   └── mock/              ← dev/CI fixtures only
 ├── docs/
 │   ├── adr/               ← architecture decision records
 │   ├── schema/            ← metric taxonomy, formulas (schema-first)
@@ -66,8 +68,8 @@ Do not implement Phase 2 or live valuation APIs in Phase 1 work unless an ADR ex
 ## Critical Constraints
 
 1. **Single metro only** — DC metro sandbox (Arlington, Bethesda, core DC ZIPs). No nationwide ingest.
-2. **Mock-first data** — Financial metrics come from `data/mock/` until ADR-003 unlocks live APIs.
-3. **No Zillow scraping** — Use ATTOM/DataTree/Redfin Data Center when going live; document in ADR.
+2. **Public bulk data** — Production metrics from `data/ingest/` per ADR-012 (Census ACS, ZHVI bulk, FHFA). `data/mock/` is dev/CI fixtures only.
+3. **No Zillow scraping** — ZHVI via Zillow Research bulk CSV only; ATTOM when ADR-012 paid gate opens.
 4. **No hardcoded secrets** — API keys via `.env` only. See `apps/web/.env.example`.
 5. **Schema-first metrics** — All displayed metrics must exist in `docs/schema/metrics-taxonomy.md` and `packages/data/src/types.ts`.
 6. **TypeScript throughout** — No `.js` in `apps/` or `packages/`.
