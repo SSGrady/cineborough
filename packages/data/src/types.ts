@@ -137,6 +137,8 @@ export interface MetricLayerDefinition {
   label: string;
   unit: string;
   category: MetricLayerCategory;
+  /** Short plain-language hint for sidebar (2–3 words) */
+  helperText?: string;
 }
 
 /** Property-level valuation — see docs/schema/property-valuation.md */
@@ -209,20 +211,116 @@ export const RENOVATION_TIERS: RenovationTier[] = [
 ];
 
 export const METRIC_LAYERS: MetricLayerDefinition[] = [
-  { key: "opportunityScore", label: "Opportunity Index", unit: "0–100", category: "popular" },
-  { key: "medianHomeValue", label: "Home Value", unit: "$", category: "popular" },
-  { key: "homePriceForecast1yr", label: "1-Year Price Forecast", unit: "%", category: "popular" },
-  { key: "overvaluationPct", label: "Overvalued %", unit: "%", category: "popular" },
-  { key: "capRate", label: "Cap Rate", unit: "%", category: "popular" },
-  { key: "sellerDesperationScore", label: "Seller Desperation Score", unit: "0–100", category: "investor" },
-  { key: "marketPsf", label: "Market PSF", unit: "$/sqft", category: "investor" },
-  { key: "daysOnMarket", label: "Days on Market", unit: "days", category: "market-trends" },
-  { key: "homeValueGrowthYoy", label: "Home Value Growth YoY", unit: "%", category: "market-trends" },
-  { key: "remoteWorkPct", label: "Remote Work %", unit: "%", category: "demographics" },
-  { key: "homeowners25to44Pct", label: "Homeowners 25–44 %", unit: "%", category: "demographics" },
-  { key: "populationGrowthRate", label: "Population Growth", unit: "%", category: "demographics" },
-  { key: "incomeGrowthRate", label: "Income Growth", unit: "%", category: "demographics" },
-  { key: "medianAge", label: "Median Age", unit: "years", category: "demographics" },
-  { key: "collegeDegreeRate", label: "College Degree Rate", unit: "%", category: "demographics" },
-  { key: "walkabilityScore", label: "Walkability Score", unit: "0–100", category: "hope-core" },
+  {
+    key: "opportunityScore",
+    label: "Opportunity Index",
+    unit: "0–100",
+    category: "popular",
+    helperText: "ROI + livability",
+  },
+  {
+    key: "medianHomeValue",
+    label: "Home Value",
+    unit: "$",
+    category: "popular",
+    helperText: "Typical home price",
+  },
+  {
+    key: "homePriceForecast1yr",
+    label: "1-Year Price Forecast",
+    unit: "%",
+    category: "popular",
+    helperText: "Expected price change",
+  },
+  {
+    key: "overvaluationPct",
+    label: "Overvalued %",
+    unit: "%",
+    category: "popular",
+    helperText: "Vs fair value",
+  },
+  {
+    key: "capRate",
+    label: "Cap Rate",
+    unit: "%",
+    category: "popular",
+    helperText: "Rental yield %",
+  },
+  {
+    key: "sellerDesperationScore",
+    label: "Seller Desperation Score",
+    unit: "0–100",
+    category: "investor",
+    helperText: "Seller urgency",
+  },
+  {
+    key: "marketPsf",
+    label: "Market PSF",
+    unit: "$/sqft",
+    category: "investor",
+    helperText: "Price per sq ft",
+  },
+  {
+    key: "daysOnMarket",
+    label: "Days on Market",
+    unit: "days",
+    category: "market-trends",
+    helperText: "Avg listing time",
+  },
+  {
+    key: "homeValueGrowthYoy",
+    label: "Home Value Growth YoY",
+    unit: "%",
+    category: "market-trends",
+    helperText: "Past year change",
+  },
+  {
+    key: "remoteWorkPct",
+    label: "Remote Work %",
+    unit: "%",
+    category: "demographics",
+    helperText: "Work from home",
+  },
+  {
+    key: "homeowners25to44Pct",
+    label: "Homeowners 25–44 %",
+    unit: "%",
+    category: "demographics",
+    helperText: "Young homeowners",
+  },
+  {
+    key: "populationGrowthRate",
+    label: "Population Growth",
+    unit: "%",
+    category: "demographics",
+    helperText: "People moving in",
+  },
+  {
+    key: "incomeGrowthRate",
+    label: "Income Growth",
+    unit: "%",
+    category: "demographics",
+    helperText: "Earning power trend",
+  },
+  {
+    key: "medianAge",
+    label: "Median Age",
+    unit: "years",
+    category: "demographics",
+    helperText: "Typical resident age",
+  },
+  {
+    key: "collegeDegreeRate",
+    label: "College Degree Rate",
+    unit: "%",
+    category: "demographics",
+    helperText: "College-educated %",
+  },
+  {
+    key: "walkabilityScore",
+    label: "Walkability Score",
+    unit: "0–100",
+    category: "hope-core",
+    helperText: "Walk to amenities",
+  },
 ];

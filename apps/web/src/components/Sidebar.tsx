@@ -79,7 +79,12 @@ function MetricRadioList({
               checked={activeMetric === layer.key}
               onChange={() => onMetricChange(layer.key)}
             />
-            <span className="sidebar__radio-label">{layer.label}</span>
+            <span className="sidebar__radio-label">
+              {layer.label}
+              {layer.helperText && (
+                <span className="sidebar-metric-helper">{layer.helperText}</span>
+              )}
+            </span>
             {showUnits && <span className="sidebar__radio-unit">{layer.unit}</span>}
           </label>
         </li>

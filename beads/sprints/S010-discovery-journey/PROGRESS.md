@@ -17,5 +17,5 @@
 
 - Discovery works in DC (47900) and Orlando (36740) sandbox metros only
 - National / non-sandbox metros show guidance via context chip
-- Flyover uses pitched camera to ZIP centroids; green-space/amenity layer deferred
+- Flyover uses pitched camera to ZIP centroids; amenity POI glow + route trace-in shipped in S011 (T051–T054)
 - Analytics overlay shows on highlight phase + tour complete; mock fields labeled via `METRIC_PROVENANCE`

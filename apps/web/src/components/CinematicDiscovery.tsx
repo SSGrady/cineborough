@@ -146,6 +146,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [discoveryResults, setDiscoveryResults] = useState<RankedNeighborhood[] | null>(null);
   const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
   const [discoveryTourComplete, setDiscoveryTourComplete] = useState(false);
+  const [pathTraceProgress, setPathTraceProgress] = useState(0);
+  const pathTraceRafRef = useRef<number | null>(null);
   const prevFlyoverRef = useRef(false);
 
   const discoveryFlyoverActive = discoveryFlyover !== null;
@@ -159,6 +161,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     !discoveryFlyoverActive &&
     activeSandboxCbsa === DC_METRO_CBSA &&
     geography !== "zip";
+
+  const cinematicTourActive = dcStoryActive || discoveryFlyoverActive;
 
   const activeShardGeoJson = useMemo(
     () => loadMetroShard(activeSandboxCbsa) ?? geoJson,
@@ -562,10 +566,23 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   ]);
 
   const pathVisible =
-    dcStoryActive &&
-    (activeSection === "neighborhood" ||
-      activeSection === "detail" ||
-      scrollProgress > 0.35);
+    (dcStoryActive &&
+      (activeSection === "neighborhood" ||
+        activeSection === "detail" ||
+        scrollProgress > 0.35)) ||
+    (discoveryFlyoverActive &&
+      (discoveryFlyover.phase === "flying" || discoveryFlyover.phase === "highlight"));
+
+  const pathFilterZip = discoveryFlyoverActive
+    ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
+    : dcStoryActive
+      ? "22201"
+      : null;
+
+  const amenityHighlightZip =
+    discoveryFlyoverActive && discoveryFlyover.phase === "highlight"
+      ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
+      : null;
 
   const sidebarMode =
     isOverviewMode || (activeSection === "metro" && dcStoryActive) ? "full" : "slim";
@@ -676,6 +693,37 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (!isValidCameraTarget(camera)) return;
     savedOverviewCameraRef.current = sanitizeCameraTarget(camera);
   }, []);
+
+  useEffect(() => {
+    if (!discoveryFlyoverActive) {
+      setPathTraceProgress(0);
+      return;
+    }
+
+    if (discoveryFlyover?.phase === "highlight") {
+      setPathTraceProgress(1);
+      return;
+    }
+
+    const start = performance.now();
+    const duration = FLYOVER_CAMERA_MS;
+
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / duration);
+      setPathTraceProgress(t);
+      if (t < 1) {
+        pathTraceRafRef.current = requestAnimationFrame(tick);
+      }
+    };
+
+    pathTraceRafRef.current = requestAnimationFrame(tick);
+    return () => {
+      if (pathTraceRafRef.current !== null) {
+        cancelAnimationFrame(pathTraceRafRef.current);
+        pathTraceRafRef.current = null;
+      }
+    };
+  }, [discoveryFlyoverActive, discoveryFlyover?.index, discoveryFlyover?.phase]);
 
   useEffect(() => {
     if (!discoveryFlyover) return;
@@ -1013,7 +1061,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       />
 
       <div
-        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}`}
+        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}`}
       >
         <aside className="cinematic__sidebar">
           <Sidebar
@@ -1042,6 +1090,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             cameraTarget={cameraTarget}
             cameraInstant={dcStoryActive}
             pathVisible={pathVisible}
+            pathTraceProgress={discoveryFlyoverActive ? pathTraceProgress : 1}
+            pathFilterZip={pathFilterZip}
+            amenityHighlightZip={amenityHighlightZip}
             selectionBorderVisible={!discoveryFlyoverActive}
             exploreMode={exploreMode}
             onToggleExploreMode={handleToggleExplore}
@@ -1065,6 +1116,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
                   ? "Tour complete — neighborhood analytics"
                   : "Neighborhood analytics"
               }
+              animateIn={discoveryFlyover?.phase === "highlight" || discoveryTourComplete}
               onOpenDetails={() => setDrawerOpen(true)}
             />
           )}

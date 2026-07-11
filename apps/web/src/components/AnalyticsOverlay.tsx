@@ -7,6 +7,7 @@ interface AnalyticsOverlayProps {
   neighborhood: RankedNeighborhood;
   metroAvgPsf: number;
   phaseLabel: string;
+  animateIn?: boolean;
   onOpenDetails?: () => void;
 }
 
@@ -14,10 +15,14 @@ export function AnalyticsOverlay({
   neighborhood,
   metroAvgPsf,
   phaseLabel,
+  animateIn = false,
   onOpenDetails,
 }: AnalyticsOverlayProps) {
   return (
-    <aside className="analytics-overlay" aria-label={`Analytics for ${neighborhood.zip}`}>
+    <aside
+      className={`analytics-overlay${animateIn ? " analytics-overlay--enter" : ""}`}
+      aria-label={`Analytics for ${neighborhood.zip}`}
+    >
       <div className="analytics-overlay__chrome">
         <span className="analytics-overlay__phase">{phaseLabel}</span>
         {onOpenDetails && (

@@ -279,6 +279,25 @@ body {
   backdrop-filter: blur(12px);
 }
 
+.analytics-overlay--enter {
+  animation: analytics-overlay-enter 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes analytics-overlay-enter {
+  from {
+    opacity: 0;
+    transform: translateY(1.25rem) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cinematic--tour .context-chip {
+  box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.12), var(--shadow);
+}
+
 .analytics-overlay__chrome {
   display: flex;
   align-items: center;
@@ -1216,7 +1235,7 @@ body {
 
 .sidebar__radio {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.5rem;
   padding: 0.45rem 1rem;
   cursor: pointer;
@@ -1232,10 +1251,23 @@ body {
 .sidebar__radio input[type="radio"] {
   accent-color: var(--accent);
   flex-shrink: 0;
+  margin-top: 0.15rem;
 }
 
 .sidebar__radio-label {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  line-height: 1.25;
+}
+
+.sidebar-metric-helper {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  font-weight: 400;
+  line-height: 1.2;
 }
 
 .sidebar__radio-unit {

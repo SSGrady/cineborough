@@ -13,5 +13,6 @@ export * from "./metro-shards";
 export * from "./metro-tiles";
 export * from "./locale-quotes";
 export * from "./paths";
+export * from "./amenity-pois";
 export * from "./validation";
 export * from "./property-valuation";

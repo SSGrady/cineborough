@@ -1,0 +1,41 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SunRail corridor (Downtown Orlando)",
+        "type": "transit",
+        "zip": "32801"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-81.385, 28.538],
+          [-81.378, 28.542],
+          [-81.372, 28.545],
+          [-81.365, 28.548],
+          [-81.358, 28.551]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Lake Eola loop trail",
+        "type": "trail",
+        "zip": "32801"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-81.373, 28.541],
+          [-81.371, 28.544],
+          [-81.369, 28.542],
+          [-81.371, 28.539],
+          [-81.373, 28.541]
+        ]
+      }
+    }
+  ]
+}

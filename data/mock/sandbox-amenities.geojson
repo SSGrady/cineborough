@@ -1,0 +1,1397 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22201",
+        "name": "Clarendon Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.08699800000001,
+          38.895141
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22201",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.099998,
+          38.885141000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22201",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.091998,
+          38.886141
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22202",
+        "name": "Crystal City Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.03591300000001,
+          38.865037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22202",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.048913,
+          38.855037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22202",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.040913,
+          38.856037
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22204",
+        "name": "Glencarlyn Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.081891,
+          38.866724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22204",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.09489099999999,
+          38.856724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22204",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.086891,
+          38.857724
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22205",
+        "name": "Cherrydale Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.132299,
+          38.888598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22205",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.145299,
+          38.878598000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22205",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.137299,
+          38.879598
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22206",
+        "name": "South Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.07334,
+          38.851863
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22206",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.08633999999999,
+          38.841863000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22206",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.07834,
+          38.842863
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22207",
+        "name": "Yorktown Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.103063,
+          38.918196
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22207",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.116063,
+          38.908196000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22207",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.108063,
+          38.909196
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20001",
+        "name": "Shaw/U Street Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.01137800000001,
+          38.919089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20001",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.024378,
+          38.909089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20001",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.016378,
+          38.910089
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20002",
+        "name": "Capitol Hill Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.985113,
+          38.905553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20002",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.99811299999999,
+          38.895553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20002",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.990113,
+          38.896553
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20003",
+        "name": "Anacostia Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.984964,
+          38.890951
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20003",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.997964,
+          38.880951
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20003",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -76.989964,
+          38.881951
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20009",
+        "name": "Adams Morgan Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.031439,
+          38.926487
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20009",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.044439,
+          38.916487000000004
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20009",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.036439,
+          38.917487
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22301",
+        "name": "Old Town Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.053658,
+          38.824663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22301",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.06665799999999,
+          38.814663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22301",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.058658,
+          38.815663
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22304",
+        "name": "West End Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.11367100000001,
+          38.815143
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22304",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.126671,
+          38.805143
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "22304",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.118671,
+          38.806143
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20814",
+        "name": "Bethesda Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.090827,
+          39.011729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20814",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.103827,
+          39.001729000000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20814",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.095827,
+          39.002729
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20815",
+        "name": "Chevy Chase Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.070875,
+          38.993645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20815",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.08387499999999,
+          38.983645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20815",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.075875,
+          38.984645
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20816",
+        "name": "East Community Park",
+        "category": "park",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.11777400000001,
+          38.958761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20816",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.130774,
+          38.948761000000005
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "20816",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "47900"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -77.122774,
+          38.949761
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32801",
+        "name": "Downtown Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.366945,
+          28.548669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32801",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.37994499999999,
+          28.538669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32801",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.371945,
+          28.539669
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32804",
+        "name": "College Park Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.389624,
+          28.587615
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32804",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.40262399999999,
+          28.577614999999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32804",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.394624,
+          28.578615
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32805",
+        "name": "Holden Heights Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.39867500000001,
+          28.53546
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32805",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.411675,
+          28.52546
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32805",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.403675,
+          28.52646
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32806",
+        "name": "Bellevue Heights Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.35220100000001,
+          28.519228000000002
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32806",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.365201,
+          28.509228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32806",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.357201,
+          28.510228
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32807",
+        "name": "Azalea Park Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.295058,
+          28.552328
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32807",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.30805799999999,
+          28.542327999999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32807",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.30005799999999,
+          28.543328
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32814",
+        "name": "Lake Como Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.319497,
+          28.574941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32814",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.33249699999999,
+          28.564940999999997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32814",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.324497,
+          28.565941
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32819",
+        "name": "Doctor Phillips Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.490438,
+          28.466588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32819",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.50343799999999,
+          28.456588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32819",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.495438,
+          28.457588
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32822",
+        "name": "South Orlando Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.28528200000001,
+          28.508766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32822",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.298282,
+          28.498766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32822",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.290282,
+          28.499766
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32825",
+        "name": "Union Park Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.237297,
+          28.546206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32825",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.25029699999999,
+          28.536206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32825",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.242297,
+          28.537206
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32828",
+        "name": "Alafaya Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.157155,
+          28.540406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32828",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.170155,
+          28.530406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32828",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.162155,
+          28.531406
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32832",
+        "name": "Lake Nona Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.195082,
+          28.408079
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32832",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.20808199999999,
+          28.398079
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32832",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.200082,
+          28.399079
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32789",
+        "name": "Winter Park Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.346303,
+          28.604914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32789",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.359303,
+          28.594914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "32789",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.351303,
+          28.595914
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34741",
+        "name": "Kissimmee Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.424074,
+          28.307539
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34741",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.437074,
+          28.297538999999997
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34741",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.429074,
+          28.298538999999998
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34747",
+        "name": "Celebration Community Park",
+        "category": "park",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.584657,
+          28.32995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34747",
+        "name": "Metro / Transit Hub",
+        "category": "transit",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.597657,
+          28.31995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "34747",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "36740"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -81.589657,
+          28.32095
+        ]
+      }
+    }
+  ]
+}

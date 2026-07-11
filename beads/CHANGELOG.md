@@ -148,3 +148,13 @@ Aggregated progress log for Cineborough development.
 - Bottom bar + tooltips show per-metric provenance (`METRIC_PROVENANCE`); mock fields tagged
 
 **Status:** T035, T036 → `done`. Sandbox grid-up + legend fix ready for commit.
+
+### E002 / S011 — Phase 2a Cinematic Polish (T051–T054)
+
+- Spec: `docs/specifications/phase-2-cinematic-ux.md`
+- Amenity POI glow layer (mock parks/transit/coffee per sandbox ZIP) during discovery flyover highlight
+- Route path trace-in animation synced to flyover camera descent
+- Unified `cinematicTourActive` chrome + analytics overlay CSS entrance
+- Orlando SunRail + Lake Eola trail mock paths
+
+**Status:** T051, T052, T053, T054 → `done`. T055 (QA) → `open`.

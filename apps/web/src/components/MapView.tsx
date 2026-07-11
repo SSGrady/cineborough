@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
-import { GeoJsonLayer, PathLayer, TextLayer } from "@deck.gl/layers";
+import { GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from "@deck.gl/layers";
 import { MVTLayer } from "@deck.gl/geo-layers";
 import type { PickingInfo, Layer } from "@deck.gl/core";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
@@ -11,6 +11,8 @@ import {
   getChoroplethSpecFromGeoJson,
   getRawMetricFromFeature,
   loadTransitPaths,
+  loadAmenityPois,
+  type AmenityCategory,
   METRIC_LAYERS,
   getMetroTileConfig,
   METRIC_PROVENANCE,
@@ -33,11 +35,19 @@ import type { GeographyLevel } from "@cineborough/geo";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
 import { extractOuterRings, ringToPath } from "@/lib/selection-border";
+import { truncateLinePath } from "@/lib/path-trace";
 import { createPmtilesFetch } from "@/lib/pmtiles-fetch";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const METRO_TILES_URL = process.env.NEXT_PUBLIC_METRO_TILES_URL ?? null;
 const MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
+
+const AMENITY_COLORS: Record<AmenityCategory, [number, number, number, number]> = {
+  park: [34, 197, 94, 230],
+  transit: [59, 130, 246, 230],
+  coffee: [245, 158, 11, 230],
+  trail: [16, 185, 129, 220],
+};
 
 interface MapViewProps {
   geoJson: DcMetroGeoJson;
@@ -65,6 +75,12 @@ interface MapViewProps {
   cinematicOnSelect?: boolean;
   /** Hide animated selection border (e.g. during discovery flyover) */
   selectionBorderVisible?: boolean;
+  /** ZIP whose amenity POIs glow during discovery highlight */
+  amenityHighlightZip?: string | null;
+  /** 0–1 trace-in progress for route paths (1 = full path) */
+  pathTraceProgress?: number;
+  /** Limit transit paths to a ZIP (discovery flyover) */
+  pathFilterZip?: string | null;
 }
 
 interface LabelPoint {
@@ -204,6 +220,9 @@ export function MapView({
   fitNationalBounds = false,
   cinematicOnSelect = true,
   selectionBorderVisible = true,
+  amenityHighlightZip = null,
+  pathTraceProgress = 1,
+  pathFilterZip = null,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -476,34 +495,81 @@ export function MapView({
   }, [labelData, activeMetric, labelsVisible, isOverviewView, geographyLevel, mapZoom]);
 
   const pathLayer = useMemo(() => {
-    const paths = loadTransitPaths().features.filter(
+    const collection = loadTransitPaths(pathFilterZip ?? undefined);
+    const paths = collection.features.filter(
       (feature) => sanitizeLngLatPath(feature.geometry.coordinates).length >= 2,
     );
     if (paths.length === 0) return null;
+
+    const trace = Math.max(0, Math.min(1, pathTraceProgress));
 
     return new PathLayer({
       id: "transit-path",
       data: paths,
       pickable: false,
-      getPath: (feature) => sanitizeLngLatPath(feature.geometry.coordinates),
-      getColor: [225, 29, 72, pathVisible ? 200 : 0],
+      getPath: (feature) => {
+        const full = sanitizeLngLatPath(feature.geometry.coordinates);
+        return trace < 1 ? truncateLinePath(full, trace) : full;
+      },
+      getColor: [34, 197, 94, pathVisible ? 210 : 0],
       getWidth: 5,
       widthMinPixels: 3,
       capRounded: true,
       jointRounded: true,
       updateTriggers: {
         getColor: [pathVisible],
+        getPath: [pathTraceProgress, pathFilterZip],
       },
     });
-  }, [pathVisible]);
+  }, [pathVisible, pathTraceProgress, pathFilterZip]);
+
+  const amenityLayers = useMemo(() => {
+    if (!amenityHighlightZip) return [];
+
+    const pois = loadAmenityPois(amenityHighlightZip).filter((f) =>
+      isFiniteLngLat(f.geometry.coordinates),
+    );
+    if (pois.length === 0) return [];
+
+    const glow = new ScatterplotLayer({
+      id: "amenity-glow",
+      data: pois,
+      pickable: false,
+      getPosition: (d) => d.geometry.coordinates,
+      getRadius: 42,
+      radiusMinPixels: 14,
+      radiusMaxPixels: 28,
+      getFillColor: (d) => {
+        const cat = d.properties.category as AmenityCategory;
+        const [r, g, b] = AMENITY_COLORS[cat] ?? [148, 163, 184];
+        return [r, g, b, 70];
+      },
+      updateTriggers: { getFillColor: [amenityHighlightZip] },
+    });
+
+    const dots = new ScatterplotLayer({
+      id: "amenity-dots",
+      data: pois,
+      pickable: false,
+      getPosition: (d) => d.geometry.coordinates,
+      getRadius: 16,
+      radiusMinPixels: 5,
+      radiusMaxPixels: 10,
+      getFillColor: (d) => AMENITY_COLORS[d.properties.category as AmenityCategory] ?? [148, 163, 184, 220],
+      updateTriggers: { getFillColor: [amenityHighlightZip] },
+    });
+
+    return [glow, dots];
+  }, [amenityHighlightZip]);
 
   const layers = useMemo(() => {
     const base = useMetroTiles && metroMvtLayer ? metroMvtLayer : choroplethLayer;
     const stack: Layer[] = [base, ...selectionBorderLayers];
     if (pathVisible && pathLayer) stack.push(pathLayer);
+    stack.push(...amenityLayers);
     if (labelLayer) stack.push(labelLayer);
     return stack;
-  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, labelLayer, pathVisible]);
+  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, amenityLayers, labelLayer, pathVisible]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
