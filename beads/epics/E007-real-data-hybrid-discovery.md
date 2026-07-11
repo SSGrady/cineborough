@@ -33,7 +33,7 @@ Neither pure retail nor pure investor. Target: first-time / move-up buyer who ne
 - [x] Top search bar (county / city / ZIP / CBSA geocoding)
 - [x] Geography tickers moved to top bar; sidebar = data layers only
 - [x] Bottom scroll story panels replaced with compact top chip + optional detail drawer
-- [ ] Hybrid scoring engine returns top 3 neighborhoods from user criteria
+- [x] Hybrid scoring engine returns top 3 neighborhoods from user criteria
 - [ ] Cinematic flyover + analytics overlay on arrival
 
 ## Sprints
@@ -58,9 +58,9 @@ Neither pure retail nor pure investor. Target: first-time / move-up buyer who ne
 | [T039](../tickets/T039-compact-story-chrome.md) | Replace bottom scroll panels | done |
 | [T040](../tickets/T040-sidebar-categories.md) | Sidebar category expansion | open |
 | [T041](../tickets/T041-map-label-density.md) | Map label density by zoom | done |
-| [T042](../tickets/T042-discovery-criteria-panel.md) | Discovery criteria panel | open |
-| [T043](../tickets/T043-hybrid-scoring-engine.md) | Hybrid scoring engine | open |
-| [T044](../tickets/T044-top3-flyover.md) | Top-3 cinematic flyover | open |
+| [T042](../tickets/T042-discovery-criteria-panel.md) | Discovery criteria panel | done |
+| [T043](../tickets/T043-hybrid-scoring-engine.md) | Hybrid scoring engine | done |
+| [T044](../tickets/T044-top3-flyover.md) | Top-3 cinematic flyover | done |
 | [T045](../tickets/T045-analytics-overlay.md) | Analytics overlay on arrival | open |
 
 ## Dependencies

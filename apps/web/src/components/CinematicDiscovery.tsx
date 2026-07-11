@@ -15,6 +15,9 @@ import {
   fetchMetroShard,
   sandboxCbsaForZip,
   METRIC_LAYERS,
+  rankNeighborhoods,
+  type DiscoveryCriteria,
+  type RankedNeighborhood,
 } from "@cineborough/data";
 import {
   resolveMapCamera,
@@ -23,6 +26,7 @@ import {
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
   ORLANDO_METRO_CAMERA,
+  discoveryFlyoverCamera,
   type GeographyLevel,
   type UsInsetRegion,
 } from "@cineborough/geo";
@@ -31,11 +35,16 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { ContextChip } from "./ContextChip";
 import { StoryDrawer } from "./StoryDrawer";
+import { DiscoveryCriteriaPanel } from "./DiscoveryCriteriaPanel";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 import { PropertyValuationPanel } from "./PropertyValuationPanel";
 import { UsMapInsets } from "./UsMapInsets";
 import { buildSearchIndex, type SearchResult } from "@/lib/search-index";
+import {
+  loadDiscoveryCriteria,
+  saveDiscoveryCriteria,
+} from "@/lib/discovery-criteria-storage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -84,6 +93,17 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
 
 const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA]);
 
+type DiscoveryFlyoverPhase = "flying" | "highlight";
+
+interface DiscoveryFlyoverState {
+  results: RankedNeighborhood[];
+  index: number;
+  phase: DiscoveryFlyoverPhase;
+}
+
+const FLYOVER_HIGHLIGHT_MS = 2800;
+const FLYOVER_CAMERA_MS = 2200;
+
 export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialFitRef = useRef(true);
@@ -100,6 +120,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [activeSandboxCbsa, setActiveSandboxCbsa] = useState(DC_METRO_CBSA);
   const [searchFlyTarget, setSearchFlyTarget] = useState<[number, number] | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [criteriaPanelOpen, setCriteriaPanelOpen] = useState(false);
+  const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria>(() =>
+    loadDiscoveryCriteria(),
+  );
+  const [discoveryFlyover, setDiscoveryFlyover] = useState<DiscoveryFlyoverState | null>(null);
+  const [discoveryResults, setDiscoveryResults] = useState<RankedNeighborhood[] | null>(null);
+  const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
+
+  const discoveryFlyoverActive = discoveryFlyover !== null;
 
   const isOverviewMode = isOverviewGeography(geography) && !sandboxDrillActive;
 
@@ -107,6 +136,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     sandboxDrillActive &&
     storyCameraActive &&
     !exploreMode &&
+    !discoveryFlyoverActive &&
     activeSandboxCbsa === DC_METRO_CBSA &&
     geography !== "zip";
 
@@ -384,6 +414,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
 
+    if (discoveryFlyover) {
+      const current = discoveryFlyover.results[discoveryFlyover.index];
+      if (current) return discoveryFlyoverCamera(current.center);
+    }
+
     if (searchFlyTarget) {
       return {
         center: searchFlyTarget,
@@ -432,6 +467,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     storyCameraActive,
     isOverviewMode,
     searchFlyTarget,
+    discoveryFlyover,
   ]);
 
   const pathVisible =
@@ -469,6 +505,72 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     });
   }, []);
 
+  const handleApplyCriteria = useCallback((criteria: DiscoveryCriteria) => {
+    setDiscoveryCriteria(criteria);
+    saveDiscoveryCriteria(criteria);
+  }, []);
+
+  const handleDiscover = useCallback(() => {
+    setDiscoveryMessage(null);
+
+    if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
+      setDiscoveryMessage("Open Washington-Arlington-Alexandria or Orlando sandbox metro first");
+      return;
+    }
+
+    setStoryCameraActive(false);
+    setSearchFlyTarget(null);
+
+    const results = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 3);
+    const passing = results.filter((r) => r.passedFilters);
+
+    if (passing.length === 0) {
+      setDiscoveryResults(results);
+      setDiscoveryMessage("No neighborhoods match your criteria — relax filters and try again");
+      setDrawerOpen(true);
+      return;
+    }
+
+    setDiscoveryResults(passing);
+    setSandboxDrillActive(true);
+    setGeography("zip");
+    setSelectedZip(passing[0].zip);
+    setDiscoveryFlyover({ results: passing, index: 0, phase: "flying" });
+  }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria]);
+
+  const handleSkipFlyover = useCallback(() => {
+    setDiscoveryFlyover(null);
+  }, []);
+
+  useEffect(() => {
+    if (!discoveryFlyover) return;
+
+    const current = discoveryFlyover.results[discoveryFlyover.index];
+    if (!current) {
+      setDiscoveryFlyover(null);
+      return;
+    }
+
+    if (discoveryFlyover.phase === "flying") {
+      const timer = window.setTimeout(() => {
+        setDiscoveryFlyover((prev) => (prev ? { ...prev, phase: "highlight" } : null));
+      }, FLYOVER_CAMERA_MS);
+      return () => window.clearTimeout(timer);
+    }
+
+    const timer = window.setTimeout(() => {
+      setDiscoveryFlyover((prev) => {
+        if (!prev) return null;
+        const nextIndex = prev.index + 1;
+        if (nextIndex >= prev.results.length) return null;
+        setSelectedZip(prev.results[nextIndex].zip);
+        return { ...prev, index: nextIndex, phase: "flying" };
+      });
+    }, FLYOVER_HIGHLIGHT_MS);
+
+    return () => window.clearTimeout(timer);
+  }, [discoveryFlyover]);
+
   const metroDescription =
     !storyCameraActive && sandboxDrillActive
       ? "Story camera paused while you explore. Resume the DC guided tour or switch to National for the US map."
@@ -481,6 +583,29 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const activeScrollSection = SCROLL_SECTIONS.find((s) => s.id === activeSection);
 
   const contextChip = useMemo(() => {
+    if (discoveryFlyover) {
+      const current = discoveryFlyover.results[discoveryFlyover.index];
+      const phaseLabel =
+        discoveryFlyover.phase === "flying" ? "Flying in…" : "Neighborhood highlight";
+      return {
+        stepLabel: `${discoveryFlyover.index + 1} / ${discoveryFlyover.results.length}`,
+        title: `#${current.rank} · ${current.zip} — ${current.name}`,
+        detail: `${phaseLabel} · score ${current.score} · cap ${current.metrics.capRate}% · walk ${current.metrics.walkabilityScore}`,
+        canOpen: true,
+        action: { label: "Skip tour", onClick: handleSkipFlyover },
+      };
+    }
+
+    if (discoveryMessage) {
+      return {
+        stepLabel: "Discovery",
+        title: discoveryMessage,
+        detail: "Adjust criteria or drill into DC / Orlando sandbox",
+        canOpen: true,
+        action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
+      };
+    }
+
     if (isOverviewMode) {
       const metricLabel =
         METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
@@ -538,9 +663,45 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeShardGeoJson.metadata.metro,
     activeSandboxCbsa,
     handleResumeDcStory,
+    discoveryFlyover,
+    discoveryMessage,
+    handleSkipFlyover,
   ]);
 
   const drawerContent = useMemo(() => {
+    if (discoveryResults && discoveryResults.length > 0) {
+      return (
+        <>
+          <p>Top matches from hybrid scoring (financial + hope-core weights).</p>
+          <ol className="discovery-results">
+            {discoveryResults.map((r) => (
+              <li key={r.zip} className="discovery-results__item">
+                <button type="button" onClick={() => handleZipSelect(r.zip)}>
+                  <strong>
+                    #{r.rank} {r.zip} — {r.name}
+                  </strong>
+                  {!r.passedFilters && (
+                    <span className="discovery-results__fail"> · filtered out</span>
+                  )}
+                </button>
+                <span className="discovery-results__score">Score {r.score}</span>
+                <ul className="discovery-results__breakdown">
+                  <li>Cap rate norm: {r.breakdown.capRate.toFixed(0)}</li>
+                  <li>Overvaluation norm: {r.breakdown.overvaluation.toFixed(0)}</li>
+                  <li>Walkability norm: {r.breakdown.walkability.toFixed(0)}</li>
+                  <li>Remote work norm: {r.breakdown.remoteWork.toFixed(0)}</li>
+                  <li>Forecast norm: {r.breakdown.forecast.toFixed(0)}</li>
+                </ul>
+                {r.filterReasons.length > 0 && (
+                  <p className="discovery-results__reasons">{r.filterReasons.join(" · ")}</p>
+                )}
+              </li>
+            ))}
+          </ol>
+        </>
+      );
+    }
+
     if (isOverviewMode) {
       return (
         <>
@@ -622,6 +783,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     handleResumeDcStory,
     handleZipSelect,
     handleEvaluateProperty,
+    discoveryResults,
   ]);
 
   return (
@@ -633,6 +795,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         sandboxDrillActive={sandboxDrillActive}
         searchIndex={SEARCH_INDEX}
         onSearchSelect={handleSearchSelect}
+        onOpenCriteria={() => setCriteriaPanelOpen(true)}
+        onDiscover={handleDiscover}
+        discoverDisabled={discoveryFlyoverActive}
+        discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Find neighborhoods"}
       />
 
       <div
@@ -715,6 +881,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       >
         {drawerContent}
       </StoryDrawer>
+
+      <DiscoveryCriteriaPanel
+        open={criteriaPanelOpen}
+        criteria={discoveryCriteria}
+        onClose={() => setCriteriaPanelOpen(false)}
+        onApply={handleApplyCriteria}
+      />
     </>
   );
 }

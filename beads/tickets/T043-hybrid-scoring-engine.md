@@ -1,7 +1,7 @@
 ---
 id: T043
 title: Hybrid scoring engine
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007
@@ -15,3 +15,9 @@ acceptance:
 ---
 
 # T043 — Hybrid Scoring Engine
+
+## Completion (2026-07-11)
+
+- `packages/data/src/hybrid-scoring.ts` — hard filters + weighted composite (cap rate, overvaluation, walkability, remote work, forecast)
+- Scores live metrics from sandbox shard geojson (47900, 36740)
+- Returns ranked list with per-metric normalized breakdown

@@ -121,11 +121,18 @@ export type MetricLayerKey =
   | "walkabilityScore"
   | "collegeDegreeRate";
 
+export type MetricLayerCategory =
+  | "popular"
+  | "investor"
+  | "market-trends"
+  | "demographics"
+  | "hope-core";
+
 export interface MetricLayerDefinition {
   key: MetricLayerKey;
   label: string;
   unit: string;
-  category: "popular" | "investor" | "hope-core";
+  category: MetricLayerCategory;
 }
 
 /** Property-level valuation — see docs/schema/property-valuation.md */
@@ -203,14 +210,14 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
   { key: "homePriceForecast1yr", label: "1-Year Price Forecast", unit: "%", category: "popular" },
   { key: "overvaluationPct", label: "Overvalued %", unit: "%", category: "popular" },
   { key: "capRate", label: "Cap Rate", unit: "%", category: "popular" },
-  { key: "daysOnMarket", label: "Days on Market", unit: "days", category: "investor" },
   { key: "sellerDesperationScore", label: "Seller Desperation Score", unit: "0–100", category: "investor" },
   { key: "marketPsf", label: "Market PSF", unit: "$/sqft", category: "investor" },
-  { key: "homeValueGrowthYoy", label: "Home Value Growth YoY", unit: "%", category: "investor" },
-  { key: "remoteWorkPct", label: "Remote Work %", unit: "%", category: "hope-core" },
-  { key: "homeowners25to44Pct", label: "Homeowners 25–44 %", unit: "%", category: "hope-core" },
-  { key: "populationGrowthRate", label: "Population Growth", unit: "%", category: "hope-core" },
-  { key: "medianAge", label: "Median Age", unit: "years", category: "hope-core" },
+  { key: "daysOnMarket", label: "Days on Market", unit: "days", category: "market-trends" },
+  { key: "homeValueGrowthYoy", label: "Home Value Growth YoY", unit: "%", category: "market-trends" },
+  { key: "remoteWorkPct", label: "Remote Work %", unit: "%", category: "demographics" },
+  { key: "homeowners25to44Pct", label: "Homeowners 25–44 %", unit: "%", category: "demographics" },
+  { key: "populationGrowthRate", label: "Population Growth", unit: "%", category: "demographics" },
+  { key: "medianAge", label: "Median Age", unit: "years", category: "demographics" },
+  { key: "collegeDegreeRate", label: "College Degree Rate", unit: "%", category: "demographics" },
   { key: "walkabilityScore", label: "Walkability Score", unit: "0–100", category: "hope-core" },
-  { key: "collegeDegreeRate", label: "College Degree Rate", unit: "%", category: "hope-core" },
 ];

@@ -123,5 +123,15 @@ Aggregated progress log for Cineborough development.
 - Bottom national-hint and scroll story panels replaced by `ContextChip` + `StoryDrawer`
 - Metro map labels capped by zoom tier to reduce national-view clutter
 - DC story scroll camera triggers preserved; panels de-emphasized
+- Sidebar expanded to five collapsible categories (Popular, Investor, Market Trends, Demographics, Hope-Core); slim mode adds layer search
 
-**Status:** T037, T038, T039, T041 → `done`. T040 remains open.
+**Status:** T037, T038, T039, T040, T041 → `done`. Sprint S009 complete (5/5).
+
+### E007 / S010 — Discovery Journey (T042–T044)
+
+- Discovery criteria panel: budget + cap rate / overvaluation / walkability / remote work filters
+- `hybrid-scoring.ts` weighted rank with explainable breakdown from live shard geojson
+- Top-3 cinematic flyover via **Find neighborhoods** — sequential pitched camera + context chip highlights
+- Session criteria persistence; national view prompts sandbox metro drill-in
+
+**Status:** T042, T043, T044 → `done`. T045 (analytics overlay) → `open`.
