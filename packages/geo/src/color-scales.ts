@@ -102,6 +102,53 @@ export function colorForChoropleth(palette: ChoroplethPalette, normalizedScore: 
     : colorForNormalizedScore(normalizedScore);
 }
 
+export type LegendStyle = "tercile" | "gradient";
+
+export interface LegendStop {
+  color: string;
+  label: string;
+}
+
+export interface MetricLegendSpec {
+  style: LegendStyle;
+  stops: LegendStop[];
+  /** CSS linear-gradient for gradient style legends */
+  gradientCss: string;
+}
+
+const VALUE_GRADIENT_CSS = "linear-gradient(to right, #2166ac, #67a9cf, #f7f7f7, #ef8a62, #b2182b)";
+
+/** Metric-aware legend configuration for map bottom bar */
+export function legendStops(metricKey: string): MetricLegendSpec {
+  if (metricKey === "opportunityScore") {
+    return {
+      style: "tercile",
+      gradientCss: "",
+      stops: OPPORTUNITY_COLOR_STOPS.map(({ color, label }) => ({ color, label })),
+    };
+  }
+
+  if (metricKey === "medianHomeValue" || metricKey === "marketPsf") {
+    return {
+      style: "gradient",
+      gradientCss: VALUE_GRADIENT_CSS,
+      stops: [
+        { color: "#2166ac", label: "Low" },
+        { color: "#b2182b", label: "High" },
+      ],
+    };
+  }
+
+  return {
+    style: "gradient",
+    gradientCss: VALUE_GRADIENT_CSS,
+    stops: [
+      { color: "#2166ac", label: "Low" },
+      { color: "#b2182b", label: "High" },
+    ],
+  };
+}
+
 export function interpolateColor(score: number, min: number, max: number): string {
   if (max === min) return OPPORTUNITY_COLOR_STOPS[1].color;
   const normalized = ((score - min) / (max - min)) * 100;

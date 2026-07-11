@@ -3,30 +3,114 @@
     {
       "zip": "32801",
       "neighborhood": "Orlando (Downtown)",
-      "text": "Lake Eola walks and the SunRail stop make downtown feel more urban than you'd expect in Florida.",
+      "text": "Representative neighborhood vibe for Orlando (Downtown) — locale quotes pending curation.",
       "source": "r/orlando",
-      "primaryVibe": "Urban lakefront core"
+      "primaryVibe": "Downtown"
     },
     {
       "zip": "32803",
       "neighborhood": "Orlando (Colonialtown)",
-      "text": "Tree-lined streets and older bungalows — still close to downtown without the condo towers.",
+      "text": "Representative neighborhood vibe for Orlando (Colonialtown) — locale quotes pending curation.",
       "source": "r/orlando",
-      "primaryVibe": "Historic bungalow belt"
+      "primaryVibe": "Colonialtown"
     },
     {
       "zip": "32804",
       "neighborhood": "Orlando (College Park)",
-      "text": "Edgewater Drive dining and a real neighborhood feel, not tourist Orlando.",
+      "text": "Representative neighborhood vibe for Orlando (College Park) — locale quotes pending curation.",
       "source": "r/orlando",
-      "primaryVibe": "Local main-street charm"
+      "primaryVibe": "College Park"
+    },
+    {
+      "zip": "32805",
+      "neighborhood": "Orlando (Holden Heights)",
+      "text": "Representative neighborhood vibe for Orlando (Holden Heights) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Holden Heights"
     },
     {
       "zip": "32806",
       "neighborhood": "Orlando (Bellevue Heights)",
-      "text": "More affordable than Colonialtown with similar access to I-4 and the hospitals corridor.",
+      "text": "Representative neighborhood vibe for Orlando (Bellevue Heights) — locale quotes pending curation.",
       "source": "r/orlando",
-      "primaryVibe": "Value near the core"
+      "primaryVibe": "Bellevue Heights"
+    },
+    {
+      "zip": "32807",
+      "neighborhood": "Orlando (Azalea Park)",
+      "text": "Representative neighborhood vibe for Orlando (Azalea Park) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Azalea Park"
+    },
+    {
+      "zip": "32814",
+      "neighborhood": "Orlando (Lake Como)",
+      "text": "Representative neighborhood vibe for Orlando (Lake Como) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Lake Como"
+    },
+    {
+      "zip": "32819",
+      "neighborhood": "Orlando (Doctor Phillips)",
+      "text": "Representative neighborhood vibe for Orlando (Doctor Phillips) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Doctor Phillips"
+    },
+    {
+      "zip": "32822",
+      "neighborhood": "Orlando (South Orlando)",
+      "text": "Representative neighborhood vibe for Orlando (South Orlando) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "South Orlando"
+    },
+    {
+      "zip": "32825",
+      "neighborhood": "Orlando (Union Park)",
+      "text": "Representative neighborhood vibe for Orlando (Union Park) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Union Park"
+    },
+    {
+      "zip": "32828",
+      "neighborhood": "Orlando (Alafaya)",
+      "text": "Representative neighborhood vibe for Orlando (Alafaya) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Alafaya"
+    },
+    {
+      "zip": "32832",
+      "neighborhood": "Orlando (Lake Nona)",
+      "text": "Representative neighborhood vibe for Orlando (Lake Nona) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Lake Nona"
+    },
+    {
+      "zip": "32835",
+      "neighborhood": "Orlando (MetroWest)",
+      "text": "Representative neighborhood vibe for Orlando (MetroWest) — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "MetroWest"
+    },
+    {
+      "zip": "32789",
+      "neighborhood": "Winter Park",
+      "text": "Representative neighborhood vibe for Winter Park — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Winter Park"
+    },
+    {
+      "zip": "34741",
+      "neighborhood": "Kissimmee",
+      "text": "Representative neighborhood vibe for Kissimmee — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Kissimmee"
+    },
+    {
+      "zip": "34747",
+      "neighborhood": "Celebration",
+      "text": "Representative neighborhood vibe for Celebration — locale quotes pending curation.",
+      "source": "r/orlando",
+      "primaryVibe": "Celebration"
     }
   ]
 }

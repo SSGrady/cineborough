@@ -1,7 +1,49 @@
 import type { HopeCoreMetrics, InvestorMetrics, ZipMetrics, ZipMetricsCollection } from "./types";
 
-/** DC metro sandbox ZIPs — see ADR-004 */
-export const SANDBOX_ZIPS = ["22201", "22202", "22204", "20814", "20001"] as const;
+/** DC metro sandbox ZIPs — see ADR-004 (expanded S008) */
+export const SANDBOX_ZIPS = [
+  "22201",
+  "22202",
+  "22203",
+  "22204",
+  "22205",
+  "22206",
+  "22207",
+  "20001",
+  "20002",
+  "20003",
+  "20009",
+  "20037",
+  "22301",
+  "22302",
+  "22304",
+  "20814",
+  "20815",
+  "20816",
+] as const;
+
+/** Orlando metro sandbox ZIPs */
+export const ORLANDO_SANDBOX_ZIPS = [
+  "32801",
+  "32803",
+  "32804",
+  "32805",
+  "32806",
+  "32807",
+  "32814",
+  "32819",
+  "32822",
+  "32825",
+  "32828",
+  "32832",
+  "32835",
+  "32789",
+  "34741",
+  "34747",
+] as const;
+
+/** All sandbox ZCTAs for ACS / ZHVI zip ingest */
+export const ALL_SANDBOX_ZIPS = [...SANDBOX_ZIPS, ...ORLANDO_SANDBOX_ZIPS] as const;
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);
@@ -56,7 +98,10 @@ export function isZipMetricsInput(value: unknown): value is ZipMetricsInput {
   );
 }
 
-export function validateZipMetricsCollection(data: unknown): ZipMetricsCollection {
+export function validateZipMetricsCollection(
+  data: unknown,
+  expectedZips: readonly string[] = SANDBOX_ZIPS,
+): ZipMetricsCollection {
   if (typeof data !== "object" || data === null) {
     throw new Error("Invalid zip metrics collection: expected object");
   }
@@ -80,7 +125,7 @@ export function validateZipMetricsCollection(data: unknown): ZipMetricsCollectio
   }
 
   const zipCodes = zips.map((z) => z.zip);
-  for (const expected of SANDBOX_ZIPS) {
+  for (const expected of expectedZips) {
     if (!zipCodes.includes(expected)) {
       throw new Error(`Missing sandbox ZIP: ${expected}`);
     }

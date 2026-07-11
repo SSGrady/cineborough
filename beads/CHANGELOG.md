@@ -135,3 +135,16 @@ Aggregated progress log for Cineborough development.
 - Session criteria persistence; national view prompts sandbox metro drill-in
 
 **Status:** T042, T043, T044 → `done`. T045 (analytics overlay) → `open`.
+
+---
+
+## 2026-07-11
+
+### E007 / S008 — Sandbox expansion + metric wiring (ADR-012)
+
+- DC sandbox: 5 → **18 ZIPs**; Orlando: 4 → **16 ZIPs** (TIGERweb ZCTA boundaries + live ingest merge)
+- ACS ingest adds B25064 median gross rent for cap-rate proxy (annual rent / ZHVI)
+- Metric-aware map legend (`legendStops`) — value gradient with min/max; opportunity terciles
+- Bottom bar + tooltips show per-metric provenance (`METRIC_PROVENANCE`); mock fields tagged
+
+**Status:** T035, T036 → `done`. Sandbox grid-up + legend fix ready for commit.

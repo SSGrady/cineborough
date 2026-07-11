@@ -19,6 +19,7 @@ export const ACS_HOPE_CORE_VARIABLES = [
   "B25003_002E", // owner-occupied units
   "B25007_004E", // owner householder 25-34
   "B25007_005E", // owner householder 35-44
+  "B25064_001E", // median gross rent (cap rate proxy)
 ] as const;
 
 export const ACS_ATTRIBUTION =
@@ -40,6 +41,7 @@ export interface CensusAcsRawRow {
   owner25to34: number | null;
   owner35to44: number | null;
   medianHouseholdIncome: number | null;
+  medianGrossRent: number | null;
 }
 
 export interface CensusZipDemographics {
@@ -55,6 +57,8 @@ export interface CensusZipDemographics {
   incomeGrowthRate?: number;
   /** ACS B19013; optional until re-ingest */
   medianHouseholdIncome?: number;
+  /** ACS B25064 median gross rent — cap rate proxy when HUD FMR unavailable */
+  medianGrossRent?: number;
 }
 
 function parseAcsNumber(value: string | undefined): number | null {
@@ -134,6 +138,10 @@ export function computeHopeCoreFromAcs(
     demo.medianHouseholdIncome = Math.round(current.medianHouseholdIncome);
   }
 
+  if (current.medianGrossRent !== null) {
+    demo.medianGrossRent = Math.round(current.medianGrossRent);
+  }
+
   return demo;
 }
 
@@ -171,5 +179,6 @@ export function parseAcsApiRow(headers: string[], row: string[]): CensusAcsRawRo
     owner25to34: parseAcsNumber(row[idx("B25007_004E")]),
     owner35to44: parseAcsNumber(row[idx("B25007_005E")]),
     medianHouseholdIncome: parseAcsNumber(row[idx("B19013_001E")]),
+    medianGrossRent: parseAcsNumber(row[idx("B25064_001E")]),
   };
 }

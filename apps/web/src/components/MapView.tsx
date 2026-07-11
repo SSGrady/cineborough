@@ -13,6 +13,7 @@ import {
   loadTransitPaths,
   METRIC_LAYERS,
   getMetroTileConfig,
+  METRIC_PROVENANCE,
 } from "@cineborough/data";
 import {
   colorForChoropleth,
@@ -239,6 +240,19 @@ export function MapView({
     () => getNormalizedMetricValuesFromGeoJson(geoJson, activeMetric),
     [geoJson, activeMetric],
   );
+
+  const legendValueRange = useMemo(() => {
+    const values = geoJson.features.map((f) =>
+      getRawMetricFromFeature(f.properties, activeMetric),
+    );
+    if (values.length === 0) return { min: undefined, max: undefined };
+    const min = Math.min(...values);
+    const max = Math.max(...values);
+    return {
+      min: formatLabelValue(activeMetric, min),
+      max: formatLabelValue(activeMetric, max),
+    };
+  }, [geoJson, activeMetric]);
 
   const labelData = useMemo((): LabelPoint[] => {
     if (!overviewMode) {
@@ -767,10 +781,15 @@ export function MapView({
       if (props?.zipCode) {
         const value = labelData.find((d) => d.zipCode === props.zipCode);
         const title = props.neighborhoodName ?? props.name ?? props.zipCode;
+        const source = METRIC_PROVENANCE[activeMetric];
+        const mockNote =
+          source.provenance === "mock"
+            ? `<br/><em class="map-tooltip__mock">${source.shortLabel}</em>`
+            : "";
         popup
           .setLngLat(e.lngLat)
           .setHTML(
-            `<strong>${title ?? props.zipCode}</strong><br/>${value ? formatLabelValue(activeMetric, value.value) : ""}`,
+            `<strong>${title ?? props.zipCode}</strong><br/>${value ? formatLabelValue(activeMetric, value.value) : ""}${mockNote}`,
           )
           .addTo(map);
       } else {
@@ -799,8 +818,11 @@ export function MapView({
       <div ref={containerRef} className="map-view__canvas" />
       {mapReady && (
         <BottomBar
+          activeMetric={activeMetric}
           dataAsOfLabel={geoJson.metadata.dataAsOfLabel}
           metricLabel={metricLabel}
+          valueMin={legendValueRange.min}
+          valueMax={legendValueRange.max}
           tooltipsEnabled={tooltipsEnabled}
           onToggleTooltips={() => setTooltipsEnabled((v) => !v)}
           exploreMode={exploreMode}

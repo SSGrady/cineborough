@@ -16,7 +16,10 @@
     "build:us-metro-tiles": "node --experimental-strip-types src/build-us-metro-tiles.ts",
     "ingest:zhvi": "node --experimental-strip-types src/ingest/ingest-zhvi.ts",
     "ingest:census-acs": "node --experimental-strip-types src/ingest/ingest-census-acs.ts",
-    "ingest:fhfa-hpi": "node --experimental-strip-types src/ingest/ingest-fhfa-hpi.ts"
+    "ingest:fhfa-hpi": "node --experimental-strip-types src/ingest/ingest-fhfa-hpi.ts",
+    "ingest:hud-fmr": "node --experimental-strip-types src/ingest/ingest-hud-fmr.ts",
+    "seed:sandbox-metrics": "node --experimental-strip-types src/scripts/seed-sandbox-metrics.ts",
+    "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

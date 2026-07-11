@@ -5,6 +5,7 @@ import type { ZipMetricsInput } from "../validation.ts";
 import type { CensusAcsNormalizedBundle } from "./census-acs.ts";
 import { deriveFinancialMetrics } from "./derived-financials.ts";
 import { SANDBOX_CBSA_ZHVI_METRO_MAP, type FhfaHpiNormalizedBundle } from "./fhfa-hpi-sources.ts";
+import type { HudFmrNormalizedBundle } from "./hud-fmr-sources.ts";
 import type { ZhviNormalizedBundle, ZhviMetroRecord, ZhviZipRecord } from "./zhvi-sources.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -15,6 +16,7 @@ export interface LiveIngestPaths {
   zhviZip: string;
   zhviMetro: string;
   fhfaHpi: string;
+  hudFmr: string;
 }
 
 export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
@@ -22,6 +24,7 @@ export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
   zhviZip: resolve(INGEST_ROOT, "zhvi/normalized/zip-latest.json"),
   zhviMetro: resolve(INGEST_ROOT, "zhvi/normalized/metro-latest.json"),
   fhfaHpi: resolve(INGEST_ROOT, "fhfa-hpi/normalized/metro-latest.json"),
+  hudFmr: resolve(INGEST_ROOT, "hud/normalized/zip-fmr-latest.json"),
 };
 
 export interface MergeLiveMetricsOptions {
@@ -35,6 +38,7 @@ export interface MergeLiveMetricsResult {
   usedZhvi: boolean;
   usedFhfa: boolean;
   usedDerivedFinancials: boolean;
+  usedHudFmr: boolean;
   dataAsOf: string;
   dataAsOfLabel: string;
 }
@@ -42,6 +46,13 @@ export interface MergeLiveMetricsResult {
 function loadJsonIfExists<T>(path: string): T | null {
   if (!existsSync(path)) return null;
   return JSON.parse(readFileSync(path, "utf8")) as T;
+}
+
+/** Cap rate proxy: annual 2BR FMR / ZHVI (ADR-012) */
+function computeCapRateFromFmr(fmr2Br: number, zhvi: number): number | null {
+  if (fmr2Br <= 0 || zhvi <= 0) return null;
+  const annualRent = fmr2Br * 12;
+  return Math.round((annualRent / zhvi) * 1000) / 10;
 }
 
 function medianIncomeFromZips(
@@ -76,11 +87,13 @@ export function mergeLiveMetricsIntoZips(
   const zhviZip = loadJsonIfExists<ZhviNormalizedBundle>(paths.zhviZip);
   const zhviMetro = loadJsonIfExists<ZhviNormalizedBundle>(paths.zhviMetro);
   const fhfa = loadJsonIfExists<FhfaHpiNormalizedBundle>(paths.fhfaHpi);
+  const hudFmr = loadJsonIfExists<HudFmrNormalizedBundle>(paths.hudFmr);
 
   let usedCensus = false;
   let usedZhvi = false;
   let usedFhfa = false;
   let usedDerivedFinancials = false;
+  let usedHudFmr = false;
 
   const fhfaMetro = cbsaCode ? fhfa?.records[cbsaCode] : undefined;
   const zhviMetroRegionId = cbsaCode ? SANDBOX_CBSA_ZHVI_METRO_MAP[cbsaCode] : undefined;
@@ -130,6 +143,21 @@ export function mergeLiveMetricsIntoZips(
       }
     }
 
+    const fmrRec = hudFmr?.records[zip.zip];
+    const zhviForCap = zhviRec?.zhvi ?? merged.medianHomeValue;
+    if (fmrRec && zhviForCap > 0) {
+      const capRate = computeCapRateFromFmr(fmrRec.fmr2Br, zhviForCap);
+      if (capRate !== null) {
+        usedHudFmr = true;
+        merged.capRate = capRate;
+      }
+    } else if (demo?.medianGrossRent && zhviForCap > 0) {
+      const capRate = computeCapRateFromFmr(demo.medianGrossRent, zhviForCap);
+      if (capRate !== null) {
+        merged.capRate = capRate;
+      }
+    }
+
     return merged;
   });
 
@@ -137,6 +165,7 @@ export function mergeLiveMetricsIntoZips(
     census ? `ACS ${census.vintage}` : null,
     zhviZip ? `ZHVI ${zhviZip.vintage}` : null,
     fhfa ? `FHFA ${fhfa.vintage}` : null,
+    hudFmr && hudFmr.recordCount > 0 ? `HUD FMR ${hudFmr.vintage}` : null,
   ].filter(Boolean);
 
   const dataAsOf = fhfa?.vintage ?? census?.vintage ?? zhviZip?.vintage ?? "mock";
@@ -168,6 +197,7 @@ export function mergeLiveMetricsIntoZips(
     usedZhvi,
     usedFhfa,
     usedDerivedFinancials,
+    usedHudFmr,
     dataAsOf,
     dataAsOfLabel,
   };

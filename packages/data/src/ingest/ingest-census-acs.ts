@@ -16,7 +16,7 @@ import {
   type CensusAcsNormalizedBundle,
   type CensusZipDemographics,
 } from "./census-acs.ts";
-import { SANDBOX_ZIPS } from "../validation.ts";
+import { ALL_SANDBOX_ZIPS } from "../validation.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INGEST_ROOT = resolve(__dirname, "../../../../data/ingest/census-acs");
@@ -43,8 +43,7 @@ function loadDotEnv(): void {
 
 loadDotEnv();
 
-const ORLANDO_SANDBOX_ZIPS = ["32801", "32803", "32804", "32806"] as const;
-const DEFAULT_ZIPS = [...SANDBOX_ZIPS, ...ORLANDO_SANDBOX_ZIPS];
+const DEFAULT_ZIPS = [...ALL_SANDBOX_ZIPS];
 
 export type { CensusAcsNormalizedBundle };
 

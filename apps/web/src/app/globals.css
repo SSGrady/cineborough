@@ -1667,6 +1667,45 @@ body {
 .bottom-bar__date {
   font-weight: 500;
   color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.bottom-bar__mock-tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #b45309;
+  background: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.3rem;
+}
+
+.bottom-bar__legend-gradient-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.bottom-bar__legend-gradient {
+  width: 7rem;
+  height: 0.65rem;
+  border-radius: 2px;
+  border: 1px solid var(--border);
+}
+
+.bottom-bar__legend-bound {
+  font-size: 0.6875rem;
+  color: var(--text-muted, #64748b);
+  white-space: nowrap;
+}
+
+.map-tooltip__mock {
+  font-size: 0.65rem;
+  color: #b45309;
 }
 
 .bottom-bar__legend {

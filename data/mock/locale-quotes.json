@@ -3,37 +3,128 @@
     {
       "zip": "22201",
       "neighborhood": "Arlington (Clarendon)",
-      "text": "It has better access to green and blue spaces than most big cities though.",
+      "text": "Representative neighborhood vibe for Arlington (Clarendon) — locale quotes pending curation.",
       "source": "r/washingtondc",
-      "primaryVibe": "Walkable nightlife hub"
+      "primaryVibe": "Clarendon"
     },
     {
       "zip": "22202",
       "neighborhood": "Arlington (Crystal City)",
-      "text": "Amazon HQ2 changed the vibe — lots of new restaurants and bike paths along the waterfront.",
-      "source": "r/arlingtonva",
-      "primaryVibe": "Transit-connected corporate edge"
+      "text": "Representative neighborhood vibe for Arlington (Crystal City) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Crystal City"
+    },
+    {
+      "zip": "22203",
+      "neighborhood": "Arlington (Ballston)",
+      "text": "Representative neighborhood vibe for Arlington (Ballston) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Ballston"
     },
     {
       "zip": "22204",
       "neighborhood": "Arlington (Glencarlyn)",
-      "text": "Quieter than Clarendon but you still get Metro access without the premium price tag.",
-      "source": "r/arlingtonva",
-      "primaryVibe": "Quiet suburban value play"
+      "text": "Representative neighborhood vibe for Arlington (Glencarlyn) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Glencarlyn"
     },
     {
-      "zip": "20814",
-      "neighborhood": "Bethesda",
-      "text": "Walkable downtown, great schools, and you're on the Red Line in minutes.",
-      "source": "r/montgomerycountymd",
-      "primaryVibe": "Affluent walkable suburb"
+      "zip": "22205",
+      "neighborhood": "Arlington (Cherrydale)",
+      "text": "Representative neighborhood vibe for Arlington (Cherrydale) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Cherrydale"
+    },
+    {
+      "zip": "22206",
+      "neighborhood": "Arlington (South)",
+      "text": "Representative neighborhood vibe for Arlington (South) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "South"
+    },
+    {
+      "zip": "22207",
+      "neighborhood": "Arlington (Yorktown)",
+      "text": "Representative neighborhood vibe for Arlington (Yorktown) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Yorktown"
     },
     {
       "zip": "20001",
       "neighborhood": "Washington DC (Shaw/U Street)",
-      "text": "The restaurant scene is incredible but prices feel stretched compared to five years ago.",
+      "text": "Representative neighborhood vibe for Washington DC (Shaw/U Street) — locale quotes pending curation.",
       "source": "r/washingtondc",
-      "primaryVibe": "Urban culture corridor"
+      "primaryVibe": "Shaw/U Street"
+    },
+    {
+      "zip": "20002",
+      "neighborhood": "Washington DC (Capitol Hill)",
+      "text": "Representative neighborhood vibe for Washington DC (Capitol Hill) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Capitol Hill"
+    },
+    {
+      "zip": "20003",
+      "neighborhood": "Washington DC (Anacostia)",
+      "text": "Representative neighborhood vibe for Washington DC (Anacostia) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Anacostia"
+    },
+    {
+      "zip": "20009",
+      "neighborhood": "Washington DC (Adams Morgan)",
+      "text": "Representative neighborhood vibe for Washington DC (Adams Morgan) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Adams Morgan"
+    },
+    {
+      "zip": "20037",
+      "neighborhood": "Washington DC (Foggy Bottom)",
+      "text": "Representative neighborhood vibe for Washington DC (Foggy Bottom) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Foggy Bottom"
+    },
+    {
+      "zip": "22301",
+      "neighborhood": "Alexandria (Old Town)",
+      "text": "Representative neighborhood vibe for Alexandria (Old Town) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Old Town"
+    },
+    {
+      "zip": "22302",
+      "neighborhood": "Alexandria (Rosemont)",
+      "text": "Representative neighborhood vibe for Alexandria (Rosemont) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Rosemont"
+    },
+    {
+      "zip": "22304",
+      "neighborhood": "Alexandria (West End)",
+      "text": "Representative neighborhood vibe for Alexandria (West End) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "West End"
+    },
+    {
+      "zip": "20814",
+      "neighborhood": "Bethesda",
+      "text": "Representative neighborhood vibe for Bethesda — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Bethesda"
+    },
+    {
+      "zip": "20815",
+      "neighborhood": "Chevy Chase",
+      "text": "Representative neighborhood vibe for Chevy Chase — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "Chevy Chase"
+    },
+    {
+      "zip": "20816",
+      "neighborhood": "Bethesda (East)",
+      "text": "Representative neighborhood vibe for Bethesda (East) — locale quotes pending curation.",
+      "source": "r/washingtondc",
+      "primaryVibe": "East"
     }
   ]
 }

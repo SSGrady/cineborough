@@ -1,10 +1,10 @@
 {
   "source": "census-acs-5year",
   "attribution": "Demographics from U.S. Census Bureau American Community Survey 5-Year Estimates.",
-  "downloadedAt": "2026-07-11T20:18:04.292Z",
+  "downloadedAt": "2026-07-11T22:29:17.527Z",
   "vintage": "2023",
   "priorVintage": "2022",
-  "recordCount": 9,
+  "recordCount": 34,
   "records": {
     "20001": {
       "zipCode": "20001",
@@ -16,7 +16,60 @@
       "collegeDegreeRate": 77.7,
       "populationGrowthRate": -0.1,
       "incomeGrowthRate": 4.1,
-      "medianHouseholdIncome": 138730
+      "medianHouseholdIncome": 138730,
+      "medianGrossRent": 2464
+    },
+    "20002": {
+      "zipCode": "20002",
+      "name": "ZCTA5 20002",
+      "population": 70580,
+      "medianAge": 33.7,
+      "remoteWorkPct": 31.9,
+      "homeowners25to44Pct": 48.2,
+      "collegeDegreeRate": 69.8,
+      "populationGrowthRate": 0.8,
+      "incomeGrowthRate": 6.9,
+      "medianHouseholdIncome": 114482,
+      "medianGrossRent": 2140
+    },
+    "20003": {
+      "zipCode": "20003",
+      "name": "ZCTA5 20003",
+      "population": 36194,
+      "medianAge": 34.6,
+      "remoteWorkPct": 32,
+      "homeowners25to44Pct": 44.3,
+      "collegeDegreeRate": 80.8,
+      "populationGrowthRate": 4.7,
+      "incomeGrowthRate": 2.9,
+      "medianHouseholdIncome": 159604,
+      "medianGrossRent": 2630
+    },
+    "20009": {
+      "zipCode": "20009",
+      "name": "ZCTA5 20009",
+      "population": 49997,
+      "medianAge": 34.2,
+      "remoteWorkPct": 29.7,
+      "homeowners25to44Pct": 49.1,
+      "collegeDegreeRate": 83.9,
+      "populationGrowthRate": -0.5,
+      "incomeGrowthRate": 6.2,
+      "medianHouseholdIncome": 140555,
+      "medianGrossRent": 2346
+    },
+    "20037": {
+      "zipCode": "20037",
+      "name": "ZCTA5 20037",
+      "population": 12441,
+      "medianAge": 31.3,
+      "remoteWorkPct": 38.7,
+      "homeowners25to44Pct": 34.9,
+      "collegeDegreeRate": 89.8,
+      "populationGrowthRate": 5.1,
+      "incomeGrowthRate": 4.3,
+      "medianHouseholdIncome": 98917,
+      "medianGrossRent": 2420
     },
     "20814": {
       "zipCode": "20814",
@@ -28,7 +81,34 @@
       "collegeDegreeRate": 84.3,
       "populationGrowthRate": 1.9,
       "incomeGrowthRate": 0.5,
-      "medianHouseholdIncome": 150401
+      "medianHouseholdIncome": 150401,
+      "medianGrossRent": 2329
+    },
+    "20815": {
+      "zipCode": "20815",
+      "name": "ZCTA5 20815",
+      "population": 31269,
+      "medianAge": 46.9,
+      "remoteWorkPct": 35.4,
+      "homeowners25to44Pct": 13.7,
+      "collegeDegreeRate": 85,
+      "populationGrowthRate": 0.6,
+      "incomeGrowthRate": 6.7,
+      "medianHouseholdIncome": 198243,
+      "medianGrossRent": 2408
+    },
+    "20816": {
+      "zipCode": "20816",
+      "name": "ZCTA5 20816",
+      "population": 18081,
+      "medianAge": 43.7,
+      "remoteWorkPct": 35,
+      "homeowners25to44Pct": 16.7,
+      "collegeDegreeRate": 88.8,
+      "populationGrowthRate": 4,
+      "incomeGrowthRate": 1.3,
+      "medianHouseholdIncome": 231284,
+      "medianGrossRent": 2723
     },
     "22201": {
       "zipCode": "22201",
@@ -40,7 +120,8 @@
       "collegeDegreeRate": 86.1,
       "populationGrowthRate": 1.1,
       "incomeGrowthRate": 0.9,
-      "medianHouseholdIncome": 141736
+      "medianHouseholdIncome": 141736,
+      "medianGrossRent": 2468
     },
     "22202": {
       "zipCode": "22202",
@@ -52,7 +133,21 @@
       "collegeDegreeRate": 84.3,
       "populationGrowthRate": -2.6,
       "incomeGrowthRate": 3,
-      "medianHouseholdIncome": 141933
+      "medianHouseholdIncome": 141933,
+      "medianGrossRent": 2448
+    },
+    "22203": {
+      "zipCode": "22203",
+      "name": "ZCTA5 22203",
+      "population": 25921,
+      "medianAge": 33.7,
+      "remoteWorkPct": 35.1,
+      "homeowners25to44Pct": 39,
+      "collegeDegreeRate": 78,
+      "populationGrowthRate": 0.7,
+      "incomeGrowthRate": 7.4,
+      "medianHouseholdIncome": 132402,
+      "medianGrossRent": 2318
     },
     "22204": {
       "zipCode": "22204",
@@ -64,7 +159,99 @@
       "collegeDegreeRate": 62,
       "populationGrowthRate": -0.7,
       "incomeGrowthRate": 3.4,
-      "medianHouseholdIncome": 109277
+      "medianHouseholdIncome": 109277,
+      "medianGrossRent": 1871
+    },
+    "22205": {
+      "zipCode": "22205",
+      "name": "ZCTA5 22205",
+      "population": 17566,
+      "medianAge": 42.3,
+      "remoteWorkPct": 38.7,
+      "homeowners25to44Pct": 22,
+      "collegeDegreeRate": 79.7,
+      "populationGrowthRate": -5.2,
+      "incomeGrowthRate": -6.5,
+      "medianHouseholdIncome": 192951,
+      "medianGrossRent": 1843
+    },
+    "22206": {
+      "zipCode": "22206",
+      "name": "ZCTA5 22206",
+      "population": 20678,
+      "medianAge": 35.8,
+      "remoteWorkPct": 29.4,
+      "homeowners25to44Pct": 42.1,
+      "collegeDegreeRate": 75.8,
+      "populationGrowthRate": 0.6,
+      "incomeGrowthRate": 4.4,
+      "medianHouseholdIncome": 136472,
+      "medianGrossRent": 2332
+    },
+    "22207": {
+      "zipCode": "22207",
+      "name": "ZCTA5 22207",
+      "population": 35186,
+      "medianAge": 42.5,
+      "remoteWorkPct": 34.8,
+      "homeowners25to44Pct": 20.9,
+      "collegeDegreeRate": 78.4,
+      "populationGrowthRate": 1.6,
+      "incomeGrowthRate": 4,
+      "medianHouseholdIncome": 237126,
+      "medianGrossRent": 2305
+    },
+    "22301": {
+      "zipCode": "22301",
+      "name": "ZCTA5 22301",
+      "population": 13830,
+      "medianAge": 36.9,
+      "remoteWorkPct": 32.9,
+      "homeowners25to44Pct": 36.6,
+      "collegeDegreeRate": 83.4,
+      "populationGrowthRate": 0.2,
+      "incomeGrowthRate": -0.2,
+      "medianHouseholdIncome": 188211,
+      "medianGrossRent": 2368
+    },
+    "22302": {
+      "zipCode": "22302",
+      "name": "ZCTA5 22302",
+      "population": 18277,
+      "medianAge": 39.3,
+      "remoteWorkPct": 27.9,
+      "homeowners25to44Pct": 29.8,
+      "collegeDegreeRate": 70.3,
+      "populationGrowthRate": 1.1,
+      "incomeGrowthRate": 5.8,
+      "medianHouseholdIncome": 127037,
+      "medianGrossRent": 2039
+    },
+    "22304": {
+      "zipCode": "22304",
+      "name": "ZCTA5 22304",
+      "population": 48577,
+      "medianAge": 37.5,
+      "remoteWorkPct": 21.3,
+      "homeowners25to44Pct": 31.3,
+      "collegeDegreeRate": 59,
+      "populationGrowthRate": -2.3,
+      "incomeGrowthRate": -0.6,
+      "medianHouseholdIncome": 97629,
+      "medianGrossRent": 1934
+    },
+    "32789": {
+      "zipCode": "32789",
+      "name": "ZCTA5 32789",
+      "population": 26884,
+      "medianAge": 44.4,
+      "remoteWorkPct": 24.8,
+      "homeowners25to44Pct": 21.1,
+      "collegeDegreeRate": 62.7,
+      "populationGrowthRate": 0.5,
+      "incomeGrowthRate": -0.9,
+      "medianHouseholdIncome": 100213,
+      "medianGrossRent": 1667
     },
     "32801": {
       "zipCode": "32801",
@@ -76,7 +263,8 @@
       "collegeDegreeRate": 63.1,
       "populationGrowthRate": 10,
       "incomeGrowthRate": 2.6,
-      "medianHouseholdIncome": 77626
+      "medianHouseholdIncome": 77626,
+      "medianGrossRent": 1773
     },
     "32803": {
       "zipCode": "32803",
@@ -88,7 +276,8 @@
       "collegeDegreeRate": 58.6,
       "populationGrowthRate": 2.9,
       "incomeGrowthRate": 9.6,
-      "medianHouseholdIncome": 101401
+      "medianHouseholdIncome": 101401,
+      "medianGrossRent": 1823
     },
     "32804": {
       "zipCode": "32804",
@@ -100,7 +289,21 @@
       "collegeDegreeRate": 61.4,
       "populationGrowthRate": 2.6,
       "incomeGrowthRate": 4.4,
-      "medianHouseholdIncome": 113466
+      "medianHouseholdIncome": 113466,
+      "medianGrossRent": 1717
+    },
+    "32805": {
+      "zipCode": "32805",
+      "name": "ZCTA5 32805",
+      "population": 18085,
+      "medianAge": 46.8,
+      "remoteWorkPct": 8.3,
+      "homeowners25to44Pct": 11.8,
+      "collegeDegreeRate": 16.2,
+      "populationGrowthRate": 1.7,
+      "incomeGrowthRate": 1.4,
+      "medianHouseholdIncome": 39425,
+      "medianGrossRent": 1112
     },
     "32806": {
       "zipCode": "32806",
@@ -112,7 +315,138 @@
       "collegeDegreeRate": 55.1,
       "populationGrowthRate": -1.9,
       "incomeGrowthRate": -2.7,
-      "medianHouseholdIncome": 86653
+      "medianHouseholdIncome": 86653,
+      "medianGrossRent": 1500
+    },
+    "32807": {
+      "zipCode": "32807",
+      "name": "ZCTA5 32807",
+      "population": 34933,
+      "medianAge": 36.3,
+      "remoteWorkPct": 10.9,
+      "homeowners25to44Pct": 28.5,
+      "collegeDegreeRate": 25,
+      "populationGrowthRate": -1.5,
+      "incomeGrowthRate": 4.5,
+      "medianHouseholdIncome": 59583,
+      "medianGrossRent": 1471
+    },
+    "32814": {
+      "zipCode": "32814",
+      "name": "ZCTA5 32814",
+      "population": 9348,
+      "medianAge": 36.1,
+      "remoteWorkPct": 27.4,
+      "homeowners25to44Pct": 30.1,
+      "collegeDegreeRate": 81.3,
+      "populationGrowthRate": -1.6,
+      "incomeGrowthRate": 4.9,
+      "medianHouseholdIncome": 129712,
+      "medianGrossRent": 2224
+    },
+    "32819": {
+      "zipCode": "32819",
+      "name": "ZCTA5 32819",
+      "population": 28399,
+      "medianAge": 39.7,
+      "remoteWorkPct": 16.8,
+      "homeowners25to44Pct": 19.8,
+      "collegeDegreeRate": 50.5,
+      "populationGrowthRate": 2.1,
+      "incomeGrowthRate": 9.4,
+      "medianHouseholdIncome": 94386,
+      "medianGrossRent": 1947
+    },
+    "32822": {
+      "zipCode": "32822",
+      "name": "ZCTA5 32822",
+      "population": 67636,
+      "medianAge": 37.8,
+      "remoteWorkPct": 9.1,
+      "homeowners25to44Pct": 19.4,
+      "collegeDegreeRate": 26.3,
+      "populationGrowthRate": -1,
+      "incomeGrowthRate": 2.7,
+      "medianHouseholdIncome": 52944,
+      "medianGrossRent": 1609
+    },
+    "32825": {
+      "zipCode": "32825",
+      "name": "ZCTA5 32825",
+      "population": 62035,
+      "medianAge": 35.7,
+      "remoteWorkPct": 17.5,
+      "homeowners25to44Pct": 29.6,
+      "collegeDegreeRate": 34.3,
+      "populationGrowthRate": -1.6,
+      "incomeGrowthRate": 2.1,
+      "medianHouseholdIncome": 79942,
+      "medianGrossRent": 1738
+    },
+    "32828": {
+      "zipCode": "32828",
+      "name": "ZCTA5 32828",
+      "population": 69937,
+      "medianAge": 36.5,
+      "remoteWorkPct": 20.2,
+      "homeowners25to44Pct": 34.5,
+      "collegeDegreeRate": 52.3,
+      "populationGrowthRate": 0.2,
+      "incomeGrowthRate": 4.2,
+      "medianHouseholdIncome": 99927,
+      "medianGrossRent": 1830
+    },
+    "32832": {
+      "zipCode": "32832",
+      "name": "ZCTA5 32832",
+      "population": 34865,
+      "medianAge": 35.9,
+      "remoteWorkPct": 22.3,
+      "homeowners25to44Pct": 44.3,
+      "collegeDegreeRate": 54.3,
+      "populationGrowthRate": 12,
+      "incomeGrowthRate": 4.1,
+      "medianHouseholdIncome": 115398,
+      "medianGrossRent": 2186
+    },
+    "32835": {
+      "zipCode": "32835",
+      "name": "ZCTA5 32835",
+      "population": 49932,
+      "medianAge": 35.5,
+      "remoteWorkPct": 12.3,
+      "homeowners25to44Pct": 24.8,
+      "collegeDegreeRate": 40.7,
+      "populationGrowthRate": 0.1,
+      "incomeGrowthRate": 4.8,
+      "medianHouseholdIncome": 70183,
+      "medianGrossRent": 1764
+    },
+    "34741": {
+      "zipCode": "34741",
+      "name": "ZCTA5 34741",
+      "population": 56429,
+      "medianAge": 33.9,
+      "remoteWorkPct": 11.6,
+      "homeowners25to44Pct": 29.7,
+      "collegeDegreeRate": 27.9,
+      "populationGrowthRate": 3.6,
+      "incomeGrowthRate": 17.8,
+      "medianHouseholdIncome": 50278,
+      "medianGrossRent": 1591
+    },
+    "34747": {
+      "zipCode": "34747",
+      "name": "ZCTA5 34747",
+      "population": 27422,
+      "medianAge": 37.5,
+      "remoteWorkPct": 21.3,
+      "homeowners25to44Pct": 26.7,
+      "collegeDegreeRate": 47.6,
+      "populationGrowthRate": 5.4,
+      "incomeGrowthRate": 2.6,
+      "medianHouseholdIncome": 83141,
+      "medianGrossRent": 1812
     }
   }
 }
