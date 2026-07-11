@@ -66,6 +66,10 @@ Hope-Core Discovery
 └── College Degree Rate
 ```
 
+## Property-Level Valuation (Level 3)
+
+See [property-valuation.md](./property-valuation.md) for offer ranges, renovation tiers, calculation breakdown, and comparable sales schema. Mock fixtures in `data/mock/properties.json`.
+
 ## Zip-Level Signals Panel (Level 2)
 
 When a ZIP is selected, show two cards:

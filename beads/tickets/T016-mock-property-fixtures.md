@@ -1,7 +1,7 @@
 ---
 id: T016
 title: Mock property fixtures
-status: open
+status: done
 type: feature
 priority: P1
 epic: E004
@@ -15,3 +15,5 @@ acceptance:
 ---
 
 # T016 — Mock Property Fixtures
+
+Completed with mock fixtures for 22201, 22202, 22204 and property-valuation schema.

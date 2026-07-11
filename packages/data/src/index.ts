@@ -8,3 +8,4 @@ export * from "./dc-metro-geojson";
 export * from "./locale-quotes";
 export * from "./paths";
 export * from "./validation";
+export * from "./property-valuation";

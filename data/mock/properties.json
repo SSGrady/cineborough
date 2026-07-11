@@ -1,0 +1,180 @@
+{
+  "updatedAt": "2026-07-11",
+  "properties": [
+    {
+      "id": "prop-22201-highland",
+      "address": "1230 N Highland St",
+      "city": "Arlington",
+      "state": "VA",
+      "zipCode": "22201",
+      "listPrice": 349900,
+      "bedrooms": 3,
+      "bathrooms": 2,
+      "sqft": 1420,
+      "lotSqft": 3200,
+      "breakdown": {
+        "marketPsf": 612,
+        "similarHomesPsf": 585,
+        "forecastAdjustedValue": 318000,
+        "purchaseTrendValue": 305000
+      },
+      "offerRangesAsIs": {
+        "conservative": 292000,
+        "fair": 307000,
+        "competitive": 316000
+      },
+      "comparables": [
+        {
+          "address": "1205 N Highland St",
+          "price": 365000,
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "sqft": 1380,
+          "lotSqft": 3100,
+          "pricePerSqft": 264,
+          "status": "Sold"
+        },
+        {
+          "address": "1310 N Quinn St",
+          "price": 342500,
+          "bedrooms": 3,
+          "bathrooms": 1.5,
+          "sqft": 1290,
+          "lotSqft": 2800,
+          "pricePerSqft": 266,
+          "status": "Sold"
+        },
+        {
+          "address": "1145 N Irving St",
+          "price": 389000,
+          "bedrooms": 4,
+          "bathrooms": 2.5,
+          "sqft": 1560,
+          "lotSqft": 3500,
+          "pricePerSqft": 249,
+          "status": "Pending"
+        },
+        {
+          "address": "1255 N Danville St",
+          "price": 329000,
+          "bedrooms": 2,
+          "bathrooms": 2,
+          "sqft": 1180,
+          "lotSqft": 2600,
+          "pricePerSqft": 279,
+          "status": "Active"
+        }
+      ]
+    },
+    {
+      "id": "prop-22202-eads",
+      "address": "1600 S Eads St",
+      "city": "Arlington",
+      "state": "VA",
+      "zipCode": "22202",
+      "listPrice": 425000,
+      "bedrooms": 2,
+      "bathrooms": 2,
+      "sqft": 1185,
+      "lotSqft": 0,
+      "breakdown": {
+        "marketPsf": 548,
+        "similarHomesPsf": 522,
+        "forecastAdjustedValue": 398000,
+        "purchaseTrendValue": 385000
+      },
+      "offerRangesAsIs": {
+        "conservative": 358000,
+        "fair": 372000,
+        "competitive": 382000
+      },
+      "comparables": [
+        {
+          "address": "1515 S Eads St",
+          "price": 410000,
+          "bedrooms": 2,
+          "bathrooms": 2,
+          "sqft": 1150,
+          "lotSqft": 0,
+          "pricePerSqft": 357,
+          "status": "Sold"
+        },
+        {
+          "address": "1700 S Eads St",
+          "price": 438000,
+          "bedrooms": 2,
+          "bathrooms": 2,
+          "sqft": 1220,
+          "lotSqft": 0,
+          "pricePerSqft": 359,
+          "status": "Sold"
+        },
+        {
+          "address": "1400 S Joyce St",
+          "price": 399000,
+          "bedrooms": 2,
+          "bathrooms": 1,
+          "sqft": 1080,
+          "lotSqft": 0,
+          "pricePerSqft": 369,
+          "status": "Active"
+        }
+      ]
+    },
+    {
+      "id": "prop-22204-lee",
+      "address": "5140 Lee Hwy",
+      "city": "Arlington",
+      "state": "VA",
+      "zipCode": "22204",
+      "listPrice": 389000,
+      "bedrooms": 4,
+      "bathrooms": 2.5,
+      "sqft": 1680,
+      "lotSqft": 6200,
+      "breakdown": {
+        "marketPsf": 398,
+        "similarHomesPsf": 372,
+        "forecastAdjustedValue": 362000,
+        "purchaseTrendValue": 348000
+      },
+      "offerRangesAsIs": {
+        "conservative": 328000,
+        "fair": 342000,
+        "competitive": 352000
+      },
+      "comparables": [
+        {
+          "address": "5200 Lee Hwy",
+          "price": 375000,
+          "bedrooms": 4,
+          "bathrooms": 2,
+          "sqft": 1620,
+          "lotSqft": 5800,
+          "pricePerSqft": 231,
+          "status": "Sold"
+        },
+        {
+          "address": "5012 Lee Hwy",
+          "price": 402000,
+          "bedrooms": 3,
+          "bathrooms": 2.5,
+          "sqft": 1740,
+          "lotSqft": 6400,
+          "pricePerSqft": 231,
+          "status": "Sold"
+        },
+        {
+          "address": "5301 Lee Hwy",
+          "price": 365000,
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "sqft": 1550,
+          "lotSqft": 5500,
+          "pricePerSqft": 235,
+          "status": "Pending"
+        }
+      ]
+    }
+  ]
+}

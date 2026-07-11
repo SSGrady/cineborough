@@ -119,6 +119,75 @@ export interface MetricLayerDefinition {
   category: "popular" | "investor" | "hope-core";
 }
 
+/** Property-level valuation — see docs/schema/property-valuation.md */
+export interface CalculationBreakdown {
+  marketPsf: number;
+  similarHomesPsf: number;
+  forecastAdjustedValue: number;
+  purchaseTrendValue: number;
+}
+
+export interface OfferRangesAsIs {
+  conservative: number;
+  fair: number;
+  competitive: number;
+}
+
+export interface ComparableSale {
+  address: string;
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  sqft: number;
+  lotSqft: number;
+  pricePerSqft: number;
+  status: "Sold" | "Pending" | "Active" | string;
+}
+
+export interface PropertyRecord {
+  id: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  listPrice: number;
+  bedrooms: number;
+  bathrooms: number;
+  sqft: number;
+  lotSqft: number;
+  breakdown: CalculationBreakdown;
+  offerRangesAsIs: OfferRangesAsIs;
+  comparables: ComparableSale[];
+}
+
+export interface PropertyCollection {
+  updatedAt: string;
+  properties: PropertyRecord[];
+}
+
+export type RenovationTierId = "off" | "light" | "full" | "stud";
+
+export interface RenovationTier {
+  id: RenovationTierId;
+  label: string;
+  costPerSqft: number;
+}
+
+export interface ComputedOfferRanges {
+  conservative: number;
+  fair: number;
+  competitive: number;
+  listPrice: number;
+  renovationCost: number;
+}
+
+export const RENOVATION_TIERS: RenovationTier[] = [
+  { id: "off", label: "Off (as-is)", costPerSqft: 0 },
+  { id: "light", label: "Light", costPerSqft: 35 },
+  { id: "full", label: "Full", costPerSqft: 65 },
+  { id: "stud", label: "Stud", costPerSqft: 100 },
+];
+
 export const METRIC_LAYERS: MetricLayerDefinition[] = [
   { key: "opportunityScore", label: "Opportunity Index", unit: "0–100", category: "popular" },
   { key: "medianHomeValue", label: "Home Value", unit: "$", category: "popular" },
