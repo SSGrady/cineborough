@@ -8,3 +8,8 @@ export { Sidebar } from "./Sidebar";
 export { ZipDetailPanel } from "./ZipDetailPanel";
 export { CinematicDiscovery } from "./CinematicDiscovery";
 export { LocaleQuoteCard } from "./LocaleQuoteCard";
+export { OfferRange } from "./OfferRange";
+export { RenovationPills } from "./RenovationPills";
+export { CalculationBreakdownPanel } from "./CalculationBreakdownPanel";
+export { ComparableSalesTable } from "./ComparableSalesTable";
+export { PropertyValuationPanel } from "./PropertyValuationPanel";

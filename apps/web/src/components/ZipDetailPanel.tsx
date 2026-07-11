@@ -1,4 +1,4 @@
-import type { DcMetroFeatureProperties, ZipMetrics } from "@cineborough/data";
+import type { DcMetroFeatureProperties, PropertyRecord, ZipMetrics } from "@cineborough/data";
 import { formatCurrency, formatPercent } from "@/lib/format";
 
 interface ZipDetailPanelProps {
@@ -9,6 +9,9 @@ interface ZipDetailPanelProps {
   embedded?: boolean;
   /** Inline vibe/quote from unified GeoJSON feature properties */
   featureProps?: DcMetroFeatureProperties;
+  /** Mock properties in this ZIP for Level 3 drill-down */
+  properties?: PropertyRecord[];
+  onEvaluateProperty?: (propertyId: string) => void;
 }
 
 export function ZipDetailPanel({
@@ -17,6 +20,8 @@ export function ZipDetailPanel({
   onClose,
   embedded = false,
   featureProps,
+  properties = [],
+  onEvaluateProperty,
 }: ZipDetailPanelProps) {
   const psfVsMarket =
     metroAvgPsf > 0 ? ((zip.marketPsf - metroAvgPsf) / metroAvgPsf) * 100 : 0;
@@ -116,6 +121,35 @@ export function ZipDetailPanel({
             </div>
           </dl>
         </article>
+
+        {properties.length > 0 && onEvaluateProperty && (
+          <article className="zip-detail__block zip-detail__block--valuation">
+            <h3>Evaluate Property</h3>
+            <p className="zip-detail__valuation-hint">
+              Select a listing to see offer ranges, renovation adjustments, and comps.
+            </p>
+            <div className="property-chips" role="group" aria-label="Properties in ZIP">
+              {properties.map((prop) => (
+                <button
+                  key={prop.id}
+                  type="button"
+                  className="property-chip"
+                  onClick={() => onEvaluateProperty(prop.id)}
+                >
+                  <span className="property-chip__address">{prop.address}</span>
+                  <span className="property-chip__price">{formatCurrency(prop.listPrice)}</span>
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="zip-detail__evaluate-cta"
+              onClick={() => onEvaluateProperty(properties[0].id)}
+            >
+              Evaluate property →
+            </button>
+          </article>
+        )}
       </div>
     </section>
   );

@@ -4,12 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
-import { zipMetricsFromGeoJson } from "@cineborough/data";
+import { getPropertiesByZip, getPropertyById, zipMetricsFromGeoJson } from "@cineborough/data";
 import { CINEMATIC_CAMERAS } from "@cineborough/geo";
 import { MapView } from "./MapView";
 import { Sidebar, type GeographyLevel } from "./Sidebar";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
+import { PropertyValuationPanel } from "./PropertyValuationPanel";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -50,6 +51,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const zips = useMemo(() => zipMetricsFromGeoJson(geoJson), [geoJson]);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
+  const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("opportunityScore");
   const [activeSection, setActiveSection] = useState<CinematicSection>("metro");
   const [geography, setGeography] = useState<GeographyLevel>("metro");
@@ -68,6 +70,16 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (zips.length === 0) return 0;
     return zips.reduce((sum, z) => sum + z.marketPsf, 0) / zips.length;
   }, [zips]);
+
+  const zipProperties = useMemo(
+    () => (selectedZip ? getPropertiesByZip(selectedZip) : []),
+    [selectedZip],
+  );
+
+  const selectedProperty = useMemo(
+    () => (selectedPropertyId ? getPropertyById(selectedPropertyId) : undefined),
+    [selectedPropertyId],
+  );
 
   useEffect(() => {
     const root = scrollRef.current;
@@ -102,13 +114,25 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleZipSelect = useCallback((zipCode: string | null) => {
     setSelectedZip(zipCode);
+    setSelectedPropertyId(null);
     if (zipCode) {
       setActiveSection("detail");
       setGeography("zip");
     }
   }, []);
 
-  const handleCloseDetail = () => setSelectedZip(null);
+  const handleCloseDetail = () => {
+    setSelectedZip(null);
+    setSelectedPropertyId(null);
+  };
+
+  const handleEvaluateProperty = useCallback((propertyId: string) => {
+    setSelectedPropertyId(propertyId);
+    setActiveSection("detail");
+    setGeography("zip");
+  }, []);
+
+  const handleBackToZip = () => setSelectedPropertyId(null);
 
   const cameraTarget = CINEMATIC_CAMERAS[activeSection];
   const pathVisible = activeSection === "neighborhood" || activeSection === "detail";
@@ -147,7 +171,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             data-section={section.id}
             aria-current={activeSection === section.id ? "step" : undefined}
           >
-            <div className="cinematic__section-panel">
+            <div
+              className={
+                section.id === "detail" && selectedProperty
+                  ? "cinematic__section-panel cinematic__section-panel--wide"
+                  : "cinematic__section-panel"
+              }
+            >
               <span className="cinematic__section-step">
                 {index + 1} / {SCROLL_SECTIONS.length}
               </span>
@@ -171,19 +201,30 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
               {section.id === "detail" && selected && (
                 <>
-                  <ZipDetailPanel
-                    zip={selected}
-                    metroAvgPsf={metroAvgPsf}
-                    onClose={handleCloseDetail}
-                    embedded
-                    featureProps={selectedFeature}
-                  />
-                  <LocaleQuoteCard
-                    zip={selected.zip}
-                    quoteText={selectedFeature?.localQuote}
-                    primaryVibe={selectedFeature?.primaryVibe}
-                    neighborhood={selectedFeature?.neighborhoodName}
-                  />
+                  {selectedProperty ? (
+                    <PropertyValuationPanel
+                      property={selectedProperty}
+                      onBack={handleBackToZip}
+                    />
+                  ) : (
+                    <>
+                      <ZipDetailPanel
+                        zip={selected}
+                        metroAvgPsf={metroAvgPsf}
+                        onClose={handleCloseDetail}
+                        embedded
+                        featureProps={selectedFeature}
+                        properties={zipProperties}
+                        onEvaluateProperty={handleEvaluateProperty}
+                      />
+                      <LocaleQuoteCard
+                        zip={selected.zip}
+                        quoteText={selectedFeature?.localQuote}
+                        primaryVibe={selectedFeature?.primaryVibe}
+                        neighborhood={selectedFeature?.neighborhoodName}
+                      />
+                    </>
+                  )}
                 </>
               )}
             </div>

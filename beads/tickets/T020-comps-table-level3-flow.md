@@ -1,7 +1,7 @@
 ---
 id: T020
 title: Comps table + Level 3 flow
-status: open
+status: done
 type: feature
 priority: P1
 epic: E004
