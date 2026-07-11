@@ -122,7 +122,7 @@ export function Sidebar({
           ))}
         </div>
         <p className="sidebar__geo-hint">
-          Pan the map in open areas or use Explore map. Data: DC sandbox ZIPs only until national ingest ships.
+          Pinch or Ctrl+scroll to zoom the map. Drag to pan. Scroll the page for the 3-step story. Explore map unlocks full navigation.
         </p>
       </section>
 

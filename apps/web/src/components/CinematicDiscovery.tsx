@@ -57,6 +57,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [geography, setGeography] = useState<GeographyLevel>("metro");
   const [exploreMode, setExploreMode] = useState(false);
   const [geographyOverride, setGeographyOverride] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   const selected = useMemo(
     () => zips.find((z) => z.zip === selectedZip),
@@ -87,14 +88,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     const root = scrollRef.current;
     if (!root) return;
 
-    const triggers = SCROLL_SECTIONS.map((section) => {
+    const sectionTriggers = SCROLL_SECTIONS.map((section) => {
       const el = root.querySelector<HTMLElement>(`[data-section="${section.id}"]`);
       if (!el) return null;
 
       return ScrollTrigger.create({
         trigger: el,
-        start: "top 55%",
-        end: "bottom 45%",
+        start: "top center",
+        end: "bottom center",
         onEnter: () => {
           if (!exploreMode) setActiveSection(section.id);
         },
@@ -104,27 +105,41 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       });
     });
 
+    const scrubTrigger = ScrollTrigger.create({
+      trigger: root,
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 0.35,
+      onUpdate: (self) => {
+        if (!exploreMode && !geographyOverride) {
+          setScrollProgress(self.progress);
+        }
+      },
+    });
+
+    ScrollTrigger.refresh();
+
     return () => {
-      triggers.forEach((t) => t?.kill());
+      sectionTriggers.forEach((t) => t?.kill());
+      scrubTrigger.kill();
     };
-  }, [exploreMode]);
+  }, [exploreMode, geographyOverride]);
 
   useEffect(() => {
     if (exploreMode) return;
     if (activeSection === "neighborhood" || activeSection === "detail") {
       setSelectedZip((prev) => prev ?? "22201");
-      setGeography("zip");
-      setGeographyOverride(false);
-    } else if (!geographyOverride) {
-      setGeography("metro");
     }
-  }, [activeSection, exploreMode, geographyOverride]);
+  }, [activeSection, exploreMode]);
 
   const handleGeographyChange = useCallback((level: GeographyLevel) => {
     setGeography(level);
-    setGeographyOverride(level !== "metro" && level !== "zip");
+    setGeographyOverride(level !== "metro");
     if (level === "zip") {
       setSelectedZip((prev) => prev ?? "22201");
+    }
+    if (level === "metro") {
+      setGeographyOverride(false);
     }
   }, []);
 
@@ -134,6 +149,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (zipCode) {
       setActiveSection("detail");
       setGeography("zip");
+      setGeographyOverride(false);
+      setScrollProgress(1);
     }
   }, []);
 
@@ -146,6 +163,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSelectedPropertyId(propertyId);
     setActiveSection("detail");
     setGeography("zip");
+    setScrollProgress(1);
   }, []);
 
   const handleBackToZip = () => setSelectedPropertyId(null);
@@ -164,13 +182,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         zipCenter,
         exploreMode,
         cinematicSection: activeSection,
+        geographyOverride,
+        scrollProgress: geographyOverride ? null : scrollProgress,
       }),
-    [geography, zipCenter, exploreMode, activeSection],
+    [geography, zipCenter, exploreMode, activeSection, geographyOverride, scrollProgress],
   );
 
   const pathVisible =
     !exploreMode &&
-    (activeSection === "neighborhood" || activeSection === "detail");
+    !geographyOverride &&
+    (activeSection === "neighborhood" ||
+      activeSection === "detail" ||
+      scrollProgress > 0.35);
   const sidebarMode = activeSection === "metro" && !exploreMode ? "full" : "slim";
 
   useEffect(() => {
@@ -179,6 +202,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       document.body.style.overflow = "";
     };
   }, [exploreMode]);
+
+  const handleToggleExplore = useCallback(() => {
+    setExploreMode((v) => {
+      if (!v) setGeographyOverride(false);
+      return !v;
+    });
+  }, []);
 
   return (
     <div className={`cinematic${exploreMode ? " cinematic--explore" : ""}`}>
@@ -194,24 +224,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         />
       </aside>
 
-      <div className="cinematic__map" aria-hidden="true">
+      <div className="cinematic__map">
         <MapView
           geoJson={geoJson}
           activeMetric={activeMetric}
           selectedZip={selectedZip}
           onZipSelect={handleZipSelect}
           cameraTarget={cameraTarget}
+          cameraInstant={!geographyOverride && !exploreMode}
           pathVisible={pathVisible}
           exploreMode={exploreMode}
-          onToggleExploreMode={() => setExploreMode((v) => !v)}
+          onToggleExploreMode={handleToggleExplore}
         />
       </div>
 
-      <div
-        ref={scrollRef}
-        className="cinematic__scroll"
-        aria-hidden={exploreMode}
-      >
+      <div ref={scrollRef} className="cinematic__scroll" aria-hidden={exploreMode}>
         {SCROLL_SECTIONS.map((section, index) => (
           <section
             key={section.id}

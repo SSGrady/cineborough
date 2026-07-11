@@ -21,7 +21,6 @@ import {
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
 
-/** Requires NEXT_PUBLIC_MAPBOX_TOKEN in .env.local — see apps/web/.env.example */
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
 interface MapViewProps {
@@ -30,6 +29,8 @@ interface MapViewProps {
   selectedZip?: string | null;
   onZipSelect?: (zipCode: string | null) => void;
   cameraTarget?: MapCameraTarget | null;
+  /** jumpTo each frame (scroll scrub) — avoids deck.gl drift during flyTo */
+  cameraInstant?: boolean;
   pathVisible?: boolean;
   labelsVisible?: boolean;
   exploreMode?: boolean;
@@ -56,7 +57,23 @@ function formatLabelValue(key: MetricLayerKey, value: number): string {
 
 function cameraKey(target: MapCameraTarget): string {
   const [lng, lat] = target.center;
-  return `${lng.toFixed(4)},${lat.toFixed(4)},${target.zoom},${target.pitch ?? 0},${target.bearing ?? 0}`;
+  return `${lng.toFixed(5)},${lat.toFixed(5)},${target.zoom.toFixed(3)},${target.pitch ?? 0},${target.bearing ?? 0}`;
+}
+
+function applyCamera(map: mapboxgl.Map, target: MapCameraTarget, instant: boolean) {
+  const opts = {
+    center: target.center,
+    zoom: target.zoom,
+    pitch: target.pitch ?? 0,
+    bearing: target.bearing ?? 0,
+  };
+
+  if (instant || target.duration === 0) {
+    map.jumpTo(opts);
+  } else {
+    map.stop();
+    map.easeTo({ ...opts, duration: target.duration ?? 800 });
+  }
 }
 
 export function MapView({
@@ -65,6 +82,7 @@ export function MapView({
   selectedZip = null,
   onZipSelect,
   cameraTarget = null,
+  cameraInstant = false,
   pathVisible = false,
   labelsVisible = true,
   exploreMode = false,
@@ -74,8 +92,11 @@ export function MapView({
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
   const lastCameraKeyRef = useRef<string | null>(null);
+  const exploreModeRef = useRef(exploreMode);
   const [mapReady, setMapReady] = useState(false);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
+
+  exploreModeRef.current = exploreMode;
 
   const metricLabel =
     METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Opportunity Index";
@@ -187,6 +208,13 @@ export function MapView({
     return base;
   }, [choroplethLayer, pathLayer, labelLayer, pathVisible]);
 
+  const redrawDeck = useCallback(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const deck = (overlay as unknown as { _deck?: { redraw: () => void } })._deck;
+    deck?.redraw();
+  }, []);
+
   const handleClick = useCallback(
     (info: PickingInfo) => {
       const zip = (info.object?.properties as { zipCode?: string })?.zipCode;
@@ -196,28 +224,41 @@ export function MapView({
 
       const map = mapRef.current;
       if (map && info.coordinate) {
-        map.stop();
-        map.flyTo({
-          center: [info.coordinate[0], info.coordinate[1]],
-          zoom: 12.5,
-          pitch: exploreMode ? 0 : 45,
-          bearing: exploreMode ? 0 : -20,
-          duration: 900,
-        });
+        applyCamera(
+          map,
+          {
+            center: [info.coordinate[0], info.coordinate[1]],
+            zoom: 12.5,
+            pitch: exploreModeRef.current ? 0 : 60,
+            bearing: exploreModeRef.current ? 0 : -15,
+            duration: 800,
+          },
+          false,
+        );
       }
     },
-    [onZipSelect, exploreMode],
+    [onZipSelect],
   );
 
   const syncOverlay = useCallback(() => {
-    const overlay = overlayRef.current;
-    const map = mapRef.current;
-    if (!overlay || !map) return;
-    overlay.setProps({ layers, onClick: handleClick });
-    // Keep Deck.gl in sync with Mapbox camera during pan/zoom/fly
-    const deck = (overlay as unknown as { _deck?: { redraw: () => void } })._deck;
-    deck?.redraw();
-  }, [layers, handleClick]);
+    overlayRef.current?.setProps({ layers, onClick: handleClick });
+    redrawDeck();
+  }, [layers, handleClick, redrawDeck]);
+
+  const applyInteractionMode = useCallback((map: mapboxgl.Map, exploring: boolean) => {
+    map.dragPan.enable();
+    map.touchZoomRotate.enable();
+    map.touchPitch.enable();
+    map.scrollZoom.enable();
+
+    if (exploring) {
+      map.boxZoom.enable();
+      map.doubleClickZoom.enable();
+    } else {
+      map.boxZoom.disable();
+      map.doubleClickZoom.disable();
+    }
+  }, []);
 
   useEffect(() => {
     if (!MAPBOX_TOKEN || MAPBOX_TOKEN === "your_mapbox_token_here") return;
@@ -231,8 +272,9 @@ export function MapView({
       center: DC_METRO_CENTER,
       zoom: DEFAULT_ZOOM,
       dragPan: true,
-      dragRotate: true,
-      pitchWithRotate: true,
+      touchZoomRotate: true,
+      touchPitch: true,
+      cooperativeGestures: true,
     });
 
     const overlay = new MapboxOverlay({
@@ -242,22 +284,31 @@ export function MapView({
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
+
     map.on("load", () => {
-      map.scrollZoom.disable();
-      map.boxZoom.disable();
-      map.doubleClickZoom.disable();
+      applyInteractionMode(map, exploreModeRef.current);
       setMapReady(true);
     });
-    map.on("move", syncOverlay);
-    map.on("moveend", syncOverlay);
+
+    map.on("render", syncOverlay);
+
+    const onWheel = (e: WheelEvent) => {
+      if (exploreModeRef.current) return;
+      if (e.ctrlKey || e.metaKey) return;
+      window.scrollBy({ top: e.deltaY, left: e.deltaX, behavior: "auto" });
+    };
+
+    const canvas = map.getCanvas();
+    canvas.addEventListener("wheel", onWheel, { passive: true });
+
     map.addControl(overlay);
 
     mapRef.current = map;
     overlayRef.current = overlay;
 
     return () => {
-      map.off("move", syncOverlay);
-      map.off("moveend", syncOverlay);
+      canvas.removeEventListener("wheel", onWheel);
+      map.off("render", syncOverlay);
       overlay.setProps({ layers: [] });
       map.remove();
       mapRef.current = null;
@@ -273,17 +324,8 @@ export function MapView({
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
-
-    if (exploreMode) {
-      map.scrollZoom.enable();
-      map.boxZoom.enable();
-      map.doubleClickZoom.enable();
-    } else {
-      map.scrollZoom.disable();
-      map.boxZoom.disable();
-      map.doubleClickZoom.disable();
-    }
-  }, [exploreMode, mapReady]);
+    applyInteractionMode(map, exploreMode);
+  }, [exploreMode, mapReady, applyInteractionMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -293,16 +335,8 @@ export function MapView({
     if (lastCameraKeyRef.current === key) return;
     lastCameraKeyRef.current = key;
 
-    map.stop();
-    map.flyTo({
-      center: cameraTarget.center,
-      zoom: cameraTarget.zoom,
-      pitch: cameraTarget.pitch ?? 0,
-      bearing: cameraTarget.bearing ?? 0,
-      duration: cameraTarget.duration ?? 1200,
-      essential: true,
-    });
-  }, [cameraTarget, mapReady, exploreMode]);
+    applyCamera(map, cameraTarget, cameraInstant);
+  }, [cameraTarget, mapReady, exploreMode, cameraInstant]);
 
   useEffect(() => {
     if (exploreMode) {

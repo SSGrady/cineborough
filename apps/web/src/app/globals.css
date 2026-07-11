@@ -92,7 +92,8 @@ body {
   left: 280px;
   right: 0;
   bottom: 0;
-  z-index: 0;
+  z-index: 1;
+  pointer-events: auto;
 }
 
 .cinematic__map .map-view,
@@ -106,6 +107,12 @@ body {
   margin-top: 3.25rem;
   z-index: 10;
   pointer-events: none;
+  min-height: 300vh;
+}
+
+.cinematic__section:last-child {
+  min-height: 110vh;
+  padding-bottom: 3rem;
 }
 
 .cinematic--explore .cinematic__scroll {
