@@ -8,6 +8,7 @@ import type {
 } from "./types";
 import {
   normalizeForecastToFixedScore,
+  normalizeHomeValueToFixedScore,
   normalizeScores,
   normalizeToTercileScores,
 } from "./opportunity-index";
@@ -93,13 +94,18 @@ export function getRawMetricFromFeature(
 }
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
-/** Low raw values map to green (affordable homes, younger residents). */
-const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>([
-  "medianHomeValue",
-  "medianAge",
-]);
+/** Low raw values map to green (younger residents). */
+const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>(["medianAge"]);
 /** Absolute thresholds — not data-driven terciles. */
-const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>(["homePriceForecast1yr"]);
+const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>([
+  "homePriceForecast1yr",
+  "medianHomeValue",
+]);
+
+function normalizeToFixedScore(key: MetricLayerKey, value: number): number {
+  if (key === "medianHomeValue") return normalizeHomeValueToFixedScore(value);
+  return normalizeForecastToFixedScore(value);
+}
 
 export type ChoroplethPalette = "value" | "opportunity";
 
@@ -148,7 +154,7 @@ export function getChoroplethSpecFromGeoJson(
       colorByZip: new Map(
         features.map((f, i) => [
           f.properties.zipCode,
-          normalizeForecastToFixedScore(raw[i]),
+          normalizeToFixedScore(key, raw[i]),
         ]),
       ),
     };

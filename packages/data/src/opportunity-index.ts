@@ -59,6 +59,25 @@ export function normalizeForecastToFixedScore(forecastPct: number): number {
   return 85;
 }
 
+/**
+ * Fixed buyer-semantics buckets for median home value choropleth.
+ * Maps to OPPORTUNITY_COLOR_STOPS scores (85 / 55 / 20) for green / yellow / red.
+ *
+ * Edge cases: $300,000 and $750,000 are yellow (inclusive middle band).
+ */
+export const HOME_VALUE_COLOR_THRESHOLDS = {
+  /** Values below this are green (more affordable). */
+  greenMax: 300_000,
+  /** Values at or below this (and >= greenMax) are yellow (middle range). */
+  yellowMax: 750_000,
+} as const;
+
+export function normalizeHomeValueToFixedScore(homeValue: number): number {
+  if (homeValue < HOME_VALUE_COLOR_THRESHOLDS.greenMax) return 85;
+  if (homeValue <= HOME_VALUE_COLOR_THRESHOLDS.yellowMax) return 55;
+  return 20;
+}
+
 export function normalizeToTercileScores(
   values: number[],
   options?: TercileScoreOptions,

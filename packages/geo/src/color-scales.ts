@@ -157,18 +157,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        {
-          color: "#22c55e",
-          label: tercileBounds?.low ?? "More affordable",
-        },
-        {
-          color: "#eab308",
-          label: tercileBounds?.mid ?? "Mid-range",
-        },
-        {
-          color: "#ef4444",
-          label: tercileBounds?.high ?? "Higher cost",
-        },
+        { color: "#22c55e", label: "< $300,000 — More affordable" },
+        { color: "#eab308", label: "$300,000 – $750,000 — Middle range" },
+        { color: "#ef4444", label: "> $750,000 — Higher cost" },
       ],
     };
   }

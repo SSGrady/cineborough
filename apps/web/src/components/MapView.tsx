@@ -329,13 +329,7 @@ export function MapView({
       min: formatLabelValue(activeMetric, min),
       max: formatLabelValue(activeMetric, max),
       tercile: bounds
-        ? activeMetric === "medianHomeValue"
-          ? {
-              low: `< ${formatLabelValue(activeMetric, bounds.p33)} — More affordable`,
-              mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
-              high: `> ${formatLabelValue(activeMetric, bounds.p66)} — Higher cost`,
-            }
-          : activeMetric === "medianAge"
+        ? activeMetric === "medianAge"
             ? {
                 low: `≤ ${formatLabelValue(activeMetric, bounds.p33)} — Younger`,
                 mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
