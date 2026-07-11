@@ -10,9 +10,9 @@ See [ADR-005](../adr/005-data-schema-metric-taxonomy.md) for the decision record
 |-----|-------|------|------------------|------------|
 | `homePriceForecast1yr` | 1-Year Price Forecast | % | Financials | Derived (ZHVI + FHFA) |
 | `overvaluationPct` | Over / Undervaluation | % | Financials | Derived (ZHVI + ACS income) |
-| `capRate` | Cap Rate | % | Investor Metrics | Mock |
+| `capRate` | Cap Rate | % | Investor Metrics | Mock (HUD FMR ingest pending) |
 | `daysOnMarket` | Days on Market | days | Market Trends | Mock |
-| `sellerDesperationScore` | Seller Desperation Score | 0–100 | Investor Metrics | Mock (derived) |
+| `sellerDesperationScore` | Seller Desperation Score | 0–100 | Investor Metrics | Mock (derived from DOM + price cuts) |
 | `marketPsf` | Market PSF | $/sqft | Financials | Mock |
 | `homeValueGrowthYoy` | Home Value Growth YoY | % | Market Trends | ZHVI bulk |
 | `medianHomeValue` | Median Home Value | $ | Financials | ZHVI bulk |
@@ -49,6 +49,14 @@ metroPTI = metroZhvi / metroMedianHouseholdIncome
 Fallback (income unavailable): zip ZHVI premium vs metro ZHVI (`(zhvi / metroZhvi − 1) × 100`).
 
 Model confidence: 0.75 with income, 0.55 with metro ZHVI anchor, 0.45 zip-only.
+
+**National / metro overview (`build-us-metros.ts`)**
+
+- `medianHomeValue`, `homeValueGrowthYoy`: ZHVI metro bulk (`metro-latest.json`) matched to CBSA by primary city + state
+- `homePriceForecast1yr`: derived from ZHVI YoY (+ FHFA HPI when CBSA present in `fhfa-hpi/normalized/metro-latest.json`)
+- `overvaluationPct`: metro ZHVI vs US national ZHVI (income-based when ACS available at ZIP level in sandbox shards)
+- `opportunityScore`: recomputed from live forecast + mock `remoteWorkPct` baseline until metro ACS ingest
+- Still mock at metro overview: cap rate, DOM, seller desperation, PSF, walkability, hope-core demographics (except sandbox ZIP shards)
 
 ## Hope-Core Half — Neighborhood Discovery Layer
 

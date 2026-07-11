@@ -1,6 +1,6 @@
 /**
  * Builds national metro vector tile source (GeoJSONL + optional PMTiles).
- * Joins all Census CBSA boundaries with mock metrics where available.
+ * Joins all Census CBSA boundaries with live ZHVI overlay where available.
  * Run: pnpm --filter @cineborough/data build:us-metro-tiles
  * Requires tippecanoe for PMTiles: brew install tippecanoe
  */
@@ -8,7 +8,13 @@ import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { computeOpportunityScore, normalizeScores } from "./opportunity-index.ts";
+import { normalizeScores } from "./opportunity-index.ts";
+import {
+  buildBaselineFromBoundary,
+  mergeMetroLiveMetrics,
+  computeMetroOpportunityScore,
+  type MetroMetricBaseline,
+} from "./ingest/merge-metro-live-metrics.ts";
 import type { MetroGeometry } from "./types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -21,14 +27,6 @@ interface CbsaFeature {
   type: "Feature";
   properties: { GEOID: string; NAME: string };
   geometry: MetroGeometry;
-}
-
-interface MetroMetric {
-  cbsa: string;
-  name: string;
-  homePriceForecast1yr: number;
-  overvaluationPct: number;
-  remoteWorkPct: number;
 }
 
 function hexToRgb(hex: string): [number, number, number] {
@@ -69,29 +67,37 @@ function buildTileFeatures(): Array<{ type: "Feature"; properties: Record<string
     readFileSync(resolve(DATA_DIR, "cbsa-boundaries-20m.geojson"), "utf8"),
   ) as { features: CbsaFeature[] };
 
-  const metricsSource = JSON.parse(
-    readFileSync(resolve(DATA_DIR, "us-metro-metrics.json"), "utf8"),
-  ) as { metros: MetroMetric[] };
+  const mockSource = existsSync(resolve(DATA_DIR, "us-metro-metrics.json"))
+    ? (JSON.parse(
+        readFileSync(resolve(DATA_DIR, "us-metro-metrics.json"), "utf8"),
+      ) as { metros: MetroMetricBaseline[] })
+    : { metros: [] as MetroMetricBaseline[] };
 
-  const metricsByCbsa = new Map(metricsSource.metros.map((m) => [m.cbsa, m]));
-  const rawScores = boundaries.features.map((f) => {
-    const m = metricsByCbsa.get(f.properties.GEOID);
-    if (!m) return 50;
-    return computeOpportunityScore({
-      homePriceForecast1yr: m.homePriceForecast1yr,
-      overvaluationPct: m.overvaluationPct,
-      remoteWorkPct: m.remoteWorkPct,
-    });
+  const mockByCbsa = new Map(mockSource.metros.map((m) => [m.cbsa, m]));
+
+  const mergedRows = boundaries.features.map((feature) => {
+    const cbsa = feature.properties.GEOID;
+    const mock = mockByCbsa.get(cbsa);
+    const baseline = buildBaselineFromBoundary(
+      cbsa,
+      feature.properties.NAME,
+      mock?.lng ?? 0,
+      mock?.lat ?? 0,
+      mock,
+    );
+    return mergeMetroLiveMetrics(baseline);
   });
+
+  const rawScores = mergedRows.map((m) => computeMetroOpportunityScore(m));
   const normalized = normalizeScores(rawScores);
 
   return boundaries.features.map((feature, i) => {
     const cbsa = feature.properties.GEOID;
-    const metric = metricsByCbsa.get(cbsa);
+    const metric = mergedRows[i];
     const score = normalized[i];
     const fillColor = colorForNormalizedScore(score);
     const [fillR, fillG, fillB] = hexToRgb(fillColor);
-    const label = metric ? shortMetroName(metric.name) : shortMetroName(feature.properties.NAME);
+    const label = shortMetroName(metric.name || feature.properties.NAME);
 
     return {
       type: "Feature" as const,
@@ -103,7 +109,7 @@ function buildTileFeatures(): Array<{ type: "Feature"; properties: Record<string
         fillR,
         fillG,
         fillB,
-        hasMetric: metric ? 1 : 0,
+        hasMetric: metric.liveSources.zhvi ? 1 : 0,
       },
       geometry: feature.geometry,
     };

@@ -1,8 +1,6 @@
 import {
   ARLINGTON_CLARENDON_CENTER,
   CINEMATIC_CAMERAS,
-  DC_METRO_CENTER,
-  DEFAULT_ZOOM,
   type MapCameraTarget,
 } from "./color-scales";
 import { US_NATIONAL_CAMERA } from "./us-map";
@@ -15,12 +13,25 @@ export const US_ZOOM = US_NATIONAL_CAMERA.zoom;
 export type GeographyLevel = "national" | "state" | "metro" | "county" | "zip";
 export type CinematicSection = "metro" | "neighborhood" | "detail";
 
+/** Geography tabs that keep a flat, continental overview (no story camera). */
+export const OVERVIEW_GEOGRAPHY_LEVELS: GeographyLevel[] = [
+  "national",
+  "state",
+  "metro",
+  "county",
+];
+
+export function isOverviewGeography(geography: GeographyLevel): boolean {
+  return OVERVIEW_GEOGRAPHY_LEVELS.includes(geography);
+}
+
 export interface GeographyCameraOptions {
   geography: GeographyLevel;
   zipCenter?: [number, number] | null;
   exploreMode?: boolean;
   cinematicSection?: CinematicSection;
-  geographyOverride?: boolean;
+  /** User drilled into a sandbox metro — cinematic allowed */
+  sandboxCinematicActive?: boolean;
   /** DC sandbox story scroll — disabled when user pans away */
   dcStoryActive?: boolean;
   scrollProgress?: number | null;
@@ -28,27 +39,9 @@ export interface GeographyCameraOptions {
 
 const GEOGRAPHY_PRESETS: Record<GeographyLevel, MapCameraTarget> = {
   national: US_NATIONAL_CAMERA,
-  state: {
-    center: [-77.0, 38.95],
-    zoom: 8,
-    pitch: 0,
-    bearing: 0,
-    duration: 0,
-  },
-  metro: {
-    center: DC_METRO_CENTER,
-    zoom: DEFAULT_ZOOM,
-    pitch: 0,
-    bearing: 0,
-    duration: 0,
-  },
-  county: {
-    center: [-77.08, 38.88],
-    zoom: 11,
-    pitch: 20,
-    bearing: 0,
-    duration: 0,
-  },
+  state: US_NATIONAL_CAMERA,
+  metro: US_NATIONAL_CAMERA,
+  county: US_NATIONAL_CAMERA,
   zip: {
     center: ARLINGTON_CLARENDON_CENTER,
     zoom: 12.5,
@@ -93,6 +86,10 @@ export function interpolateCinematicCamera(progress: number): MapCameraTarget {
   return lerpCamera(neighborhood, detail, (p - 0.5) / 0.5);
 }
 
+/**
+ * Returns a camera target only for sandbox cinematic modes.
+ * Overview geography tabs retain the current map position (return null).
+ */
 export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarget | null {
   if (options.exploreMode) {
     return null;
@@ -102,26 +99,24 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     geography,
     zipCenter,
     cinematicSection = "metro",
-    geographyOverride = false,
+    sandboxCinematicActive = false,
     dcStoryActive = false,
     scrollProgress = null,
   } = options;
 
-  if (geographyOverride) {
-    if (geography === "zip" && zipCenter) {
-      return { ...GEOGRAPHY_PRESETS.zip, center: zipCenter, duration: 800 };
-    }
-    if (geography === "metro") {
-      return null;
-    }
-    return { ...GEOGRAPHY_PRESETS[geography], duration: 800 };
+  if (isOverviewGeography(geography)) {
+    return null;
+  }
+
+  if (geography === "zip" && zipCenter) {
+    return { ...GEOGRAPHY_PRESETS.zip, center: zipCenter, duration: 800 };
   }
 
   if (dcStoryActive && scrollProgress !== null && scrollProgress !== undefined) {
     return interpolateCinematicCamera(scrollProgress);
   }
 
-  if (geography === "metro") {
+  if (sandboxCinematicActive && geography === "metro") {
     return { ...CINEMATIC_CAMERAS[cinematicSection], duration: 800 };
   }
 

@@ -59,10 +59,16 @@ function round1(n: number): number {
   return Math.round(n * 10) / 10;
 }
 
+/** FHFA expanded file uses CBSA codes in column 0; sandbox DC maps to MSAD 11694. */
 const fhfaCodeToCbsa = new Map<string, string>();
 for (const cbsa of SANDBOX_CBSAS) {
   const mapping = SANDBOX_CBSA_FHFA_MAP[cbsa];
   if (mapping) fhfaCodeToCbsa.set(mapping.fhfaMetroCode, cbsa);
+}
+// Most metros: FHFA code equals CBSA code
+function cbsaForFhfaCode(code: string): string {
+  if (fhfaCodeToCbsa.has(code)) return fhfaCodeToCbsa.get(code)!;
+  return code;
 }
 
 async function downloadFhfaTxt(): Promise<string> {
@@ -104,7 +110,7 @@ async function parseFhfaTxt(txtPath: string): Promise<Map<string, RawFhfaRow[]>>
 
     const fields = parseFhfaLine(line);
     const fhfaMetroCode = fields[0]?.trim();
-    if (!fhfaMetroCode || !fhfaCodeToCbsa.has(fhfaMetroCode)) continue;
+    if (!fhfaMetroCode || !/^\d+$/.test(fhfaMetroCode)) continue;
 
     const year = parseNumber(fields[2]);
     const quarter = parseNumber(fields[3]);
@@ -173,15 +179,10 @@ const txtPath = await downloadFhfaTxt();
 const byMetro = await parseFhfaTxt(txtPath);
 
 const records: Record<string, FhfaMetroRecord> = {};
-for (const cbsa of SANDBOX_CBSAS) {
-  const mapping = SANDBOX_CBSA_FHFA_MAP[cbsa];
-  const rows = byMetro.get(mapping.fhfaMetroCode) ?? [];
+for (const [fhfaMetroCode, rows] of byMetro) {
+  const cbsa = cbsaForFhfaCode(fhfaMetroCode);
   const record = buildMetroRecord(cbsa, rows);
-  if (record) {
-    records[cbsa] = record;
-  } else {
-    console.warn(`No FHFA rows for CBSA ${cbsa} (FHFA code ${mapping.fhfaMetroCode})`);
-  }
+  if (record) records[cbsa] = record;
 }
 
 const latestRecord = Object.values(records)[0];
