@@ -1,7 +1,7 @@
 ---
 id: T018
 title: Renovation adjustment pills
-status: open
+status: done
 type: feature
 priority: P1
 epic: E004
