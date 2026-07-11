@@ -44,7 +44,7 @@ function colorForNormalizedScore(score: number): string {
 }
 
 function shortMetroName(name: string): string {
-  return name.split("-")[0].split(",")[0].trim();
+  return name.split(",")[0].trim();
 }
 
 function findTippecanoe(): string | null {

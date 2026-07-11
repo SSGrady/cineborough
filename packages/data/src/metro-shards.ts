@@ -1,15 +1,18 @@
 import dcMetroGeoJson from "../../../data/metros/47900.geojson";
 import orlandoMetroGeoJson from "../../../data/metros/36740.geojson";
+import sfBayMetroGeoJson from "../../../data/metros/41860.geojson";
 import type { DcMetroGeoJson } from "./types";
 import { DC_METRO_CBSA } from "./us-metros-geojson";
 
 export const ORLANDO_METRO_CBSA = "36740";
+export const SF_METRO_CBSA = "41860";
 
 const LOCAL_METRO_API_BASE = "/api/v1";
 
 const METRO_SHARD_SOURCES: Record<string, DcMetroGeoJson> = {
   [DC_METRO_CBSA]: dcMetroGeoJson as unknown as DcMetroGeoJson,
   [ORLANDO_METRO_CBSA]: orlandoMetroGeoJson as unknown as DcMetroGeoJson,
+  [SF_METRO_CBSA]: sfBayMetroGeoJson as unknown as DcMetroGeoJson,
 };
 
 const shardCache = new Map<string, DcMetroGeoJson>();

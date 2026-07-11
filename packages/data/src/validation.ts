@@ -22,6 +22,28 @@ export const SANDBOX_ZIPS = [
   "20816",
 ] as const;
 
+/** SF-Oakland-Berkeley metro sandbox ZIPs — SF neighborhoods + East Bay anchors */
+export const SF_BAY_SANDBOX_ZIPS = [
+  "94102",
+  "94103",
+  "94107",
+  "94109",
+  "94110",
+  "94114",
+  "94117",
+  "94122",
+  "94123",
+  "94131",
+  "94601",
+  "94607",
+  "94611",
+  "94704",
+  "94705",
+  "94596",
+  "94520",
+  "94549",
+] as const;
+
 /** Orlando metro sandbox ZIPs */
 export const ORLANDO_SANDBOX_ZIPS = [
   "32801",
@@ -43,7 +65,11 @@ export const ORLANDO_SANDBOX_ZIPS = [
 ] as const;
 
 /** All sandbox ZCTAs for ACS / ZHVI zip ingest */
-export const ALL_SANDBOX_ZIPS = [...SANDBOX_ZIPS, ...ORLANDO_SANDBOX_ZIPS] as const;
+export const ALL_SANDBOX_ZIPS = [
+  ...SANDBOX_ZIPS,
+  ...ORLANDO_SANDBOX_ZIPS,
+  ...SF_BAY_SANDBOX_ZIPS,
+] as const;
 
 function isFiniteNumber(value: unknown): value is number {
   return typeof value === "number" && Number.isFinite(value);

@@ -9,7 +9,7 @@ export const FHFA_ATTRIBUTION =
   "House price momentum from FHFA House Price Index bulk data (© FHFA).";
 
 /** Sandbox CBSAs — see ADR-004 / E007 */
-export const SANDBOX_CBSAS = ["47900", "36740"] as const;
+export const SANDBOX_CBSAS = ["47900", "36740", "41860"] as const;
 
 /**
  * FHFA expanded-data metro file uses CBSA codes directly for most metros.
@@ -28,12 +28,17 @@ export const SANDBOX_CBSA_FHFA_MAP: Record<
     fhfaMetroCode: "11694",
     label: "Arlington-Alexandria-Reston, VA-WV (MSAD)",
   },
+  "41860": {
+    fhfaMetroCode: "41860",
+    label: "San Francisco-Oakland-Berkeley, CA",
+  },
 };
 
 /** Zillow Research ZHVI metro regionId for sandbox CBSAs (from metro-latest.json). */
 export const SANDBOX_CBSA_ZHVI_METRO_MAP: Record<string, string> = {
   "36740": "394943",
   "47900": "395209",
+  "41860": "395057",
 };
 
 export interface FhfaHpiSeriesPoint {

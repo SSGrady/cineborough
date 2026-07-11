@@ -50,8 +50,8 @@ function colorForNormalizedScore(score: number): string {
 }
 
 function shortMetroName(name: string, state: string): string {
-  const city = name.split("-")[0].split(",")[0].trim();
-  return state && state.length <= 2 ? `${city}, ${state}` : city;
+  const base = name.split(",")[0].trim();
+  return state && state.length <= 2 ? `${base}, ${state}` : base;
 }
 
 function polygonCentroid(geometry: MetroGeometry): { lng: number; lat: number } {

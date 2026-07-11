@@ -43,6 +43,23 @@ export const ORLANDO_METRO_CAMERA: MapCameraTarget = {
   duration: 800,
 };
 
+/** San Francisco-Oakland-Berkeley sandbox shard */
+export const SF_BAY_METRO_CENTER: [number, number] = [-122.35, 37.82];
+
+export const SF_BAY_METRO_CAMERA: MapCameraTarget = {
+  center: SF_BAY_METRO_CENTER,
+  zoom: 10.2,
+  pitch: 0,
+  bearing: 0,
+  duration: 800,
+};
+
+/** Flat overview cameras for non-DC sandbox metros (CBSA → camera) */
+export const SANDBOX_METRO_CAMERAS: Record<string, MapCameraTarget> = {
+  "36740": ORLANDO_METRO_CAMERA,
+  "41860": SF_BAY_METRO_CAMERA,
+};
+
 /** Padding-aware fit for sidebar + header — used by MapView at national scale */
 export const US_NATIONAL_FIT_PADDING = {
   top: 72,

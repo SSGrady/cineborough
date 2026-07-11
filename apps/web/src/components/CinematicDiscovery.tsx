@@ -13,6 +13,7 @@ import {
   buildNationalChoroplethFromMetros,
   DC_METRO_CBSA,
   ORLANDO_METRO_CBSA,
+  SF_METRO_CBSA,
   loadMetroShard,
   fetchMetroShard,
   sandboxCbsaForZip,
@@ -34,7 +35,7 @@ import {
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
-  ORLANDO_METRO_CAMERA,
+  SANDBOX_METRO_CAMERAS,
   CINEMATIC_CAMERAS,
   discoveryFlyoverCamera,
   type GeographyLevel,
@@ -105,7 +106,7 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   county: "County view · state aggregates (county GeoJSON pending)",
 };
 
-const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA]);
+const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA]);
 
 type DiscoveryFlyoverPhase = "flying" | "highlight";
 
@@ -353,7 +354,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSearchFlyTarget(null);
 
       if (isOverviewMode) {
-        if (regionId === DC_METRO_CBSA || regionId === ORLANDO_METRO_CBSA) {
+        if (
+          regionId === DC_METRO_CBSA ||
+          regionId === ORLANDO_METRO_CBSA ||
+          regionId === SF_METRO_CBSA
+        ) {
           setActiveSandboxCbsa(regionId);
           setSandboxDrillActive(true);
           setStoryCameraActive(regionId === DC_METRO_CBSA);
@@ -439,8 +444,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       geography,
       discoveryFlyoverActive,
       activeSandboxCbsa,
-      orlandoCbsa: ORLANDO_METRO_CBSA,
-      orlandoCamera: ORLANDO_METRO_CAMERA,
+      sandboxCameras: SANDBOX_METRO_CAMERAS,
       savedOverviewCamera: savedOverviewCameraRef.current,
       usInsetRegion,
     });
@@ -533,10 +537,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (
       sandboxDrillActive &&
       !dcStoryActive &&
-      activeSandboxCbsa === ORLANDO_METRO_CBSA &&
       geography !== "zip"
     ) {
-      return ORLANDO_METRO_CAMERA;
+      const sandboxCamera = SANDBOX_METRO_CAMERAS[activeSandboxCbsa];
+      if (sandboxCamera) return sandboxCamera;
     }
 
     return resolveMapCamera({
@@ -624,7 +628,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     prevFlyoverRef.current = false;
 
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
-      setDiscoveryMessage("Open Washington-Arlington-Alexandria or Orlando sandbox metro first");
+      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, or SF Bay) first");
       return;
     }
 
@@ -669,7 +673,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
     if (wasDiscovery && !discoveryFlyoverActive && sandboxDrillActive) {
       setExitRestoreTarget(
-        buildSandboxFlatRestore(activeSandboxCbsa, ORLANDO_METRO_CBSA, ORLANDO_METRO_CAMERA),
+        buildSandboxFlatRestore(activeSandboxCbsa, SANDBOX_METRO_CAMERAS),
       );
     }
   }, [

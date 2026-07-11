@@ -6,7 +6,7 @@
 import { writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SANDBOX_ZIPS, ORLANDO_SANDBOX_ZIPS } from "../validation.ts";
+import { SANDBOX_ZIPS, ORLANDO_SANDBOX_ZIPS, SF_BAY_SANDBOX_ZIPS } from "../validation.ts";
 import type { ZipMetricsInput } from "../validation.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -38,6 +38,27 @@ const DC_SEEDS: ZipSeed[] = [
   { zip: "20814", name: "Bethesda", state: "MD", tier: "premium" },
   { zip: "20815", name: "Chevy Chase", state: "MD", tier: "premium" },
   { zip: "20816", name: "Bethesda (East)", state: "MD", tier: "premium" },
+];
+
+const SF_BAY_SEEDS: ZipSeed[] = [
+  { zip: "94102", name: "San Francisco (Tenderloin)", state: "CA", tier: "mid" },
+  { zip: "94103", name: "San Francisco (SOMA)", state: "CA", tier: "premium" },
+  { zip: "94107", name: "San Francisco (Dogpatch)", state: "CA", tier: "premium" },
+  { zip: "94109", name: "San Francisco (Nob Hill)", state: "CA", tier: "premium" },
+  { zip: "94110", name: "San Francisco (Mission)", state: "CA", tier: "mid" },
+  { zip: "94114", name: "San Francisco (Castro)", state: "CA", tier: "premium" },
+  { zip: "94117", name: "San Francisco (Haight)", state: "CA", tier: "premium" },
+  { zip: "94122", name: "San Francisco (Sunset)", state: "CA", tier: "mid" },
+  { zip: "94123", name: "San Francisco (Marina)", state: "CA", tier: "premium" },
+  { zip: "94131", name: "San Francisco (Glen Park)", state: "CA", tier: "mid" },
+  { zip: "94601", name: "Oakland (Eastlake)", state: "CA", tier: "value" },
+  { zip: "94607", name: "Oakland (West Oakland)", state: "CA", tier: "value" },
+  { zip: "94611", name: "Oakland (Rockridge)", state: "CA", tier: "premium" },
+  { zip: "94704", name: "Berkeley (Downtown)", state: "CA", tier: "mid" },
+  { zip: "94705", name: "Berkeley (Elmwood)", state: "CA", tier: "premium" },
+  { zip: "94596", name: "Walnut Creek", state: "CA", tier: "premium" },
+  { zip: "94520", name: "Concord", state: "CA", tier: "mid" },
+  { zip: "94549", name: "Lafayette", state: "CA", tier: "premium" },
 ];
 
 const ORLANDO_SEEDS: ZipSeed[] = [
@@ -153,6 +174,7 @@ function assertSeeds(seeds: ZipSeed[], expected: readonly string[]) {
 
 assertSeeds(DC_SEEDS, SANDBOX_ZIPS);
 assertSeeds(ORLANDO_SEEDS, ORLANDO_SANDBOX_ZIPS);
+assertSeeds(SF_BAY_SEEDS, SF_BAY_SANDBOX_ZIPS);
 
 const dcCollection = {
   metro: "Washington-Arlington-Alexandria MSA",
@@ -167,8 +189,16 @@ const orlandoCollection = {
   zips: ORLANDO_SEEDS.map(buildZip),
 };
 
+const sfBayCollection = {
+  metro: "San Francisco-Oakland-Berkeley MSA",
+  cbsaCode: "41860",
+  updatedAt: "2026-07-11",
+  zips: SF_BAY_SEEDS.map(buildZip),
+};
+
 writeFileSync(resolve(MOCK_DIR, "zip-metrics.json"), `${JSON.stringify(dcCollection, null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "orlando-zip-metrics.json"), `${JSON.stringify(orlandoCollection, null, 2)}\n`, "utf8");
+writeFileSync(resolve(MOCK_DIR, "sf-bay-zip-metrics.json"), `${JSON.stringify(sfBayCollection, null, 2)}\n`, "utf8");
 
 function buildQuotes(seeds: ZipSeed[], source: string) {
   return {
@@ -184,6 +214,8 @@ function buildQuotes(seeds: ZipSeed[], source: string) {
 
 writeFileSync(resolve(MOCK_DIR, "locale-quotes.json"), `${JSON.stringify(buildQuotes(DC_SEEDS, "r/washingtondc"), null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "orlando-locale-quotes.json"), `${JSON.stringify(buildQuotes(ORLANDO_SEEDS, "r/orlando"), null, 2)}\n`, "utf8");
+writeFileSync(resolve(MOCK_DIR, "sf-bay-locale-quotes.json"), `${JSON.stringify(buildQuotes(SF_BAY_SEEDS, "r/sanfrancisco"), null, 2)}\n`, "utf8");
 
 console.info(`Wrote zip-metrics.json (${dcCollection.zips.length} ZIPs)`);
 console.info(`Wrote orlando-zip-metrics.json (${orlandoCollection.zips.length} ZIPs)`);
+console.info(`Wrote sf-bay-zip-metrics.json (${sfBayCollection.zips.length} ZIPs)`);

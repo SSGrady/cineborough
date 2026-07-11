@@ -114,11 +114,11 @@ export function buildOverviewRestoreCamera(
 /** Flat sandbox metro overview after background click or flyover exit. */
 export function buildSandboxFlatRestore(
   cbsa: string,
-  orlandoCbsa: string,
-  orlandoCamera: MapCameraTarget,
+  sandboxCameras: Record<string, MapCameraTarget>,
 ): MapCameraTarget {
-  if (cbsa === orlandoCbsa) {
-    return { ...orlandoCamera, pitch: 0, bearing: 0, duration: 1000 };
+  const camera = sandboxCameras[cbsa];
+  if (camera) {
+    return { ...camera, pitch: 0, bearing: 0, duration: 1000 };
   }
   return { ...CINEMATIC_CAMERAS.metro, pitch: 0, bearing: 0, duration: 1000 };
 }
@@ -131,8 +131,7 @@ export interface BackgroundClickRestoreOptions {
   geography: GeographyLevel;
   discoveryFlyoverActive: boolean;
   activeSandboxCbsa: string;
-  orlandoCbsa: string;
-  orlandoCamera: MapCameraTarget;
+  sandboxCameras: Record<string, MapCameraTarget>;
   savedOverviewCamera?: MapCameraTarget | null;
   usInsetRegion?: UsInsetRegion;
 }
@@ -149,8 +148,7 @@ export function buildBackgroundClickRestore(
     geography,
     discoveryFlyoverActive,
     activeSandboxCbsa,
-    orlandoCbsa,
-    orlandoCamera,
+    sandboxCameras,
     savedOverviewCamera,
     usInsetRegion = "continental",
   } = options;
@@ -166,7 +164,7 @@ export function buildBackgroundClickRestore(
 
   if (!pitched) return null;
 
-  return buildSandboxFlatRestore(activeSandboxCbsa, orlandoCbsa, orlandoCamera);
+  return buildSandboxFlatRestore(activeSandboxCbsa, sandboxCameras);
 }
 
 export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarget | null {
