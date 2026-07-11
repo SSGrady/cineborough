@@ -1,7 +1,7 @@
 ---
 id: T017
 title: Offer Range component
-status: open
+status: done
 type: feature
 priority: P1
 epic: E004
