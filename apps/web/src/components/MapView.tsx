@@ -24,6 +24,9 @@ import {
   US_FULL_BOUNDS,
   US_MAP_PROJECTION,
   US_NATIONAL_FIT_PADDING,
+  isFiniteLngLat,
+  isValidCameraTarget,
+  sanitizeLngLatPath,
   type MapCameraTarget,
 } from "@cineborough/geo";
 import type { GeographyLevel } from "@cineborough/geo";
@@ -63,6 +66,8 @@ interface MapViewProps {
   fitNationalBounds?: boolean;
   /** When false, map clicks do not tilt/fly the camera (overview regions) */
   cinematicOnSelect?: boolean;
+  /** Hide animated selection border (e.g. during discovery flyover) */
+  selectionBorderVisible?: boolean;
 }
 
 interface LabelPoint {
@@ -153,7 +158,8 @@ function formatLabelValue(key: MetricLayerKey, value: number): string {
   return value.toFixed(1);
 }
 
-function cameraKey(target: MapCameraTarget): string {
+function cameraKey(target: MapCameraTarget): string | null {
+  if (!isValidCameraTarget(target)) return null;
   const [lng, lat] = target.center;
   return `${lng.toFixed(5)},${lat.toFixed(5)},${target.zoom.toFixed(3)},${target.pitch ?? 0},${target.bearing ?? 0}`;
 }
@@ -164,6 +170,7 @@ function applyCamera(
   instant: boolean,
   programmaticRef: { current: boolean },
 ) {
+  if (!isValidCameraTarget(target)) return;
   programmaticRef.current = true;
   const opts = {
     center: target.center,
@@ -199,6 +206,7 @@ export function MapView({
   overviewMode = false,
   fitNationalBounds = false,
   cinematicOnSelect = true,
+  selectionBorderVisible = true,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -286,8 +294,11 @@ export function MapView({
   }, [geoJson, activeMetric, overviewMode, geographyLevel, mapZoom]);
 
   const selectionRings = useMemo(
-    () => (selectedZip ? extractOuterRings(geoJson, selectedZip) : []),
-    [geoJson, selectedZip],
+    () =>
+      selectedZip && selectionBorderVisible && !isOverviewView
+        ? extractOuterRings(geoJson, selectedZip)
+        : [],
+    [geoJson, selectedZip, selectionBorderVisible, isOverviewView],
   );
 
   const choroplethLayer = useMemo(() => {
@@ -387,10 +398,18 @@ export function MapView({
   }, [useMetroTiles, metroTileConfig, selectedZip, isOverviewView]);
 
   const selectionBorderLayers = useMemo(() => {
-    if (!selectedZip || selectionRings.length === 0) return [];
+    if (!selectedZip || selectionRings.length === 0 || !selectionBorderVisible || isOverviewView) {
+      return [];
+    }
 
-    const trailData = buildTrailPaths(selectionRings, trailPhase);
-    const outlineData = selectionRings.map(({ ring, regionId }) => ({ path: ring, regionId }));
+    const trailData = buildTrailPaths(selectionRings, trailPhase)
+      .map(({ path, regionId }) => ({ path: sanitizeLngLatPath(path), regionId }))
+      .filter(({ path }) => path.length >= 2);
+    const outlineData = selectionRings
+      .map(({ ring, regionId }) => ({ path: sanitizeLngLatPath(ring), regionId }))
+      .filter(({ path }) => path.length >= 2);
+
+    if (outlineData.length === 0) return [];
 
     const outline = new PathLayer({
       id: "selection-outline",
@@ -432,7 +451,7 @@ export function MapView({
     });
 
     return [outline, glow, trail];
-  }, [selectedZip, selectionRings, trailPhase, isOverviewView]);
+  }, [selectedZip, selectionRings, trailPhase, isOverviewView, selectionBorderVisible]);
 
   const labelLayer = useMemo(() => {
     if (!labelsVisible || labelData.length === 0) return null;
@@ -473,12 +492,16 @@ export function MapView({
   }, [labelData, activeMetric, labelsVisible, isOverviewView, geographyLevel, mapZoom]);
 
   const pathLayer = useMemo(() => {
-    const paths = loadTransitPaths();
+    const paths = loadTransitPaths().features.filter(
+      (feature) => sanitizeLngLatPath(feature.geometry.coordinates).length >= 2,
+    );
+    if (paths.length === 0) return null;
+
     return new PathLayer({
       id: "transit-path",
-      data: paths.features,
+      data: paths,
       pickable: false,
-      getPath: (feature) => feature.geometry.coordinates,
+      getPath: (feature) => sanitizeLngLatPath(feature.geometry.coordinates),
       getColor: [225, 29, 72, pathVisible ? 200 : 0],
       getWidth: 5,
       widthMinPixels: 3,
@@ -493,7 +516,7 @@ export function MapView({
   const layers = useMemo(() => {
     const base = useMetroTiles && metroMvtLayer ? metroMvtLayer : choroplethLayer;
     const stack: Layer[] = [base, ...selectionBorderLayers];
-    if (pathVisible) stack.push(pathLayer);
+    if (pathVisible && pathLayer) stack.push(pathLayer);
     if (labelLayer) stack.push(labelLayer);
     return stack;
   }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, labelLayer, pathVisible]);
@@ -520,6 +543,7 @@ export function MapView({
 
       const map = mapRef.current;
       if (!map || !info.coordinate || !cinematicOnSelect) return;
+      if (!isFiniteLngLat([info.coordinate[0], info.coordinate[1]])) return;
 
       applyCamera(
         map,
@@ -710,9 +734,13 @@ export function MapView({
     const pitch = map.getPitch();
     const bearing = map.getBearing();
     if (pitch > 1 || Math.abs(bearing) > 1) return;
+    const lng = map.getCenter().lng;
+    const lat = map.getCenter().lat;
+    const zoom = map.getZoom();
+    if (!Number.isFinite(lng) || !Number.isFinite(lat) || !Number.isFinite(zoom)) return;
     onOverviewCameraCaptureRef.current?.({
-      center: [map.getCenter().lng, map.getCenter().lat],
-      zoom: map.getZoom(),
+      center: [lng, lat],
+      zoom,
       pitch: 0,
       bearing: 0,
     });
@@ -739,9 +767,10 @@ export function MapView({
     const map = mapRef.current;
     if (!map || !cameraTarget || !mapReady || exploreMode) return;
     if (fitNationalBounds) return;
+    if (!isValidCameraTarget(cameraTarget)) return;
 
     const key = cameraKey(cameraTarget);
-    if (lastCameraKeyRef.current === key) return;
+    if (!key || lastCameraKeyRef.current === key) return;
     lastCameraKeyRef.current = key;
 
     applyCamera(map, cameraTarget, cameraInstant, programmaticMoveRef);

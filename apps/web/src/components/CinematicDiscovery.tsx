@@ -27,6 +27,10 @@ import {
   buildOverviewRestoreCamera,
   buildSandboxFlatRestore,
   buildBackgroundClickRestore,
+  centroidFromGeoJsonGeometry,
+  isFiniteLngLat,
+  isValidCameraTarget,
+  sanitizeCameraTarget,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
@@ -483,20 +487,29 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       (feat) => feat.properties.zipCode === selectedZip,
     );
     if (!f) return null;
-    return [f.properties.labelLng, f.properties.labelLat];
+    const { labelLng, labelLat } = f.properties;
+    if (isFiniteLngLat([labelLng, labelLat])) {
+      return [labelLng, labelLat];
+    }
+    const centroid = centroidFromGeoJsonGeometry(f.geometry);
+    return centroid ?? null;
   }, [activeShardGeoJson, selectedZip]);
 
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
 
-    if (exitRestoreTarget) return exitRestoreTarget;
+    if (exitRestoreTarget && isValidCameraTarget(exitRestoreTarget)) {
+      return exitRestoreTarget;
+    }
 
     if (discoveryFlyover) {
       const current = discoveryFlyover.results[discoveryFlyover.index];
-      if (current) return discoveryFlyoverCamera(current.center);
+      if (current && isFiniteLngLat(current.center)) {
+        return discoveryFlyoverCamera(current.center);
+      }
     }
 
-    if (searchFlyTarget) {
+    if (searchFlyTarget && isFiniteLngLat(searchFlyTarget)) {
       return {
         center: searchFlyTarget,
         zoom: 7.5,
@@ -660,7 +673,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   }, [exitRestoreTarget]);
 
   const handleOverviewCameraCapture = useCallback((camera: MapCameraTarget) => {
-    savedOverviewCameraRef.current = camera;
+    if (!isValidCameraTarget(camera)) return;
+    savedOverviewCameraRef.current = sanitizeCameraTarget(camera);
   }, []);
 
   useEffect(() => {
@@ -1028,6 +1042,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             cameraTarget={cameraTarget}
             cameraInstant={dcStoryActive}
             pathVisible={pathVisible}
+            selectionBorderVisible={!discoveryFlyoverActive}
             exploreMode={exploreMode}
             onToggleExploreMode={handleToggleExplore}
             onUserMapMove={handleUserMapMove}

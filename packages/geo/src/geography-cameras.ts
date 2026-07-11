@@ -3,6 +3,7 @@ import {
   CINEMATIC_CAMERAS,
   type MapCameraTarget,
 } from "./color-scales";
+import { isFiniteLngLat, isValidCameraTarget, sanitizeCameraTarget } from "./camera-utils";
 import { US_INSET_CAMERAS, US_NATIONAL_CAMERA, type UsInsetRegion } from "./us-map";
 
 /** Continental US center — national explore view */
@@ -60,15 +61,17 @@ function lerpCamera(
   to: MapCameraTarget,
   t: number,
 ): MapCameraTarget {
+  const safeFrom = sanitizeCameraTarget(from);
+  const safeTo = sanitizeCameraTarget(to);
   const clamped = Math.max(0, Math.min(1, t));
   return {
     center: [
-      lerp(from.center[0], to.center[0], clamped),
-      lerp(from.center[1], to.center[1], clamped),
+      lerp(safeFrom.center[0], safeTo.center[0], clamped),
+      lerp(safeFrom.center[1], safeTo.center[1], clamped),
     ],
-    zoom: lerp(from.zoom, to.zoom, clamped),
-    pitch: lerp(from.pitch ?? 0, to.pitch ?? 0, clamped),
-    bearing: lerp(from.bearing ?? 0, to.bearing ?? 0, clamped),
+    zoom: lerp(safeFrom.zoom, safeTo.zoom, clamped),
+    pitch: lerp(safeFrom.pitch ?? 0, safeTo.pitch ?? 0, clamped),
+    bearing: lerp(safeFrom.bearing ?? 0, safeTo.bearing ?? 0, clamped),
     duration: 0,
   };
 }
@@ -98,9 +101,9 @@ export function buildOverviewRestoreCamera(
   if (insetRegion !== "continental") {
     return { ...US_INSET_CAMERAS[insetRegion], pitch: 0, bearing: 0, duration: 1200 };
   }
-  const base = saved ?? US_NATIONAL_CAMERA;
+  const base = isValidCameraTarget(saved) ? saved : US_NATIONAL_CAMERA;
   return {
-    center: base.center,
+    center: [base.center[0], base.center[1]],
     zoom: base.zoom,
     pitch: 0,
     bearing: 0,
@@ -180,11 +183,7 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     scrollProgress = null,
   } = options;
 
-  if (isOverviewGeography(geography)) {
-    return null;
-  }
-
-  if (geography === "zip" && zipCenter) {
+  if (geography === "zip" && zipCenter && isFiniteLngLat(zipCenter)) {
     return { ...GEOGRAPHY_PRESETS.zip, center: zipCenter, duration: 800 };
   }
 
@@ -192,8 +191,12 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     return interpolateCinematicCamera(scrollProgress);
   }
 
-  if (sandboxCinematicActive && geography === "metro") {
+  if (sandboxCinematicActive) {
     return { ...CINEMATIC_CAMERAS[cinematicSection], duration: 800 };
+  }
+
+  if (isOverviewGeography(geography)) {
+    return null;
   }
 
   return null;

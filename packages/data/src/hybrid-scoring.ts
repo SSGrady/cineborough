@@ -149,6 +149,49 @@ export function rankNeighborhoods(
   return scored.slice(0, topN).map((entry, i) => ({ ...entry, rank: i + 1 }));
 }
 
+function isFiniteLngLat(coord: unknown): coord is [number, number] {
+  return (
+    Array.isArray(coord) &&
+    coord.length >= 2 &&
+    Number.isFinite(coord[0]) &&
+    Number.isFinite(coord[1])
+  );
+}
+
+function centroidFromGeometry(
+  geometry: DcMetroGeoJson["features"][number]["geometry"],
+): [number, number] | null {
+  const ring =
+    geometry.type === "Polygon"
+      ? geometry.coordinates[0]
+      : geometry.coordinates[0]?.[0];
+  if (!ring || ring.length < 3) return null;
+
+  const n =
+    ring[0][0] === ring[ring.length - 1][0] && ring[0][1] === ring[ring.length - 1][1]
+      ? ring.length - 1
+      : ring.length;
+  if (n <= 0) return null;
+
+  let sumLng = 0;
+  let sumLat = 0;
+  for (let i = 0; i < n; i++) {
+    sumLng += ring[i][0];
+    sumLat += ring[i][1];
+  }
+  return [sumLng / n, sumLat / n];
+}
+
+function featureCenter(
+  feature: DcMetroGeoJson["features"][number],
+): [number, number] {
+  const { labelLng, labelLat } = feature.properties;
+  if (isFiniteLngLat([labelLng, labelLat])) {
+    return [labelLng, labelLat];
+  }
+  return centroidFromGeometry(feature.geometry) ?? [-77.0369, 38.9072];
+}
+
 function buildRankedEntry(
   feature: DcMetroGeoJson["features"][number],
   composite: number,
@@ -162,7 +205,7 @@ function buildRankedEntry(
     state: props.state,
     score: Math.round(composite * 10) / 10,
     rank: 0,
-    center: [props.labelLng, props.labelLat],
+    center: featureCenter(feature),
     breakdown,
     metrics: featurePropertiesToZipMetrics(props),
     passedFilters: true,

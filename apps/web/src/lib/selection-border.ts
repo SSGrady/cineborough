@@ -71,9 +71,9 @@ function buildRingArc(ring: LngLat[]): RingArc {
   return { points, cumulative, total: cumulative[n] };
 }
 
-function sampleAtDistance(arc: RingArc, distance: number): LngLat {
+function sampleAtDistance(arc: RingArc, distance: number): LngLat | null {
   if (arc.total <= 0 || arc.points.length === 0) {
-    return arc.points[0] ?? [0, 0];
+    return arc.points.find((point) => Number.isFinite(point[0]) && Number.isFinite(point[1])) ?? null;
   }
 
   const d = Math.max(0, Math.min(arc.total, distance));
@@ -90,6 +90,15 @@ function sampleAtDistance(arc: RingArc, distance: number): LngLat {
   const a = arc.points[i];
   const b = arc.points[(i + 1) % arc.points.length];
 
+  if (
+    !Number.isFinite(a[0]) ||
+    !Number.isFinite(a[1]) ||
+    !Number.isFinite(b[0]) ||
+    !Number.isFinite(b[1])
+  ) {
+    return null;
+  }
+
   return [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])];
 }
 
@@ -99,13 +108,16 @@ function sampleAtDistance(arc: RingArc, distance: number): LngLat {
  */
 export function trailSegmentAlongRing(ring: LngLat[], progress: number): LngLat[] {
   const arc = buildRingArc(ring);
-  if (arc.points.length < 2 || arc.total <= 0) return arc.points;
+  if (arc.points.length < 2 || arc.total <= 0) return [];
 
   const clamped = Math.max(0, Math.min(0.9999, progress));
   const tiny = arc.total * TINY_TRAIL_FRACTION;
 
   if (clamped <= 0) {
-    return [sampleAtDistance(arc, 0), sampleAtDistance(arc, tiny)];
+    const start = sampleAtDistance(arc, 0);
+    const end = sampleAtDistance(arc, tiny);
+    if (!start || !end) return [];
+    return [start, end];
   }
 
   const headDistance = clamped * arc.total;
@@ -115,10 +127,11 @@ export function trailSegmentAlongRing(ring: LngLat[], progress: number): LngLat[
   const segment: LngLat[] = [];
 
   for (let i = 0; i <= steps; i++) {
-    segment.push(sampleAtDistance(arc, (trailEnd * i) / steps));
+    const point = sampleAtDistance(arc, (trailEnd * i) / steps);
+    if (point) segment.push(point);
   }
 
-  return segment;
+  return segment.length >= 2 ? segment : [];
 }
 
 export function buildTrailPaths(
