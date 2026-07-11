@@ -13,7 +13,6 @@ import {
   loadTransitPaths,
   METRIC_LAYERS,
   getMetroTileConfig,
-  isMetroTilesEnabled,
 } from "@cineborough/data";
 import {
   colorForNormalizedScore,
@@ -216,7 +215,9 @@ export function MapView({
     () => (isOverviewView ? getMetroTileConfig(METRO_TILES_URL) : null),
     [isOverviewView],
   );
-  const useMetroTiles = isOverviewView && isMetroTilesEnabled(METRO_TILES_URL);
+  // Overview uses in-memory GeoJSON (945 CBSAs) for metric-aware choropleth fills.
+  // MVT tiles bake opportunity-score colors only and were not rendering polygon fills.
+  const useMetroTiles = false;
 
   const metricLabel =
     METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Opportunity Index";
@@ -262,17 +263,17 @@ export function MapView({
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
+        const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
 
-        if (props?.fillColorRgb) {
+        // Overview must recolor per active metric; baked fillColorRgb is opp-score only.
+        if (!isOverviewView && props?.fillColorRgb) {
           const rgb = props.fillColorRgb as [number, number, number];
-          const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
           return [...rgb, alpha];
         }
 
         const score = zip ? (colorByZip.get(zip) ?? 0) : 0;
         const hex = colorForNormalizedScore(score);
         const [r, g, b] = hexToRgb(hex);
-        const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
         return [r, g, b, alpha];
       },
       getLineColor: (feature) => {
