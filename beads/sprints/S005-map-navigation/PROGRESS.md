@@ -7,7 +7,7 @@ Last updated: 2026-07-11
 - [x] **T022** — Deck.gl `interleaved: false`, redraw on move, stop() before flyTo
 - [x] **T023** — Explore map toggle; pointer-events pass-through on scroll track
 - [x] **T024** — National/State/County/Metro/Zip camera presets
-- [ ] **T025** — Second mock metro (e.g. Orlando) for pan-away demo
+- [x] **T025** — Orlando metro shard (4 ZIPs) + `loadMetroShardsGeoJson()` merge loader
 - [ ] **T026** — Document vector tile strategy for 3,100+ metros
 
 ## Notes
@@ -23,4 +23,4 @@ None for T022–T024.
 
 ## Velocity
 
-3/5 tickets done (60%).
+4/5 tickets done (80%).

@@ -32,6 +32,17 @@ export const US_NATIONAL_CAMERA: MapCameraTarget = {
   duration: 800,
 };
 
+/** Orlando-Kissimmee-Sanford sandbox shard */
+export const ORLANDO_METRO_CENTER: [number, number] = [-81.3792, 28.5383];
+
+export const ORLANDO_METRO_CAMERA: MapCameraTarget = {
+  center: ORLANDO_METRO_CENTER,
+  zoom: 10.5,
+  pitch: 0,
+  bearing: 0,
+  duration: 800,
+};
+
 /** Padding-aware fit for sidebar + header — used by MapView at national scale */
 export const US_NATIONAL_FIT_PADDING = {
   top: 72,

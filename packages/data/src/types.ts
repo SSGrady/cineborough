@@ -90,10 +90,12 @@ export interface DcMetroFeature {
 
 export interface DcMetroGeoJsonMetadata {
   metro: string;
+  cbsaCode?: string;
   dataAsOf: string;
   dataAsOfLabel: string;
   sandboxZips: string[];
   generatedAt: string;
+  shards?: Array<{ cbsaCode: string; metro: string; sandboxZips: string[] }>;
 }
 
 export interface DcMetroGeoJson {

@@ -10,5 +10,5 @@
     "isolatedModules": true
   },
   "include": ["src/**/*"],
-  "exclude": ["src/build-geojson.ts", "src/build-us-metros.ts"]
+  "exclude": ["src/build-geojson.ts", "src/build-orlando-geojson.ts", "src/build-metro-shard.ts", "src/build-us-metros.ts"]
 }

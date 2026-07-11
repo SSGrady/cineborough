@@ -11,6 +11,7 @@
   "scripts": {
     "typecheck": "tsc --noEmit",
     "build:geojson": "node --experimental-strip-types src/build-geojson.ts",
+    "build:orlando-geojson": "node --experimental-strip-types src/build-orlando-geojson.ts",
     "build:us-metros": "node --experimental-strip-types src/build-us-metros.ts"
   },
   "devDependencies": {

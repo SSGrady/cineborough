@@ -1,0 +1,37 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "zip": "32801", "name": "Orlando (Downtown)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-81.392, 28.528], [-81.368, 28.528], [-81.368, 28.548], [-81.392, 28.548], [-81.392, 28.528]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "32803", "name": "Orlando (Colonialtown)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-81.368, 28.548], [-81.344, 28.548], [-81.344, 28.568], [-81.368, 28.568], [-81.368, 28.548]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "32804", "name": "Orlando (College Park)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-81.392, 28.548], [-81.368, 28.548], [-81.368, 28.568], [-81.392, 28.568], [-81.392, 28.548]]]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": { "zip": "32806", "name": "Orlando (Bellevue Heights)" },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [[[-81.368, 28.528], [-81.344, 28.528], [-81.344, 28.548], [-81.368, 28.548], [-81.368, 28.528]]]
+      }
+    }
+  ]
+}

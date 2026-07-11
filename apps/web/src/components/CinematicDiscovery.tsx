@@ -4,12 +4,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
-import { getPropertiesByZip, getPropertyById, zipMetricsFromGeoJson, loadUsMetrosGeoJson, DC_METRO_CBSA, METRIC_LAYERS } from "@cineborough/data";
+import { getPropertiesByZip, getPropertyById, zipMetricsFromGeoJson, loadUsMetrosGeoJson, DC_METRO_CBSA, ORLANDO_METRO_CBSA, loadMetroShard, sandboxCbsaForZip, METRIC_LAYERS } from "@cineborough/data";
 import {
   resolveMapCamera,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
+  ORLANDO_METRO_CAMERA,
   type UsInsetRegion,
 } from "@cineborough/geo";
 import { MapView } from "./MapView";
@@ -68,18 +69,31 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [storyCameraActive, setStoryCameraActive] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const [usInsetRegion, setUsInsetRegion] = useState<UsInsetRegion>("continental");
+  const [activeSandboxCbsa, setActiveSandboxCbsa] = useState(DC_METRO_CBSA);
 
   const dcStoryActive =
-    storyCameraActive && geography === "metro" && !exploreMode && !geographyOverride;
+    storyCameraActive &&
+    geography === "metro" &&
+    !exploreMode &&
+    !geographyOverride &&
+    activeSandboxCbsa === DC_METRO_CBSA;
 
   const isNationalView = geography === "national";
+
+  const activeShardGeoJson = useMemo(
+    () => loadMetroShard(activeSandboxCbsa) ?? geoJson,
+    [activeSandboxCbsa, geoJson],
+  );
 
   const activeGeoJson = useMemo(
     () => (isNationalView ? US_METROS_GEOJSON : geoJson),
     [isNationalView, geoJson],
   );
 
-  const zips = useMemo(() => zipMetricsFromGeoJson(activeGeoJson), [activeGeoJson]);
+  const zips = useMemo(
+    () => zipMetricsFromGeoJson(isNationalView ? activeGeoJson : activeShardGeoJson),
+    [isNationalView, activeGeoJson, activeShardGeoJson],
+  );
 
   const selected = useMemo(
     () => zips.find((z) => z.zip === selectedZip),
@@ -111,10 +125,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (geography === "national") return "United States · lower 48 + AK & HI";
     if (geography === "state") return "State view · select a metro to dive in";
     if (!storyCameraActive && geography === "metro") {
-      return `${geoJson.metadata.metro} · story paused — pan freely or resume`;
+      return `${activeShardGeoJson.metadata.metro} · story paused — pan freely or resume`;
     }
-    return `${geoJson.metadata.metro} · scroll to explore`;
-  }, [exploreMode, geography, storyCameraActive, geoJson.metadata.metro]);
+    return `${activeShardGeoJson.metadata.metro} · scroll to explore`;
+  }, [exploreMode, geography, storyCameraActive, activeShardGeoJson.metadata.metro]);
 
   const mapBounds = useMemo((): [[number, number], [number, number]] | null => {
     if (exploreMode) return US_FULL_BOUNDS;
@@ -180,6 +194,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return;
     }
     if (level === "metro") {
+      setActiveSandboxCbsa(DC_METRO_CBSA);
       setGeographyOverride(false);
       setStoryCameraActive(true);
       setUsInsetRegion("continental");
@@ -201,6 +216,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   }, [exploreMode, geography, storyCameraActive]);
 
   const handleResumeDcStory = useCallback(() => {
+    setActiveSandboxCbsa(DC_METRO_CBSA);
     setStoryCameraActive(true);
     setGeography("metro");
     setGeographyOverride(false);
@@ -227,18 +243,24 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
 
       if (isNationalView) {
-        if (regionId === DC_METRO_CBSA) {
+        if (regionId === DC_METRO_CBSA || regionId === ORLANDO_METRO_CBSA) {
+          setActiveSandboxCbsa(regionId);
           setGeography("metro");
-          setGeographyOverride(false);
-          setStoryCameraActive(true);
+          setGeographyOverride(regionId === ORLANDO_METRO_CBSA);
+          setStoryCameraActive(regionId === DC_METRO_CBSA);
           setSelectedZip(null);
           setSelectedPropertyId(null);
           setUsInsetRegion("continental");
-          window.scrollTo({ top: 0, behavior: "smooth" });
-          requestAnimationFrame(() => ScrollTrigger.refresh());
+          if (regionId === DC_METRO_CBSA) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            requestAnimationFrame(() => ScrollTrigger.refresh());
+          }
         }
         return;
       }
+
+      const shard = sandboxCbsaForZip(regionId);
+      if (shard) setActiveSandboxCbsa(shard);
 
       setSelectedZip(regionId);
       setSelectedPropertyId(null);
@@ -280,6 +302,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return { ...US_INSET_CAMERAS[usInsetRegion], duration: 800 };
     }
 
+    if (
+      geographyOverride &&
+      geography === "metro" &&
+      !dcStoryActive &&
+      activeSandboxCbsa === ORLANDO_METRO_CBSA
+    ) {
+      return ORLANDO_METRO_CAMERA;
+    }
+
     return resolveMapCamera({
       geography,
       zipCenter,
@@ -298,6 +329,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     dcStoryActive,
     scrollProgress,
     usInsetRegion,
+    activeSandboxCbsa,
   ]);
 
   const pathVisible =
@@ -374,7 +406,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
               <h2>US Metro Overview</h2>
               <p>
                 {activeGeoJson.features.length} metros colored by {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"}.
-                Click Washington-Arlington-Alexandria to open the DC sandbox.
+                Click Washington-Arlington-Alexandria or Orlando-Kissimmee-Sanford to open a metro sandbox.
               </p>
             </div>
           )}

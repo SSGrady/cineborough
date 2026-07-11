@@ -1,7 +1,7 @@
 ---
 id: T025
 title: Second mock metro shard
-status: open
+status: done
 type: task
 priority: P2
 epic: E005

@@ -6,6 +6,7 @@ export * from "./boundaries";
 export * from "./loaders";
 export * from "./dc-metro-geojson";
 export * from "./us-metros-geojson";
+export * from "./metro-shards";
 export * from "./locale-quotes";
 export * from "./paths";
 export * from "./validation";

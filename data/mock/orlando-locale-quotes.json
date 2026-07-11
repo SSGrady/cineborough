@@ -1,0 +1,32 @@
+{
+  "quotes": [
+    {
+      "zip": "32801",
+      "neighborhood": "Orlando (Downtown)",
+      "text": "Lake Eola walks and the SunRail stop make downtown feel more urban than you'd expect in Florida.",
+      "source": "r/orlando",
+      "primaryVibe": "Urban lakefront core"
+    },
+    {
+      "zip": "32803",
+      "neighborhood": "Orlando (Colonialtown)",
+      "text": "Tree-lined streets and older bungalows — still close to downtown without the condo towers.",
+      "source": "r/orlando",
+      "primaryVibe": "Historic bungalow belt"
+    },
+    {
+      "zip": "32804",
+      "neighborhood": "Orlando (College Park)",
+      "text": "Edgewater Drive dining and a real neighborhood feel, not tourist Orlando.",
+      "source": "r/orlando",
+      "primaryVibe": "Local main-street charm"
+    },
+    {
+      "zip": "32806",
+      "neighborhood": "Orlando (Bellevue Heights)",
+      "text": "More affordable than Colonialtown with similar access to I-4 and the hospitals corridor.",
+      "source": "r/orlando",
+      "primaryVibe": "Value near the core"
+    }
+  ]
+}

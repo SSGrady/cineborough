@@ -20,7 +20,7 @@ Address scroll jank / layer desync and enable free map panning with geography-le
 | [T022](../../tickets/T022-deck-gl-sync.md) | Deck.gl layer sync | done |
 | [T023](../../tickets/T023-explore-map-mode.md) | Explore map mode | done |
 | [T024](../../tickets/T024-geography-cameras.md) | Geography cameras | done |
-| [T025](../../tickets/T025-second-mock-metro.md) | Second mock metro | open |
+| [T025](../../tickets/T025-second-mock-metro.md) | Second mock metro | done |
 | [T026](../../tickets/T026-metro-tile-strategy.md) | Metro tile strategy | open |
 
 ## Progress
