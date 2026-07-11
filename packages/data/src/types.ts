@@ -19,6 +19,7 @@ export interface HopeCoreMetrics {
   remoteWorkPct: number;
   homeowners25to44Pct: number;
   populationGrowthRate: number;
+  incomeGrowthRate: number;
   medianAge: number;
   walkabilityScore: number;
   collegeDegreeRate: number;
@@ -69,6 +70,8 @@ export interface DcMetroFeatureProperties {
   remoteWorkPct: number;
   homeowners25to44Pct: number;
   populationGrowthRate: number;
+  /** ACS B19013 YoY when ingest provides prior vintage; optional on legacy shards */
+  incomeGrowthRate?: number;
   medianAge: number;
   walkScore: number;
   collegeDegreeRate: number;
@@ -117,6 +120,7 @@ export type MetricLayerKey =
   | "remoteWorkPct"
   | "homeowners25to44Pct"
   | "populationGrowthRate"
+  | "incomeGrowthRate"
   | "medianAge"
   | "walkabilityScore"
   | "collegeDegreeRate";
@@ -217,6 +221,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
   { key: "remoteWorkPct", label: "Remote Work %", unit: "%", category: "demographics" },
   { key: "homeowners25to44Pct", label: "Homeowners 25–44 %", unit: "%", category: "demographics" },
   { key: "populationGrowthRate", label: "Population Growth", unit: "%", category: "demographics" },
+  { key: "incomeGrowthRate", label: "Income Growth", unit: "%", category: "demographics" },
   { key: "medianAge", label: "Median Age", unit: "years", category: "demographics" },
   { key: "collegeDegreeRate", label: "College Degree Rate", unit: "%", category: "demographics" },
   { key: "walkabilityScore", label: "Walkability Score", unit: "0–100", category: "hope-core" },

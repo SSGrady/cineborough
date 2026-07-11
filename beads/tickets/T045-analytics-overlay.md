@@ -1,7 +1,7 @@
 ---
 id: T045
 title: Analytics overlay on arrival
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

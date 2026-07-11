@@ -19,6 +19,7 @@
       "remoteWorkPct": 26.0,
       "homeowners25to44Pct": 36.0,
       "populationGrowthRate": 3.2,
+      "incomeGrowthRate": 5.1,
       "medianAge": 35.0,
       "walkabilityScore": 62,
       "collegeDegreeRate": 34.0
@@ -39,6 +40,7 @@
       "remoteWorkPct": 28.0,
       "homeowners25to44Pct": 38.0,
       "populationGrowthRate": 2.8,
+      "incomeGrowthRate": 4.6,
       "medianAge": 36.5,
       "walkabilityScore": 55,
       "collegeDegreeRate": 32.0
@@ -59,6 +61,7 @@
       "remoteWorkPct": 30.0,
       "homeowners25to44Pct": 40.0,
       "populationGrowthRate": 2.5,
+      "incomeGrowthRate": 4.0,
       "medianAge": 37.0,
       "walkabilityScore": 48,
       "collegeDegreeRate": 30.0
@@ -79,6 +82,7 @@
       "remoteWorkPct": 24.0,
       "homeowners25to44Pct": 35.0,
       "populationGrowthRate": 2.2,
+      "incomeGrowthRate": 3.7,
       "medianAge": 38.0,
       "walkabilityScore": 42,
       "collegeDegreeRate": 28.0

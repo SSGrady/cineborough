@@ -3,7 +3,7 @@ import {
   CINEMATIC_CAMERAS,
   type MapCameraTarget,
 } from "./color-scales";
-import { US_NATIONAL_CAMERA } from "./us-map";
+import { US_INSET_CAMERAS, US_NATIONAL_CAMERA, type UsInsetRegion } from "./us-map";
 
 /** Continental US center — national explore view */
 export const US_CENTER = US_NATIONAL_CAMERA.center;
@@ -90,6 +90,24 @@ export function interpolateCinematicCamera(progress: number): MapCameraTarget {
  * Returns a camera target only for sandbox cinematic modes.
  * Overview geography tabs retain the current map position (return null).
  */
+/** Reverse cinematic tilt when returning to continental / inset overview. */
+export function buildOverviewRestoreCamera(
+  saved?: MapCameraTarget | null,
+  insetRegion: UsInsetRegion = "continental",
+): MapCameraTarget {
+  if (insetRegion !== "continental") {
+    return { ...US_INSET_CAMERAS[insetRegion], pitch: 0, bearing: 0, duration: 1200 };
+  }
+  const base = saved ?? US_NATIONAL_CAMERA;
+  return {
+    center: base.center,
+    zoom: base.zoom,
+    pitch: 0,
+    bearing: 0,
+    duration: 1200,
+  };
+}
+
 export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarget | null {
   if (options.exploreMode) {
     return null;

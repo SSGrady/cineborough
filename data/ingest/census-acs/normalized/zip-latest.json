@@ -1,7 +1,7 @@
 {
   "source": "census-acs-5year",
   "attribution": "Demographics from U.S. Census Bureau American Community Survey 5-Year Estimates.",
-  "downloadedAt": "2026-07-11T19:38:11.516Z",
+  "downloadedAt": "2026-07-11T20:18:04.292Z",
   "vintage": "2023",
   "priorVintage": "2022",
   "recordCount": 9,
@@ -15,6 +15,7 @@
       "homeowners25to44Pct": 53.4,
       "collegeDegreeRate": 77.7,
       "populationGrowthRate": -0.1,
+      "incomeGrowthRate": 4.1,
       "medianHouseholdIncome": 138730
     },
     "20814": {
@@ -26,6 +27,7 @@
       "homeowners25to44Pct": 21.1,
       "collegeDegreeRate": 84.3,
       "populationGrowthRate": 1.9,
+      "incomeGrowthRate": 0.5,
       "medianHouseholdIncome": 150401
     },
     "22201": {
@@ -37,6 +39,7 @@
       "homeowners25to44Pct": 41.7,
       "collegeDegreeRate": 86.1,
       "populationGrowthRate": 1.1,
+      "incomeGrowthRate": 0.9,
       "medianHouseholdIncome": 141736
     },
     "22202": {
@@ -48,6 +51,7 @@
       "homeowners25to44Pct": 27.7,
       "collegeDegreeRate": 84.3,
       "populationGrowthRate": -2.6,
+      "incomeGrowthRate": 3,
       "medianHouseholdIncome": 141933
     },
     "22204": {
@@ -59,6 +63,7 @@
       "homeowners25to44Pct": 35.5,
       "collegeDegreeRate": 62,
       "populationGrowthRate": -0.7,
+      "incomeGrowthRate": 3.4,
       "medianHouseholdIncome": 109277
     },
     "32801": {
@@ -70,6 +75,7 @@
       "homeowners25to44Pct": 44.4,
       "collegeDegreeRate": 63.1,
       "populationGrowthRate": 10,
+      "incomeGrowthRate": 2.6,
       "medianHouseholdIncome": 77626
     },
     "32803": {
@@ -81,6 +87,7 @@
       "homeowners25to44Pct": 36.1,
       "collegeDegreeRate": 58.6,
       "populationGrowthRate": 2.9,
+      "incomeGrowthRate": 9.6,
       "medianHouseholdIncome": 101401
     },
     "32804": {
@@ -92,6 +99,7 @@
       "homeowners25to44Pct": 33.7,
       "collegeDegreeRate": 61.4,
       "populationGrowthRate": 2.6,
+      "incomeGrowthRate": 4.4,
       "medianHouseholdIncome": 113466
     },
     "32806": {
@@ -103,6 +111,7 @@
       "homeowners25to44Pct": 31.3,
       "collegeDegreeRate": 55.1,
       "populationGrowthRate": -1.9,
+      "incomeGrowthRate": -2.7,
       "medianHouseholdIncome": 86653
     }
   }

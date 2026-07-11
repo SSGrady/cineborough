@@ -3,6 +3,7 @@ export * from "./opportunity-index";
 export * from "./hybrid-scoring";
 export * from "./opportunity-index-examples";
 export * from "./metric-utils";
+export * from "./metric-provenance";
 export * from "./boundaries";
 export * from "./loaders";
 export * from "./dc-metro-geojson";

@@ -125,7 +125,8 @@ for (const zip of zipCodes) {
     continue;
   }
   const priorPop = priorRows.get(zip)?.population ?? null;
-  const demo = computeHopeCoreFromAcs(current, priorPop);
+  const priorIncome = priorRows.get(zip)?.medianHouseholdIncome ?? null;
+  const demo = computeHopeCoreFromAcs(current, priorPop, priorIncome);
   if (!demo) {
     console.warn(`Could not compute demographics for ZCTA ${zip}`);
     continue;

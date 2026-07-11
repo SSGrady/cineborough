@@ -51,6 +51,8 @@ export interface CensusZipDemographics {
   homeowners25to44Pct: number;
   collegeDegreeRate: number;
   populationGrowthRate: number;
+  /** YoY change in ACS B19013 median household income */
+  incomeGrowthRate?: number;
   /** ACS B19013; optional until re-ingest */
   medianHouseholdIncome?: number;
 }
@@ -74,6 +76,7 @@ function round1(n: number): number {
 export function computeHopeCoreFromAcs(
   current: CensusAcsRawRow,
   priorPopulation: number | null,
+  priorMedianHouseholdIncome: number | null = null,
 ): CensusZipDemographics | null {
   const population = current.population;
   const medianAge = current.medianAge;
@@ -97,6 +100,17 @@ export function computeHopeCoreFromAcs(
     populationGrowthRate = ((population - priorPopulation) / priorPopulation) * 100;
   }
 
+  let incomeGrowthRate: number | null = null;
+  if (
+    priorMedianHouseholdIncome !== null &&
+    priorMedianHouseholdIncome > 0 &&
+    current.medianHouseholdIncome !== null
+  ) {
+    incomeGrowthRate =
+      ((current.medianHouseholdIncome - priorMedianHouseholdIncome) / priorMedianHouseholdIncome) *
+      100;
+  }
+
   if (remote === null || homeowners2544 === null || college === null || populationGrowthRate === null) {
     return null;
   }
@@ -111,6 +125,10 @@ export function computeHopeCoreFromAcs(
     collegeDegreeRate: round1(college),
     populationGrowthRate: round1(populationGrowthRate),
   };
+
+  if (incomeGrowthRate !== null) {
+    demo.incomeGrowthRate = round1(incomeGrowthRate);
+  }
 
   if (current.medianHouseholdIncome !== null) {
     demo.medianHouseholdIncome = Math.round(current.medianHouseholdIncome);

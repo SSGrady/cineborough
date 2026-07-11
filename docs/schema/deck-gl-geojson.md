@@ -47,6 +47,7 @@ Flat camelCase aligned with Deerfield / Reventure enriched GeoJSON:
 | `remoteWorkPct` | number | Remote work % |
 | `homeowners25to44Pct` | number | Homeowners aged 25–44 % |
 | `populationGrowthRate` | number | Population growth % |
+| `incomeGrowthRate` | number | ACS B19013 median household income YoY % (optional on legacy shards) |
 | `medianAge` | number | Median age (years) |
 | `walkScore` | number | Walkability 0–100 |
 | `collegeDegreeRate` | number | College degree % |

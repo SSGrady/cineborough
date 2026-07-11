@@ -22,13 +22,16 @@ import {
 import {
   resolveMapCamera,
   isOverviewGeography,
+  buildOverviewRestoreCamera,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
   ORLANDO_METRO_CAMERA,
+  CINEMATIC_CAMERAS,
   discoveryFlyoverCamera,
   type GeographyLevel,
   type UsInsetRegion,
+  type MapCameraTarget,
 } from "@cineborough/geo";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
@@ -40,7 +43,10 @@ import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 import { PropertyValuationPanel } from "./PropertyValuationPanel";
 import { UsMapInsets } from "./UsMapInsets";
+import { AnalyticsOverlay } from "./AnalyticsOverlay";
+import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
 import { buildSearchIndex, type SearchResult } from "@/lib/search-index";
+import { formatPercent } from "@/lib/format";
 import {
   loadDiscoveryCriteria,
   saveDiscoveryCriteria,
@@ -104,9 +110,20 @@ interface DiscoveryFlyoverState {
 const FLYOVER_HIGHLIGHT_MS = 2800;
 const FLYOVER_CAMERA_MS = 2200;
 
+function sandboxFlatRestore(cbsa: string): MapCameraTarget {
+  if (cbsa === ORLANDO_METRO_CBSA) {
+    return { ...ORLANDO_METRO_CAMERA, duration: 1000 };
+  }
+  return { ...CINEMATIC_CAMERAS.metro, duration: 1000 };
+}
+
 export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialFitRef = useRef(true);
+  const savedOverviewCameraRef = useRef<MapCameraTarget | null>(null);
+  const prevSandboxDrillRef = useRef(false);
+  const prevDiscoveryFlyoverRef = useRef(false);
+  const [exitRestoreTarget, setExitRestoreTarget] = useState<MapCameraTarget | null>(null);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
   const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("opportunityScore");
@@ -127,6 +144,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [discoveryFlyover, setDiscoveryFlyover] = useState<DiscoveryFlyoverState | null>(null);
   const [discoveryResults, setDiscoveryResults] = useState<RankedNeighborhood[] | null>(null);
   const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
+  const [discoveryTourComplete, setDiscoveryTourComplete] = useState(false);
+  const prevFlyoverRef = useRef(false);
 
   const discoveryFlyoverActive = discoveryFlyover !== null;
 
@@ -262,6 +281,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSearchFlyTarget(null);
 
     if (isOverviewGeography(level)) {
+      setDiscoveryFlyover(null);
       setSandboxDrillActive(false);
       setStoryCameraActive(false);
       setSelectedZip(null);
@@ -299,6 +319,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const handleInsetSelect = useCallback((region: UsInsetRegion) => {
     setUsInsetRegion(region);
     setGeography("national");
+    setDiscoveryFlyover(null);
     setSandboxDrillActive(false);
     setStoryCameraActive(false);
   }, []);
@@ -414,6 +435,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
 
+    if (exitRestoreTarget) return exitRestoreTarget;
+
     if (discoveryFlyover) {
       const current = discoveryFlyover.results[discoveryFlyover.index];
       if (current) return discoveryFlyoverCamera(current.center);
@@ -468,6 +491,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     isOverviewMode,
     searchFlyTarget,
     discoveryFlyover,
+    exitRestoreTarget,
   ]);
 
   const pathVisible =
@@ -512,6 +536,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleDiscover = useCallback(() => {
     setDiscoveryMessage(null);
+    setDiscoveryTourComplete(false);
+    prevFlyoverRef.current = false;
 
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
       setDiscoveryMessage("Open Washington-Arlington-Alexandria or Orlando sandbox metro first");
@@ -540,6 +566,45 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleSkipFlyover = useCallback(() => {
     setDiscoveryFlyover(null);
+    setDiscoveryTourComplete(true);
+    setDrawerOpen(true);
+  }, []);
+
+  useEffect(() => {
+    const wasSandbox = prevSandboxDrillRef.current;
+    const wasDiscovery = prevDiscoveryFlyoverRef.current;
+    prevSandboxDrillRef.current = sandboxDrillActive;
+    prevDiscoveryFlyoverRef.current = discoveryFlyoverActive;
+
+    if (wasSandbox && !sandboxDrillActive && isOverviewGeography(geography)) {
+      setExitRestoreTarget(
+        buildOverviewRestoreCamera(savedOverviewCameraRef.current, usInsetRegion),
+      );
+      return;
+    }
+
+    if (wasDiscovery && !discoveryFlyoverActive && sandboxDrillActive) {
+      setExitRestoreTarget(sandboxFlatRestore(activeSandboxCbsa));
+    }
+  }, [
+    sandboxDrillActive,
+    discoveryFlyoverActive,
+    geography,
+    activeSandboxCbsa,
+    usInsetRegion,
+  ]);
+
+  useEffect(() => {
+    if (!exitRestoreTarget) return;
+    const timer = window.setTimeout(
+      () => setExitRestoreTarget(null),
+      (exitRestoreTarget.duration ?? 1200) + 100,
+    );
+    return () => window.clearTimeout(timer);
+  }, [exitRestoreTarget]);
+
+  const handleOverviewCameraCapture = useCallback((camera: MapCameraTarget) => {
+    savedOverviewCameraRef.current = camera;
   }, []);
 
   useEffect(() => {
@@ -562,7 +627,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setDiscoveryFlyover((prev) => {
         if (!prev) return null;
         const nextIndex = prev.index + 1;
-        if (nextIndex >= prev.results.length) return null;
+        if (nextIndex >= prev.results.length) {
+          setGeography("metro");
+          setSelectedZip(null);
+          return null;
+        }
         setSelectedZip(prev.results[nextIndex].zip);
         return { ...prev, index: nextIndex, phase: "flying" };
       });
@@ -570,6 +639,35 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
     return () => window.clearTimeout(timer);
   }, [discoveryFlyover]);
+
+  useEffect(() => {
+    if (discoveryFlyover?.phase === "highlight") {
+      setDrawerOpen(true);
+    }
+  }, [discoveryFlyover?.index, discoveryFlyover?.phase]);
+
+  useEffect(() => {
+    if (prevFlyoverRef.current && !discoveryFlyover && discoveryResults && discoveryResults.length > 0) {
+      setDiscoveryTourComplete(true);
+      setDrawerOpen(true);
+    }
+    prevFlyoverRef.current = discoveryFlyover !== null;
+  }, [discoveryFlyover, discoveryResults]);
+
+  const activeDiscoveryNeighborhood = useMemo((): RankedNeighborhood | null => {
+    if (!discoveryResults || discoveryResults.length === 0) return null;
+    if (discoveryFlyover) {
+      return discoveryFlyover.results[discoveryFlyover.index] ?? null;
+    }
+    if (discoveryTourComplete && selectedZip) {
+      return discoveryResults.find((r) => r.zip === selectedZip) ?? discoveryResults[0];
+    }
+    return null;
+  }, [discoveryFlyover, discoveryResults, discoveryTourComplete, selectedZip]);
+
+  const showAnalyticsOverlay =
+    activeDiscoveryNeighborhood !== null &&
+    (discoveryFlyover?.phase === "highlight" || discoveryTourComplete);
 
   const metroDescription =
     !storyCameraActive && sandboxDrillActive
@@ -586,13 +684,25 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (discoveryFlyover) {
       const current = discoveryFlyover.results[discoveryFlyover.index];
       const phaseLabel =
-        discoveryFlyover.phase === "flying" ? "Flying in…" : "Neighborhood highlight";
+        discoveryFlyover.phase === "flying" ? "Flying in…" : "Neighborhood analytics";
+      const { metrics: m } = current;
       return {
         stepLabel: `${discoveryFlyover.index + 1} / ${discoveryFlyover.results.length}`,
         title: `#${current.rank} · ${current.zip} — ${current.name}`,
-        detail: `${phaseLabel} · score ${current.score} · cap ${current.metrics.capRate}% · walk ${current.metrics.walkabilityScore}`,
+        detail: `${phaseLabel} · forecast ${formatPercent(m.homePriceForecast1yr)} · cap ${formatPercent(m.capRate)} · walk ${Math.round(m.walkabilityScore)} · remote ${m.remoteWorkPct.toFixed(0)}%`,
         canOpen: true,
         action: { label: "Skip tour", onClick: handleSkipFlyover },
+      };
+    }
+
+    if (discoveryTourComplete && activeDiscoveryNeighborhood) {
+      const { metrics: m } = activeDiscoveryNeighborhood;
+      return {
+        stepLabel: "Tour complete",
+        title: `#${activeDiscoveryNeighborhood.rank} · ${activeDiscoveryNeighborhood.zip} — ${activeDiscoveryNeighborhood.name}`,
+        detail: `Score ${activeDiscoveryNeighborhood.score} · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
+        canOpen: true,
+        action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
       };
     }
 
@@ -666,9 +776,37 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryFlyover,
     discoveryMessage,
     handleSkipFlyover,
+    discoveryTourComplete,
+    activeDiscoveryNeighborhood,
   ]);
 
   const drawerContent = useMemo(() => {
+    if (activeDiscoveryNeighborhood && (discoveryFlyover || discoveryTourComplete)) {
+      return (
+        <>
+          <DiscoveryAnalyticsPanel
+            neighborhood={activeDiscoveryNeighborhood}
+            metroAvgPsf={metroAvgPsf}
+            variant="drawer"
+          />
+          {discoveryResults && discoveryResults.length > 1 && (
+            <div className="discovery-results discovery-results--tour-nav" role="group" aria-label="Tour stops">
+              {discoveryResults.map((r) => (
+                <button
+                  key={r.zip}
+                  type="button"
+                  className={`zip-chip${selectedZip === r.zip ? " zip-chip--active" : ""}`}
+                  onClick={() => handleZipSelect(r.zip)}
+                >
+                  #{r.rank} {r.zip}
+                </button>
+              ))}
+            </div>
+          )}
+        </>
+      );
+    }
+
     if (discoveryResults && discoveryResults.length > 0) {
       return (
         <>
@@ -784,6 +922,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     handleZipSelect,
     handleEvaluateProperty,
     discoveryResults,
+    activeDiscoveryNeighborhood,
+    discoveryFlyover,
+    discoveryTourComplete,
   ]);
 
   return (
@@ -833,6 +974,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             exploreMode={exploreMode}
             onToggleExploreMode={handleToggleExplore}
             onUserMapMove={handleUserMapMove}
+            onOverviewCameraCapture={handleOverviewCameraCapture}
             mapBounds={mapBounds}
             geographyLevel={geography}
             overviewMode={isOverviewMode}
@@ -841,6 +983,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           />
           {isOverviewMode && geography === "national" && !exploreMode && (
             <UsMapInsets activeRegion={usInsetRegion} onSelectRegion={handleInsetSelect} />
+          )}
+          {showAnalyticsOverlay && activeDiscoveryNeighborhood && (
+            <AnalyticsOverlay
+              neighborhood={activeDiscoveryNeighborhood}
+              metroAvgPsf={metroAvgPsf}
+              phaseLabel={
+                discoveryTourComplete && !discoveryFlyover
+                  ? "Tour complete — neighborhood analytics"
+                  : "Neighborhood analytics"
+              }
+              onOpenDetails={() => setDrawerOpen(true)}
+            />
           )}
         </div>
 

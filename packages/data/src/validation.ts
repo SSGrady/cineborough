@@ -34,6 +34,7 @@ export function isHopeCoreMetrics(value: unknown): value is HopeCoreMetrics {
     isFiniteNumber(m.remoteWorkPct) &&
     isFiniteNumber(m.homeowners25to44Pct) &&
     isFiniteNumber(m.populationGrowthRate) &&
+    isFiniteNumber(m.incomeGrowthRate) &&
     isFiniteNumber(m.medianAge) &&
     isFiniteNumber(m.walkabilityScore) &&
     isFiniteNumber(m.collegeDegreeRate)

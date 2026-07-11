@@ -70,6 +70,7 @@ function buildFeature(
     remoteWorkPct: zip.remoteWorkPct,
     homeowners25to44Pct: zip.homeowners25to44Pct,
     populationGrowthRate: zip.populationGrowthRate,
+    incomeGrowthRate: zip.incomeGrowthRate,
     medianAge: zip.medianAge,
     walkScore: zip.walkabilityScore,
     collegeDegreeRate: zip.collegeDegreeRate,

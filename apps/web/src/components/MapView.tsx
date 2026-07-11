@@ -49,6 +49,8 @@ interface MapViewProps {
   exploreMode?: boolean;
   onToggleExploreMode?: () => void;
   onUserMapMove?: () => void;
+  /** Retains continental overview center/zoom for cinematic exit restore */
+  onOverviewCameraCapture?: (camera: MapCameraTarget) => void;
   mapBounds?: [[number, number], [number, number]] | null;
   geographyLevel?: GeographyLevel;
   /** Flat continental overview — national/state/metro/county tabs */
@@ -206,6 +208,7 @@ export function MapView({
   exploreMode = false,
   onToggleExploreMode,
   onUserMapMove,
+  onOverviewCameraCapture,
   mapBounds = US_CONTINENTAL_BOUNDS,
   geographyLevel = "metro",
   overviewMode = false,
@@ -219,6 +222,7 @@ export function MapView({
   const programmaticMoveRef = useRef(false);
   const exploreModeRef = useRef(exploreMode);
   const onUserMapMoveRef = useRef(onUserMapMove);
+  const onOverviewCameraCaptureRef = useRef(onOverviewCameraCapture);
   const [mapReady, setMapReady] = useState(false);
   const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
@@ -228,6 +232,7 @@ export function MapView({
 
   exploreModeRef.current = exploreMode;
   onUserMapMoveRef.current = onUserMapMove;
+  onOverviewCameraCaptureRef.current = onOverviewCameraCapture;
 
   const isOverviewView = overviewMode;
   const metroTileConfig = useMemo(
@@ -655,6 +660,19 @@ export function MapView({
 
   const prevNationalFitRef = useRef(false);
 
+  const captureOverviewCamera = useCallback((map: mapboxgl.Map) => {
+    if (!overviewMode || exploreModeRef.current) return;
+    const pitch = map.getPitch();
+    const bearing = map.getBearing();
+    if (pitch > 1 || Math.abs(bearing) > 1) return;
+    onOverviewCameraCaptureRef.current?.({
+      center: [map.getCenter().lng, map.getCenter().lat],
+      zoom: map.getZoom(),
+      pitch: 0,
+      bearing: 0,
+    });
+  }, [overviewMode]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady || exploreMode) return;
@@ -667,9 +685,10 @@ export function MapView({
         bearing: 0,
         duration: 800,
       });
+      map.once("moveend", () => captureOverviewCamera(map));
     }
     prevNationalFitRef.current = fitNationalBounds;
-  }, [fitNationalBounds, mapReady, exploreMode]);
+  }, [fitNationalBounds, mapReady, exploreMode, captureOverviewCamera]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -694,6 +713,18 @@ export function MapView({
       lastCameraKeyRef.current = null;
     }
   }, [exploreMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || !overviewMode) return;
+
+    captureOverviewCamera(map);
+    const onMoveEnd = () => captureOverviewCamera(map);
+    map.on("moveend", onMoveEnd);
+    return () => {
+      map.off("moveend", onMoveEnd);
+    };
+  }, [overviewMode, mapReady, captureOverviewCamera]);
 
   useEffect(() => {
     const map = mapRef.current;

@@ -65,6 +65,7 @@ Model confidence: 0.75 with income, 0.55 with metro ZHVI anchor, 0.45 zip-only.
 | `remoteWorkPct` | Remote Work % | % | Demographics | Census ACS |
 | `homeowners25to44Pct` | Homeowners Age 25–44 | % | Demographics | Census ACS |
 | `populationGrowthRate` | Population Growth Rate | % | Demographics | Census ACS |
+| `incomeGrowthRate` | Income Growth Rate | % | Demographics | Census ACS (B19013 YoY) |
 | `medianAge` | Median Age | years | Demographics | Census ACS |
 | `walkabilityScore` | Walkability Score | 0–100 | Urban Fabric | Mock → OSM |
 | `collegeDegreeRate` | College Degree Rate | % | Demographics | Census ACS |

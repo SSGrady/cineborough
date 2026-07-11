@@ -1,7 +1,7 @@
 ---
 id: T036
 title: Income growth schema and layer
-status: open
+status: done
 type: feature
 priority: P2
 epic: E007

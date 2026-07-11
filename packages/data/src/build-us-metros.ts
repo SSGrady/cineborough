@@ -163,7 +163,7 @@ function buildUsMetrosGeoJson(): DcMetroGeoJson {
     metadata: {
       metro: "United States",
       dataAsOf: mockSource.updatedAt,
-      dataAsOfLabel: `ZHVI live (${zhviLive} metros) + mock hope-core/investor`,
+      dataAsOfLabel: `ZHVI+FHFA live (${zhviLive}/${features.length} metros) · ACS sandbox ZIPs · mock cap/DOM/PSF/walk`,
       sandboxZips: [],
       generatedAt: new Date().toISOString().slice(0, 10),
     },

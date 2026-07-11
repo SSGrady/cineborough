@@ -100,6 +100,9 @@ export function mergeLiveMetricsIntoZips(
       merged.populationGrowthRate = demo.populationGrowthRate;
       merged.medianAge = demo.medianAge;
       merged.collegeDegreeRate = demo.collegeDegreeRate;
+      if (demo.incomeGrowthRate !== undefined) {
+        merged.incomeGrowthRate = demo.incomeGrowthRate;
+      }
     }
 
     const zhviRec = zhviZip?.records[zip.zip] as ZhviZipRecord | undefined;
