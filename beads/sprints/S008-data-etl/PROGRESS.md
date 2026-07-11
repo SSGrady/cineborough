@@ -2,8 +2,8 @@
 
 ## Tickets
 
-- [ ] **T032** — Census ACS demographics ETL
-- [x] **T033** — ZHVI bulk ingest (metro + zip script; metro normalized committed)
+- [~] **T032** — Census ACS ingest script + shard merge (needs CENSUS_API_KEY to populate)
+- [~] **T033** — ZHVI bulk ingest done; FHFA HPI ingest pending
 - [ ] **T034** — Forecast + overvaluation model
 - [ ] **T035** — Derived metrics + refresh cron
 - [ ] **T036** — Income growth schema + layer

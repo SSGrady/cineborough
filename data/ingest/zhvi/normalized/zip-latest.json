@@ -1,0 +1,343 @@
+{
+  "source": "zillow-research-zhvi",
+  "attribution": "Home values from Zillow Research ZHVI bulk data (© Zillow). Not for redistribution without attribution.",
+  "downloadedAt": "2026-07-11T19:28:09.276Z",
+  "vintage": "2026-05-31",
+  "geography": "zip",
+  "recordCount": 9,
+  "records": {
+    "20001": {
+      "zipCode": "20001",
+      "regionId": "66125",
+      "state": "DC",
+      "city": "Washington",
+      "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "county": "District of Columbia",
+      "zhvi": 637643,
+      "zhviMomPct": -0.31125061591456615,
+      "zhviYoyPct": -1.5081518363446689,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 643140
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 643978
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 643330
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 642005
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 639634
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 637643
+        }
+      ]
+    },
+    "20814": {
+      "zipCode": "20814",
+      "regionId": "66645",
+      "state": "MD",
+      "city": "Bethesda",
+      "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "county": "Montgomery County",
+      "zhvi": 775739,
+      "zhviMomPct": -0.6386070215442731,
+      "zhviYoyPct": -4.096652764189333,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 790421
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 786948
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 784777
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 783413
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 780725
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 775739
+        }
+      ]
+    },
+    "22201": {
+      "zipCode": "22201",
+      "regionId": "67186",
+      "state": "VA",
+      "city": "Arlington",
+      "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "county": "Arlington County",
+      "zhvi": 703075,
+      "zhviMomPct": -0.24028619497139556,
+      "zhviYoyPct": -0.28496126169731534,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 706369
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 706884
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 706709
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 706622
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 704768
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 703075
+        }
+      ]
+    },
+    "22202": {
+      "zipCode": "22202",
+      "regionId": "67187",
+      "state": "VA",
+      "city": "Arlington",
+      "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "county": "Arlington County",
+      "zhvi": 765087,
+      "zhviMomPct": -0.4505441513579978,
+      "zhviYoyPct": -1.1606210978053573,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 772385
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 772346
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 772138
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 771590
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 768550
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 765087
+        }
+      ]
+    },
+    "22204": {
+      "zipCode": "22204",
+      "regionId": "67189",
+      "state": "VA",
+      "city": "Arlington",
+      "metro": "Washington-Arlington-Alexandria, DC-VA-MD-WV",
+      "county": "Arlington County",
+      "zhvi": 614962,
+      "zhviMomPct": -0.536097233622156,
+      "zhviYoyPct": -1.4176139241231327,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 621664
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 622228
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 622131
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 621152
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 618277
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 614962
+        }
+      ]
+    },
+    "32801": {
+      "zipCode": "32801",
+      "regionId": "72227",
+      "state": "FL",
+      "city": "Orlando",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
+      "county": "Orange County",
+      "zhvi": 347680,
+      "zhviMomPct": -0.7782755570411933,
+      "zhviYoyPct": -5.626595769963256,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 351543
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 351859
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 352652
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 352474
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 350407
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 347680
+        }
+      ]
+    },
+    "32803": {
+      "zipCode": "32803",
+      "regionId": "72229",
+      "state": "FL",
+      "city": "Orlando",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
+      "county": "Orange County",
+      "zhvi": 475619,
+      "zhviMomPct": -0.1551793949970271,
+      "zhviYoyPct": -0.9715425029454404,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 473881
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 475321
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 476663
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 476870
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 476358
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 475619
+        }
+      ]
+    },
+    "32804": {
+      "zipCode": "32804",
+      "regionId": "72230",
+      "state": "FL",
+      "city": "Orlando",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
+      "county": "Orange County",
+      "zhvi": 509600,
+      "zhviMomPct": 0.04056187555354091,
+      "zhviYoyPct": -1.4502358782371092,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 505610
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 507082
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 508760
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 509643
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 509393
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 509600
+        }
+      ]
+    },
+    "32806": {
+      "zipCode": "32806",
+      "regionId": "72232",
+      "state": "FL",
+      "city": "Orlando",
+      "metro": "Orlando-Kissimmee-Sanford, FL",
+      "county": "Orange County",
+      "zhvi": 441664,
+      "zhviMomPct": -0.3238765816871075,
+      "zhviYoyPct": -2.3255636279126817,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 442472
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 443707
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 444306
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 444161
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 443099
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 441664
+        }
+      ]
+    }
+  }
+}

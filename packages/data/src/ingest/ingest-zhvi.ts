@@ -8,7 +8,7 @@ import { pipeline } from "node:stream/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { Readable } from "node:stream";
-import { ZHVI_ATTRIBUTION, ZHVI_CSV_URLS, type ZhviGeography } from "./zhvi-sources.ts";
+import { ZHVI_ATTRIBUTION, ZHVI_CSV_URLS, type ZhviGeography, type ZhviMetroRecord, type ZhviNormalizedBundle, type ZhviZipRecord } from "./zhvi-sources.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const INGEST_ROOT = resolve(__dirname, "../../../../data/ingest/zhvi");
@@ -16,45 +16,6 @@ const RAW_DIR = resolve(INGEST_ROOT, "raw");
 const OUT_DIR = resolve(INGEST_ROOT, "normalized");
 
 const DATE_COL_RE = /^\d{4}-\d{2}-\d{2}$/;
-
-export interface ZhviSeriesPoint {
-  date: string;
-  zhvi: number;
-}
-
-export interface ZhviZipRecord {
-  zipCode: string;
-  regionId: string;
-  state: string;
-  city: string;
-  metro: string;
-  county: string;
-  zhvi: number;
-  zhviMomPct: number | null;
-  zhviYoyPct: number | null;
-  series: ZhviSeriesPoint[];
-}
-
-export interface ZhviMetroRecord {
-  regionId: string;
-  name: string;
-  state: string;
-  regionType: string;
-  zhvi: number;
-  zhviMomPct: number | null;
-  zhviYoyPct: number | null;
-  series: ZhviSeriesPoint[];
-}
-
-export interface ZhviNormalizedBundle {
-  source: "zillow-research-zhvi";
-  attribution: string;
-  downloadedAt: string;
-  vintage: string;
-  geography: ZhviGeography;
-  recordCount: number;
-  records: Record<string, ZhviZipRecord | ZhviMetroRecord>;
-}
 
 /** Parse one CSV line respecting quoted fields. */
 export function parseCsvLine(line: string): string[] {
@@ -214,7 +175,7 @@ async function normalizeMetroCsv(csvPath: string): Promise<ZhviNormalizedBundle>
   };
 }
 
-async function normalizeZipCsv(csvPath: string): Promise<ZhviNormalizedBundle> {
+async function normalizeZipCsv(csvPath: string, zipAllowList?: Set<string>): Promise<ZhviNormalizedBundle> {
   const rl = createInterface({ input: createReadStream(csvPath, { encoding: "utf8" }), crlfDelay: true });
 
   let header: string[] | null = null;
@@ -248,6 +209,7 @@ async function normalizeZipCsv(csvPath: string): Promise<ZhviNormalizedBundle> {
 
     const zipCode = fields[2]?.padStart(5, "0");
     if (!/^\d{5}$/.test(zipCode)) continue;
+    if (zipAllowList && !zipAllowList.has(zipCode)) continue;
 
     records[zipCode] = {
       zipCode,
@@ -275,10 +237,12 @@ async function normalizeZipCsv(csvPath: string): Promise<ZhviNormalizedBundle> {
   };
 }
 
-async function ingestGeography(geography: ZhviGeography): Promise<ZhviNormalizedBundle> {
+async function ingestGeography(geography: ZhviGeography, zipAllowList?: Set<string>): Promise<ZhviNormalizedBundle> {
   const csvPath = await downloadCsv(geography);
   const bundle =
-    geography === "zip" ? await normalizeZipCsv(csvPath) : await normalizeMetroCsv(csvPath);
+    geography === "zip"
+      ? await normalizeZipCsv(csvPath, zipAllowList)
+      : await normalizeMetroCsv(csvPath);
 
   mkdirSync(OUT_DIR, { recursive: true });
   const outPath = resolve(OUT_DIR, `${geography}-latest.json`);
@@ -289,11 +253,15 @@ async function ingestGeography(geography: ZhviGeography): Promise<ZhviNormalized
 
 const args = process.argv.slice(2);
 const only = args.find((a) => a.startsWith("--only="))?.split("=")[1] as ZhviGeography | undefined;
+const zipsArg = args.find((a) => a.startsWith("--zips="))?.split("=")[1];
+const zipAllowList = zipsArg
+  ? new Set<string>(zipsArg.split(",").map((z) => z.trim().padStart(5, "0")))
+  : undefined;
 const geographies: ZhviGeography[] = only ? [only] : ["metro", "zip"];
 
 let total = 0;
 for (const g of geographies) {
-  const bundle = await ingestGeography(g);
+  const bundle = await ingestGeography(g, g === "zip" ? zipAllowList : undefined);
   total += bundle.recordCount;
 }
 

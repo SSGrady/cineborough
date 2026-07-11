@@ -83,7 +83,7 @@ Commercial property APIs (ATTOM, Redfin Data Center paid tier) unlock only when:
 ## Consequences
 
 - E007 S008 tickets T032–T036 implement ingest pipelines, not mock expansion
-- New env vars: `CENSUS_API_KEY` (optional), ingest paths; no ATTOM keys yet
+- New env vars: `CENSUS_API_KEY` (required for ACS ingest), ingest paths; no ATTOM keys yet
 - ZHVI attribution required in UI footer / data panel per Zillow Research terms
 - Forecast and overvaluation carry **model confidence** metadata when derived (not proprietary Zillow forecast API)
 - Property-level comps (E004 valuation) remain mock until paid gate opens

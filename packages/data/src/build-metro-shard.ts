@@ -5,6 +5,8 @@ import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, PolygonG
 export interface MetroShardBuildInput {
   metro: string;
   cbsaCode: string;
+  dataAsOf?: string;
+  dataAsOfLabel?: string;
   zips: ZipMetricsInput[];
   boundaries: {
     features: Array<{
@@ -103,8 +105,8 @@ export function buildMetroShardGeoJson(input: MetroShardBuildInput): DcMetroGeoJ
     metadata: {
       metro: input.metro,
       cbsaCode: input.cbsaCode,
-      dataAsOf: "2026-05-01",
-      dataAsOfLabel: "May 2026",
+      dataAsOf: input.dataAsOf ?? "2026-05-01",
+      dataAsOfLabel: input.dataAsOfLabel ?? "May 2026",
       sandboxZips: zips.map((z) => z.zip),
       generatedAt: new Date().toISOString().slice(0, 10),
     },
