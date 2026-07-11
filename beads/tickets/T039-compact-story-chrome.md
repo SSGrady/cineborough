@@ -1,7 +1,7 @@
 ---
 id: T039
 title: Replace bottom scroll panels
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

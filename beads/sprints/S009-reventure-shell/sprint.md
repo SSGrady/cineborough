@@ -18,8 +18,8 @@ Match Reventure organization: top search + geography bar, cleaner map labels, si
 
 | ID | Title | Status |
 |----|-------|--------|
-| [T037](../../tickets/T037-top-search-bar.md) | Top search bar (geocoding) | open |
-| [T038](../../tickets/T038-top-geography-bar.md) | Geography tickers → top bar | open |
-| [T039](../../tickets/T039-compact-story-chrome.md) | Replace bottom scroll panels | open |
+| [T037](../../tickets/T037-top-search-bar.md) | Top search bar (geocoding) | done |
+| [T038](../../tickets/T038-top-geography-bar.md) | Geography tickers → top bar | done |
+| [T039](../../tickets/T039-compact-story-chrome.md) | Replace bottom scroll panels | done |
 | [T040](../../tickets/T040-sidebar-categories.md) | Sidebar category expansion | open |
-| [T041](../../tickets/T041-map-label-density.md) | Map label density by zoom | open |
+| [T041](../../tickets/T041-map-label-density.md) | Map label density by zoom | done |

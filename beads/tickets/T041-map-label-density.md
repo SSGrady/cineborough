@@ -1,7 +1,7 @@
 ---
 id: T041
 title: Map label density by zoom
-status: open
+status: done
 type: task
 priority: P2
 epic: E007

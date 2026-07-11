@@ -23,14 +23,19 @@ import {
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
   ORLANDO_METRO_CAMERA,
+  type GeographyLevel,
   type UsInsetRegion,
 } from "@cineborough/geo";
 import { MapView } from "./MapView";
-import { Sidebar, type GeographyLevel } from "./Sidebar";
+import { Sidebar } from "./Sidebar";
+import { TopBar } from "./TopBar";
+import { ContextChip } from "./ContextChip";
+import { StoryDrawer } from "./StoryDrawer";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 import { PropertyValuationPanel } from "./PropertyValuationPanel";
 import { UsMapInsets } from "./UsMapInsets";
+import { buildSearchIndex, type SearchResult } from "@/lib/search-index";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -68,6 +73,7 @@ interface CinematicDiscoveryProps {
 }
 
 const US_METROS_GEOJSON = loadUsMetrosGeoJson();
+const SEARCH_INDEX = buildSearchIndex(US_METROS_GEOJSON);
 
 const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · click a metro to drill in",
@@ -75,6 +81,8 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   metro: "All metros · click a region to open sandbox detail",
   county: "County view · metro boundaries (county ingest pending)",
 };
+
+const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA]);
 
 export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -90,6 +98,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [usInsetRegion, setUsInsetRegion] = useState<UsInsetRegion>("continental");
   const [activeSandboxCbsa, setActiveSandboxCbsa] = useState(DC_METRO_CBSA);
+  const [searchFlyTarget, setSearchFlyTarget] = useState<[number, number] | null>(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const isOverviewMode = isOverviewGeography(geography) && !sandboxDrillActive;
 
@@ -219,6 +229,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (level === "zip" && !sandboxDrillActive) return;
 
     setGeography(level);
+    setSearchFlyTarget(null);
 
     if (isOverviewGeography(level)) {
       setSandboxDrillActive(false);
@@ -239,6 +250,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (dcStoryActive) {
       setStoryCameraActive(false);
     }
+    setSearchFlyTarget(null);
   }, [exploreMode, dcStoryActive]);
 
   const handleResumeDcStory = useCallback(() => {
@@ -249,6 +261,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setUsInsetRegion("continental");
     setActiveSection("metro");
     setScrollProgress(0);
+    setDrawerOpen(false);
     window.scrollTo({ top: 0, behavior: "smooth" });
     requestAnimationFrame(() => ScrollTrigger.refresh());
   }, []);
@@ -270,6 +283,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         }
         return;
       }
+
+      setSearchFlyTarget(null);
 
       if (isOverviewMode) {
         if (regionId === DC_METRO_CBSA || regionId === ORLANDO_METRO_CBSA) {
@@ -313,6 +328,35 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [isOverviewMode, sandboxDrillActive],
   );
 
+  const handleSearchSelect = useCallback(
+    (result: SearchResult) => {
+      if (result.kind === "zip") {
+        const shard = sandboxCbsaForZip(result.id);
+        if (shard && !sandboxDrillActive) {
+          setActiveSandboxCbsa(shard);
+          setSandboxDrillActive(true);
+          setStoryCameraActive(shard === DC_METRO_CBSA);
+          setGeography("metro");
+        }
+        handleZipSelect(result.id);
+        return;
+      }
+
+      if (SANDBOX_CBSA.has(result.id)) {
+        handleZipSelect(result.id);
+        return;
+      }
+
+      setGeography("metro");
+      setSandboxDrillActive(false);
+      setStoryCameraActive(false);
+      setSelectedZip(null);
+      setSelectedPropertyId(null);
+      setSearchFlyTarget([result.lng, result.lat]);
+    },
+    [handleZipSelect, sandboxDrillActive],
+  );
+
   const handleCloseDetail = () => {
     setSelectedZip(null);
     setSelectedPropertyId(null);
@@ -323,6 +367,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setActiveSection("detail");
     setGeography("zip");
     setScrollProgress(1);
+    setDrawerOpen(true);
   }, []);
 
   const handleBackToZip = () => setSelectedPropertyId(null);
@@ -338,6 +383,16 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
+
+    if (searchFlyTarget) {
+      return {
+        center: searchFlyTarget,
+        zoom: 7.5,
+        pitch: 0,
+        bearing: 0,
+        duration: 900,
+      };
+    }
 
     if (isOverviewMode) {
       if (geography === "national" && usInsetRegion !== "continental") {
@@ -376,6 +431,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     sandboxDrillActive,
     storyCameraActive,
     isOverviewMode,
+    searchFlyTarget,
   ]);
 
   const pathVisible =
@@ -422,12 +478,162 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     (f) => f.properties.medianHomeValue > 0,
   ).length;
 
+  const activeScrollSection = SCROLL_SECTIONS.find((s) => s.id === activeSection);
+
+  const contextChip = useMemo(() => {
+    if (isOverviewMode) {
+      const metricLabel =
+        METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
+      return {
+        stepLabel: geography.charAt(0).toUpperCase() + geography.slice(1),
+        title: "US Metro Overview",
+        detail: `${overviewFeatureCount} metros · ${metricLabel}`,
+        canOpen: true,
+      };
+    }
+
+    if (dcStoryActive) {
+      return {
+        stepLabel: `${SCROLL_SECTIONS.findIndex((s) => s.id === activeSection) + 1} / ${SCROLL_SECTIONS.length}`,
+        title: activeScrollSection?.title ?? "DC Story",
+        detail: activeScrollSection?.description,
+        canOpen: true,
+        action:
+          !storyCameraActive && sandboxDrillActive
+            ? { label: "Resume", onClick: handleResumeDcStory }
+            : undefined,
+      };
+    }
+
+    if (selected) {
+      return {
+        stepLabel: "ZIP",
+        title: `${selected.zip} — ${selected.name}`,
+        detail: activeShardGeoJson.metadata.metro,
+        canOpen: true,
+      };
+    }
+
+    return {
+      stepLabel: "Sandbox",
+      title: activeShardGeoJson.metadata.metro,
+      detail: storyCameraActive ? "Guided story · scroll to explore" : "Flat view",
+      canOpen: true,
+      action:
+        !storyCameraActive && sandboxDrillActive && activeSandboxCbsa === DC_METRO_CBSA
+          ? { label: "Resume", onClick: handleResumeDcStory }
+          : undefined,
+    };
+  }, [
+    isOverviewMode,
+    geography,
+    overviewFeatureCount,
+    activeMetric,
+    dcStoryActive,
+    activeSection,
+    activeScrollSection,
+    storyCameraActive,
+    sandboxDrillActive,
+    selected,
+    activeShardGeoJson.metadata.metro,
+    activeSandboxCbsa,
+    handleResumeDcStory,
+  ]);
+
+  const drawerContent = useMemo(() => {
+    if (isOverviewMode) {
+      return (
+        <>
+          <p>
+            {overviewFeatureCount} metros with live home values ·{" "}
+            {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"} layer.
+            Click Washington-Arlington-Alexandria or Orlando to open ZIP sandbox detail.
+          </p>
+        </>
+      );
+    }
+
+    if (selected) {
+      if (selectedProperty) {
+        return <PropertyValuationPanel property={selectedProperty} onBack={handleBackToZip} />;
+      }
+      return (
+        <>
+          <ZipDetailPanel
+            zip={selected}
+            metroAvgPsf={metroAvgPsf}
+            onClose={handleCloseDetail}
+            embedded
+            featureProps={selectedFeature}
+            properties={zipProperties}
+            onEvaluateProperty={handleEvaluateProperty}
+          />
+          <LocaleQuoteCard
+            zip={selected.zip}
+            quoteText={selectedFeature?.localQuote}
+            primaryVibe={selectedFeature?.primaryVibe}
+            neighborhood={selectedFeature?.neighborhoodName}
+          />
+        </>
+      );
+    }
+
+    const section = activeScrollSection ?? SCROLL_SECTIONS[0];
+    return (
+      <>
+        <p>{section.id === "metro" ? metroDescription : section.description}</p>
+        {!storyCameraActive && sandboxDrillActive && activeSandboxCbsa === DC_METRO_CBSA && (
+          <button type="button" className="cinematic__resume-btn" onClick={handleResumeDcStory}>
+            Resume DC story
+          </button>
+        )}
+        {(section.id === "neighborhood" || section.id === "detail") && (
+          <div className="zip-chips" role="group" aria-label="Quick ZIP compare">
+            {zips.map((z) => (
+              <button
+                key={z.zip}
+                type="button"
+                className={`zip-chip${selectedZip === z.zip ? " zip-chip--active" : ""}`}
+                onClick={() => handleZipSelect(z.zip)}
+              >
+                {z.zip}
+              </button>
+            ))}
+          </div>
+        )}
+      </>
+    );
+  }, [
+    isOverviewMode,
+    overviewFeatureCount,
+    activeMetric,
+    selected,
+    selectedProperty,
+    selectedFeature,
+    metroAvgPsf,
+    zipProperties,
+    activeScrollSection,
+    metroDescription,
+    storyCameraActive,
+    sandboxDrillActive,
+    activeSandboxCbsa,
+    zips,
+    selectedZip,
+    handleResumeDcStory,
+    handleZipSelect,
+    handleEvaluateProperty,
+  ]);
+
   return (
     <>
-      <header className="cinematic-header">
-        <h1>Cineborough</h1>
-        <p>{subtitle}</p>
-      </header>
+      <TopBar
+        subtitle={subtitle}
+        geography={geography}
+        onGeographyChange={handleGeographyChange}
+        sandboxDrillActive={sandboxDrillActive}
+        searchIndex={SEARCH_INDEX}
+        onSearchSelect={handleSearchSelect}
+      />
 
       <div
         className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}`}
@@ -437,15 +643,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             activeMetric={activeMetric}
             onMetricChange={setActiveMetric}
             mode={sidebarMode}
-            geography={geography}
-            onGeographyChange={handleGeographyChange}
             selectedZip={selectedZip}
             zips={zips}
-            sandboxDrillActive={sandboxDrillActive}
           />
         </aside>
 
         <div className="cinematic__map">
+          <ContextChip
+            stepLabel={contextChip.stepLabel}
+            title={contextChip.title}
+            detail={contextChip.detail}
+            onOpenDrawer={contextChip.canOpen ? () => setDrawerOpen(true) : undefined}
+            action={contextChip.action}
+          />
           <MapView
             geoJson={activeGeoJson}
             activeMetric={activeMetric}
@@ -463,106 +673,25 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             fitNationalBounds={fitNationalBounds}
             cinematicOnSelect={!isOverviewMode}
           />
-          {isOverviewMode && !exploreMode && (
-            <div className="national-hint">
-              <span className="national-hint__step">
-                {geography.charAt(0).toUpperCase() + geography.slice(1)}
-              </span>
-              <h2>US Metro Overview</h2>
-              <p>
-                {overviewFeatureCount} metros with live home values ·{" "}
-                {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"} layer.
-                Click Washington-Arlington-Alexandria or Orlando to open ZIP sandbox detail.
-              </p>
-            </div>
-          )}
           {isOverviewMode && geography === "national" && !exploreMode && (
             <UsMapInsets activeRegion={usInsetRegion} onSelectRegion={handleInsetSelect} />
           )}
         </div>
 
-        {!isOverviewMode && (
+        {!isOverviewMode && dcStoryActive && (
           <div ref={scrollRef} className="cinematic__scroll" aria-hidden={exploreMode}>
-            {SCROLL_SECTIONS.map((section, index) => (
+            {SCROLL_SECTIONS.map((section) => (
               <section
                 key={section.id}
-                className="cinematic__section"
+                className="cinematic__section cinematic__section--spacer"
                 data-section={section.id}
                 aria-current={activeSection === section.id ? "step" : undefined}
-              >
-                <div
-                  className={
-                    section.id === "detail" && selectedProperty
-                      ? "cinematic__section-panel cinematic__section-panel--wide"
-                      : "cinematic__section-panel"
-                  }
-                >
-                  <span className="cinematic__section-step">
-                    {index + 1} / {SCROLL_SECTIONS.length}
-                  </span>
-                  <h2>{section.title}</h2>
-                  <p>{section.id === "metro" ? metroDescription : section.description}</p>
-
-                  {section.id === "metro" && !storyCameraActive && sandboxDrillActive && (
-                    <button
-                      type="button"
-                      className="cinematic__resume-btn"
-                      onClick={handleResumeDcStory}
-                    >
-                      Resume DC story
-                    </button>
-                  )}
-
-                  {(section.id === "neighborhood" || section.id === "detail") && (
-                    <div className="zip-chips" role="group" aria-label="Quick ZIP compare">
-                      {zips.map((z) => (
-                        <button
-                          key={z.zip}
-                          type="button"
-                          className={`zip-chip${selectedZip === z.zip ? " zip-chip--active" : ""}`}
-                          onClick={() => handleZipSelect(z.zip)}
-                        >
-                          {z.zip}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-
-                  {section.id === "detail" && selected && (
-                    <>
-                      {selectedProperty ? (
-                        <PropertyValuationPanel
-                          property={selectedProperty}
-                          onBack={handleBackToZip}
-                        />
-                      ) : (
-                        <>
-                          <ZipDetailPanel
-                            zip={selected}
-                            metroAvgPsf={metroAvgPsf}
-                            onClose={handleCloseDetail}
-                            embedded
-                            featureProps={selectedFeature}
-                            properties={zipProperties}
-                            onEvaluateProperty={handleEvaluateProperty}
-                          />
-                          <LocaleQuoteCard
-                            zip={selected.zip}
-                            quoteText={selectedFeature?.localQuote}
-                            primaryVibe={selectedFeature?.primaryVibe}
-                            neighborhood={selectedFeature?.neighborhoodName}
-                          />
-                        </>
-                      )}
-                    </>
-                  )}
-                </div>
-              </section>
+              />
             ))}
           </div>
         )}
 
-        {!isOverviewMode && (
+        {!isOverviewMode && dcStoryActive && (
           <nav className="cinematic__progress" aria-label="Scroll progress">
             {SCROLL_SECTIONS.map((section) => (
               <span
@@ -578,6 +707,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           </nav>
         )}
       </div>
+
+      <StoryDrawer
+        open={drawerOpen}
+        title={contextChip.title}
+        onClose={() => setDrawerOpen(false)}
+      >
+        {drawerContent}
+      </StoryDrawer>
     </>
   );
 }

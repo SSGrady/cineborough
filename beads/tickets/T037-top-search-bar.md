@@ -1,7 +1,7 @@
 ---
 id: T037
 title: Top search bar geocoding
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

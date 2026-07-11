@@ -115,3 +115,13 @@ Aggregated progress log for Cineborough development.
 - ADR-011 implementation checklist complete
 
 **Status:** T030–T031 → `done`. Sprint S007 complete (2/2).
+
+### E007 / S009 — Reventure Shell UX (T037–T039, T041)
+
+- `TopBar` with local search (945 CBSAs + sandbox ZIPs) and geography tickers
+- Sidebar reduced to data layers only (Popular / Investor / Hope-Core)
+- Bottom national-hint and scroll story panels replaced by `ContextChip` + `StoryDrawer`
+- Metro map labels capped by zoom tier to reduce national-view clutter
+- DC story scroll camera triggers preserved; panels de-emphasized
+
+**Status:** T037, T038, T039, T041 → `done`. T040 remains open.

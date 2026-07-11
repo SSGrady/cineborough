@@ -30,9 +30,9 @@ Neither pure retail nor pure investor. Target: first-time / move-up buyer who ne
 - [ ] Census ACS demographics live at ZIP + CBSA (remote work, homeowners 25–44, pop growth, median age, college degree)
 - [ ] Financial metrics from ZHVI bulk + FHFA/HUD derived models (ADR-012)
 - [ ] `Income Growth` added to schema + sidebar (currently missing)
-- [ ] Top search bar (county / city / ZIP / CBSA geocoding)
-- [ ] Geography tickers moved to top bar; sidebar = data layers only
-- [ ] Bottom scroll story panels replaced with compact top chip + optional detail drawer
+- [x] Top search bar (county / city / ZIP / CBSA geocoding)
+- [x] Geography tickers moved to top bar; sidebar = data layers only
+- [x] Bottom scroll story panels replaced with compact top chip + optional detail drawer
 - [ ] Hybrid scoring engine returns top 3 neighborhoods from user criteria
 - [ ] Cinematic flyover + analytics overlay on arrival
 
@@ -53,11 +53,11 @@ Neither pure retail nor pure investor. Target: first-time / move-up buyer who ne
 | [T034](../tickets/T034-forecast-overvaluation.md) | Forecast + overvaluation model | open |
 | [T035](../tickets/T035-derived-metrics-refresh.md) | Derived metrics + refresh cron | open |
 | [T036](../tickets/T036-income-growth-metric.md) | Income growth schema + layer | open |
-| [T037](../tickets/T037-top-search-bar.md) | Top search bar (geocoding) | open |
-| [T038](../tickets/T038-top-geography-bar.md) | Geography tickers → top bar | open |
-| [T039](../tickets/T039-compact-story-chrome.md) | Replace bottom scroll panels | open |
+| [T037](../tickets/T037-top-search-bar.md) | Top search bar (geocoding) | done |
+| [T038](../tickets/T038-top-geography-bar.md) | Geography tickers → top bar | done |
+| [T039](../tickets/T039-compact-story-chrome.md) | Replace bottom scroll panels | done |
 | [T040](../tickets/T040-sidebar-categories.md) | Sidebar category expansion | open |
-| [T041](../tickets/T041-map-label-density.md) | Map label density by zoom | open |
+| [T041](../tickets/T041-map-label-density.md) | Map label density by zoom | done |
 | [T042](../tickets/T042-discovery-criteria-panel.md) | Discovery criteria panel | open |
 | [T043](../tickets/T043-hybrid-scoring-engine.md) | Hybrid scoring engine | open |
 | [T044](../tickets/T044-top3-flyover.md) | Top-3 cinematic flyover | open |

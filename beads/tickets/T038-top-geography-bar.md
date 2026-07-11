@@ -1,7 +1,7 @@
 ---
 id: T038
 title: Geography tickers top bar
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

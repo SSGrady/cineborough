@@ -23,7 +23,7 @@ import {
   US_NATIONAL_FIT_PADDING,
   type MapCameraTarget,
 } from "@cineborough/geo";
-import type { GeographyLevel } from "./Sidebar";
+import type { GeographyLevel } from "@cineborough/geo";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
 import { buildTrailPaths, extractOuterRings } from "@/lib/selection-border";
@@ -65,19 +65,37 @@ interface LabelPoint {
   value: number;
 }
 
+/** Cap metro labels at low zoom to reduce clutter (T041). */
+function maxMetroLabelsForZoom(zoom: number): number {
+  if (zoom < 4) return 0;
+  if (zoom < 5) return 24;
+  if (zoom < 6) return 60;
+  if (zoom < 7) return 140;
+  return Number.POSITIVE_INFINITY;
+}
+
 function buildMetroLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
+  mapZoom: number,
   minHomeValue = 1,
 ): LabelPoint[] {
-  return geoJson.features
+  const cap = maxMetroLabelsForZoom(mapZoom);
+  const candidates = geoJson.features
     .filter((f) => f.properties.medianHomeValue >= minHomeValue)
     .map((f) => ({
       position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
       zipCode: f.properties.zipCode,
       name: f.properties.neighborhoodName,
       value: getRawMetricFromFeature(f.properties, activeMetric),
+      medianHomeValue: f.properties.medianHomeValue,
     }));
+
+  if (!Number.isFinite(cap)) return candidates;
+
+  return candidates
+    .sort((a, b) => b.medianHomeValue - a.medianHomeValue)
+    .slice(0, cap);
 }
 
 function buildStateLabelData(
@@ -202,6 +220,7 @@ export function MapView({
   const exploreModeRef = useRef(exploreMode);
   const onUserMapMoveRef = useRef(onUserMapMove);
   const [mapReady, setMapReady] = useState(false);
+  const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
   const [trailPhase, setTrailPhase] = useState(0);
   const trailProgressRef = useRef(0);
@@ -242,8 +261,8 @@ export function MapView({
     if (geographyLevel === "state") {
       return buildStateLabelData(geoJson, activeMetric);
     }
-    return buildMetroLabelData(geoJson, activeMetric);
-  }, [geoJson, activeMetric, overviewMode, geographyLevel]);
+    return buildMetroLabelData(geoJson, activeMetric, mapZoom);
+  }, [geoJson, activeMetric, overviewMode, geographyLevel, mapZoom]);
 
   const selectionRings = useMemo(
     () => (selectedZip ? extractOuterRings(geoJson, selectedZip) : []),
@@ -401,7 +420,7 @@ export function MapView({
         national
           ? `${d.name}\n${formatLabelValue(activeMetric, d.value)}`
           : `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
-      getSize: national ? 11 : 12,
+      getSize: national ? 11 : mapZoom < 6 ? 10 : 12,
       getColor: [15, 23, 42, 255],
       getTextAnchor: "middle",
       getAlignmentBaseline: "center",
@@ -414,7 +433,7 @@ export function MapView({
         getText: [activeMetric, isOverviewView],
       },
     });
-  }, [labelData, activeMetric, labelsVisible, isOverviewView]);
+  }, [labelData, activeMetric, labelsVisible, isOverviewView, mapZoom]);
 
   const pathLayer = useMemo(() => {
     const paths = loadTransitPaths();
@@ -541,7 +560,12 @@ export function MapView({
       }
     };
 
+    const onZoom = () => {
+      setMapZoom(map.getZoom());
+    };
+
     const onZoomEnd = () => {
+      setMapZoom(map.getZoom());
       if (!programmaticMoveRef.current) onUserGestureEnd();
     };
 
@@ -550,6 +574,7 @@ export function MapView({
     };
 
     map.on("dragend", onUserGestureEnd);
+    map.on("zoom", onZoom);
     map.on("zoomend", onZoomEnd);
     map.on("moveend", onMoveEnd);
 
@@ -571,6 +596,7 @@ export function MapView({
       canvas.removeEventListener("wheel", onWheel);
       map.off("render", onRender);
       map.off("dragend", onUserGestureEnd);
+      map.off("zoom", onZoom);
       map.off("zoomend", onZoomEnd);
       map.off("moveend", onMoveEnd);
       try {
