@@ -15,7 +15,8 @@ import {
   getMetroTileConfig,
 } from "@cineborough/data";
 import {
-  colorForNormalizedScore,
+  colorForChoropleth,
+  choroplethPaletteForMetric,
   US_NATIONAL_CAMERA,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
@@ -41,6 +42,8 @@ interface MapViewProps {
   activeMetric?: MetricLayerKey;
   selectedZip?: string | null;
   onZipSelect?: (zipCode: string | null) => void;
+  /** Fired when the user clicks map background (no feature hit). */
+  onBackgroundClick?: () => void;
   cameraTarget?: MapCameraTarget | null;
   /** jumpTo each frame (scroll scrub) — avoids deck.gl drift during flyTo */
   cameraInstant?: boolean;
@@ -67,12 +70,12 @@ interface LabelPoint {
   value: number;
 }
 
-/** Cap metro labels at low zoom to reduce clutter (T041). */
+/** Hide metro labels at bird's-eye zoom — shapes only until user zooms in. */
 function maxMetroLabelsForZoom(zoom: number): number {
-  if (zoom < 4) return 0;
-  if (zoom < 5) return 24;
-  if (zoom < 6) return 60;
-  if (zoom < 7) return 140;
+  if (zoom < 5.5) return 0;
+  if (zoom < 6) return 24;
+  if (zoom < 7) return 60;
+  if (zoom < 8) return 140;
   return Number.POSITIVE_INFINITY;
 }
 
@@ -104,51 +107,32 @@ function buildStateLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
 ): LabelPoint[] {
-  const byState = new Map<
-    string,
-    { lng: number; lat: number; count: number; total: number }
-  >();
-
-  for (const f of geoJson.features) {
-    if (f.properties.medianHomeValue <= 0) continue;
-    const st = f.properties.state?.trim();
-    if (!st || st.length > 2) continue;
-    const value = getRawMetricFromFeature(f.properties, activeMetric);
-    const entry = byState.get(st) ?? { lng: 0, lat: 0, count: 0, total: 0 };
-    entry.lng += f.properties.labelLng;
-    entry.lat += f.properties.labelLat;
-    entry.count += 1;
-    entry.total += value;
-    byState.set(st, entry);
-  }
-
-  return Array.from(byState.entries()).map(([state, entry]) => ({
-    position: [entry.lng / entry.count, entry.lat / entry.count] as [number, number],
-    zipCode: state,
-    name: state,
-    value: entry.total / entry.count,
-  }));
+  return geoJson.features
+    .filter((f) => f.properties.medianHomeValue > 0 || f.properties.opportunityScoreNormalized > 0)
+    .map((f) => ({
+      position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
+      zipCode: f.properties.zipCode,
+      name: f.properties.neighborhoodName,
+      value: getRawMetricFromFeature(f.properties, activeMetric),
+    }));
 }
 
 function buildNationalLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
 ): LabelPoint[] {
-  const values: number[] = [];
-  for (const f of geoJson.features) {
-    if (f.properties.medianHomeValue <= 0) continue;
-    values.push(getRawMetricFromFeature(f.properties, activeMetric));
+  const sample = geoJson.features[0];
+  if (sample) {
+    return [
+      {
+        position: [-96.5, 39.2] as [number, number],
+        zipCode: "US",
+        name: "United States",
+        value: getRawMetricFromFeature(sample.properties, activeMetric),
+      },
+    ];
   }
-  if (values.length === 0) return [];
-  const avg = values.reduce((sum, v) => sum + v, 0) / values.length;
-  return [
-    {
-      position: [-96.5, 39.2],
-      zipCode: "US",
-      name: "United States",
-      value: avg,
-    },
-  ];
+  return [];
 }
 
 function hexToRgb(hex: string): [number, number, number, number] {
@@ -198,9 +182,10 @@ function applyCamera(
 
 export function MapView({
   geoJson,
-  activeMetric = "opportunityScore",
+  activeMetric = "medianHomeValue",
   selectedZip = null,
   onZipSelect,
+  onBackgroundClick,
   cameraTarget = null,
   cameraInstant = false,
   pathVisible = false,
@@ -244,7 +229,11 @@ export function MapView({
   const useMetroTiles = false;
 
   const metricLabel =
-    METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Opportunity Index";
+    METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Home Value";
+
+  const choroplethPalette = choroplethPaletteForMetric(activeMetric);
+  const isNationalGeography = overviewMode && geographyLevel === "national";
+  const isStateGeography = overviewMode && geographyLevel === "state";
 
   const colorByZip = useMemo(
     () => getNormalizedMetricValuesFromGeoJson(geoJson, activeMetric),
@@ -265,6 +254,9 @@ export function MapView({
     }
     if (geographyLevel === "state") {
       return buildStateLabelData(geoJson, activeMetric);
+    }
+    if (geographyLevel === "county") {
+      return buildMetroLabelData(geoJson, activeMetric, mapZoom);
     }
     return buildMetroLabelData(geoJson, activeMetric, mapZoom);
   }, [geoJson, activeMetric, overviewMode, geographyLevel, mapZoom]);
@@ -296,28 +288,34 @@ export function MapView({
         }
 
         const score = zip ? (colorByZip.get(zip) ?? 0) : 0;
-        const hex = colorForNormalizedScore(score);
+        const hex = colorForChoropleth(choroplethPalette, score);
         const [r, g, b] = hexToRgb(hex);
-        return [r, g, b, alpha];
+        const fillAlpha = isNationalGeography ? 200 : isStateGeography ? 210 : isOverviewView ? 120 : 75;
+        return [r, g, b, isSelected ? 150 : fillAlpha];
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
         if (zip === selectedZip) return [255, 255, 255, 110];
-        return isOverviewView ? [30, 41, 59, 180] : [30, 41, 59, 160];
+        if (isNationalGeography) return [255, 255, 255, 60];
+        if (isStateGeography) return [15, 23, 42, 200];
+        return isOverviewView ? [15, 23, 42, 220] : [30, 41, 59, 160];
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        return zip === selectedZip ? 1.25 : isOverviewView ? 1 : 0.75;
+        if (zip === selectedZip) return 1.25;
+        if (isNationalGeography) return 0.5;
+        if (isStateGeography) return 1.25;
+        return isOverviewView ? 1.1 : 0.75;
       },
-      lineWidthMinPixels: isOverviewView ? 0.75 : 0.5,
-      lineWidthMaxPixels: isOverviewView ? 2 : 1.5,
+      lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
+      lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
-        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView],
-        getLineColor: [selectedZip, isOverviewView],
-        getLineWidth: [selectedZip, isOverviewView],
+        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel],
+        getLineColor: [selectedZip, isOverviewView, geographyLevel],
+        getLineWidth: [selectedZip, isOverviewView, geographyLevel],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
@@ -415,30 +413,40 @@ export function MapView({
   const labelLayer = useMemo(() => {
     if (!labelsVisible || labelData.length === 0) return null;
 
-    const national = isOverviewView;
+    const overview = isOverviewView;
+    const labelSize = overview
+      ? geographyLevel === "national"
+        ? 18
+        : geographyLevel === "state"
+          ? 14
+          : mapZoom < 7
+            ? 12
+            : 13
+      : mapZoom < 6
+        ? 11
+        : 13;
+
     return new TextLayer({
-      id: national ? "metro-labels" : "zip-labels",
+      id: overview ? "overview-labels" : "zip-labels",
       data: labelData,
       pickable: false,
       getPosition: (d) => d.position,
-      getText: (d) =>
-        national
-          ? `${d.name}\n${formatLabelValue(activeMetric, d.value)}`
-          : `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
-      getSize: national ? 11 : mapZoom < 6 ? 10 : 12,
+      getText: (d) => `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
+      getSize: labelSize,
       getColor: [15, 23, 42, 255],
       getTextAnchor: "middle",
       getAlignmentBaseline: "center",
       fontFamily: "Arial, Helvetica, sans-serif",
-      fontWeight: 600,
-      outlineWidth: national ? 3 : 2,
-      outlineColor: [255, 255, 255, 240],
+      fontWeight: 700,
+      outlineWidth: overview ? 4 : 3,
+      outlineColor: [255, 255, 255, 250],
       characterSet: "auto",
       updateTriggers: {
-        getText: [activeMetric, isOverviewView],
+        getText: [activeMetric, geographyLevel],
+        getSize: [geographyLevel, mapZoom],
       },
     });
-  }, [labelData, activeMetric, labelsVisible, isOverviewView, mapZoom]);
+  }, [labelData, activeMetric, labelsVisible, isOverviewView, geographyLevel, mapZoom]);
 
   const pathLayer = useMemo(() => {
     const paths = loadTransitPaths();
@@ -469,7 +477,20 @@ export function MapView({
   const handleClick = useCallback(
     (info: PickingInfo) => {
       const zip = (info.object?.properties as { zipCode?: string })?.zipCode;
-      if (!zip) return;
+
+      if (!zip) {
+        onBackgroundClick?.();
+        return;
+      }
+
+      // National/state overview regions are not drill targets
+      if (isOverviewView && (zip === "US" || zip.startsWith("US-"))) {
+        onBackgroundClick?.();
+        return;
+      }
+      if (isOverviewView && geographyLevel === "state") {
+        return;
+      }
 
       onZipSelect?.(zip);
 
@@ -489,7 +510,7 @@ export function MapView({
         programmaticMoveRef,
       );
     },
-    [onZipSelect, cinematicOnSelect],
+    [onZipSelect, onBackgroundClick, cinematicOnSelect, isOverviewView, geographyLevel],
   );
 
   const syncOverlay = useCallback(() => {

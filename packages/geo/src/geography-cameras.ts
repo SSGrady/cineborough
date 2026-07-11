@@ -108,6 +108,64 @@ export function buildOverviewRestoreCamera(
   };
 }
 
+/** Flat sandbox metro overview after background click or flyover exit. */
+export function buildSandboxFlatRestore(
+  cbsa: string,
+  orlandoCbsa: string,
+  orlandoCamera: MapCameraTarget,
+): MapCameraTarget {
+  if (cbsa === orlandoCbsa) {
+    return { ...orlandoCamera, pitch: 0, bearing: 0, duration: 1000 };
+  }
+  return { ...CINEMATIC_CAMERAS.metro, pitch: 0, bearing: 0, duration: 1000 };
+}
+
+export interface BackgroundClickRestoreOptions {
+  isOverviewMode: boolean;
+  sandboxDrillActive: boolean;
+  storyCameraActive: boolean;
+  selectedZip: string | null;
+  geography: GeographyLevel;
+  discoveryFlyoverActive: boolean;
+  activeSandboxCbsa: string;
+  orlandoCbsa: string;
+  orlandoCamera: MapCameraTarget;
+  savedOverviewCamera?: MapCameraTarget | null;
+  usInsetRegion?: UsInsetRegion;
+}
+
+/** Camera target for map background click — reverse pitch/bearing to flat overview. */
+export function buildBackgroundClickRestore(
+  options: BackgroundClickRestoreOptions,
+): MapCameraTarget | null {
+  const {
+    isOverviewMode,
+    sandboxDrillActive,
+    storyCameraActive,
+    selectedZip,
+    geography,
+    discoveryFlyoverActive,
+    activeSandboxCbsa,
+    orlandoCbsa,
+    orlandoCamera,
+    savedOverviewCamera,
+    usInsetRegion = "continental",
+  } = options;
+
+  if (options.isOverviewMode && isOverviewGeography(options.geography)) {
+    return buildOverviewRestoreCamera(savedOverviewCamera, usInsetRegion);
+  }
+
+  if (!sandboxDrillActive) return null;
+
+  const pitched =
+    storyCameraActive || selectedZip !== null || geography === "zip" || discoveryFlyoverActive;
+
+  if (!pitched) return null;
+
+  return buildSandboxFlatRestore(activeSandboxCbsa, orlandoCbsa, orlandoCamera);
+}
+
 export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarget | null {
   if (options.exploreMode) {
     return null;

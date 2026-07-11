@@ -68,6 +68,40 @@ export function colorForNormalizedScore(score: number): string {
   return OPPORTUNITY_COLOR_STOPS[OPPORTUNITY_COLOR_STOPS.length - 1].color;
 }
 
+/** Reventure-style blue (low) → red (high) for home value and similar metrics */
+export const VALUE_COLOR_STOPS: ColorStop[] = [
+  { min: 0, max: 20, color: "#2166ac", label: "Low" },
+  { min: 21, max: 40, color: "#67a9cf", label: "Below avg" },
+  { min: 41, max: 60, color: "#f7f7f7", label: "Average" },
+  { min: 61, max: 80, color: "#ef8a62", label: "Above avg" },
+  { min: 81, max: 100, color: "#b2182b", label: "High" },
+];
+
+export function colorForValueGradient(score: number): string {
+  const clamped = Math.max(0, Math.min(100, score));
+  for (const stop of VALUE_COLOR_STOPS) {
+    if (clamped >= stop.min && clamped <= stop.max) {
+      return stop.color;
+    }
+  }
+  return VALUE_COLOR_STOPS[VALUE_COLOR_STOPS.length - 1].color;
+}
+
+export type ChoroplethPalette = "opportunity" | "value";
+
+export function choroplethPaletteForMetric(metricKey: string): ChoroplethPalette {
+  if (metricKey === "medianHomeValue" || metricKey === "marketPsf") {
+    return "value";
+  }
+  return "opportunity";
+}
+
+export function colorForChoropleth(palette: ChoroplethPalette, normalizedScore: number): string {
+  return palette === "value"
+    ? colorForValueGradient(normalizedScore)
+    : colorForNormalizedScore(normalizedScore);
+}
+
 export function interpolateColor(score: number, min: number, max: number): string {
   if (max === min) return OPPORTUNITY_COLOR_STOPS[1].color;
   const normalized = ((score - min) / (max - min)) * 100;

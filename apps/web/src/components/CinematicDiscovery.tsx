@@ -9,6 +9,8 @@ import {
   getPropertyById,
   zipMetricsFromGeoJson,
   loadUsMetrosGeoJson,
+  buildStateChoroplethFromMetros,
+  buildNationalChoroplethFromMetros,
   DC_METRO_CBSA,
   ORLANDO_METRO_CBSA,
   loadMetroShard,
@@ -23,6 +25,8 @@ import {
   resolveMapCamera,
   isOverviewGeography,
   buildOverviewRestoreCamera,
+  buildSandboxFlatRestore,
+  buildBackgroundClickRestore,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
@@ -94,7 +98,7 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · click a metro to drill in",
   state: "State view · metric label per state",
   metro: "All metros · click a region to open sandbox detail",
-  county: "County view · metro boundaries (county ingest pending)",
+  county: "County view · state aggregates (county GeoJSON pending)",
 };
 
 const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA]);
@@ -110,13 +114,6 @@ interface DiscoveryFlyoverState {
 const FLYOVER_HIGHLIGHT_MS = 2800;
 const FLYOVER_CAMERA_MS = 2200;
 
-function sandboxFlatRestore(cbsa: string): MapCameraTarget {
-  if (cbsa === ORLANDO_METRO_CBSA) {
-    return { ...ORLANDO_METRO_CAMERA, duration: 1000 };
-  }
-  return { ...CINEMATIC_CAMERAS.metro, duration: 1000 };
-}
-
 export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const initialFitRef = useRef(true);
@@ -126,9 +123,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [exitRestoreTarget, setExitRestoreTarget] = useState<MapCameraTarget | null>(null);
   const [selectedZip, setSelectedZip] = useState<string | null>(null);
   const [selectedPropertyId, setSelectedPropertyId] = useState<string | null>(null);
-  const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("opportunityScore");
+  const [activeMetric, setActiveMetric] = useState<MetricLayerKey>("medianHomeValue");
   const [activeSection, setActiveSection] = useState<CinematicSection>("metro");
-  const [geography, setGeography] = useState<GeographyLevel>("national");
+  const [geography, setGeography] = useState<GeographyLevel>("state");
   const [exploreMode, setExploreMode] = useState(false);
   const [sandboxDrillActive, setSandboxDrillActive] = useState(false);
   const [storyCameraActive, setStoryCameraActive] = useState(false);
@@ -164,9 +161,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [activeSandboxCbsa, geoJson],
   );
 
+  const overviewGeoJson = useMemo(() => {
+    if (geography === "national") {
+      return buildNationalChoroplethFromMetros(US_METROS_GEOJSON, activeMetric);
+    }
+    if (geography === "state" || geography === "county") {
+      return buildStateChoroplethFromMetros(US_METROS_GEOJSON, activeMetric);
+    }
+    return US_METROS_GEOJSON;
+  }, [geography, activeMetric]);
+
   const activeGeoJson = useMemo(
-    () => (isOverviewMode ? US_METROS_GEOJSON : activeShardGeoJson),
-    [isOverviewMode, activeShardGeoJson],
+    () => (isOverviewMode ? overviewGeoJson : activeShardGeoJson),
+    [isOverviewMode, overviewGeoJson, activeShardGeoJson],
   );
 
   const zips = useMemo(
@@ -413,6 +420,53 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSelectedPropertyId(null);
   };
 
+  const handleBackgroundClick = useCallback(() => {
+    if (exploreMode || isOverviewMode) return;
+
+    const restore = buildBackgroundClickRestore({
+      isOverviewMode,
+      sandboxDrillActive,
+      storyCameraActive,
+      selectedZip,
+      geography,
+      discoveryFlyoverActive,
+      activeSandboxCbsa,
+      orlandoCbsa: ORLANDO_METRO_CBSA,
+      orlandoCamera: ORLANDO_METRO_CAMERA,
+      savedOverviewCamera: savedOverviewCameraRef.current,
+      usInsetRegion,
+    });
+
+    if (discoveryFlyoverActive) {
+      setDiscoveryFlyover(null);
+      setDiscoveryTourComplete(true);
+    }
+
+    if (selectedZip || geography === "zip") {
+      setSelectedZip(null);
+      setSelectedPropertyId(null);
+      setGeography("metro");
+    }
+
+    if (storyCameraActive || discoveryFlyoverActive) {
+      setStoryCameraActive(false);
+    }
+
+    if (restore) {
+      setExitRestoreTarget(restore);
+    }
+  }, [
+    exploreMode,
+    isOverviewMode,
+    sandboxDrillActive,
+    storyCameraActive,
+    selectedZip,
+    geography,
+    discoveryFlyoverActive,
+    activeSandboxCbsa,
+    usInsetRegion,
+  ]);
+
   const handleEvaluateProperty = useCallback((propertyId: string) => {
     setSelectedPropertyId(propertyId);
     setActiveSection("detail");
@@ -584,7 +638,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
 
     if (wasDiscovery && !discoveryFlyoverActive && sandboxDrillActive) {
-      setExitRestoreTarget(sandboxFlatRestore(activeSandboxCbsa));
+      setExitRestoreTarget(
+        buildSandboxFlatRestore(activeSandboxCbsa, ORLANDO_METRO_CBSA, ORLANDO_METRO_CAMERA),
+      );
     }
   }, [
     sandboxDrillActive,
@@ -968,6 +1024,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             activeMetric={activeMetric}
             selectedZip={selectedZip}
             onZipSelect={handleZipSelect}
+            onBackgroundClick={handleBackgroundClick}
             cameraTarget={cameraTarget}
             cameraInstant={dcStoryActive}
             pathVisible={pathVisible}

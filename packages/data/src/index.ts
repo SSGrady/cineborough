@@ -8,6 +8,7 @@ export * from "./boundaries";
 export * from "./loaders";
 export * from "./dc-metro-geojson";
 export * from "./us-metros-geojson";
+export * from "./us-states";
 export * from "./metro-shards";
 export * from "./metro-tiles";
 export * from "./locale-quotes";
