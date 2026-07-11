@@ -1,5 +1,5 @@
 /**
- * Regenerates data/mock/dc-metro.geojson from boundaries, metrics, and locale quotes.
+ * Regenerates data/metros/47900.geojson from boundaries, metrics, and locale quotes.
  * Run: pnpm --filter @cineborough/data build:geojson
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -11,7 +11,8 @@ import type { PolygonGeometry } from "./types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = resolve(__dirname, "../../../data/mock");
-const OUTPUT = resolve(DATA_DIR, "dc-metro.geojson");
+const METROS_DIR = resolve(__dirname, "../../../data/metros");
+const OUTPUT = resolve(METROS_DIR, "47900.geojson");
 
 const boundaries = JSON.parse(
   readFileSync(resolve(DATA_DIR, "zip-boundaries.geojson"), "utf8"),

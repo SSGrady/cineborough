@@ -1,9 +1,11 @@
-import dcMetroGeoJson from "../../../data/mock/dc-metro.geojson";
-import orlandoMetroGeoJson from "../../../data/mock/orlando-metro.geojson";
+import dcMetroGeoJson from "../../../data/metros/47900.geojson";
+import orlandoMetroGeoJson from "../../../data/metros/36740.geojson";
 import type { DcMetroGeoJson } from "./types";
 import { DC_METRO_CBSA } from "./us-metros-geojson";
 
 export const ORLANDO_METRO_CBSA = "36740";
+
+const LOCAL_METRO_API_BASE = "/api/v1";
 
 const METRO_SHARD_SOURCES: Record<string, DcMetroGeoJson> = {
   [DC_METRO_CBSA]: dcMetroGeoJson as unknown as DcMetroGeoJson,
@@ -13,8 +15,14 @@ const METRO_SHARD_SOURCES: Record<string, DcMetroGeoJson> = {
 const shardCache = new Map<string, DcMetroGeoJson>();
 
 export interface FetchMetroShardOptions {
-  /** API base URL — defaults to NEXT_PUBLIC_METRO_API_BASE_URL when set */
+  /** API base URL — external override; defaults to local /api/v1 in browser when unset */
   apiBaseUrl?: string;
+}
+
+function resolveMetroApiBase(options?: FetchMetroShardOptions): string | undefined {
+  if (options?.apiBaseUrl) return options.apiBaseUrl;
+  if (typeof window !== "undefined") return LOCAL_METRO_API_BASE;
+  return undefined;
 }
 
 /**
@@ -34,7 +42,7 @@ export async function fetchMetroShard(
   const cached = shardCache.get(cbsaCode);
   if (cached) return cached;
 
-  const base = options?.apiBaseUrl;
+  const base = resolveMetroApiBase(options);
   if (!base) return undefined;
 
   try {

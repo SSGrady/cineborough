@@ -104,4 +104,14 @@ Aggregated progress log for Cineborough development.
 - Level 3 flow wired from ZIP detail via property picker and "Evaluate property" CTA
 - Home value sparkline added to ZIP detail investor block
 
-**Status:** T016–T021 → `done`. Sprint S004 complete (6/6).
+
+## 2026-07-11
+
+### E006 / S007 — ADR-011 Follow-on (T030–T031)
+
+- Migrated sandbox shards to `data/metros/{cbsa}.geojson` (47900 DC, 36740 Orlando)
+- `GET /api/v1/metros/{cbsa}/geojson` returns bundled shard or 404 `{ "fallback": "national-tile-only" }`
+- `fetchMetroShard` falls back to local `/api/v1` when no external API base is passed
+- ADR-011 implementation checklist complete
+
+**Status:** T030–T031 → `done`. Sprint S007 complete (2/2).

@@ -1,4 +1,4 @@
-import dcMetroGeoJson from "../../../data/mock/dc-metro.geojson";
+import dcMetroGeoJson from "../../../data/metros/47900.geojson";
 import type {
   DcMetroFeatureProperties,
   DcMetroGeoJson,
@@ -8,7 +8,7 @@ import type {
 } from "./types";
 import { normalizeScores } from "./opportunity-index";
 
-/** @deprecated Use loadDcMetroGeoJson() — boundaries are embedded in dc-metro.geojson */
+/** @deprecated Use loadDcMetroGeoJson() — boundaries are embedded in data/metros/47900.geojson */
 export { loadZipBoundaries } from "./boundaries";
 
 export function loadDcMetroGeoJson(): DcMetroGeoJson {

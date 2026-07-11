@@ -7,7 +7,7 @@ See [ADR-009](../adr/009-ui-ux-and-geojson-schema.md).
 
 | Path | Role |
 |------|------|
-| `data/mock/dc-metro.geojson` | Runtime source for Deck.gl `GeoJsonLayer` |
+| `data/metros/47900.geojson` | Runtime source for Deck.gl `GeoJsonLayer` (DC sandbox) |
 | `packages/data/src/build-geojson.ts` | Regenerates file from boundaries + metrics + locale quotes |
 
 ## FeatureCollection shape

@@ -1,5 +1,5 @@
 /**
- * Regenerates data/mock/orlando-metro.geojson from Orlando mock inputs.
+ * Regenerates data/metros/36740.geojson from Orlando mock inputs.
  * Run: pnpm --filter @cineborough/data build:orlando-geojson
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -11,7 +11,8 @@ import type { PolygonGeometry } from "./types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = resolve(__dirname, "../../../data/mock");
-const OUTPUT = resolve(DATA_DIR, "orlando-metro.geojson");
+const METROS_DIR = resolve(__dirname, "../../../data/metros");
+const OUTPUT = resolve(METROS_DIR, "36740.geojson");
 
 const metrics = JSON.parse(
   readFileSync(resolve(DATA_DIR, "orlando-zip-metrics.json"), "utf8"),

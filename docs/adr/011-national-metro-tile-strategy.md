@@ -74,7 +74,7 @@ This ADR compares three delivery models and picks a phased hybrid.
 
 ### Tier 2 — Metro shards (current pattern, scale catalog)
 
-**Now:** `dc-metro.geojson`, `orlando-metro.geojson`; `metro-shards.ts` merges for map display; `build-metro-shard.ts` shared builder.
+**Now:** `data/metros/47900.geojson`, `data/metros/36740.geojson`; `metro-shards.ts` merges for map display; `build-metro-shard.ts` shared builder.
 
 **Scale path:**
 
@@ -158,11 +158,11 @@ Deferred. Cost and vendor lock for CBSA/ZCTA; Census cartographic boundaries + t
 
 ## Implementation checklist (follow-on work)
 
-- [ ] `build-us-metro-tiles.ts` — tippecanoe pipeline from `cbsa-boundaries-20m.geojson` + metrics
-- [ ] `MVTLayer` branch in `MapView` when `geographyLevel === "national"` and tiles URL set
-- [ ] `fetchMetroShard(cbsa)` client loader with cache
-- [ ] Move shard files to `data/metros/{cbsa}.geojson` layout
-- [ ] Env: `NEXT_PUBLIC_METRO_TILES_URL`, `METRO_API_BASE_URL`
+- [x] `build-us-metro-tiles.ts` — tippecanoe pipeline from `cbsa-boundaries-20m.geojson` + metrics
+- [x] `MVTLayer` branch in `MapView` when `geographyLevel === "national"` and tiles URL set
+- [x] `fetchMetroShard(cbsa)` client loader with cache
+- [x] Move shard files to `data/metros/{cbsa}.geojson` layout
+- [x] Env: `NEXT_PUBLIC_METRO_TILES_URL`, `NEXT_PUBLIC_METRO_API_BASE_URL`
 
 ## References
 
