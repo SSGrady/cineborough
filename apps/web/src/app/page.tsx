@@ -6,12 +6,6 @@ export default function HomePage() {
 
   return (
     <main className="page page--cinematic">
-      <header className="cinematic-header">
-        <h1>Cineborough</h1>
-        <p>
-          {geoJson.metadata.metro} · scroll to explore
-        </p>
-      </header>
       <CinematicDiscovery geoJson={geoJson} />
     </main>
   );

@@ -51,6 +51,43 @@ function formatMetricValue(key: MetricLayerKey, value: number): string {
   return value.toFixed(1);
 }
 
+function GeographySection({
+  geography,
+  onGeographyChange,
+  showHint = true,
+}: {
+  geography: GeographyLevel;
+  onGeographyChange?: (level: GeographyLevel) => void;
+  showHint?: boolean;
+}) {
+  return (
+    <section className="sidebar__section sidebar__geography">
+      <h3>Geography</h3>
+      <div className="sidebar__geo-toggles" role="group" aria-label="Geography level">
+        {GEOGRAPHY_OPTIONS.map((opt) => (
+          <button
+            key={opt.key}
+            type="button"
+            className={`sidebar__geo-btn${
+              geography === opt.key ? " sidebar__geo-btn--active" : ""
+            }${!opt.enabled ? " sidebar__geo-btn--disabled" : ""}`}
+            disabled={!opt.enabled}
+            onClick={() => opt.enabled && onGeographyChange?.(opt.key)}
+            aria-pressed={geography === opt.key}
+          >
+            {opt.label}
+          </button>
+        ))}
+      </div>
+      {showHint && (
+        <p className="sidebar__geo-hint">
+          Pinch or Ctrl+scroll to zoom the map. Drag to pan. Scroll the page for the 3-step story. Explore map unlocks full navigation.
+        </p>
+      )}
+    </section>
+  );
+}
+
 export function Sidebar({
   activeMetric,
   onMetricChange,
@@ -66,6 +103,7 @@ export function Sidebar({
   if (mode === "slim") {
     return (
       <aside className="sidebar sidebar--slim">
+        <GeographySection geography={geography} onGeographyChange={onGeographyChange} showHint={false} />
         <header className="sidebar__header">
           <h2>{selected ? `${selected.zip} — ${selected.name}` : "ZIP Detail"}</h2>
           {selected && activeLayer && (
@@ -103,28 +141,7 @@ export function Sidebar({
         <p>Select a metric to color the map</p>
       </header>
 
-      <section className="sidebar__section sidebar__geography">
-        <h3>Geography</h3>
-        <div className="sidebar__geo-toggles" role="group" aria-label="Geography level">
-          {GEOGRAPHY_OPTIONS.map((opt) => (
-            <button
-              key={opt.key}
-              type="button"
-              className={`sidebar__geo-btn${
-                geography === opt.key ? " sidebar__geo-btn--active" : ""
-              }${!opt.enabled ? " sidebar__geo-btn--disabled" : ""}`}
-              disabled={!opt.enabled}
-              onClick={() => opt.enabled && onGeographyChange?.(opt.key)}
-              aria-pressed={geography === opt.key}
-            >
-              {opt.label}
-            </button>
-          ))}
-        </div>
-        <p className="sidebar__geo-hint">
-          Pinch or Ctrl+scroll to zoom the map. Drag to pan. Scroll the page for the 3-step story. Explore map unlocks full navigation.
-        </p>
-      </section>
+      <GeographySection geography={geography} onGeographyChange={onGeographyChange} />
 
       {CATEGORY_ORDER.map((category) => (
         <section key={category} className="sidebar__section">

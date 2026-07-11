@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import { MapboxOverlay } from "@deck.gl/mapbox";
 import { GeoJsonLayer, PathLayer, TextLayer } from "@deck.gl/layers";
-import type { PickingInfo } from "@deck.gl/core";
+import type { PickingInfo, Layer } from "@deck.gl/core";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
 import {
   getNormalizedMetricValuesFromGeoJson,
@@ -16,12 +16,22 @@ import {
   colorForNormalizedScore,
   DC_METRO_CENTER,
   DEFAULT_ZOOM,
+  US_CONTINENTAL_BOUNDS,
+  US_FULL_BOUNDS,
+  US_MAP_PROJECTION,
+  US_NATIONAL_FIT_PADDING,
   type MapCameraTarget,
 } from "@cineborough/geo";
+import type { GeographyLevel } from "./Sidebar";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
+import { buildTrailPaths, extractOuterRings } from "@/lib/selection-border";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+const MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
+/** Seconds for one full lap — constant rate, arc-length geometry. */
+const TRAIL_LAP_SEC_ZIP = 3.1;
+const TRAIL_LAP_SEC_NATIONAL = 2.75;
 
 interface MapViewProps {
   geoJson: DcMetroGeoJson;
@@ -35,6 +45,10 @@ interface MapViewProps {
   labelsVisible?: boolean;
   exploreMode?: boolean;
   onToggleExploreMode?: () => void;
+  onUserMapMove?: () => void;
+  mapBounds?: [[number, number], [number, number]] | null;
+  geographyLevel?: GeographyLevel;
+  fitNationalBounds?: boolean;
 }
 
 function hexToRgb(hex: string): [number, number, number, number] {
@@ -60,7 +74,13 @@ function cameraKey(target: MapCameraTarget): string {
   return `${lng.toFixed(5)},${lat.toFixed(5)},${target.zoom.toFixed(3)},${target.pitch ?? 0},${target.bearing ?? 0}`;
 }
 
-function applyCamera(map: mapboxgl.Map, target: MapCameraTarget, instant: boolean) {
+function applyCamera(
+  map: mapboxgl.Map,
+  target: MapCameraTarget,
+  instant: boolean,
+  programmaticRef: { current: boolean },
+) {
+  programmaticRef.current = true;
   const opts = {
     center: target.center,
     zoom: target.zoom,
@@ -87,16 +107,28 @@ export function MapView({
   labelsVisible = true,
   exploreMode = false,
   onToggleExploreMode,
+  onUserMapMove,
+  mapBounds = US_CONTINENTAL_BOUNDS,
+  geographyLevel = "metro",
+  fitNationalBounds = false,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
   const lastCameraKeyRef = useRef<string | null>(null);
+  const programmaticMoveRef = useRef(false);
   const exploreModeRef = useRef(exploreMode);
+  const onUserMapMoveRef = useRef(onUserMapMove);
   const [mapReady, setMapReady] = useState(false);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
+  const [trailPhase, setTrailPhase] = useState(0);
+  const trailProgressRef = useRef(0);
+  const trailLastFrameRef = useRef(0);
 
   exploreModeRef.current = exploreMode;
+  onUserMapMoveRef.current = onUserMapMove;
+
+  const isNationalView = geographyLevel === "national";
 
   const metricLabel =
     METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Opportunity Index";
@@ -117,6 +149,11 @@ export function MapView({
     [geoJson, activeMetric],
   );
 
+  const selectionRings = useMemo(
+    () => (selectedZip ? extractOuterRings(geoJson, selectedZip) : []),
+    [geoJson, selectedZip],
+  );
+
   const choroplethLayer = useMemo(() => {
     return new GeoJsonLayer({
       id: "zip-choropleth",
@@ -125,59 +162,118 @@ export function MapView({
       stroked: true,
       filled: true,
       extruded: false,
+      wireframe: false,
       getFillColor: (feature) => {
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
 
-        if (activeMetric === "opportunityScore" && props?.fillColorRgb) {
+        if (props?.fillColorRgb) {
           const rgb = props.fillColorRgb as [number, number, number];
-          return [...rgb, isSelected ? 230 : 190];
+          const alpha = isSelected ? 150 : isNationalView ? 85 : 75;
+          return [...rgb, alpha];
         }
 
         const score = zip ? (colorByZip.get(zip) ?? 0) : 0;
         const hex = colorForNormalizedScore(score);
         const [r, g, b] = hexToRgb(hex);
-        return [r, g, b, isSelected ? 230 : 190];
+        const alpha = isSelected ? 150 : isNationalView ? 85 : 75;
+        return [r, g, b, alpha];
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        return zip === selectedZip ? [225, 29, 72, 255] : [100, 116, 139, 180];
+        if (zip === selectedZip) return [255, 255, 255, 110];
+        return isNationalView ? [30, 41, 59, 180] : [30, 41, 59, 160];
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        return zip === selectedZip ? 3 : 1;
+        return zip === selectedZip ? 1.25 : isNationalView ? 1 : 0.75;
       },
-      lineWidthMinPixels: 1,
+      lineWidthMinPixels: isNationalView ? 0.75 : 0.5,
+      lineWidthMaxPixels: isNationalView ? 2 : 1.5,
       updateTriggers: {
-        getFillColor: [colorByZip, selectedZip, activeMetric],
-        getLineColor: [selectedZip],
-        getLineWidth: [selectedZip],
+        getFillColor: [colorByZip, selectedZip, activeMetric, isNationalView],
+        getLineColor: [selectedZip, isNationalView],
+        getLineWidth: [selectedZip, isNationalView],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isNationalView]);
+
+  const selectionBorderLayers = useMemo(() => {
+    if (!selectedZip || selectionRings.length === 0) return [];
+
+    const trailData = buildTrailPaths(selectionRings, trailPhase);
+    const outlineData = selectionRings.map(({ ring, regionId }) => ({ path: ring, regionId }));
+
+    const outline = new PathLayer({
+      id: "selection-outline",
+      data: outlineData,
+      pickable: false,
+      getPath: (d) => d.path,
+      getColor: [255, 255, 255, 90],
+      getWidth: 1.5,
+      widthMinPixels: 1,
+      widthMaxPixels: 2,
+      capRounded: true,
+      jointRounded: true,
+    });
+
+    const glow = new PathLayer({
+      id: "selection-trail-glow",
+      data: trailData,
+      pickable: false,
+      getPath: (d) => d.path,
+      getColor: [255, 255, 255, 95],
+      getWidth: 14,
+      widthMinPixels: 7,
+      widthMaxPixels: 18,
+      capRounded: true,
+      jointRounded: true,
+    });
+
+    const trail = new PathLayer({
+      id: "selection-trail",
+      data: trailData,
+      pickable: false,
+      getPath: (d) => d.path,
+      getColor: [255, 255, 255, 230],
+      getWidth: 3.5,
+      widthMinPixels: 2.5,
+      widthMaxPixels: 5,
+      capRounded: true,
+      jointRounded: true,
+    });
+
+    return [outline, glow, trail];
+  }, [selectedZip, selectionRings, trailPhase, isNationalView]);
 
   const labelLayer = useMemo(() => {
-    if (!labelsVisible) return null;
+    if (!labelsVisible || labelData.length === 0) return null;
+
+    const national = isNationalView;
     return new TextLayer({
-      id: "zip-labels",
+      id: national ? "metro-labels" : "zip-labels",
       data: labelData,
       pickable: false,
       getPosition: (d) => d.position,
-      getText: (d) => `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
-      getSize: 12,
-      getColor: [30, 41, 59, 255],
+      getText: (d) =>
+        national
+          ? `${d.name}\n${formatLabelValue(activeMetric, d.value)}`
+          : `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
+      getSize: national ? 11 : 12,
+      getColor: [15, 23, 42, 255],
       getTextAnchor: "middle",
       getAlignmentBaseline: "center",
-      fontFamily: "system-ui, sans-serif",
+      fontFamily: "Arial, Helvetica, sans-serif",
       fontWeight: 600,
-      outlineWidth: 2,
-      outlineColor: [255, 255, 255, 220],
+      outlineWidth: national ? 3 : 2,
+      outlineColor: [255, 255, 255, 240],
+      characterSet: "auto",
       updateTriggers: {
-        getText: [activeMetric],
+        getText: [activeMetric, isNationalView],
       },
     });
-  }, [labelData, activeMetric, labelsVisible]);
+  }, [labelData, activeMetric, labelsVisible, isNationalView]);
 
   const pathLayer = useMemo(() => {
     const paths = loadTransitPaths();
@@ -198,22 +294,11 @@ export function MapView({
   }, [pathVisible]);
 
   const layers = useMemo(() => {
-    const base = labelLayer
-      ? pathVisible
-        ? [choroplethLayer, pathLayer, labelLayer]
-        : [choroplethLayer, labelLayer]
-      : pathVisible
-        ? [choroplethLayer, pathLayer]
-        : [choroplethLayer];
-    return base;
-  }, [choroplethLayer, pathLayer, labelLayer, pathVisible]);
-
-  const redrawDeck = useCallback(() => {
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-    const deck = (overlay as unknown as { _deck?: { redraw: () => void } })._deck;
-    deck?.redraw();
-  }, []);
+    const stack: Layer[] = [choroplethLayer, ...selectionBorderLayers];
+    if (pathVisible) stack.push(pathLayer);
+    if (labelLayer) stack.push(labelLayer);
+    return stack;
+  }, [choroplethLayer, selectionBorderLayers, pathLayer, labelLayer, pathVisible]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -234,6 +319,7 @@ export function MapView({
             duration: 800,
           },
           false,
+          programmaticMoveRef,
         );
       }
     },
@@ -241,9 +327,14 @@ export function MapView({
   );
 
   const syncOverlay = useCallback(() => {
-    overlayRef.current?.setProps({ layers, onClick: handleClick });
-    redrawDeck();
-  }, [layers, handleClick, redrawDeck]);
+    const overlay = overlayRef.current;
+    if (!overlay || !mapReady) return;
+    try {
+      overlay.setProps({ layers, onClick: handleClick });
+    } catch {
+      // Deck.gl rejects non-mercator Mapbox projections
+    }
+  }, [layers, handleClick, mapReady]);
 
   const applyInteractionMode = useCallback((map: mapboxgl.Map, exploring: boolean) => {
     map.dragPan.enable();
@@ -266,11 +357,14 @@ export function MapView({
 
     mapboxgl.accessToken = MAPBOX_TOKEN;
 
+    const initialStyle = MAP_STYLE;
+
     const map = new mapboxgl.Map({
       container: containerRef.current,
-      style: "mapbox://styles/mapbox/light-v11",
+      style: initialStyle,
       center: DC_METRO_CENTER,
       zoom: DEFAULT_ZOOM,
+      projection: US_MAP_PROJECTION,
       dragPan: true,
       touchZoomRotate: true,
       touchPitch: true,
@@ -279,18 +373,41 @@ export function MapView({
 
     const overlay = new MapboxOverlay({
       interleaved: false,
-      layers,
-      onClick: handleClick,
+      layers: [],
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
+    const onRender = () => {
+      const deck = (overlay as unknown as { _deck?: { redraw: () => void } })._deck;
+      deck?.redraw();
+    };
+
     map.on("load", () => {
+      map.setProjection(US_MAP_PROJECTION);
+      map.setMaxBounds(mapBounds ?? US_CONTINENTAL_BOUNDS);
       applyInteractionMode(map, exploreModeRef.current);
+      map.on("render", onRender);
       setMapReady(true);
     });
 
-    map.on("render", syncOverlay);
+    const onUserGestureEnd = () => {
+      if (!programmaticMoveRef.current && onUserMapMoveRef.current) {
+        onUserMapMoveRef.current();
+      }
+    };
+
+    const onZoomEnd = () => {
+      if (!programmaticMoveRef.current) onUserGestureEnd();
+    };
+
+    const onMoveEnd = () => {
+      programmaticMoveRef.current = false;
+    };
+
+    map.on("dragend", onUserGestureEnd);
+    map.on("zoomend", onZoomEnd);
+    map.on("moveend", onMoveEnd);
 
     const onWheel = (e: WheelEvent) => {
       if (exploreModeRef.current) return;
@@ -308,8 +425,15 @@ export function MapView({
 
     return () => {
       canvas.removeEventListener("wheel", onWheel);
-      map.off("render", syncOverlay);
-      overlay.setProps({ layers: [] });
+      map.off("render", onRender);
+      map.off("dragend", onUserGestureEnd);
+      map.off("zoomend", onZoomEnd);
+      map.off("moveend", onMoveEnd);
+      try {
+        overlay.setProps({ layers: [] });
+      } catch {
+        // ignore teardown errors when projection is incompatible
+      }
       map.remove();
       mapRef.current = null;
       overlayRef.current = null;
@@ -322,21 +446,78 @@ export function MapView({
   }, [syncOverlay]);
 
   useEffect(() => {
+    if (!selectedZip || selectionRings.length === 0) {
+      trailProgressRef.current = 0;
+      setTrailPhase(0);
+      return;
+    }
+
+    const lapDuration = isNationalView ? TRAIL_LAP_SEC_NATIONAL : TRAIL_LAP_SEC_ZIP;
+    trailProgressRef.current = 0;
+    trailLastFrameRef.current = performance.now();
+    setTrailPhase(0);
+
+    let frame = 0;
+
+    const animate = (now: number) => {
+      const dt = (now - trailLastFrameRef.current) / 1000;
+      trailLastFrameRef.current = now;
+
+      trailProgressRef.current += dt / lapDuration;
+
+      if (trailProgressRef.current >= 1) {
+        trailProgressRef.current = 0;
+      }
+
+      setTrailPhase(trailProgressRef.current);
+      frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [selectedZip, selectionRings, isNationalView]);
+
+  useEffect(() => {
     const map = mapRef.current;
     if (!map || !mapReady) return;
     applyInteractionMode(map, exploreMode);
   }, [exploreMode, mapReady, applyInteractionMode]);
 
+  const prevNationalFitRef = useRef(false);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || exploreMode) return;
+
+    if (fitNationalBounds && !prevNationalFitRef.current) {
+      programmaticMoveRef.current = true;
+      map.fitBounds(US_CONTINENTAL_BOUNDS, {
+        padding: US_NATIONAL_FIT_PADDING,
+        pitch: 0,
+        bearing: 0,
+        duration: 800,
+      });
+    }
+    prevNationalFitRef.current = fitNationalBounds;
+  }, [fitNationalBounds, mapReady, exploreMode]);
+
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !cameraTarget || !mapReady || exploreMode) return;
+    if (fitNationalBounds) return;
 
     const key = cameraKey(cameraTarget);
     if (lastCameraKeyRef.current === key) return;
     lastCameraKeyRef.current = key;
 
-    applyCamera(map, cameraTarget, cameraInstant);
-  }, [cameraTarget, mapReady, exploreMode, cameraInstant]);
+    applyCamera(map, cameraTarget, cameraInstant, programmaticMoveRef);
+  }, [cameraTarget, mapReady, exploreMode, cameraInstant, fitNationalBounds]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady) return;
+    map.setMaxBounds(mapBounds ?? US_FULL_BOUNDS);
+  }, [mapBounds, mapReady]);
 
   useEffect(() => {
     if (exploreMode) {
@@ -363,10 +544,11 @@ export function MapView({
         | undefined;
       if (props?.zipCode) {
         const value = labelData.find((d) => d.zipCode === props.zipCode);
+        const title = isNationalView ? props.neighborhoodName : props.neighborhoodName;
         popup
           .setLngLat(e.lngLat)
           .setHTML(
-            `<strong>${props.neighborhoodName}</strong><br/>${value ? formatLabelValue(activeMetric, value.value) : ""}`,
+            `<strong>${title ?? props.zipCode}</strong><br/>${value ? formatLabelValue(activeMetric, value.value) : ""}`,
           )
           .addTo(map);
       } else {
@@ -379,7 +561,7 @@ export function MapView({
       map.off("mousemove", onMouseMove);
       popup.remove();
     };
-  }, [mapReady, tooltipsEnabled, labelData, activeMetric]);
+  }, [mapReady, tooltipsEnabled, labelData, activeMetric, isNationalView]);
 
   if (!MAPBOX_TOKEN || MAPBOX_TOKEN === "your_mapbox_token_here") {
     return (

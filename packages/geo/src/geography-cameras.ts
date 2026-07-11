@@ -5,11 +5,12 @@ import {
   DEFAULT_ZOOM,
   type MapCameraTarget,
 } from "./color-scales";
+import { US_NATIONAL_CAMERA } from "./us-map";
 
 /** Continental US center — national explore view */
-export const US_CENTER: [number, number] = [-98.5795, 39.8283];
+export const US_CENTER = US_NATIONAL_CAMERA.center;
 
-export const US_ZOOM = 4;
+export const US_ZOOM = US_NATIONAL_CAMERA.zoom;
 
 export type GeographyLevel = "national" | "state" | "metro" | "county" | "zip";
 export type CinematicSection = "metro" | "neighborhood" | "detail";
@@ -19,20 +20,14 @@ export interface GeographyCameraOptions {
   zipCenter?: [number, number] | null;
   exploreMode?: boolean;
   cinematicSection?: CinematicSection;
-  /** User clicked a geography toggle — overrides scroll-driven camera */
   geographyOverride?: boolean;
-  /** 0–1 scroll progress for scrubbed cinematic camera (story mode) */
+  /** DC sandbox story scroll — disabled when user pans away */
+  dcStoryActive?: boolean;
   scrollProgress?: number | null;
 }
 
 const GEOGRAPHY_PRESETS: Record<GeographyLevel, MapCameraTarget> = {
-  national: {
-    center: US_CENTER,
-    zoom: US_ZOOM,
-    pitch: 0,
-    bearing: 0,
-    duration: 0,
-  },
+  national: US_NATIONAL_CAMERA,
   state: {
     center: [-77.0, 38.95],
     zoom: 8,
@@ -108,6 +103,7 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     zipCenter,
     cinematicSection = "metro",
     geographyOverride = false,
+    dcStoryActive = false,
     scrollProgress = null,
   } = options;
 
@@ -115,14 +111,21 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     if (geography === "zip" && zipCenter) {
       return { ...GEOGRAPHY_PRESETS.zip, center: zipCenter, duration: 800 };
     }
+    if (geography === "metro") {
+      return null;
+    }
     return { ...GEOGRAPHY_PRESETS[geography], duration: 800 };
   }
 
-  if (scrollProgress !== null && scrollProgress !== undefined) {
+  if (dcStoryActive && scrollProgress !== null && scrollProgress !== undefined) {
     return interpolateCinematicCamera(scrollProgress);
   }
 
-  return { ...CINEMATIC_CAMERAS[cinematicSection], duration: 800 };
+  if (geography === "metro") {
+    return { ...CINEMATIC_CAMERAS[cinematicSection], duration: 800 };
+  }
+
+  return null;
 }
 
 export { GEOGRAPHY_PRESETS };

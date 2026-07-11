@@ -45,6 +45,13 @@ export interface PolygonGeometry {
   coordinates: number[][][];
 }
 
+export interface MultiPolygonGeometry {
+  type: "MultiPolygon";
+  coordinates: number[][][][];
+}
+
+export type MetroGeometry = PolygonGeometry | MultiPolygonGeometry;
+
 /** Unified Deck.gl feature properties — see docs/schema/deck-gl-geojson.md */
 export interface DcMetroFeatureProperties {
   zipCode: string;
@@ -78,7 +85,7 @@ export interface DcMetroFeatureProperties {
 export interface DcMetroFeature {
   type: "Feature";
   properties: DcMetroFeatureProperties;
-  geometry: PolygonGeometry;
+  geometry: MetroGeometry;
 }
 
 export interface DcMetroGeoJsonMetadata {

@@ -5,9 +5,9 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { computeOpportunityScore, normalizeScores } from "./opportunity-index";
-import type { ZipMetricsInput } from "./validation";
-import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, PolygonGeometry } from "./types";
+import { computeOpportunityScore, normalizeScores } from "./opportunity-index.ts";
+import type { ZipMetricsInput } from "./validation.ts";
+import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, PolygonGeometry } from "./types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const DATA_DIR = resolve(__dirname, "../../../data/mock");
