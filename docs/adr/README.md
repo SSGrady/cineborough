@@ -18,6 +18,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [008](./008-cinematic-ux-deferred.md) | Cinematic UX (Phase 2, Deferred) | Accepted | 2026-07-08 |
 | [009](./009-ui-ux-and-geojson-schema.md) | Reventure-Light UI and Unified GeoJSON | Accepted | 2026-07-08 |
 | [010](./010-national-geography-scale.md) | National Geography Scale Architecture | Accepted | 2026-07-11 |
+| [011](./011-national-metro-tile-strategy.md) | National Metro Tile Strategy (3,100+ CBSAs) | Accepted | 2026-07-11 |
 
 ---
 
@@ -114,3 +115,12 @@ Addresses map jank and navigation toward national / 3,100+ metro scale:
 - Deck.gl sync fixes: `interleaved: false`, redraw on move, cancel stacked flyTo
 - All geography toggles enabled; cameras fly to National/State/Metro/County/Zip
 - Data remains DC sandbox until metro shard ingest (Epic E005 T025–T026)
+
+### ADR 011 — National Metro Tile Strategy
+
+Documents path from 58-metro mock choropleth + sandbox shards to 3,100+ CBSAs:
+
+- **National zoom:** vector tiles (PMTiles/MVT) — not monolithic GeoJSON
+- **Metro/ZIP zoom:** enriched GeoJSON shards per CBSA (`data/metros/{cbsa}.geojson`)
+- **Long tail:** API on-demand fetch with client cache
+- `metro-tiles.ts` stub; enable via `NEXT_PUBLIC_METRO_TILES_URL`

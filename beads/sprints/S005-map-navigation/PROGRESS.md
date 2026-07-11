@@ -8,7 +8,7 @@ Last updated: 2026-07-11
 - [x] **T023** — Explore map toggle; pointer-events pass-through on scroll track
 - [x] **T024** — National/State/County/Metro/Zip camera presets
 - [x] **T025** — Orlando metro shard (4 ZIPs) + `loadMetroShardsGeoJson()` merge loader
-- [ ] **T026** — Document vector tile strategy for 3,100+ metros
+- [x] **T026** — ADR-011 national metro tile strategy (GeoJSON vs MVT vs API)
 
 ## Notes
 
@@ -23,4 +23,8 @@ None for T022–T024.
 
 ## Velocity
 
-4/5 tickets done (80%).
+5/5 tickets done (100%). Sprint S005 complete.
+
+### 2026-07-11 (afternoon)
+
+- **T026** — ADR-011 documents hybrid: MVT national layer + GeoJSON shards + API on-demand; `metro-tiles.ts` stub added

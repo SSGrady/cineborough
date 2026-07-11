@@ -51,7 +51,7 @@ Enable sidebar toggles: National → State → Metro → County → Zip.
 
 1. Metro-level `FeatureCollection` shards (`data/metros/{cbsa-id}.geojson`)
 2. Build script merges metrics from ATTOM/Census pipelines
-3. Vector tile fallback for 3,100+ metros at low zoom
+3. Vector tile fallback for 3,100+ metros at low zoom — **see ADR-011** (PMTiles + MVTLayer; `metro-tiles.ts` stub)
 4. On-demand fetch for ZIP detail
 
 ### Unified GeoJSON contract
