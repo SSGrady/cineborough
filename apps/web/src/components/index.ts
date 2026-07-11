@@ -13,3 +13,4 @@ export { RenovationPills } from "./RenovationPills";
 export { CalculationBreakdownPanel } from "./CalculationBreakdownPanel";
 export { ComparableSalesTable } from "./ComparableSalesTable";
 export { PropertyValuationPanel } from "./PropertyValuationPanel";
+export { HomeValueSparkline } from "./HomeValueSparkline";

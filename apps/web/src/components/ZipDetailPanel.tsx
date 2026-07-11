@@ -1,5 +1,6 @@
 import type { DcMetroFeatureProperties, PropertyRecord, ZipMetrics } from "@cineborough/data";
 import { formatCurrency, formatPercent } from "@/lib/format";
+import { HomeValueSparkline, generateHomeValueSparkline } from "./HomeValueSparkline";
 
 interface ZipDetailPanelProps {
   zip: ZipMetrics;
@@ -28,6 +29,7 @@ export function ZipDetailPanel({
 
   const forecastPct = featureProps?.oneYearForecastPct ?? zip.homePriceForecast1yr;
   const gaugeRotation = Math.max(-45, Math.min(45, forecastPct * 10));
+  const sparklineValues = generateHomeValueSparkline(zip.medianHomeValue, zip.homeValueGrowthYoy);
 
   return (
     <section className={embedded ? "zip-detail zip-detail--embedded zip-detail--stacked" : "zip-detail zip-detail--stacked"}>
@@ -52,15 +54,18 @@ export function ZipDetailPanel({
           <h3>Investor Signals</h3>
 
           <div className="zip-detail__gauge-row">
-            <div className="forecast-gauge" aria-label={`1-year forecast ${formatPercent(forecastPct)}`}>
-              <div className="forecast-gauge__dial">
-                <div
-                  className="forecast-gauge__needle"
-                  style={{ transform: `rotate(${gaugeRotation}deg)` }}
-                />
+            <div className="zip-detail__gauge-cluster">
+              <div className="forecast-gauge" aria-label={`1-year forecast ${formatPercent(forecastPct)}`}>
+                <div className="forecast-gauge__dial">
+                  <div
+                    className="forecast-gauge__needle"
+                    style={{ transform: `rotate(${gaugeRotation}deg)` }}
+                  />
+                </div>
+                <div className="forecast-gauge__value">{formatPercent(forecastPct)}</div>
+                <div className="forecast-gauge__label">1-Year Forecast</div>
               </div>
-              <div className="forecast-gauge__value">{formatPercent(forecastPct)}</div>
-              <div className="forecast-gauge__label">1-Year Forecast</div>
+              <HomeValueSparkline values={sparklineValues} />
             </div>
 
             <dl className="metric-grid metric-grid--compact">

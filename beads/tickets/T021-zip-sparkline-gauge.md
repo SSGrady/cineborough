@@ -1,7 +1,7 @@
 ---
 id: T021
 title: ZIP sparkline + forecast gauge
-status: open
+status: done
 type: feature
 priority: P2
 epic: E004
