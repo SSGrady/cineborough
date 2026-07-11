@@ -248,10 +248,11 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
   },
   {
     key: "sellerDesperationScore",
-    label: "Seller Desperation Score",
+    label: "Seller Urgency",
     unit: "0–100",
     category: "investor",
-    helperText: "Seller urgency",
+    helperText:
+      "How motivated sellers are to discount. Low = firm pricing; high = more room to negotiate.",
   },
   {
     key: "marketPsf",
