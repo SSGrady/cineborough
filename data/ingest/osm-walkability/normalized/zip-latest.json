@@ -1,0 +1,790 @@
+{
+  "source": "osm-overpass-walkability",
+  "attribution": "Walkability proxy from OpenStreetMap © contributors (ODbL).",
+  "downloadedAt": "2026-07-11T23:34:36.624Z",
+  "vintage": "2026-07-11",
+  "recordCount": 52,
+  "scoringFormula": "min(100, density(60 max: cafe≤15@2ea, grocery≤15@5ea, park≤15@3ea, transit≤15@2ea) + diversity(40 max: 10/category))",
+  "records": {
+    "20001": {
+      "zipCode": "20001",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 114,
+        "grocery": 24,
+        "park": 43,
+        "transit": 129
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.913089,
+      "centroidLng": -77.019378,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:13.717Z"
+    },
+    "20002": {
+      "zipCode": "20002",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 68,
+        "grocery": 11,
+        "park": 34,
+        "transit": 94
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.899553,
+      "centroidLng": -76.993113,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:16.218Z"
+    },
+    "20003": {
+      "zipCode": "20003",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 81,
+        "grocery": 14,
+        "park": 57,
+        "transit": 72
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.884951,
+      "centroidLng": -76.992964,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:18.721Z"
+    },
+    "20009": {
+      "zipCode": "20009",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 151,
+        "grocery": 19,
+        "park": 28,
+        "transit": 75
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.920487,
+      "centroidLng": -77.039439,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:21.224Z"
+    },
+    "20037": {
+      "zipCode": "20037",
+      "walkabilityScore": 0,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 0,
+      "centroidLat": 38.885398,
+      "centroidLng": -77.053284,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:23.726Z"
+    },
+    "20814": {
+      "zipCode": "20814",
+      "walkabilityScore": 77,
+      "categoryCounts": {
+        "cafe": 1,
+        "grocery": 1,
+        "park": 5,
+        "transit": 36
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 39.005729,
+      "centroidLng": -77.098827,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:33.738Z"
+    },
+    "20815": {
+      "zipCode": "20815",
+      "walkabilityScore": 72,
+      "categoryCounts": {
+        "cafe": 6,
+        "grocery": 0,
+        "park": 6,
+        "transit": 37
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 38.987645,
+      "centroidLng": -77.078875,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:36.240Z"
+    },
+    "20816": {
+      "zipCode": "20816",
+      "walkabilityScore": 53,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 1,
+        "park": 1,
+        "transit": 18
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 38.952761,
+      "centroidLng": -77.125774,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:38.742Z"
+    },
+    "22201": {
+      "zipCode": "22201",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 63,
+        "grocery": 6,
+        "park": 20,
+        "transit": 78
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.889141,
+      "centroidLng": -77.094998,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:28:56.189Z"
+    },
+    "22202": {
+      "zipCode": "22202",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 70,
+        "grocery": 5,
+        "park": 5,
+        "transit": 43
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.859037,
+      "centroidLng": -77.043913,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:28:58.695Z"
+    },
+    "22203": {
+      "zipCode": "22203",
+      "walkabilityScore": 0,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 0,
+      "centroidLat": 38.874375,
+      "centroidLng": -77.121123,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:01.198Z"
+    },
+    "22204": {
+      "zipCode": "22204",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 23,
+        "grocery": 3,
+        "park": 11,
+        "transit": 76
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.860724,
+      "centroidLng": -77.089891,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:03.702Z"
+    },
+    "22205": {
+      "zipCode": "22205",
+      "walkabilityScore": 75,
+      "categoryCounts": {
+        "cafe": 8,
+        "grocery": 0,
+        "park": 8,
+        "transit": 22
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 38.882598,
+      "centroidLng": -77.140299,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:06.205Z"
+    },
+    "22206": {
+      "zipCode": "22206",
+      "walkabilityScore": 99,
+      "categoryCounts": {
+        "cafe": 7,
+        "grocery": 3,
+        "park": 13,
+        "transit": 81
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.845863,
+      "centroidLng": -77.08134,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:08.708Z"
+    },
+    "22207": {
+      "zipCode": "22207",
+      "walkabilityScore": 41,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 2,
+        "transit": 16
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 38.912196,
+      "centroidLng": -77.111063,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:11.212Z"
+    },
+    "22301": {
+      "zipCode": "22301",
+      "walkabilityScore": 95,
+      "categoryCounts": {
+        "cafe": 19,
+        "grocery": 2,
+        "park": 8,
+        "transit": 65
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.818663,
+      "centroidLng": -77.061658,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:26.228Z"
+    },
+    "22302": {
+      "zipCode": "22302",
+      "walkabilityScore": 0,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 0,
+      "centroidLat": 38.831343,
+      "centroidLng": -77.088751,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:28.731Z"
+    },
+    "22304": {
+      "zipCode": "22304",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 17,
+        "grocery": 5,
+        "park": 13,
+        "transit": 40
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.809143,
+      "centroidLng": -77.121671,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:31.234Z"
+    },
+    "32789": {
+      "zipCode": "32789",
+      "walkabilityScore": 87,
+      "categoryCounts": {
+        "cafe": 37,
+        "grocery": 1,
+        "park": 4,
+        "transit": 40
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 28.598914,
+      "centroidLng": -81.354303,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:28.233Z"
+    },
+    "32801": {
+      "zipCode": "32801",
+      "walkabilityScore": 97,
+      "categoryCounts": {
+        "cafe": 60,
+        "grocery": 4,
+        "park": 4,
+        "transit": 80
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 28.542669,
+      "centroidLng": -81.374945,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:41.247Z"
+    },
+    "32803": {
+      "zipCode": "32803",
+      "walkabilityScore": 88,
+      "categoryCounts": {
+        "cafe": 23,
+        "grocery": 3,
+        "park": 1,
+        "transit": 22
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 28.55752,
+      "centroidLng": -81.345154,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:44.882Z"
+    },
+    "32804": {
+      "zipCode": "32804",
+      "walkabilityScore": 43,
+      "categoryCounts": {
+        "cafe": 1,
+        "grocery": 0,
+        "park": 1,
+        "transit": 4
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 28.581615,
+      "centroidLng": -81.397624,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:48.521Z"
+    },
+    "32805": {
+      "zipCode": "32805",
+      "walkabilityScore": 37,
+      "categoryCounts": {
+        "cafe": 1,
+        "grocery": 0,
+        "park": 0,
+        "transit": 29
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 28.52946,
+      "centroidLng": -81.406675,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:52.158Z"
+    },
+    "32806": {
+      "zipCode": "32806",
+      "walkabilityScore": 43,
+      "categoryCounts": {
+        "cafe": 3,
+        "grocery": 0,
+        "park": 1,
+        "transit": 2
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 28.513228,
+      "centroidLng": -81.360201,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:55.458Z"
+    },
+    "32807": {
+      "zipCode": "32807",
+      "walkabilityScore": 41,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 2,
+        "transit": 8
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 28.546328,
+      "centroidLng": -81.303058,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:29:59.070Z"
+    },
+    "32814": {
+      "zipCode": "32814",
+      "walkabilityScore": 60,
+      "categoryCounts": {
+        "cafe": 5,
+        "grocery": 1,
+        "park": 9,
+        "transit": 0
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 28.568941,
+      "centroidLng": -81.327497,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:30:24.929Z"
+    },
+    "32819": {
+      "zipCode": "32819",
+      "walkabilityScore": 35,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 1,
+        "transit": 6
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 28.460588,
+      "centroidLng": -81.498438,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:30:39.380Z"
+    },
+    "32822": {
+      "zipCode": "32822",
+      "walkabilityScore": 16,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 0,
+        "transit": 3
+      },
+      "categoryDiversity": 1,
+      "centroidLat": 28.502766,
+      "centroidLng": -81.293282,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:30:42.896Z"
+    },
+    "32825": {
+      "zipCode": "32825",
+      "walkabilityScore": 13,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 1,
+        "transit": 0
+      },
+      "categoryDiversity": 1,
+      "centroidLat": 28.540206,
+      "centroidLng": -81.245297,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:30:47.136Z"
+    },
+    "32828": {
+      "zipCode": "32828",
+      "walkabilityScore": 13,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 1,
+        "transit": 0
+      },
+      "categoryDiversity": 1,
+      "centroidLat": 28.534406,
+      "centroidLng": -81.165155,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:30:51.342Z"
+    },
+    "32832": {
+      "zipCode": "32832",
+      "walkabilityScore": 13,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 1,
+        "transit": 0
+      },
+      "categoryDiversity": 1,
+      "centroidLat": 28.402079,
+      "centroidLng": -81.203082,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:12.806Z"
+    },
+    "32835": {
+      "zipCode": "32835",
+      "walkabilityScore": 33,
+      "categoryCounts": {
+        "cafe": 4,
+        "grocery": 1,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 28.51937,
+      "centroidLng": -81.481773,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:23.586Z"
+    },
+    "34741": {
+      "zipCode": "34741",
+      "walkabilityScore": 87,
+      "categoryCounts": {
+        "cafe": 8,
+        "grocery": 1,
+        "park": 4,
+        "transit": 15
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 28.301539,
+      "centroidLng": -81.432074,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:46.551Z"
+    },
+    "34747": {
+      "zipCode": "34747",
+      "walkabilityScore": 27,
+      "categoryCounts": {
+        "cafe": 1,
+        "grocery": 1,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 28.32395,
+      "centroidLng": -81.592657,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:51.054Z"
+    },
+    "94102": {
+      "zipCode": "94102",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 346,
+        "grocery": 67,
+        "park": 16,
+        "transit": 378
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.780699,
+      "centroidLng": -122.418483,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:31:55.814Z"
+    },
+    "94103": {
+      "zipCode": "94103",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 149,
+        "grocery": 23,
+        "park": 10,
+        "transit": 262
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.772169,
+      "centroidLng": -122.413184,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:00.363Z"
+    },
+    "94107": {
+      "zipCode": "94107",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 96,
+        "grocery": 4,
+        "park": 22,
+        "transit": 209
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.77053,
+      "centroidLng": -122.396227,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:15.254Z"
+    },
+    "94109": {
+      "zipCode": "94109",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 162,
+        "grocery": 32,
+        "park": 17,
+        "transit": 355
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.796937,
+      "centroidLng": -122.420786,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:19.759Z"
+    },
+    "94110": {
+      "zipCode": "94110",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 191,
+        "grocery": 41,
+        "park": 14,
+        "transit": 207
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.748677,
+      "centroidLng": -122.418111,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:23.896Z"
+    },
+    "94114": {
+      "zipCode": "94114",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 78,
+        "grocery": 9,
+        "park": 19,
+        "transit": 319
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.757608,
+      "centroidLng": -122.438146,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:31.325Z"
+    },
+    "94117": {
+      "zipCode": "94117",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 92,
+        "grocery": 23,
+        "park": 14,
+        "transit": 291
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.769628,
+      "centroidLng": -122.444422,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:36.058Z"
+    },
+    "94122": {
+      "zipCode": "94122",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 107,
+        "grocery": 10,
+        "park": 6,
+        "transit": 172
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.763616,
+      "centroidLng": -122.476837,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:32:55.802Z"
+    },
+    "94123": {
+      "zipCode": "94123",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 96,
+        "grocery": 14,
+        "park": 8,
+        "transit": 216
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.799396,
+      "centroidLng": -122.433778,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:00.451Z"
+    },
+    "94131": {
+      "zipCode": "94131",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 24,
+        "grocery": 3,
+        "park": 13,
+        "transit": 257
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.747478,
+      "centroidLng": -122.442229,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:10.518Z"
+    },
+    "94520": {
+      "zipCode": "94520",
+      "walkabilityScore": 79,
+      "categoryCounts": {
+        "cafe": 5,
+        "grocery": 1,
+        "park": 3,
+        "transit": 28
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 38.000076,
+      "centroidLng": -122.02633,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:34:27.099Z"
+    },
+    "94549": {
+      "zipCode": "94549",
+      "walkabilityScore": 0,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 0,
+        "transit": 0
+      },
+      "categoryDiversity": 0,
+      "centroidLat": 37.905279,
+      "centroidLng": -122.126535,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:34:36.624Z"
+    },
+    "94596": {
+      "zipCode": "94596",
+      "walkabilityScore": 46,
+      "categoryCounts": {
+        "cafe": 3,
+        "grocery": 0,
+        "park": 2,
+        "transit": 2
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 37.894738,
+      "centroidLng": -122.045705,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:34:23.648Z"
+    },
+    "94601": {
+      "zipCode": "94601",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 54,
+        "grocery": 17,
+        "park": 5,
+        "transit": 138
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.779689,
+      "centroidLng": -122.219729,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:30.756Z"
+    },
+    "94607": {
+      "zipCode": "94607",
+      "walkabilityScore": 100,
+      "categoryCounts": {
+        "cafe": 31,
+        "grocery": 13,
+        "park": 19,
+        "transit": 175
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.8105,
+      "centroidLng": -122.283246,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:42.924Z"
+    },
+    "94611": {
+      "zipCode": "94611",
+      "walkabilityScore": 50,
+      "categoryCounts": {
+        "cafe": 0,
+        "grocery": 0,
+        "park": 6,
+        "transit": 65
+      },
+      "categoryDiversity": 2,
+      "centroidLat": 37.829938,
+      "centroidLng": -122.223192,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:47.063Z"
+    },
+    "94704": {
+      "zipCode": "94704",
+      "walkabilityScore": 97,
+      "categoryCounts": {
+        "cafe": 239,
+        "grocery": 12,
+        "park": 4,
+        "transit": 221
+      },
+      "categoryDiversity": 4,
+      "centroidLat": 37.867131,
+      "centroidLng": -122.262471,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:33:53.229Z"
+    },
+    "94705": {
+      "zipCode": "94705",
+      "walkabilityScore": 70,
+      "categoryCounts": {
+        "cafe": 5,
+        "grocery": 0,
+        "park": 6,
+        "transit": 48
+      },
+      "categoryDiversity": 3,
+      "centroidLat": 37.861465,
+      "centroidLng": -122.24044,
+      "radiusMeters": 1000,
+      "computedAt": "2026-07-11T23:34:04.645Z"
+    }
+  }
+}

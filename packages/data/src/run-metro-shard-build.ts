@@ -52,6 +52,9 @@ export function runMetroShardBuild(files: MetroShardBuildFiles): void {
     merged.usedFhfa ? "FHFA HPI" : null,
     merged.usedDerivedFinancials ? "derived forecast/overvaluation" : null,
     merged.usedHudFmr ? "HUD FMR cap rate" : null,
+    merged.usedRedfin ? "Redfin market trends" : null,
+    merged.usedSellerDesperation ? "derived seller desperation" : null,
+    merged.usedOsmWalkability ? "OSM walkability" : null,
   ]
     .filter(Boolean)
     .join(" + ");

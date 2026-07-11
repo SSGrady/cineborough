@@ -4,8 +4,11 @@ import { fileURLToPath } from "node:url";
 import type { ZipMetricsInput } from "../validation.ts";
 import type { CensusAcsNormalizedBundle } from "./census-acs.ts";
 import { deriveFinancialMetrics } from "./derived-financials.ts";
+import { deriveSellerDesperationFromRedfin } from "./derived-market-signals.ts";
 import { SANDBOX_CBSA_ZHVI_METRO_MAP, type FhfaHpiNormalizedBundle } from "./fhfa-hpi-sources.ts";
 import type { HudFmrNormalizedBundle } from "./hud-fmr-sources.ts";
+import type { OsmWalkabilityNormalizedBundle } from "./osm-walkability-sources.ts";
+import type { RedfinNormalizedBundle } from "./redfin-sources.ts";
 import type { ZhviNormalizedBundle, ZhviMetroRecord, ZhviZipRecord } from "./zhvi-sources.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -17,6 +20,8 @@ export interface LiveIngestPaths {
   zhviMetro: string;
   fhfaHpi: string;
   hudFmr: string;
+  redfinZip: string;
+  osmWalkability: string;
 }
 
 export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
@@ -25,6 +30,8 @@ export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
   zhviMetro: resolve(INGEST_ROOT, "zhvi/normalized/metro-latest.json"),
   fhfaHpi: resolve(INGEST_ROOT, "fhfa-hpi/normalized/metro-latest.json"),
   hudFmr: resolve(INGEST_ROOT, "hud/normalized/zip-fmr-latest.json"),
+  redfinZip: resolve(INGEST_ROOT, "redfin/normalized/zip-latest.json"),
+  osmWalkability: resolve(INGEST_ROOT, "osm-walkability/normalized/zip-latest.json"),
 };
 
 export interface MergeLiveMetricsOptions {
@@ -39,6 +46,9 @@ export interface MergeLiveMetricsResult {
   usedFhfa: boolean;
   usedDerivedFinancials: boolean;
   usedHudFmr: boolean;
+  usedRedfin: boolean;
+  usedOsmWalkability: boolean;
+  usedSellerDesperation: boolean;
   dataAsOf: string;
   dataAsOfLabel: string;
 }
@@ -88,12 +98,17 @@ export function mergeLiveMetricsIntoZips(
   const zhviMetro = loadJsonIfExists<ZhviNormalizedBundle>(paths.zhviMetro);
   const fhfa = loadJsonIfExists<FhfaHpiNormalizedBundle>(paths.fhfaHpi);
   const hudFmr = loadJsonIfExists<HudFmrNormalizedBundle>(paths.hudFmr);
+  const redfin = loadJsonIfExists<RedfinNormalizedBundle>(paths.redfinZip);
+  const osmWalkability = loadJsonIfExists<OsmWalkabilityNormalizedBundle>(paths.osmWalkability);
 
   let usedCensus = false;
   let usedZhvi = false;
   let usedFhfa = false;
   let usedDerivedFinancials = false;
   let usedHudFmr = false;
+  let usedRedfin = false;
+  let usedOsmWalkability = false;
+  let usedSellerDesperation = false;
 
   const fhfaMetro = cbsaCode ? fhfa?.records[cbsaCode] : undefined;
   const zhviMetroRegionId = cbsaCode ? SANDBOX_CBSA_ZHVI_METRO_MAP[cbsaCode] : undefined;
@@ -158,6 +173,31 @@ export function mergeLiveMetricsIntoZips(
       }
     }
 
+    const redfinRec = redfin?.records[zip.zip];
+    if (redfinRec) {
+      if (redfinRec.medianDom !== null) {
+        usedRedfin = true;
+        merged.daysOnMarket = Math.round(redfinRec.medianDom);
+      }
+      if (redfinRec.medianPpsf !== null) {
+        usedRedfin = true;
+        merged.marketPsf = Math.round(redfinRec.medianPpsf);
+      }
+      const desperation = deriveSellerDesperationFromRedfin(redfinRec);
+      if (desperation) {
+        usedRedfin = true;
+        usedSellerDesperation = true;
+        merged.sellerDesperationScore = desperation.sellerDesperationScore;
+        merged.priceCutCount = desperation.priceCutCount;
+      }
+    }
+
+    const walkRec = osmWalkability?.records[zip.zip];
+    if (walkRec) {
+      usedOsmWalkability = true;
+      merged.walkabilityScore = walkRec.walkabilityScore;
+    }
+
     return merged;
   });
 
@@ -166,9 +206,14 @@ export function mergeLiveMetricsIntoZips(
     zhviZip ? `ZHVI ${zhviZip.vintage}` : null,
     fhfa ? `FHFA ${fhfa.vintage}` : null,
     hudFmr && hudFmr.recordCount > 0 ? `HUD FMR ${hudFmr.vintage}` : null,
+    redfin && redfin.recordCount > 0 ? `Redfin ${redfin.vintage}` : null,
+    osmWalkability && osmWalkability.recordCount > 0
+      ? `OSM walkability ${osmWalkability.vintage}`
+      : null,
   ].filter(Boolean);
 
-  const dataAsOf = fhfa?.vintage ?? census?.vintage ?? zhviZip?.vintage ?? "mock";
+  const dataAsOf =
+    redfin?.vintage ?? fhfa?.vintage ?? census?.vintage ?? zhviZip?.vintage ?? "mock";
   const dataAsOfLabel =
     vintageParts.length > 0 ? vintageParts.join(" + ") : "May 2026";
 
@@ -190,6 +235,16 @@ export function mergeLiveMetricsIntoZips(
   if (cbsaCode && usedZhvi && usedFhfa && !usedDerivedFinancials) {
     console.warn(`Derived forecast/overvaluation not applied for CBSA ${cbsaCode}`);
   }
+  if (!usedRedfin) {
+    console.warn(
+      `Redfin market trends not applied — run ingest:redfin (missing ${paths.redfinZip})`,
+    );
+  }
+  if (!usedOsmWalkability) {
+    console.warn(
+      `OSM walkability not applied — run ingest:osm-walkability (missing ${paths.osmWalkability})`,
+    );
+  }
 
   return {
     zips,
@@ -198,6 +253,9 @@ export function mergeLiveMetricsIntoZips(
     usedFhfa,
     usedDerivedFinancials,
     usedHudFmr,
+    usedRedfin,
+    usedOsmWalkability,
+    usedSellerDesperation,
     dataAsOf,
     dataAsOfLabel,
   };

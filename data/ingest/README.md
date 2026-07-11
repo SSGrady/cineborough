@@ -47,6 +47,39 @@ Outputs:
 
 DC sandbox maps CBSA 47900 → FHFA MSAD 11694 (Arlington-Alexandria-Reston) per ADR-012.
 
+## Redfin market tracker (DOM, PSF, price drops)
+
+```bash
+pnpm --filter @cineborough/data ingest:redfin
+pnpm --filter @cineborough/data ingest:redfin -- --zips=22201,32801
+```
+
+Outputs:
+
+- `redfin/raw/zip_code_market_tracker.tsv000.gz` — downloaded bulk TSV (gitignored)
+- `redfin/normalized/zip-latest.json` — latest rolling window per sandbox ZCTA
+
+Filters `All Residential` rows; keeps latest `period_end` per ZIP. Current S3 dump uses 90-day rolling windows.
+
+Attribution: Redfin Data Center bulk download.
+
+## OSM walkability proxy
+
+```bash
+pnpm --filter @cineborough/data ingest:osm-walkability
+pnpm --filter @cineborough/data ingest:osm-walkability -- --zips=22201,32801
+pnpm --filter @cineborough/data ingest:osm-walkability -- --no-cache
+```
+
+Requires `data/mock/zip-boundaries.geojson` for DC sandbox ZIPs; Orlando ZIPs fall back to live TIGERweb centroid lookup.
+
+Outputs:
+
+- `osm-walkability/raw/overpass/{zip}.json` — cached Overpass responses (gitignored)
+- `osm-walkability/normalized/zip-latest.json` — 0–100 walkability score per sandbox ZCTA
+
+Attribution: OpenStreetMap © contributors (ODbL).
+
 ## Shard rebuild (joins live ingest)
 
 ```bash
@@ -54,4 +87,4 @@ pnpm --filter @cineborough/data build:geojson
 pnpm --filter @cineborough/data build:orlando-geojson
 ```
 
-Build scripts overlay Census hope-core, ZHVI home values, and derived forecast/overvaluation (ZHVI + FHFA + ACS income when present) onto mock financials when normalized ingest files exist.
+Build scripts overlay Census hope-core, ZHVI home values, Redfin market trends, OSM walkability, derived seller desperation, and derived forecast/overvaluation (ZHVI + FHFA + ACS income when present) onto mock financials when normalized ingest files exist.
