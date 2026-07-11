@@ -6,7 +6,7 @@ import type {
   ZipMetrics,
   ZipMetricsCollection,
 } from "./types";
-import { normalizeScores } from "./opportunity-index";
+import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
 
 /** @deprecated Use loadDcMetroGeoJson() — boundaries are embedded in data/metros/47900.geojson */
 export { loadZipBoundaries } from "./boundaries";
@@ -88,22 +88,68 @@ export function getRawMetricFromFeature(
   return map[key];
 }
 
+const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["medianHomeValue", "marketPsf"]);
+
+export type ChoroplethPalette = "value" | "opportunity";
+
+export interface ChoroplethSpec {
+  palette: ChoroplethPalette;
+  colorByZip: Map<string, number>;
+  tercileBounds?: { p33: number; p66: number };
+}
+
+export function choroplethPaletteForMetricKey(key: MetricLayerKey): ChoroplethPalette {
+  return VALUE_GRADIENT_METRICS.has(key) ? "value" : "opportunity";
+}
+
+export function getChoroplethSpecFromGeoJson(
+  collection: DcMetroGeoJson,
+  key: MetricLayerKey,
+): ChoroplethSpec {
+  const features = collection.features;
+  const palette = choroplethPaletteForMetricKey(key);
+
+  if (key === "opportunityScore") {
+    return {
+      palette,
+      colorByZip: new Map(
+        features.map((f) => [
+          f.properties.zipCode,
+          f.properties.opportunityScoreNormalized,
+        ]),
+      ),
+    };
+  }
+
+  const raw = features.map((f) => getRawMetricFromFeature(f.properties, key));
+
+  if (palette === "value") {
+    const normalized = normalizeScores(raw);
+    return {
+      palette,
+      colorByZip: new Map(features.map((f, i) => [f.properties.zipCode, normalized[i]])),
+    };
+  }
+
+  const dataMask = features.map((f) => f.properties.medianHomeValue > 0);
+  const dataValues = raw.filter((_, i) => dataMask[i]);
+  const { scores: dataScores, p33, p66 } = normalizeToTercileScores(dataValues);
+  let dataIndex = 0;
+  const scores = raw.map((_, i) => {
+    if (!dataMask[i]) return 0;
+    return dataScores[dataIndex++];
+  });
+
+  return {
+    palette,
+    colorByZip: new Map(features.map((f, i) => [f.properties.zipCode, scores[i]])),
+    tercileBounds: dataValues.length > 0 ? { p33, p66 } : undefined,
+  };
+}
+
 export function getNormalizedMetricValuesFromGeoJson(
   collection: DcMetroGeoJson,
   key: MetricLayerKey,
 ): Map<string, number> {
-  const features = collection.features;
-
-  if (key === "opportunityScore") {
-    return new Map(
-      features.map((f) => [
-        f.properties.zipCode,
-        f.properties.opportunityScoreNormalized,
-      ]),
-    );
-  }
-
-  const raw = features.map((f) => getRawMetricFromFeature(f.properties, key));
-  const normalized = normalizeScores(raw);
-  return new Map(features.map((f, i) => [f.properties.zipCode, normalized[i]]));
+  return getChoroplethSpecFromGeoJson(collection, key).colorByZip;
 }

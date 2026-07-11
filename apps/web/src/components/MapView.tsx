@@ -8,12 +8,13 @@ import { MVTLayer } from "@deck.gl/geo-layers";
 import type { PickingInfo, Layer } from "@deck.gl/core";
 import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
 import {
-  getNormalizedMetricValuesFromGeoJson,
+  getChoroplethSpecFromGeoJson,
   getRawMetricFromFeature,
   loadTransitPaths,
   METRIC_LAYERS,
   getMetroTileConfig,
   METRIC_PROVENANCE,
+  metricSourceDetail,
 } from "@cineborough/data";
 import {
   colorForChoropleth,
@@ -108,14 +109,12 @@ function buildStateLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
 ): LabelPoint[] {
-  return geoJson.features
-    .filter((f) => f.properties.medianHomeValue > 0 || f.properties.opportunityScoreNormalized > 0)
-    .map((f) => ({
-      position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
-      zipCode: f.properties.zipCode,
-      name: f.properties.neighborhoodName,
-      value: getRawMetricFromFeature(f.properties, activeMetric),
-    }));
+  return geoJson.features.map((f) => ({
+    position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
+    zipCode: f.properties.zipCode,
+    name: f.properties.neighborhoodName,
+    value: getRawMetricFromFeature(f.properties, activeMetric),
+  }));
 }
 
 function buildNationalLabelData(
@@ -236,23 +235,34 @@ export function MapView({
   const isNationalGeography = overviewMode && geographyLevel === "national";
   const isStateGeography = overviewMode && geographyLevel === "state";
 
-  const colorByZip = useMemo(
-    () => getNormalizedMetricValuesFromGeoJson(geoJson, activeMetric),
+  const choroplethSpec = useMemo(
+    () => getChoroplethSpecFromGeoJson(geoJson, activeMetric),
     [geoJson, activeMetric],
   );
+  const colorByZip = choroplethSpec.colorByZip;
 
   const legendValueRange = useMemo(() => {
     const values = geoJson.features.map((f) =>
       getRawMetricFromFeature(f.properties, activeMetric),
     );
-    if (values.length === 0) return { min: undefined, max: undefined };
+    if (values.length === 0) {
+      return { min: undefined, max: undefined, tercile: undefined };
+    }
     const min = Math.min(...values);
     const max = Math.max(...values);
+    const bounds = choroplethSpec.tercileBounds;
     return {
       min: formatLabelValue(activeMetric, min),
       max: formatLabelValue(activeMetric, max),
+      tercile: bounds
+        ? {
+            low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
+            mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
+            high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
+          }
+        : undefined,
     };
-  }, [geoJson, activeMetric]);
+  }, [geoJson, activeMetric, choroplethSpec.tercileBounds]);
 
   const labelData = useMemo((): LabelPoint[] => {
     if (!overviewMode) {
@@ -782,10 +792,11 @@ export function MapView({
         const value = labelData.find((d) => d.zipCode === props.zipCode);
         const title = props.neighborhoodName ?? props.name ?? props.zipCode;
         const source = METRIC_PROVENANCE[activeMetric];
+        const sourceDetail = metricSourceDetail(activeMetric);
         const mockNote =
           source.provenance === "mock"
             ? `<br/><em class="map-tooltip__mock">${source.shortLabel}</em>`
-            : "";
+            : `<br/><em class="map-tooltip__verified">${sourceDetail}</em>`;
         popup
           .setLngLat(e.lngLat)
           .setHTML(
@@ -823,6 +834,7 @@ export function MapView({
           metricLabel={metricLabel}
           valueMin={legendValueRange.min}
           valueMax={legendValueRange.max}
+          tercileBounds={legendValueRange.tercile}
           tooltipsEnabled={tooltipsEnabled}
           onToggleTooltips={() => setTooltipsEnabled((v) => !v)}
           exploreMode={exploreMode}

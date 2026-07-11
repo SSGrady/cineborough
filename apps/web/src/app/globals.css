@@ -1684,6 +1684,28 @@ body {
   padding: 0.05rem 0.3rem;
 }
 
+.bottom-bar__verified-tag {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #166534;
+  background: #dcfce7;
+  border: 1px solid #86efac;
+  border-radius: 0.2rem;
+  padding: 0.05rem 0.3rem;
+}
+
+.bottom-bar__date--live,
+.bottom-bar__date--derived {
+  color: var(--text);
+}
+
+.map-tooltip__verified {
+  font-size: 0.75rem;
+  color: #166534;
+}
+
 .bottom-bar__legend-gradient-wrap {
   display: flex;
   align-items: center;

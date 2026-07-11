@@ -41,18 +41,30 @@ export const CONTINENTAL_STATE_FIPS = new Set(
   Object.keys(STATE_FIPS_TO_ABBR).filter((fips) => fips !== "02" && fips !== "15"),
 );
 
-function polygonCentroid(geometry: MetroGeometry): { lng: number; lat: number } {
-  const ring =
-    geometry.type === "Polygon"
-      ? geometry.coordinates[0]
-      : geometry.coordinates[0]?.[0];
-  if (!ring || ring.length === 0) return { lng: -96.5, lat: 39.2 };
+function ringArea(ring: number[][]): number {
+  let area = 0;
+  for (let i = 0; i < ring.length - 1; i++) {
+    area += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+  }
+  return Math.abs(area) / 2;
+}
+
+function exteriorRings(geometry: MetroGeometry): number[][][] {
+  if (geometry.type === "Polygon") return [geometry.coordinates[0]];
+  return geometry.coordinates.map((polygon) => polygon[0]);
+}
+
+/** Label anchor at the centroid of the largest polygon part (handles VA/MI MultiPolygons). */
+function polygonLabelPoint(geometry: MetroGeometry): { lng: number; lat: number } {
+  const rings = exteriorRings(geometry);
+  const largest = rings.reduce((best, ring) => (ringArea(ring) > ringArea(best) ? ring : best));
+  if (!largest || largest.length === 0) return { lng: -96.5, lat: 39.2 };
   let sumLng = 0;
   let sumLat = 0;
-  const n = ring.length - 1;
+  const n = largest.length - 1;
   for (let i = 0; i < n; i++) {
-    sumLng += ring[i][0];
-    sumLat += ring[i][1];
+    sumLng += largest[i][0];
+    sumLat += largest[i][1];
   }
   return { lng: sumLng / n, lat: sumLat / n };
 }
@@ -68,18 +80,19 @@ function hexToRgb(hex: string): [number, number, number] {
 function aggregateMetrosByState(
   metros: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
-): Map<string, { value: number; count: number; opportunityScore: number }> {
-  const byState = new Map<string, { total: number; count: number; oppTotal: number }>();
+): Map<string, { value: number; count: number; opportunityScore: number; medianHomeValue: number }> {
+  const byState = new Map<string, { total: number; count: number; oppTotal: number; hvTotal: number }>();
 
   for (const f of metros.features) {
     if (f.properties.medianHomeValue <= 0) continue;
     const st = f.properties.state?.trim();
     if (!st || st.length > 2) continue;
     const value = getRawMetricFromFeature(f.properties, activeMetric);
-    const entry = byState.get(st) ?? { total: 0, count: 0, oppTotal: 0 };
+    const entry = byState.get(st) ?? { total: 0, count: 0, oppTotal: 0, hvTotal: 0 };
     entry.total += value;
     entry.count += 1;
     entry.oppTotal += f.properties.opportunityScoreNormalized;
+    entry.hvTotal += f.properties.medianHomeValue;
     byState.set(st, entry);
   }
 
@@ -90,6 +103,7 @@ function aggregateMetrosByState(
         value: entry.total / entry.count,
         count: entry.count,
         opportunityScore: entry.oppTotal / entry.count,
+        medianHomeValue: entry.hvTotal / entry.count,
       },
     ]),
   );
@@ -202,26 +216,20 @@ export function buildStateChoroplethFromMetros(
   const states = loadUsStatesGeoJson();
   const byState = aggregateMetrosByState(metros, activeMetric);
 
-  const metricValues = Array.from(byState.values()).map((v) => v.value);
-  const normalized = normalizeScores(metricValues);
-  const stateAbbrs = Array.from(byState.keys());
-
   const features: DcMetroFeature[] = states.features
     .filter((f) => CONTINENTAL_STATE_FIPS.has(f.id))
     .map((feature) => {
       const abbr = STATE_FIPS_TO_ABBR[feature.id] ?? feature.id;
       const name = feature.properties.name;
-      const centroid = polygonCentroid(feature.geometry);
-      const aggIndex = stateAbbrs.indexOf(abbr);
+      const labelPoint = polygonLabelPoint(feature.geometry);
       const agg = byState.get(abbr);
 
-      const props = blankProperties(abbr, name, centroid.lng, centroid.lat);
+      const props = blankProperties(abbr, name, labelPoint.lng, labelPoint.lat);
 
       if (agg) {
-        const norm = normalized[aggIndex] ?? 0;
         setAggregatedMetric(props, activeMetric, agg.value);
+        props.medianHomeValue = agg.medianHomeValue;
         props.opportunityScore = agg.opportunityScore;
-        props.opportunityScoreNormalized = norm;
       }
 
       return { type: "Feature", properties: props, geometry: feature.geometry };

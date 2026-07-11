@@ -1,5 +1,7 @@
-import { normalizeScores } from "./opportunity-index";
+import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
 import type { MetricLayerKey, ZipMetrics } from "./types";
+
+const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["medianHomeValue", "marketPsf"]);
 
 export function getRawMetricValue(zip: ZipMetrics, key: MetricLayerKey): number {
   if (key === "opportunityScore") {
@@ -19,6 +21,11 @@ export function getNormalizedMetricValues(
   }
 
   const raw = zips.map((z) => getRawMetricValue(z, key));
-  const normalized = normalizeScores(raw);
-  return new Map(zips.map((z, i) => [z.zip, normalized[i]]));
+  if (VALUE_GRADIENT_METRICS.has(key)) {
+    const normalized = normalizeScores(raw);
+    return new Map(zips.map((z, i) => [z.zip, normalized[i]]));
+  }
+
+  const { scores } = normalizeToTercileScores(raw);
+  return new Map(zips.map((z, i) => [z.zip, scores[i]]));
 }

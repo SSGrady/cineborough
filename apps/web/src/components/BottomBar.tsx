@@ -1,6 +1,6 @@
 import type { MetricLayerKey } from "@cineborough/data";
 import { METRIC_PROVENANCE, metricAttributionLabel } from "@cineborough/data";
-import { legendStops } from "@cineborough/geo";
+import { legendStops, type TercileLegendBounds } from "@cineborough/geo";
 
 interface BottomBarProps {
   activeMetric: MetricLayerKey;
@@ -8,6 +8,7 @@ interface BottomBarProps {
   metricLabel: string;
   valueMin?: string;
   valueMax?: string;
+  tercileBounds?: TercileLegendBounds;
   tooltipsEnabled: boolean;
   onToggleTooltips: () => void;
   exploreMode?: boolean;
@@ -20,12 +21,13 @@ export function BottomBar({
   metricLabel,
   valueMin,
   valueMax,
+  tercileBounds,
   tooltipsEnabled,
   onToggleTooltips,
   exploreMode = false,
   onToggleExploreMode,
 }: BottomBarProps) {
-  const legend = legendStops(activeMetric);
+  const legend = legendStops(activeMetric, tercileBounds);
   const attribution = metricAttributionLabel(activeMetric, dataAsOfLabel);
   const source = METRIC_PROVENANCE[activeMetric];
 
@@ -53,12 +55,16 @@ export function BottomBar({
 
       <span
         className={`bottom-bar__date bottom-bar__date--${source.provenance}`}
-        title={source.provenance === "mock" ? "This metric uses mock estimates until a live source is wired" : undefined}
+        title={source.provenance === "mock" ? "This metric uses mock estimates until a live source is wired" : "Sourced from public bulk ingest with schema-first derivation"}
       >
         {attribution}
-        {source.provenance === "mock" && (
+        {source.provenance === "mock" ? (
           <span className="bottom-bar__mock-tag" aria-label="mock data">
             mock
+          </span>
+        ) : (
+          <span className="bottom-bar__verified-tag" aria-label="verified data">
+            verified
           </span>
         )}
       </span>

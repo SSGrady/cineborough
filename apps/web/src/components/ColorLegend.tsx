@@ -1,12 +1,17 @@
-import { legendStops } from "@cineborough/geo";
+import { legendStops, type TercileLegendBounds } from "@cineborough/geo";
 
 interface ColorLegendProps {
   title: string;
   metricKey?: string;
+  tercileBounds?: TercileLegendBounds;
 }
 
-export function ColorLegend({ title, metricKey = "opportunityScore" }: ColorLegendProps) {
-  const legend = legendStops(metricKey);
+export function ColorLegend({
+  title,
+  metricKey = "opportunityScore",
+  tercileBounds,
+}: ColorLegendProps) {
+  const legend = legendStops(metricKey, tercileBounds);
 
   return (
     <div className="color-legend">

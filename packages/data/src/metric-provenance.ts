@@ -35,7 +35,36 @@ export function provenanceBadgeClass(provenance: MetricProvenance): string {
 export function metricAttributionLabel(key: MetricLayerKey, dataAsOfLabel: string): string {
   const { provenance, shortLabel } = METRIC_PROVENANCE[key];
   if (provenance === "mock") {
-    return `${shortLabel} · ${dataAsOfLabel}`;
+    return `${shortLabel} · mock · ${dataAsOfLabel}`;
   }
-  return `${shortLabel} · ${dataAsOfLabel}`;
+  if (provenance === "live") {
+    return `${shortLabel} · verified live · ${dataAsOfLabel}`;
+  }
+  return `${shortLabel} · verified derived · ${dataAsOfLabel}`;
+}
+
+/** Tooltip / proof panel source line */
+export function metricSourceDetail(key: MetricLayerKey): string {
+  const { provenance, shortLabel } = METRIC_PROVENANCE[key];
+  const sources: Partial<Record<MetricLayerKey, string>> = {
+    medianHomeValue: "data/ingest/zhvi/normalized/metro-latest.json",
+    homePriceForecast1yr: "derived-financials.ts (ZHVI 60% + FHFA 40%)",
+    overvaluationPct: "derived-financials.ts (ZHVI + ACS income)",
+    homeValueGrowthYoy: "data/ingest/zhvi/normalized/metro-latest.json",
+    remoteWorkPct: "data/ingest/census-acs/normalized/zip-latest.json",
+    homeowners25to44Pct: "data/ingest/census-acs/normalized/zip-latest.json",
+    populationGrowthRate: "data/ingest/census-acs/normalized/zip-latest.json",
+    incomeGrowthRate: "data/ingest/census-acs/normalized/zip-latest.json",
+    medianAge: "data/ingest/census-acs/normalized/zip-latest.json",
+    collegeDegreeRate: "data/ingest/census-acs/normalized/zip-latest.json",
+    capRate: "derived (ACS rent + ZHVI)",
+    daysOnMarket: "data/mock/ (no live source)",
+    sellerDesperationScore: "data/mock/ (no live source)",
+    marketPsf: "data/mock/ (no live source)",
+    walkabilityScore: "data/mock/ (no live source)",
+    opportunityScore: "composite (forecast + remoteWork − overvaluation)",
+  };
+  const path = sources[key] ?? shortLabel;
+  if (provenance === "mock") return `Source: ${path}`;
+  return `Source: ${path} · verified ${provenance}`;
 }

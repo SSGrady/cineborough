@@ -96,6 +96,10 @@ export function choroplethPaletteForMetric(metricKey: string): ChoroplethPalette
   return "opportunity";
 }
 
+export function usesTercileLegend(metricKey: string): boolean {
+  return choroplethPaletteForMetric(metricKey) === "opportunity";
+}
+
 export function colorForChoropleth(palette: ChoroplethPalette, normalizedScore: number): string {
   return palette === "value"
     ? colorForValueGradient(normalizedScore)
@@ -118,8 +122,17 @@ export interface MetricLegendSpec {
 
 const VALUE_GRADIENT_CSS = "linear-gradient(to right, #2166ac, #67a9cf, #f7f7f7, #ef8a62, #b2182b)";
 
+export interface TercileLegendBounds {
+  low: string;
+  mid: string;
+  high: string;
+}
+
 /** Metric-aware legend configuration for map bottom bar */
-export function legendStops(metricKey: string): MetricLegendSpec {
+export function legendStops(
+  metricKey: string,
+  tercileBounds?: TercileLegendBounds,
+): MetricLegendSpec {
   if (metricKey === "opportunityScore") {
     return {
       style: "tercile",
@@ -140,11 +153,21 @@ export function legendStops(metricKey: string): MetricLegendSpec {
   }
 
   return {
-    style: "gradient",
-    gradientCss: VALUE_GRADIENT_CSS,
+    style: "tercile",
+    gradientCss: "",
     stops: [
-      { color: "#2166ac", label: "Low" },
-      { color: "#b2182b", label: "High" },
+      {
+        color: "#ef4444",
+        label: tercileBounds?.low ?? "Low (bottom third)",
+      },
+      {
+        color: "#eab308",
+        label: tercileBounds?.mid ?? "Moderate (middle third)",
+      },
+      {
+        color: "#22c55e",
+        label: tercileBounds?.high ?? "High (top third)",
+      },
     ],
   };
 }
