@@ -194,6 +194,18 @@ export function legendStops(
     };
   }
 
+  if (metricKey === "homePriceForecast1yr") {
+    return {
+      style: "tercile",
+      gradientCss: "",
+      stops: [
+        { color: "#ef4444", label: "< 0%" },
+        { color: "#eab308", label: "0% – 2.9%" },
+        { color: "#22c55e", label: "≥ 3%" },
+      ],
+    };
+  }
+
   return {
     style: "tercile",
     gradientCss: "",

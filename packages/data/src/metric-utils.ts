@@ -1,4 +1,8 @@
-import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
+import {
+  normalizeForecastToFixedScore,
+  normalizeScores,
+  normalizeToTercileScores,
+} from "./opportunity-index";
 import type { MetricLayerKey, ZipMetrics } from "./types";
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
@@ -7,6 +11,8 @@ const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>([
   "medianHomeValue",
   "medianAge",
 ]);
+/** Absolute thresholds — not data-driven terciles. */
+const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>(["homePriceForecast1yr"]);
 
 export function getRawMetricValue(zip: ZipMetrics, key: MetricLayerKey): number {
   if (key === "opportunityScore") {
@@ -29,6 +35,12 @@ export function getNormalizedMetricValues(
   if (VALUE_GRADIENT_METRICS.has(key)) {
     const normalized = normalizeScores(raw);
     return new Map(zips.map((z, i) => [z.zip, normalized[i]]));
+  }
+
+  if (FIXED_THRESHOLD_METRICS.has(key)) {
+    return new Map(
+      zips.map((z, i) => [z.zip, normalizeForecastToFixedScore(raw[i])]),
+    );
   }
 
   const { scores } = normalizeToTercileScores(raw, {

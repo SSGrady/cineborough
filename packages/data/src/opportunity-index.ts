@@ -40,6 +40,25 @@ export interface TercileScoreOptions {
   invert?: boolean;
 }
 
+/**
+ * Fixed buyer-semantics buckets for 1-year price forecast choropleth.
+ * Maps to OPPORTUNITY_COLOR_STOPS scores (20 / 55 / 85) for red / yellow / green.
+ *
+ * Edge case: 0% to <0.1% is yellow (flat/neutral growth), not red.
+ */
+export const FORECAST_COLOR_THRESHOLDS = {
+  /** Values below this are red (declining prices). */
+  negativeMax: 0,
+  /** Values at or above this are green (strong growth). */
+  greenMin: 3,
+} as const;
+
+export function normalizeForecastToFixedScore(forecastPct: number): number {
+  if (forecastPct < FORECAST_COLOR_THRESHOLDS.negativeMax) return 20;
+  if (forecastPct < FORECAST_COLOR_THRESHOLDS.greenMin) return 55;
+  return 85;
+}
+
 export function normalizeToTercileScores(
   values: number[],
   options?: TercileScoreOptions,

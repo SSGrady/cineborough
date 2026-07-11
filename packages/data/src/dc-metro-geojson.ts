@@ -6,7 +6,11 @@ import type {
   ZipMetrics,
   ZipMetricsCollection,
 } from "./types";
-import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
+import {
+  normalizeForecastToFixedScore,
+  normalizeScores,
+  normalizeToTercileScores,
+} from "./opportunity-index";
 
 /** @deprecated Use loadDcMetroGeoJson() — boundaries are embedded in data/metros/47900.geojson */
 export { loadZipBoundaries } from "./boundaries";
@@ -94,6 +98,8 @@ const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>([
   "medianHomeValue",
   "medianAge",
 ]);
+/** Absolute thresholds — not data-driven terciles. */
+const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>(["homePriceForecast1yr"]);
 
 export type ChoroplethPalette = "value" | "opportunity";
 
@@ -133,6 +139,18 @@ export function getChoroplethSpecFromGeoJson(
     return {
       palette,
       colorByZip: new Map(features.map((f, i) => [f.properties.zipCode, normalized[i]])),
+    };
+  }
+
+  if (FIXED_THRESHOLD_METRICS.has(key)) {
+    return {
+      palette,
+      colorByZip: new Map(
+        features.map((f, i) => [
+          f.properties.zipCode,
+          normalizeForecastToFixedScore(raw[i]),
+        ]),
+      ),
     };
   }
 
