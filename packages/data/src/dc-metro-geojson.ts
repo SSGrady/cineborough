@@ -89,6 +89,7 @@ export function getRawMetricFromFeature(
 }
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
+const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>(["medianHomeValue"]);
 
 export type ChoroplethPalette = "value" | "opportunity";
 
@@ -133,7 +134,9 @@ export function getChoroplethSpecFromGeoJson(
 
   const dataMask = features.map((f) => f.properties.medianHomeValue > 0);
   const dataValues = raw.filter((_, i) => dataMask[i]);
-  const { scores: dataScores, p33, p66 } = normalizeToTercileScores(dataValues);
+  const { scores: dataScores, p33, p66 } = normalizeToTercileScores(dataValues, {
+    invert: AFFORDABILITY_TERCILE_METRICS.has(key),
+  });
   let dataIndex = 0;
   const scores = raw.map((_, i) => {
     if (!dataMask[i]) return 0;

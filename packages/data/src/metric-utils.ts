@@ -2,6 +2,7 @@ import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
 import type { MetricLayerKey, ZipMetrics } from "./types";
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
+const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>(["medianHomeValue"]);
 
 export function getRawMetricValue(zip: ZipMetrics, key: MetricLayerKey): number {
   if (key === "opportunityScore") {
@@ -26,6 +27,8 @@ export function getNormalizedMetricValues(
     return new Map(zips.map((z, i) => [z.zip, normalized[i]]));
   }
 
-  const { scores } = normalizeToTercileScores(raw);
+  const { scores } = normalizeToTercileScores(raw, {
+    invert: AFFORDABILITY_TERCILE_METRICS.has(key),
+  });
   return new Map(zips.map((z, i) => [z.zip, scores[i]]));
 }

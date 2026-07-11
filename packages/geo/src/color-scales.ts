@@ -152,6 +152,27 @@ export function legendStops(
     };
   }
 
+  if (metricKey === "medianHomeValue") {
+    return {
+      style: "tercile",
+      gradientCss: "",
+      stops: [
+        {
+          color: "#22c55e",
+          label: tercileBounds?.low ?? "More affordable",
+        },
+        {
+          color: "#eab308",
+          label: tercileBounds?.mid ?? "Mid-range",
+        },
+        {
+          color: "#ef4444",
+          label: tercileBounds?.high ?? "Higher cost",
+        },
+      ],
+    };
+  }
+
   return {
     style: "tercile",
     gradientCss: "",

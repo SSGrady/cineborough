@@ -258,11 +258,17 @@ export function MapView({
       min: formatLabelValue(activeMetric, min),
       max: formatLabelValue(activeMetric, max),
       tercile: bounds
-        ? {
-            low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
-            mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
-            high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
-          }
+        ? activeMetric === "medianHomeValue"
+          ? {
+              low: `< ${formatLabelValue(activeMetric, bounds.p33)} — More affordable`,
+              mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
+              high: `> ${formatLabelValue(activeMetric, bounds.p66)} — Higher cost`,
+            }
+          : {
+              low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
+              mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
+              high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
+            }
         : undefined,
     };
   }, [geoJson, activeMetric, choroplethSpec.tercileBounds]);

@@ -35,16 +35,25 @@ function percentile(sorted: number[], p: number): number {
  * Percentile tercile buckets (33rd / 66th) mapped to choropleth scores.
  * Identical raw values always land in the same color bucket.
  */
-export function normalizeToTercileScores(values: number[]): TercileNormalization {
+export interface TercileScoreOptions {
+  /** Low raw values map to green (buyer affordability semantics). */
+  invert?: boolean;
+}
+
+export function normalizeToTercileScores(
+  values: number[],
+  options?: TercileScoreOptions,
+): TercileNormalization {
   if (values.length === 0) return { scores: [], p33: 0, p66: 0 };
   const sorted = [...values].sort((a, b) => a - b);
   const p33 = percentile(sorted, 0.33);
   const p66 = percentile(sorted, 0.66);
+  const invert = options?.invert === true;
 
   const scores = values.map((v) => {
-    if (v <= p33) return 20;
+    if (v <= p33) return invert ? 85 : 20;
     if (v <= p66) return 55;
-    return 85;
+    return invert ? 20 : 85;
   });
 
   return { scores, p33, p66 };
