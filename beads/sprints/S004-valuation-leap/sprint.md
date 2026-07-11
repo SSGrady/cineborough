@@ -1,7 +1,7 @@
 ---
 id: S004
 title: Phase 3 Valuation Leap (Mock-First)
-status: in_progress
+status: done
 epic: E004
 start: 2026-07-11
 end: null
@@ -17,12 +17,12 @@ Implement ADR-006 Level 3 valuation UX with mock property fixtures, Reventure-st
 
 | ID | Title | Status |
 |----|-------|--------|
-| T016 | Mock property fixtures | open |
-| T017 | Offer Range component | open |
-| T018 | Renovation adjustment pills | open |
-| T019 | Calculation breakdown panel | open |
-| T020 | Comps table + Level 3 flow | open |
-| T021 | ZIP sparkline + forecast gauge | open |
+| T016 | Mock property fixtures | done |
+| T017 | Offer Range component | done |
+| T018 | Renovation adjustment pills | done |
+| T019 | Calculation breakdown panel | done |
+| T020 | Comps table + Level 3 flow | done |
+| T021 | ZIP sparkline + forecast gauge | done |
 
 ## Progress
 

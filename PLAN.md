@@ -37,16 +37,18 @@ See [ADR-008](./docs/adr/008-cinematic-ux-deferred.md). Epic E002 / Sprint S002 
 | 2.4 | Route/path overlay (Deck.gl PathLayer) | T009 |
 | 2.5 | Real ZCTA boundary GeoJSON | T010 |
 
-## Phase 3: Valuation Leap (Mock → Live)
+## Phase 3: Valuation Leap (Mock → Live) — Current
 
 **Goal:** Offer Range component (Conservative / Fair / Competitive) with calculation breakdown.
 
-| Step | Deliverable |
-|------|-------------|
-| 3.1 | Mock offer engine for 2–3 test properties |
-| 3.2 | Renovation adjustment pills |
-| 3.3 | Comparable sales table |
-| 3.4 | Live ATTOM/DataTree integration (ADR amendment required) |
+| Step | Deliverable | Beads Ticket |
+|------|-------------|--------------|
+| 3.1 | Mock offer engine for 2–3 test properties | T016 |
+| 3.2 | Renovation adjustment pills | T018 |
+| 3.3 | Comparable sales table + Level 3 flow | T020 |
+| 3.4 | Live ATTOM/DataTree integration (ADR amendment required) | — |
+
+Epic E004 / Sprint S004 complete (T016–T021). Live ingest remains deferred per ADR-003.
 
 ## File Targets (Phase 1)
 

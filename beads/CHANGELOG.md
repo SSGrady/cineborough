@@ -95,3 +95,13 @@ Aggregated progress log for Cineborough development.
 - Hybrid navigation: scroll journey + click ZIP compare; stacked detail with forecast gauge
 
 **Status:** T011–T015 → `done`. Sprint S003 complete (5/5).
+
+### E004 / S004 — Phase 3 Valuation Leap (Mock-First)
+
+- `docs/schema/property-valuation.md` documents property sidecar schema
+- `data/mock/properties.json` with 3 DC sandbox listings (22201, 22202, 22204)
+- Offer Range cards, renovation pills, calculation breakdown, comparable sales table
+- Level 3 flow wired from ZIP detail via property picker and "Evaluate property" CTA
+- Home value sparkline added to ZIP detail investor block
+
+**Status:** T016–T021 → `done`. Sprint S004 complete (6/6).
