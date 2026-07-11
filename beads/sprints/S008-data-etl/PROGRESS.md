@@ -3,7 +3,7 @@
 ## Tickets
 
 - [ ] **T032** — Census ACS demographics ETL
-- [ ] **T033** — FHFA/HUD financial proxy ETL
+- [x] **T033** — ZHVI bulk ingest (metro + zip script; metro normalized committed)
 - [ ] **T034** — Forecast + overvaluation model
 - [ ] **T035** — Derived metrics + refresh cron
 - [ ] **T036** — Income growth schema + layer

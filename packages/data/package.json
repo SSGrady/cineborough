@@ -13,7 +13,8 @@
     "build:geojson": "node --experimental-strip-types src/build-geojson.ts",
     "build:orlando-geojson": "node --experimental-strip-types src/build-orlando-geojson.ts",
     "build:us-metros": "node --experimental-strip-types src/build-us-metros.ts",
-    "build:us-metro-tiles": "node --experimental-strip-types src/build-us-metro-tiles.ts"
+    "build:us-metro-tiles": "node --experimental-strip-types src/build-us-metro-tiles.ts",
+    "ingest:zhvi": "node --experimental-strip-types src/ingest/ingest-zhvi.ts"
   },
   "devDependencies": {
     "typescript": "^5.7.0"

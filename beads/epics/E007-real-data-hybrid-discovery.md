@@ -1,7 +1,7 @@
 ---
 id: E007
 title: Real Data + Hybrid Discovery
-status: open
+status: in_progress
 priority: P1
 sprints:
   - S008

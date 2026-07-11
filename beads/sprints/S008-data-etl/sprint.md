@@ -1,7 +1,7 @@
 ---
 id: S008
 title: Real Data ETL
-status: open
+status: in_progress
 priority: P1
 epic: E007
 start_date: 2026-07-11

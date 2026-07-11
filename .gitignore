@@ -21,3 +21,8 @@ dist/
 
 # Mapbox
 .mapbox/
+
+# Ingest raw bulk downloads (regenerate via pnpm ingest:zhvi)
+data/ingest/**/raw/
+data/ingest/**/raw/**
+data/ingest/zhvi/normalized/zip-latest.json
