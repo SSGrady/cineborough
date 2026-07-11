@@ -32,6 +32,8 @@ interface MapViewProps {
   cameraTarget?: MapCameraTarget | null;
   pathVisible?: boolean;
   labelsVisible?: boolean;
+  exploreMode?: boolean;
+  onToggleExploreMode?: () => void;
 }
 
 function hexToRgb(hex: string): [number, number, number, number] {
@@ -52,6 +54,11 @@ function formatLabelValue(key: MetricLayerKey, value: number): string {
   return value.toFixed(1);
 }
 
+function cameraKey(target: MapCameraTarget): string {
+  const [lng, lat] = target.center;
+  return `${lng.toFixed(4)},${lat.toFixed(4)},${target.zoom},${target.pitch ?? 0},${target.bearing ?? 0}`;
+}
+
 export function MapView({
   geoJson,
   activeMetric = "opportunityScore",
@@ -60,10 +67,13 @@ export function MapView({
   cameraTarget = null,
   pathVisible = false,
   labelsVisible = true,
+  exploreMode = false,
+  onToggleExploreMode,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
   const overlayRef = useRef<MapboxOverlay | null>(null);
+  const lastCameraKeyRef = useRef<string | null>(null);
   const [mapReady, setMapReady] = useState(false);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
 
@@ -93,6 +103,7 @@ export function MapView({
       pickable: true,
       stroked: true,
       filled: true,
+      extruded: false,
       getFillColor: (feature) => {
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
@@ -185,17 +196,28 @@ export function MapView({
 
       const map = mapRef.current;
       if (map && info.coordinate) {
+        map.stop();
         map.flyTo({
           center: [info.coordinate[0], info.coordinate[1]],
           zoom: 12.5,
-          pitch: 45,
-          bearing: -20,
-          duration: 1400,
+          pitch: exploreMode ? 0 : 45,
+          bearing: exploreMode ? 0 : -20,
+          duration: 900,
         });
       }
     },
-    [onZipSelect],
+    [onZipSelect, exploreMode],
   );
+
+  const syncOverlay = useCallback(() => {
+    const overlay = overlayRef.current;
+    const map = mapRef.current;
+    if (!overlay || !map) return;
+    overlay.setProps({ layers, onClick: handleClick });
+    // Keep Deck.gl in sync with Mapbox camera during pan/zoom/fly
+    const deck = (overlay as unknown as { _deck?: { redraw: () => void } })._deck;
+    deck?.redraw();
+  }, [layers, handleClick]);
 
   useEffect(() => {
     if (!MAPBOX_TOKEN || MAPBOX_TOKEN === "your_mapbox_token_here") return;
@@ -208,22 +230,34 @@ export function MapView({
       style: "mapbox://styles/mapbox/light-v11",
       center: DC_METRO_CENTER,
       zoom: DEFAULT_ZOOM,
+      dragPan: true,
+      dragRotate: true,
+      pitchWithRotate: true,
     });
 
     const overlay = new MapboxOverlay({
-      interleaved: true,
+      interleaved: false,
       layers,
       onClick: handleClick,
     });
 
     map.addControl(new mapboxgl.NavigationControl(), "top-right");
-    map.on("load", () => setMapReady(true));
+    map.on("load", () => {
+      map.scrollZoom.disable();
+      map.boxZoom.disable();
+      map.doubleClickZoom.disable();
+      setMapReady(true);
+    });
+    map.on("move", syncOverlay);
+    map.on("moveend", syncOverlay);
     map.addControl(overlay);
 
     mapRef.current = map;
     overlayRef.current = overlay;
 
     return () => {
+      map.off("move", syncOverlay);
+      map.off("moveend", syncOverlay);
       overlay.setProps({ layers: [] });
       map.remove();
       mapRef.current = null;
@@ -233,22 +267,48 @@ export function MapView({
   }, []);
 
   useEffect(() => {
-    overlayRef.current?.setProps({ layers, onClick: handleClick });
-  }, [layers, handleClick]);
+    syncOverlay();
+  }, [syncOverlay]);
 
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !cameraTarget || !mapReady) return;
+    if (!map || !mapReady) return;
 
+    if (exploreMode) {
+      map.scrollZoom.enable();
+      map.boxZoom.enable();
+      map.doubleClickZoom.enable();
+    } else {
+      map.scrollZoom.disable();
+      map.boxZoom.disable();
+      map.doubleClickZoom.disable();
+    }
+  }, [exploreMode, mapReady]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !cameraTarget || !mapReady || exploreMode) return;
+
+    const key = cameraKey(cameraTarget);
+    if (lastCameraKeyRef.current === key) return;
+    lastCameraKeyRef.current = key;
+
+    map.stop();
     map.flyTo({
       center: cameraTarget.center,
       zoom: cameraTarget.zoom,
       pitch: cameraTarget.pitch ?? 0,
       bearing: cameraTarget.bearing ?? 0,
-      duration: cameraTarget.duration ?? 1600,
+      duration: cameraTarget.duration ?? 1200,
       essential: true,
     });
-  }, [cameraTarget, mapReady]);
+  }, [cameraTarget, mapReady, exploreMode]);
+
+  useEffect(() => {
+    if (exploreMode) {
+      lastCameraKeyRef.current = null;
+    }
+  }, [exploreMode]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -297,7 +357,7 @@ export function MapView({
   }
 
   return (
-    <div className="map-view">
+    <div className={`map-view${exploreMode ? " map-view--explore" : ""}`}>
       <div ref={containerRef} className="map-view__canvas" />
       {mapReady && (
         <BottomBar
@@ -305,6 +365,8 @@ export function MapView({
           metricLabel={metricLabel}
           tooltipsEnabled={tooltipsEnabled}
           onToggleTooltips={() => setTooltipsEnabled((v) => !v)}
+          exploreMode={exploreMode}
+          onToggleExploreMode={onToggleExploreMode}
         />
       )}
     </div>

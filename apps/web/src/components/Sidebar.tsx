@@ -28,10 +28,10 @@ const CATEGORY_ORDER: MetricLayerDefinition["category"][] = [
 ];
 
 const GEOGRAPHY_OPTIONS: { key: GeographyLevel; label: string; enabled: boolean }[] = [
-  { key: "national", label: "National", enabled: false },
-  { key: "state", label: "State", enabled: false },
+  { key: "national", label: "National", enabled: true },
+  { key: "state", label: "State", enabled: true },
   { key: "metro", label: "Metro", enabled: true },
-  { key: "county", label: "County", enabled: false },
+  { key: "county", label: "County", enabled: true },
   { key: "zip", label: "Zip", enabled: true },
 ];
 
@@ -121,6 +121,9 @@ export function Sidebar({
             </button>
           ))}
         </div>
+        <p className="sidebar__geo-hint">
+          Pan the map in open areas or use Explore map. Data: DC sandbox ZIPs only until national ingest ships.
+        </p>
       </section>
 
       {CATEGORY_ORDER.map((category) => (
