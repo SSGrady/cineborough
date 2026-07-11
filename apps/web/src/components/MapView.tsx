@@ -6,7 +6,7 @@ import { MapboxOverlay } from "@deck.gl/mapbox";
 import { GeoJsonLayer, PathLayer, ScatterplotLayer, TextLayer } from "@deck.gl/layers";
 import { MVTLayer } from "@deck.gl/geo-layers";
 import type { PickingInfo, Layer } from "@deck.gl/core";
-import type { DcMetroGeoJson, MetricLayerKey } from "@cineborough/data";
+import type { DcMetroGeoJson, MetricLayerKey, MetroGeometry } from "@cineborough/data";
 import {
   getChoroplethSpecFromGeoJson,
   getRawMetricFromFeature,
@@ -34,13 +34,15 @@ import {
 import type { GeographyLevel } from "@cineborough/geo";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
-import { extractOuterRings, ringToPath } from "@/lib/selection-border";
+import { buildTrailPaths, extractOuterRings, ringToPath } from "@/lib/selection-border";
 import { truncateLinePath } from "@/lib/path-trace";
 import { createPmtilesFetch } from "@/lib/pmtiles-fetch";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const METRO_TILES_URL = process.env.NEXT_PUBLIC_METRO_TILES_URL ?? null;
 const MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
+/** Seconds for one full perimeter lap at constant arc-length speed. */
+const TRAIL_LAP_SEC_ZIP = 3.1;
 
 const AMENITY_COLORS: Record<AmenityCategory, [number, number, number, number]> = {
   park: [34, 197, 94, 230],
@@ -90,12 +92,41 @@ interface LabelPoint {
   value: number;
 }
 
-/** Hide metro labels at bird's-eye zoom — shapes only until user zooms in. */
+/** Zoom at which metric values appear beneath metro names (Reventure-style two-line labels). */
+const METRO_VALUE_LABEL_MIN_ZOOM = 5.75;
+
+function ringAreaSqDeg(ring: number[][]): number {
+  let area = 0;
+  for (let i = 0; i < ring.length - 1; i++) {
+    area += ring[i][0] * ring[i + 1][1] - ring[i + 1][0] * ring[i][1];
+  }
+  return Math.abs(area) / 2;
+}
+
+function metroGeometryArea(geometry: MetroGeometry): number {
+  if (geometry.type === "Polygon") return ringAreaSqDeg(geometry.coordinates[0]);
+  return geometry.coordinates.reduce((sum, polygon) => sum + ringAreaSqDeg(polygon[0]), 0);
+}
+
+/** Smallest zoom at which a metro polygon earns a label (area in sq degrees). */
+function minMetroLabelZoom(areaSqDeg: number): number {
+  if (areaSqDeg < 0.12) return 8;
+  if (areaSqDeg < 0.25) return 7.5;
+  if (areaSqDeg < 0.4) return 7;
+  if (areaSqDeg < 0.55) return 7;
+  if (areaSqDeg < 0.85) return 6;
+  if (areaSqDeg < 1.2) return 5.5;
+  return 5;
+}
+
+/** Label budget by zoom — bird's-eye shows largest metros only; mid-zoom densifies. */
 function maxMetroLabelsForZoom(zoom: number): number {
-  if (zoom < 5.5) return 0;
-  if (zoom < 6) return 24;
-  if (zoom < 7) return 60;
-  if (zoom < 8) return 140;
+  if (zoom < 5) return 0;
+  if (zoom < 5.5) return 12;
+  if (zoom < 6) return 150;
+  if (zoom < 6.5) return 220;
+  if (zoom < 7) return 280;
+  if (zoom < 8) return 400;
   return Number.POSITIVE_INFINITY;
 }
 
@@ -106,33 +137,32 @@ function buildMetroLabelData(
   minHomeValue = 1,
 ): LabelPoint[] {
   const cap = maxMetroLabelsForZoom(mapZoom);
+  if (cap === 0) return [];
+
   const candidates = geoJson.features
     .filter((f) => f.properties.medianHomeValue >= minHomeValue)
-    .map((f) => ({
-      position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
-      zipCode: f.properties.zipCode,
-      name: f.properties.neighborhoodName,
-      value: getRawMetricFromFeature(f.properties, activeMetric),
-      medianHomeValue: f.properties.medianHomeValue,
-    }));
+    .flatMap((f) => {
+      const area = metroGeometryArea(f.geometry);
+      if (mapZoom < minMetroLabelZoom(area)) return [];
+      const point = featureToLabelPoint(f.properties, activeMetric);
+      return point ? [{ point, area }] : [];
+    });
 
-  if (!Number.isFinite(cap)) return candidates;
+  if (!Number.isFinite(cap)) return candidates.map(({ point }) => point);
 
   return candidates
-    .sort((a, b) => b.medianHomeValue - a.medianHomeValue)
-    .slice(0, cap);
+    .sort((a, b) => b.area - a.area)
+    .slice(0, cap)
+    .map(({ point }) => point);
 }
 
 function buildStateLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
 ): LabelPoint[] {
-  return geoJson.features.map((f) => ({
-    position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
-    zipCode: f.properties.zipCode,
-    name: f.properties.neighborhoodName,
-    value: getRawMetricFromFeature(f.properties, activeMetric),
-  }));
+  return geoJson.features
+    .map((f) => featureToLabelPoint(f.properties, activeMetric))
+    .filter((point): point is LabelPoint => point !== null);
 }
 
 function buildNationalLabelData(
@@ -169,6 +199,24 @@ function formatLabelValue(key: MetricLayerKey, value: number): string {
   if (layer.unit === "$/sqft") return `$${value}`;
   if (layer.unit === "0–100") return `${Math.round(value)}`;
   return value.toFixed(1);
+}
+
+function isValidLabelPosition(lng: number, lat: number): boolean {
+  return Number.isFinite(lng) && Number.isFinite(lat);
+}
+
+function featureToLabelPoint(
+  properties: DcMetroGeoJson["features"][number]["properties"],
+  activeMetric: MetricLayerKey,
+): LabelPoint | null {
+  const { labelLng, labelLat, zipCode, neighborhoodName } = properties;
+  if (!isValidLabelPosition(labelLng, labelLat)) return null;
+  return {
+    position: [labelLng, labelLat] as [number, number],
+    zipCode,
+    name: neighborhoodName,
+    value: getRawMetricFromFeature(properties, activeMetric),
+  };
 }
 
 function cameraKey(target: MapCameraTarget): string | null {
@@ -236,12 +284,16 @@ export function MapView({
   const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
   const [selectionPathReady, setSelectionPathReady] = useState(false);
+  const [trailPhase, setTrailPhase] = useState(0);
+  const trailProgressRef = useRef(0);
+  const trailLastFrameRef = useRef(0);
 
   exploreModeRef.current = exploreMode;
   onUserMapMoveRef.current = onUserMapMove;
   onOverviewCameraCaptureRef.current = onOverviewCameraCapture;
 
   const isOverviewView = overviewMode;
+  const cameraTargetKey = cameraTarget ? cameraKey(cameraTarget) : null;
   const metroTileConfig = useMemo(
     () => (isOverviewView ? getMetroTileConfig(METRO_TILES_URL) : null),
     [isOverviewView],
@@ -294,12 +346,9 @@ export function MapView({
 
   const labelData = useMemo((): LabelPoint[] => {
     if (!overviewMode) {
-      return geoJson.features.map((f) => ({
-        position: [f.properties.labelLng, f.properties.labelLat] as [number, number],
-        zipCode: f.properties.zipCode,
-        name: f.properties.neighborhoodName,
-        value: getRawMetricFromFeature(f.properties, activeMetric),
-      }));
+      return geoJson.features
+        .map((f) => featureToLabelPoint(f.properties, activeMetric))
+        .filter((point): point is LabelPoint => point !== null);
     }
     if (geographyLevel === "national") {
       return buildNationalLabelData(geoJson, activeMetric);
@@ -428,6 +477,10 @@ export function MapView({
       return [];
     }
 
+    const trailData = buildTrailPaths(selectionRings, trailPhase)
+      .map(({ path, regionId }) => ({ path: sanitizeLngLatPath(path), regionId }))
+      .filter(({ path }) => path.length >= 2);
+
     const outlineData = selectionRings
       .map(({ ring, regionId }) => ({ path: ringToPath(ring), regionId }))
       .filter(({ path }) => path.length >= 2);
@@ -439,28 +492,60 @@ export function MapView({
       data: outlineData,
       pickable: false,
       getPath: (d) => d.path,
-      getColor: [255, 255, 255, 90],
-      getWidth: 1.5,
+      getColor: [255, 255, 255, 45],
+      getWidth: 1.25,
       widthMinPixels: 1,
       widthMaxPixels: 2,
       capRounded: true,
       jointRounded: true,
     });
 
-    return [outline];
+    if (trailData.length === 0) return [outline];
+
+    const glow = new PathLayer({
+      id: "selection-trail-glow",
+      data: trailData,
+      pickable: false,
+      getPath: (d) => d.path,
+      getColor: [200, 255, 220, 55],
+      getWidth: 14,
+      widthMinPixels: 7,
+      widthMaxPixels: 18,
+      capRounded: true,
+      jointRounded: true,
+    });
+
+    const trail = new PathLayer({
+      id: "selection-trail",
+      data: trailData,
+      pickable: false,
+      getPath: (d) => d.path,
+      getColor: [255, 255, 255, 230],
+      getWidth: 3.5,
+      widthMinPixels: 2.5,
+      widthMaxPixels: 5,
+      capRounded: true,
+      jointRounded: true,
+    });
+
+    return [outline, glow, trail];
   }, [
     selectedZip,
     selectionRings,
+    trailPhase,
     isOverviewView,
     selectionBorderVisible,
     selectionPathReady,
   ]);
 
-  const labelLayer = useMemo(() => {
-    if (!labelsVisible || labelData.length === 0) return null;
+  const labelLayers = useMemo((): Layer[] => {
+    if (!labelsVisible || labelData.length === 0) return [];
 
     const overview = isOverviewView;
-    const labelSize = overview
+    const isMetroOverview =
+      overview && (geographyLevel === "metro" || geographyLevel === "county");
+    const showMetroValues = !isMetroOverview || mapZoom >= METRO_VALUE_LABEL_MIN_ZOOM;
+    const nameSize = overview
       ? geographyLevel === "national"
         ? 18
         : geographyLevel === "state"
@@ -471,27 +556,54 @@ export function MapView({
       : mapZoom < 6
         ? 11
         : 13;
+    const valueSize = Math.max(10, nameSize - 1);
+    // Split name + metric into two layers — deck.gl multiline `\n` was clipping the value line.
+    const lineGap = Math.round(nameSize * 0.72);
+    const outlineWidth = overview ? 4 : 3;
 
-    return new TextLayer({
-      id: overview ? "overview-labels" : "zip-labels",
+    const shared = {
       data: labelData,
       pickable: false,
-      getPosition: (d) => d.position,
-      getText: (d) => `${d.name}\n${formatLabelValue(activeMetric, d.value)}`,
-      getSize: labelSize,
-      getColor: [15, 23, 42, 255],
-      getTextAnchor: "middle",
-      getAlignmentBaseline: "center",
+      getPosition: (d: LabelPoint) => d.position,
+      getTextAnchor: "middle" as const,
+      getAlignmentBaseline: "center" as const,
       fontFamily: "Arial, Helvetica, sans-serif",
       fontWeight: 700,
-      outlineWidth: overview ? 4 : 3,
-      outlineColor: [255, 255, 255, 250],
-      characterSet: "auto",
+      outlineWidth,
+      outlineColor: [255, 255, 255, 250] as [number, number, number, number],
+      characterSet: "auto" as const,
+    };
+
+    const nameLayer = new TextLayer({
+      ...shared,
+      id: overview ? "overview-labels-name" : "zip-labels-name",
+      getText: (d: LabelPoint) => d.name,
+      getSize: nameSize,
+      getColor: [15, 23, 42, 255],
+      getPixelOffset: [0, showMetroValues ? -lineGap / 2 : 0],
       updateTriggers: {
-        getText: [activeMetric, geographyLevel],
         getSize: [geographyLevel, mapZoom],
+        getPixelOffset: [nameSize, showMetroValues],
       },
     });
+
+    if (!showMetroValues) return [nameLayer];
+
+    const valueLayer = new TextLayer({
+      ...shared,
+      id: overview ? "overview-labels-value" : "zip-labels-value",
+      getText: (d: LabelPoint) => formatLabelValue(activeMetric, d.value),
+      getSize: valueSize,
+      getColor: [15, 23, 42, 255],
+      getPixelOffset: [0, lineGap / 2],
+      updateTriggers: {
+        getText: [activeMetric],
+        getSize: [geographyLevel, mapZoom, activeMetric],
+        getPixelOffset: [nameSize],
+      },
+    });
+
+    return [nameLayer, valueLayer];
   }, [labelData, activeMetric, labelsVisible, isOverviewView, geographyLevel, mapZoom]);
 
   const pathLayer = useMemo(() => {
@@ -567,9 +679,9 @@ export function MapView({
     const stack: Layer[] = [base, ...selectionBorderLayers];
     if (pathVisible && pathLayer) stack.push(pathLayer);
     stack.push(...amenityLayers);
-    if (labelLayer) stack.push(labelLayer);
+    stack.push(...labelLayers);
     return stack;
-  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, amenityLayers, labelLayer, pathVisible]);
+  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, amenityLayers, labelLayers, pathVisible]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -767,7 +879,50 @@ export function MapView({
       window.clearTimeout(fallback);
       map?.off("moveend", onMoveEnd);
     };
-  }, [selectedZip, selectionRings, selectionBorderVisible, isOverviewView, mapReady]);
+  }, [selectedZip, selectionRings, selectionBorderVisible, isOverviewView, mapReady, cameraTargetKey]);
+
+  useEffect(() => {
+    const trailActive =
+      selectedZip &&
+      selectionRings.length > 0 &&
+      selectionBorderVisible &&
+      selectionPathReady &&
+      !isOverviewView;
+
+    if (!trailActive) {
+      trailProgressRef.current = 0;
+      setTrailPhase(0);
+      return;
+    }
+
+    trailProgressRef.current = 0;
+    trailLastFrameRef.current = performance.now();
+    setTrailPhase(0);
+
+    let frame = 0;
+
+    const animate = (now: number) => {
+      const dt = (now - trailLastFrameRef.current) / 1000;
+      trailLastFrameRef.current = now;
+
+      trailProgressRef.current += dt / TRAIL_LAP_SEC_ZIP;
+      if (trailProgressRef.current >= 1) {
+        trailProgressRef.current = 0;
+      }
+
+      setTrailPhase(trailProgressRef.current);
+      frame = requestAnimationFrame(animate);
+    };
+
+    frame = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(frame);
+  }, [
+    selectedZip,
+    selectionRings,
+    selectionBorderVisible,
+    selectionPathReady,
+    isOverviewView,
+  ]);
 
   useEffect(() => {
     const map = mapRef.current;

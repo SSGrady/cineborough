@@ -223,7 +223,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Home Value",
     unit: "$",
     category: "popular",
-    helperText: "Typical home price",
+    helperText: "Median home price",
   },
   {
     key: "homePriceForecast1yr",
