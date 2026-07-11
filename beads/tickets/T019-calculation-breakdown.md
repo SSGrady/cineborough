@@ -1,7 +1,7 @@
 ---
 id: T019
 title: Calculation breakdown panel
-status: open
+status: done
 type: feature
 priority: P1
 epic: E004
