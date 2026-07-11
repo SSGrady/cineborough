@@ -88,7 +88,7 @@ export function getRawMetricFromFeature(
   return map[key];
 }
 
-const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["medianHomeValue", "marketPsf"]);
+const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
 
 export type ChoroplethPalette = "value" | "opportunity";
 

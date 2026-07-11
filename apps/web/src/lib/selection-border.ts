@@ -1,4 +1,5 @@
 import type { DcMetroGeoJson, MetroGeometry } from "@cineborough/data";
+import { sanitizeLngLatPath } from "@cineborough/geo";
 
 export type LngLat = [number, number];
 
@@ -142,4 +143,9 @@ export function buildTrailPaths(
     regionId,
     path: trailSegmentAlongRing(ring, progress),
   }));
+}
+
+/** Closed ring → open path safe for Deck.gl PathLayer (no wrap-around chord). */
+export function ringToPath(ring: LngLat[]): LngLat[] {
+  return sanitizeLngLatPath(openRing(ring));
 }

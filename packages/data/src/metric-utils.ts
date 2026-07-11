@@ -1,7 +1,7 @@
 import { normalizeScores, normalizeToTercileScores } from "./opportunity-index";
 import type { MetricLayerKey, ZipMetrics } from "./types";
 
-const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["medianHomeValue", "marketPsf"]);
+const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
 
 export function getRawMetricValue(zip: ZipMetrics, key: MetricLayerKey): number {
   if (key === "opportunityScore") {

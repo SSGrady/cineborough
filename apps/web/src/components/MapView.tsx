@@ -32,15 +32,12 @@ import {
 import type { GeographyLevel } from "@cineborough/geo";
 import { formatCurrency, formatPercent } from "@/lib/format";
 import { BottomBar } from "./BottomBar";
-import { buildTrailPaths, extractOuterRings } from "@/lib/selection-border";
+import { extractOuterRings, ringToPath } from "@/lib/selection-border";
 import { createPmtilesFetch } from "@/lib/pmtiles-fetch";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const METRO_TILES_URL = process.env.NEXT_PUBLIC_METRO_TILES_URL ?? null;
 const MAP_STYLE = "mapbox://styles/mapbox/outdoors-v12";
-/** Seconds for one full lap — constant rate, arc-length geometry. */
-const TRAIL_LAP_SEC_ZIP = 3.1;
-const TRAIL_LAP_SEC_NATIONAL = 2.75;
 
 interface MapViewProps {
   geoJson: DcMetroGeoJson;
@@ -219,9 +216,7 @@ export function MapView({
   const [mapReady, setMapReady] = useState(false);
   const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
-  const [trailPhase, setTrailPhase] = useState(0);
-  const trailProgressRef = useRef(0);
-  const trailLastFrameRef = useRef(0);
+  const [selectionPathReady, setSelectionPathReady] = useState(false);
 
   exploreModeRef.current = exploreMode;
   onUserMapMoveRef.current = onUserMapMove;
@@ -316,8 +311,8 @@ export function MapView({
         const isSelected = zip === selectedZip;
         const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
 
-        // Overview must recolor per active metric; baked fillColorRgb is opp-score only.
-        if (!isOverviewView && props?.fillColorRgb) {
+        // Baked fillColorRgb is opportunity-score only; other metrics use runtime choropleth.
+        if (!isOverviewView && activeMetric === "opportunityScore" && props?.fillColorRgb) {
           const rgb = props.fillColorRgb as [number, number, number];
           return [...rgb, alpha];
         }
@@ -398,15 +393,18 @@ export function MapView({
   }, [useMetroTiles, metroTileConfig, selectedZip, isOverviewView]);
 
   const selectionBorderLayers = useMemo(() => {
-    if (!selectedZip || selectionRings.length === 0 || !selectionBorderVisible || isOverviewView) {
+    if (
+      !selectedZip ||
+      selectionRings.length === 0 ||
+      !selectionBorderVisible ||
+      !selectionPathReady ||
+      isOverviewView
+    ) {
       return [];
     }
 
-    const trailData = buildTrailPaths(selectionRings, trailPhase)
-      .map(({ path, regionId }) => ({ path: sanitizeLngLatPath(path), regionId }))
-      .filter(({ path }) => path.length >= 2);
     const outlineData = selectionRings
-      .map(({ ring, regionId }) => ({ path: sanitizeLngLatPath(ring), regionId }))
+      .map(({ ring, regionId }) => ({ path: ringToPath(ring), regionId }))
       .filter(({ path }) => path.length >= 2);
 
     if (outlineData.length === 0) return [];
@@ -424,34 +422,14 @@ export function MapView({
       jointRounded: true,
     });
 
-    const glow = new PathLayer({
-      id: "selection-trail-glow",
-      data: trailData,
-      pickable: false,
-      getPath: (d) => d.path,
-      getColor: [255, 255, 255, 95],
-      getWidth: 14,
-      widthMinPixels: 7,
-      widthMaxPixels: 18,
-      capRounded: true,
-      jointRounded: true,
-    });
-
-    const trail = new PathLayer({
-      id: "selection-trail",
-      data: trailData,
-      pickable: false,
-      getPath: (d) => d.path,
-      getColor: [255, 255, 255, 230],
-      getWidth: 3.5,
-      widthMinPixels: 2.5,
-      widthMaxPixels: 5,
-      capRounded: true,
-      jointRounded: true,
-    });
-
-    return [outline, glow, trail];
-  }, [selectedZip, selectionRings, trailPhase, isOverviewView, selectionBorderVisible]);
+    return [outline];
+  }, [
+    selectedZip,
+    selectionRings,
+    isOverviewView,
+    selectionBorderVisible,
+    selectionPathReady,
+  ]);
 
   const labelLayer = useMemo(() => {
     if (!labelsVisible || labelData.length === 0) return null;
@@ -690,36 +668,34 @@ export function MapView({
   }, [syncOverlay]);
 
   useEffect(() => {
-    if (!selectedZip || selectionRings.length === 0) {
-      trailProgressRef.current = 0;
-      setTrailPhase(0);
+    if (
+      !selectedZip ||
+      selectionRings.length === 0 ||
+      !selectionBorderVisible ||
+      isOverviewView
+    ) {
+      setSelectionPathReady(false);
       return;
     }
 
-    const lapDuration = isOverviewView ? TRAIL_LAP_SEC_NATIONAL : TRAIL_LAP_SEC_ZIP;
-    trailProgressRef.current = 0;
-    trailLastFrameRef.current = performance.now();
-    setTrailPhase(0);
-
-    let frame = 0;
-
-    const animate = (now: number) => {
-      const dt = (now - trailLastFrameRef.current) / 1000;
-      trailLastFrameRef.current = now;
-
-      trailProgressRef.current += dt / lapDuration;
-
-      if (trailProgressRef.current >= 1) {
-        trailProgressRef.current = 0;
-      }
-
-      setTrailPhase(trailProgressRef.current);
-      frame = requestAnimationFrame(animate);
+    setSelectionPathReady(false);
+    let shown = false;
+    const reveal = () => {
+      if (shown) return;
+      shown = true;
+      setSelectionPathReady(true);
     };
 
-    frame = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(frame);
-  }, [selectedZip, selectionRings, isOverviewView]);
+    const fallback = window.setTimeout(reveal, 900);
+    const map = mapRef.current;
+    const onMoveEnd = () => reveal();
+    map?.once("moveend", onMoveEnd);
+
+    return () => {
+      window.clearTimeout(fallback);
+      map?.off("moveend", onMoveEnd);
+    };
+  }, [selectedZip, selectionRings, selectionBorderVisible, isOverviewView, mapReady]);
 
   useEffect(() => {
     const map = mapRef.current;

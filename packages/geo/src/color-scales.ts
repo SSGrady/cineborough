@@ -90,14 +90,14 @@ export function colorForValueGradient(score: number): string {
 export type ChoroplethPalette = "opportunity" | "value";
 
 export function choroplethPaletteForMetric(metricKey: string): ChoroplethPalette {
-  if (metricKey === "medianHomeValue" || metricKey === "marketPsf") {
+  if (metricKey === "marketPsf") {
     return "value";
   }
   return "opportunity";
 }
 
 export function usesTercileLegend(metricKey: string): boolean {
-  return choroplethPaletteForMetric(metricKey) === "opportunity";
+  return metricKey !== "marketPsf";
 }
 
 export function colorForChoropleth(palette: ChoroplethPalette, normalizedScore: number): string {
@@ -141,7 +141,7 @@ export function legendStops(
     };
   }
 
-  if (metricKey === "medianHomeValue" || metricKey === "marketPsf") {
+  if (metricKey === "marketPsf") {
     return {
       style: "gradient",
       gradientCss: VALUE_GRADIENT_CSS,

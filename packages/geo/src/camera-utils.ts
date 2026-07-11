@@ -46,9 +46,54 @@ export function sanitizeCameraTarget(
   };
 }
 
-/** Drop null/NaN vertices before handing paths to Deck.gl PathLayer. */
+/** Reject null island and other non-finite vertices for Deck.gl paths. */
+export function isUsableLngLat(coord: unknown): coord is LngLat {
+  return (
+    isFiniteLngLat(coord) &&
+    !(coord[0] === 0 && coord[1] === 0)
+  );
+}
+
+const MAX_PATH_SEGMENT_METERS = 5_000;
+
+function segmentLengthMeters(a: LngLat, b: LngLat): number {
+  const earthRadius = 6_371_000;
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const dLat = toRad(b[1] - a[1]);
+  const dLng = toRad(b[0] - a[0]);
+  const lat1 = toRad(a[1]);
+  const lat2 = toRad(b[1]);
+  const h =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+  return 2 * earthRadius * Math.asin(Math.min(1, Math.sqrt(h)));
+}
+
+/**
+ * Drop bad vertices and split on long jumps so Deck.gl never draws cross-map chords.
+ * Returns the longest contiguous run with segments under MAX_PATH_SEGMENT_METERS.
+ */
 export function sanitizeLngLatPath(path: LngLat[]): LngLat[] {
-  return path.filter(isFiniteLngLat);
+  const filtered = path.filter(isUsableLngLat);
+  if (filtered.length < 2) return [];
+
+  const runs: LngLat[][] = [];
+  let current: LngLat[] = [filtered[0]];
+
+  for (let i = 1; i < filtered.length; i++) {
+    const prev = filtered[i - 1];
+    const next = filtered[i];
+    if (segmentLengthMeters(prev, next) > MAX_PATH_SEGMENT_METERS) {
+      if (current.length >= 2) runs.push(current);
+      current = [next];
+    } else {
+      current.push(next);
+    }
+  }
+  if (current.length >= 2) runs.push(current);
+
+  if (runs.length === 0) return [];
+  return runs.reduce((longest, run) => (run.length > longest.length ? run : longest));
 }
 
 /** Outer-ring centroid for polygon / multipolygon geometries. */
