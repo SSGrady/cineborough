@@ -8,6 +8,7 @@ export const ACS_VINTAGE_PRIOR = "2022";
 export const ACS_HOPE_CORE_VARIABLES = [
   "B01003_001E", // total population
   "B01002_001E", // median age
+  "B19013_001E", // median household income
   "B08301_001E", // workers 16+
   "B08301_021E", // worked from home
   "B15003_001E", // population 25+
@@ -38,6 +39,7 @@ export interface CensusAcsRawRow {
   ownerOccupied: number | null;
   owner25to34: number | null;
   owner35to44: number | null;
+  medianHouseholdIncome: number | null;
 }
 
 export interface CensusZipDemographics {
@@ -49,6 +51,8 @@ export interface CensusZipDemographics {
   homeowners25to44Pct: number;
   collegeDegreeRate: number;
   populationGrowthRate: number;
+  /** ACS B19013; optional until re-ingest */
+  medianHouseholdIncome?: number;
 }
 
 function parseAcsNumber(value: string | undefined): number | null {
@@ -97,7 +101,7 @@ export function computeHopeCoreFromAcs(
     return null;
   }
 
-  return {
+  const demo: CensusZipDemographics = {
     zipCode: current.zipCode,
     name: current.name,
     population,
@@ -107,6 +111,12 @@ export function computeHopeCoreFromAcs(
     collegeDegreeRate: round1(college),
     populationGrowthRate: round1(populationGrowthRate),
   };
+
+  if (current.medianHouseholdIncome !== null) {
+    demo.medianHouseholdIncome = Math.round(current.medianHouseholdIncome);
+  }
+
+  return demo;
 }
 
 export interface CensusAcsNormalizedBundle {
@@ -142,5 +152,6 @@ export function parseAcsApiRow(headers: string[], row: string[]): CensusAcsRawRo
     ownerOccupied: parseAcsNumber(row[idx("B25003_002E")]),
     owner25to34: parseAcsNumber(row[idx("B25007_004E")]),
     owner35to44: parseAcsNumber(row[idx("B25007_005E")]),
+    medianHouseholdIncome: parseAcsNumber(row[idx("B19013_001E")]),
   };
 }

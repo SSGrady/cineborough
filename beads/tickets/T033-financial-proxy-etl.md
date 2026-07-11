@@ -1,7 +1,7 @@
 ---
 id: T033
 title: ZHVI and FHFA bulk ingest
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

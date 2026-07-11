@@ -1,7 +1,7 @@
 ---
 id: T034
 title: Forecast and overvaluation model
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

@@ -1,0 +1,127 @@
+{
+  "source": "fhfa-hpi-expanded-metro",
+  "attribution": "House price momentum from FHFA House Price Index bulk data (© FHFA).",
+  "downloadedAt": "2026-07-11T19:37:17.451Z",
+  "vintage": "2026Q1",
+  "recordCount": 2,
+  "records": {
+    "36740": {
+      "cbsaCode": "36740",
+      "fhfaMetroCode": "36740",
+      "name": "Orlando-Kissimmee-Sanford, FL",
+      "indexNsa": 452.8,
+      "indexSa": 453.5,
+      "hpiYoyPct": -0.5,
+      "hpiQoqPct": -0.9,
+      "series": [
+        {
+          "year": 2024,
+          "quarter": 2,
+          "indexNsa": 454.1,
+          "indexSa": 448.9
+        },
+        {
+          "year": 2024,
+          "quarter": 3,
+          "indexNsa": 457.2,
+          "indexSa": 452.9
+        },
+        {
+          "year": 2024,
+          "quarter": 4,
+          "indexNsa": 454.7,
+          "indexSa": 454.8
+        },
+        {
+          "year": 2025,
+          "quarter": 1,
+          "indexNsa": 455.1,
+          "indexSa": 456
+        },
+        {
+          "year": 2025,
+          "quarter": 2,
+          "indexNsa": 462.1,
+          "indexSa": 457
+        },
+        {
+          "year": 2025,
+          "quarter": 3,
+          "indexNsa": 458.5,
+          "indexSa": 454.6
+        },
+        {
+          "year": 2025,
+          "quarter": 4,
+          "indexNsa": 456.7,
+          "indexSa": 456.4
+        },
+        {
+          "year": 2026,
+          "quarter": 1,
+          "indexNsa": 452.8,
+          "indexSa": 453.5
+        }
+      ]
+    },
+    "47900": {
+      "cbsaCode": "47900",
+      "fhfaMetroCode": "11694",
+      "name": "Arlington-Alexandria-Reston, VA-WV (MSAD)",
+      "indexNsa": 406.8,
+      "indexSa": 404,
+      "hpiYoyPct": 1.7,
+      "hpiQoqPct": 0.7,
+      "series": [
+        {
+          "year": 2024,
+          "quarter": 2,
+          "indexNsa": 389.1,
+          "indexSa": 384.1
+        },
+        {
+          "year": 2024,
+          "quarter": 3,
+          "indexNsa": 392,
+          "indexSa": 390.2
+        },
+        {
+          "year": 2024,
+          "quarter": 4,
+          "indexNsa": 389.7,
+          "indexSa": 392.6
+        },
+        {
+          "year": 2025,
+          "quarter": 1,
+          "indexNsa": 400,
+          "indexSa": 397.5
+        },
+        {
+          "year": 2025,
+          "quarter": 2,
+          "indexNsa": 402.3,
+          "indexSa": 397.6
+        },
+        {
+          "year": 2025,
+          "quarter": 3,
+          "indexNsa": 401.7,
+          "indexSa": 400.2
+        },
+        {
+          "year": 2025,
+          "quarter": 4,
+          "indexNsa": 404,
+          "indexSa": 406.3
+        },
+        {
+          "year": 2026,
+          "quarter": 1,
+          "indexNsa": 406.8,
+          "indexSa": 404
+        }
+      ]
+    }
+  }
+}

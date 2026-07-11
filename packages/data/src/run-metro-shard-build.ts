@@ -32,7 +32,7 @@ export function runMetroShardBuild(files: MetroShardBuildFiles): void {
 
   const quotes = JSON.parse(readFileSync(files.quotesPath, "utf8")) as MetroShardBuildInput["quotes"];
 
-  const merged = mergeLiveMetricsIntoZips(metrics.zips);
+  const merged = mergeLiveMetricsIntoZips(metrics.zips, { cbsaCode: files.cbsaCode });
 
   const collection = buildMetroShardGeoJson({
     metro: metrics.metro,
@@ -49,6 +49,8 @@ export function runMetroShardBuild(files: MetroShardBuildFiles): void {
   const sources = [
     merged.usedCensus ? "Census ACS" : null,
     merged.usedZhvi ? "ZHVI" : null,
+    merged.usedFhfa ? "FHFA HPI" : null,
+    merged.usedDerivedFinancials ? "derived forecast/overvaluation" : null,
   ]
     .filter(Boolean)
     .join(" + ");
