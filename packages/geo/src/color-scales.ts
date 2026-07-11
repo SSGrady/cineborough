@@ -173,6 +173,27 @@ export function legendStops(
     };
   }
 
+  if (metricKey === "medianAge") {
+    return {
+      style: "tercile",
+      gradientCss: "",
+      stops: [
+        {
+          color: "#22c55e",
+          label: tercileBounds?.low ?? "Younger",
+        },
+        {
+          color: "#eab308",
+          label: tercileBounds?.mid ?? "Mid-range",
+        },
+        {
+          color: "#ef4444",
+          label: tercileBounds?.high ?? "Older",
+        },
+      ],
+    };
+  }
+
   return {
     style: "tercile",
     gradientCss: "",

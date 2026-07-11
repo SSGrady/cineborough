@@ -335,11 +335,17 @@ export function MapView({
               mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
               high: `> ${formatLabelValue(activeMetric, bounds.p66)} — Higher cost`,
             }
-          : {
-              low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
-              mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
-              high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
-            }
+          : activeMetric === "medianAge"
+            ? {
+                low: `≤ ${formatLabelValue(activeMetric, bounds.p33)} — Younger`,
+                mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
+                high: `≥ ${formatLabelValue(activeMetric, bounds.p66)} — Older`,
+              }
+            : {
+                low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
+                mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
+                high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
+              }
         : undefined,
     };
   }, [geoJson, activeMetric, choroplethSpec.tercileBounds]);
