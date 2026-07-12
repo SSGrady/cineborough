@@ -200,3 +200,15 @@ Aggregated progress log for Cineborough development.
 - Re-ran ingest for **68** total sandbox ZIPs
 
 **Status:** T057 → `done`. T055 QA scope expanded to include San Jose.
+
+## 2026-07-12
+
+### E002 / S011 — Phase 2a manual QA (T055)
+
+- End-to-end discovery tour verified for DC, Orlando, and SF Bay sandboxes (Puppeteer + manual checklist)
+- Fixed default discovery criteria so Orlando/SF Bay produce ≥3 matches on live ingest
+- Added missing amenity POIs (32803, 32835, 22203, 20037, 22302) and transit paths for SF/Orlando tour stops
+- `build-metro-shard.ts`: `MetroGeometry` type fix
+
+**Status:** T055 → `done`. S010/S011 discovery journey + Phase 2a cinematic QA complete.
+

@@ -1,6 +1,6 @@
 # S010 — Discovery Journey Progress
 
-## Status: in_progress
+## Status: done
 
 ## Completed this session
 
@@ -11,7 +11,7 @@
 
 ## Remaining
 
-- [ ] S010 wrap — manual QA on DC + Orlando + SF Bay discovery tour end-to-end
+- [x] S010 wrap — manual QA on DC + Orlando + SF Bay discovery tour end-to-end (T055)
 
 ## Notes
 

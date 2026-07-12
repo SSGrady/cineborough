@@ -1,6 +1,6 @@
 # S011 — Phase 2a Cinematic Polish Progress
 
-## Status: in_progress
+## Status: done
 
 ## Completed
 
@@ -10,10 +10,11 @@
 - [x] T054 — Orlando SunRail + Lake Eola trail mock paths
 - [x] T056 — SF Bay BART + park trail paths, amenity POIs, live ingest overlay
 - [x] T057 — San Jose VTA/Caltrain/trail paths, amenity POIs, live ingest overlay
+- [x] T055 — Manual QA DC + Orlando + SF Bay discovery tour end-to-end
 
 ## Remaining
 
-- [ ] T055 — Manual QA DC + Orlando + SF Bay + San Jose discovery tour end-to-end
+- (none — Phase 2a QA complete for DC, Orlando, SF Bay)
 
 ## Notes
 
