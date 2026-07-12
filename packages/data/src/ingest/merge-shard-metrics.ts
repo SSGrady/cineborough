@@ -4,11 +4,12 @@ import { fileURLToPath } from "node:url";
 import type { ZipMetricsInput } from "../validation.ts";
 import type { CensusAcsNormalizedBundle } from "./census-acs.ts";
 import { deriveFinancialMetrics } from "./derived-financials.ts";
-import { deriveSellerDesperationFromRedfin } from "./derived-market-signals.ts";
+import { crossCheckRedfinWithZillow, deriveSellerDesperationFromRedfin } from "./derived-market-signals.ts";
 import { SANDBOX_CBSA_ZHVI_METRO_MAP, type FhfaHpiNormalizedBundle } from "./fhfa-hpi-sources.ts";
 import type { HudFmrNormalizedBundle } from "./hud-fmr-sources.ts";
 import type { OsmWalkabilityNormalizedBundle } from "./osm-walkability-sources.ts";
 import type { RedfinNormalizedBundle } from "./redfin-sources.ts";
+import type { ZillowMarketNormalizedBundle } from "./zillow-market-sources.ts";
 import type { ZhviNormalizedBundle, ZhviMetroRecord, ZhviZipRecord } from "./zhvi-sources.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -21,6 +22,7 @@ export interface LiveIngestPaths {
   fhfaHpi: string;
   hudFmr: string;
   redfinZip: string;
+  zillowMarketZip: string;
   osmWalkability: string;
 }
 
@@ -31,6 +33,7 @@ export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
   fhfaHpi: resolve(INGEST_ROOT, "fhfa-hpi/normalized/metro-latest.json"),
   hudFmr: resolve(INGEST_ROOT, "hud/normalized/zip-fmr-latest.json"),
   redfinZip: resolve(INGEST_ROOT, "redfin/normalized/zip-latest.json"),
+  zillowMarketZip: resolve(INGEST_ROOT, "zillow-market/normalized/zip-latest.json"),
   osmWalkability: resolve(INGEST_ROOT, "osm-walkability/normalized/zip-latest.json"),
 };
 
@@ -47,6 +50,8 @@ export interface MergeLiveMetricsResult {
   usedDerivedFinancials: boolean;
   usedHudFmr: boolean;
   usedRedfin: boolean;
+  usedZillowMarketCrossCheck: boolean;
+  zillowCrossCheckMisaligned: number;
   usedOsmWalkability: boolean;
   usedSellerDesperation: boolean;
   dataAsOf: string;
@@ -99,6 +104,7 @@ export function mergeLiveMetricsIntoZips(
   const fhfa = loadJsonIfExists<FhfaHpiNormalizedBundle>(paths.fhfaHpi);
   const hudFmr = loadJsonIfExists<HudFmrNormalizedBundle>(paths.hudFmr);
   const redfin = loadJsonIfExists<RedfinNormalizedBundle>(paths.redfinZip);
+  const zillowMarket = loadJsonIfExists<ZillowMarketNormalizedBundle>(paths.zillowMarketZip);
   const osmWalkability = loadJsonIfExists<OsmWalkabilityNormalizedBundle>(paths.osmWalkability);
 
   let usedCensus = false;
@@ -107,6 +113,8 @@ export function mergeLiveMetricsIntoZips(
   let usedDerivedFinancials = false;
   let usedHudFmr = false;
   let usedRedfin = false;
+  let usedZillowMarketCrossCheck = false;
+  let zillowCrossCheckMisaligned = 0;
   let usedOsmWalkability = false;
   let usedSellerDesperation = false;
 
@@ -190,6 +198,18 @@ export function mergeLiveMetricsIntoZips(
         merged.sellerDesperationScore = desperation.sellerDesperationScore;
         merged.priceCutCount = desperation.priceCutCount;
       }
+
+      const zillowRec = zillowMarket?.records[zip.zip];
+      if (zillowRec) {
+        usedZillowMarketCrossCheck = true;
+        const crossCheck = crossCheckRedfinWithZillow(redfinRec, zillowRec);
+        if (!crossCheck.aligned) {
+          zillowCrossCheckMisaligned++;
+          console.warn(
+            `Zillow cross-check misaligned for ${zip.zip}: DOM Δ=${crossCheck.domDeltaDays ?? "n/a"}d, price-cut Δ=${crossCheck.priceCutDeltaPct ?? "n/a"}pp`,
+          );
+        }
+      }
     }
 
     const walkRec = osmWalkability?.records[zip.zip];
@@ -207,6 +227,9 @@ export function mergeLiveMetricsIntoZips(
     fhfa ? `FHFA ${fhfa.vintage}` : null,
     hudFmr && hudFmr.recordCount > 0 ? `HUD FMR ${hudFmr.vintage}` : null,
     redfin && redfin.recordCount > 0 ? `Redfin ${redfin.vintage}` : null,
+    zillowMarket && zillowMarket.recordCount > 0
+      ? `Zillow market ${zillowMarket.vintage} (cross-check)`
+      : null,
     osmWalkability && osmWalkability.recordCount > 0
       ? `OSM walkability ${osmWalkability.vintage}`
       : null,
@@ -240,6 +263,16 @@ export function mergeLiveMetricsIntoZips(
       `Redfin market trends not applied — run ingest:redfin (missing ${paths.redfinZip})`,
     );
   }
+  if (usedRedfin && !usedZillowMarketCrossCheck) {
+    console.warn(
+      `Zillow market cross-check not applied — run ingest:zillow-market (missing ${paths.zillowMarketZip})`,
+    );
+  }
+  if (usedZillowMarketCrossCheck && zillowCrossCheckMisaligned > 0) {
+    console.warn(
+      `Zillow cross-check: ${zillowCrossCheckMisaligned} ZIP(s) outside tolerance vs Redfin (definitions differ; Redfin remains primary)`,
+    );
+  }
   if (!usedOsmWalkability) {
     console.warn(
       `OSM walkability not applied — run ingest:osm-walkability (missing ${paths.osmWalkability})`,
@@ -254,6 +287,8 @@ export function mergeLiveMetricsIntoZips(
     usedDerivedFinancials,
     usedHudFmr,
     usedRedfin,
+    usedZillowMarketCrossCheck,
+    zillowCrossCheckMisaligned,
     usedOsmWalkability,
     usedSellerDesperation,
     dataAsOf,

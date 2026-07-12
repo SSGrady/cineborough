@@ -21,6 +21,7 @@
     "ingest:fhfa-hpi": "node --experimental-strip-types src/ingest/ingest-fhfa-hpi.ts",
     "ingest:hud-fmr": "node --experimental-strip-types src/ingest/ingest-hud-fmr.ts",
     "ingest:redfin": "node --experimental-strip-types src/ingest/ingest-redfin.ts",
+    "ingest:zillow-market": "node --experimental-strip-types src/ingest/ingest-zillow-market.ts",
     "ingest:osm-walkability": "node --experimental-strip-types src/ingest/ingest-osm-walkability.ts",
     "seed:sandbox-metrics": "node --experimental-strip-types src/scripts/seed-sandbox-metrics.ts",
     "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts",

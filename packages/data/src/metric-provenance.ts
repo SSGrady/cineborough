@@ -59,7 +59,8 @@ export function metricSourceDetail(key: MetricLayerKey): string {
     collegeDegreeRate: "data/ingest/census-acs/normalized/zip-latest.json",
     capRate: "derived (ACS rent + ZHVI)",
     daysOnMarket: "data/ingest/redfin/normalized/zip-latest.json",
-    sellerDesperationScore: "derived-market-signals.ts (Redfin DOM + price_drops)",
+    sellerDesperationScore:
+      "derived-market-signals.ts (Redfin DOM + price_drops; Zillow cross-check optional)",
     marketPsf: "data/ingest/redfin/normalized/zip-latest.json",
     walkabilityScore: "data/ingest/osm-walkability/normalized/zip-latest.json",
     opportunityScore: "composite (forecast + remoteWork − overvaluation)",
