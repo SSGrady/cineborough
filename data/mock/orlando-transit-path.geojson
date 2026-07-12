@@ -36,6 +36,23 @@
           [-81.373, 28.541]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Colonialtown SunRail spur",
+        "type": "transit",
+        "zip": "32803"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-81.355, 28.555],
+          [-81.350, 28.557],
+          [-81.345, 28.558],
+          [-81.340, 28.556]
+        ]
+      }
     }
   ]
 }

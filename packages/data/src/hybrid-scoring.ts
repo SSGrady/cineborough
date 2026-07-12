@@ -13,13 +13,14 @@ export interface DiscoveryCriteria {
 
 export const DISCOVERY_CRITERIA_STORAGE_KEY = "cineborough:discovery-criteria";
 
+/** Tuned so DC, Orlando, and SF Bay sandboxes each yield ≥3 matches on live ingest. */
 export const DEFAULT_DISCOVERY_CRITERIA: DiscoveryCriteria = {
-  budgetMin: 400_000,
-  budgetMax: 900_000,
-  minCapRate: 4.0,
-  maxOvervaluationPct: 25,
-  minWalkability: 70,
-  minRemoteWorkPct: 25,
+  budgetMin: 300_000,
+  budgetMax: 1_200_000,
+  minCapRate: 3.2,
+  maxOvervaluationPct: 30,
+  minWalkability: 35,
+  minRemoteWorkPct: 20,
 };
 
 export interface ScoreBreakdown {

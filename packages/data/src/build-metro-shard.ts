@@ -12,7 +12,7 @@ export interface MetroShardBuildInput {
     features: Array<{
       type: "Feature";
       properties: { zip: string; name: string };
-      geometry: PolygonGeometry;
+      geometry: MetroGeometry;
     }>;
   };
   quotes: { quotes: Array<{ zip: string; text: string; primaryVibe?: string }> };

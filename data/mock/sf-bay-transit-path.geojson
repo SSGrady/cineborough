@@ -53,6 +53,57 @@
           [-122.272, 37.826]
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BART Dogpatch corridor",
+        "type": "transit",
+        "zip": "94107"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.395, 37.772],
+          [-122.399, 37.769],
+          [-122.404, 37.766],
+          [-122.409, 37.763]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "SOMA Muni corridor",
+        "type": "transit",
+        "zip": "94103"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.412, 37.778],
+          [-122.416, 37.774],
+          [-122.420, 37.770],
+          [-122.424, 37.766]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "West Oakland BART corridor",
+        "type": "transit",
+        "zip": "94607"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.285, 37.812],
+          [-122.290, 37.808],
+          [-122.296, 37.804],
+          [-122.302, 37.800]
+        ]
+      }
     }
   ]
 }
