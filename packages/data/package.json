@@ -16,6 +16,7 @@
     "build:san-jose-geojson": "node --experimental-strip-types src/build-san-jose-geojson.ts",
     "build:us-metros": "node --experimental-strip-types src/build-us-metros.ts",
     "build:us-metro-tiles": "node --experimental-strip-types src/build-us-metro-tiles.ts",
+    "build:us-county-tiles": "node --experimental-strip-types src/build-us-county-tiles.ts",
     "ingest:zhvi": "node --experimental-strip-types src/ingest/ingest-zhvi.ts",
     "ingest:census-acs": "node --experimental-strip-types src/ingest/ingest-census-acs.ts",
     "ingest:fhfa-hpi": "node --experimental-strip-types src/ingest/ingest-fhfa-hpi.ts",
@@ -25,7 +26,8 @@
     "ingest:osm-walkability": "node --experimental-strip-types src/ingest/ingest-osm-walkability.ts",
     "seed:sandbox-metrics": "node --experimental-strip-types src/scripts/seed-sandbox-metrics.ts",
     "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts",
-    "fetch:sandbox-counties": "node --experimental-strip-types src/scripts/fetch-sandbox-counties.ts"
+    "fetch:sandbox-counties": "node --experimental-strip-types src/scripts/fetch-sandbox-counties.ts",
+    "fetch:us-counties": "node --experimental-strip-types src/scripts/fetch-us-counties.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

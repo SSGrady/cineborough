@@ -97,6 +97,24 @@ export const COUNTY_FIPS_TO_NAME: Record<string, string> = {
   "06085": "Santa Clara",
 };
 
+/** Sandbox county FIPS → nearest metro shard CBSA */
+export const COUNTY_FIPS_TO_CBSA: Record<string, string> = {
+  "11001": "47900",
+  "51013": "47900",
+  "51510": "47900",
+  "24031": "47900",
+  "12095": "36740",
+  "12097": "36740",
+  "06075": "41860",
+  "06001": "41860",
+  "06013": "41860",
+  "06085": "41940",
+};
+
+export function sandboxCbsaForCounty(countyFips: string): string | null {
+  return COUNTY_FIPS_TO_CBSA[countyFips] ?? null;
+}
+
 /** Validate every sandbox ZIP has a county mapping */
 for (const zip of ALL_SANDBOX_ZIPS) {
   if (!ZIP_TO_COUNTY[zip]) {
