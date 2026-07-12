@@ -14,6 +14,7 @@ export * from "./us-states";
 export * from "./us-counties";
 export * from "./zip-to-county";
 export * from "./metro-shards";
+export * from "./metro-overview";
 export * from "./metro-tiles";
 export * from "./county-tiles";
 export * from "./locale-quotes";

@@ -91,6 +91,13 @@ interface MapViewProps {
   cinematicTourActive?: boolean;
   /** When set, only this ZIP gets a map label (flyover / story focus) */
   labelHighlightZip?: string | null;
+  /** CBSAs with ingested neighborhood shards — highlighted in overview metro view */
+  ingestedCbsas?: ReadonlySet<string>;
+  /** Fired when zoom or pan changes (for lazy shard loading in overview) */
+  onViewportChange?: (viewport: {
+    zoom: number;
+    bounds: [[number, number], [number, number]];
+  }) => void;
 }
 
 interface LabelPoint {
@@ -323,6 +330,8 @@ export function MapView({
   enable3DTiles = false,
   cinematicTourActive = false,
   labelHighlightZip = null,
+  ingestedCbsas,
+  onViewportChange,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -457,6 +466,9 @@ export function MapView({
         if (zip === selectedZip) return [255, 255, 255, 110];
         if (isNationalGeography) return [255, 255, 255, 60];
         if (isStateGeography || isCountyGeography) return [15, 23, 42, 200];
+        if (isOverviewView && geographyLevel === "metro" && ingestedCbsas?.has(zip ?? "")) {
+          return [34, 197, 94, 240];
+        }
         return isOverviewView ? [15, 23, 42, 220] : [30, 41, 59, 160];
       },
       getLineWidth: (feature) => {
@@ -470,11 +482,11 @@ export function MapView({
       lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
         getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel],
-        getLineColor: [selectedZip, isOverviewView, geographyLevel],
+        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas],
         getLineWidth: [selectedZip, isOverviewView, geographyLevel],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
@@ -955,6 +967,17 @@ export function MapView({
 
     const onMoveEnd = () => {
       programmaticMoveRef.current = false;
+      if (onViewportChange) {
+        const b = map.getBounds();
+        if (!b) return;
+        onViewportChange({
+          zoom: map.getZoom(),
+          bounds: [
+            [b.getWest(), b.getSouth()],
+            [b.getEast(), b.getNorth()],
+          ],
+        });
+      }
     };
 
     map.on("dragend", onUserGestureEnd);
