@@ -91,9 +91,9 @@ export function DiscoveryAnalyticsPanel({
             {neighborhood.zip} — {neighborhood.name}
           </h3>
         </div>
-        <div className="discovery-analytics__score" aria-label={`Hybrid score ${neighborhood.score}`}>
-          <span className="discovery-analytics__score-value">{neighborhood.score}</span>
-          <span className="discovery-analytics__score-label">hybrid score</span>
+        <div className="discovery-analytics__score" aria-label={`Match ${neighborhood.matchPercent}%`}>
+          <span className="discovery-analytics__score-value">{neighborhood.matchPercent}%</span>
+          <span className="discovery-analytics__score-label">match</span>
         </div>
       </header>
 
@@ -118,13 +118,13 @@ export function DiscoveryAnalyticsPanel({
       </dl>
 
       {variant === "drawer" && (
-        <section className="discovery-analytics__breakdown" aria-label="Score breakdown">
-          <h4>Hybrid score breakdown</h4>
+        <section className="discovery-analytics__breakdown" aria-label="Match breakdown">
+          <h4>Criteria match breakdown</h4>
           <ul>
             {Object.entries(neighborhood.breakdown.byMetric).map(([metric, score]) => (
               <li key={metric}>
                 {getDiscoveryMetricLabel(metric as DiscoveryFilterMetric)}{" "}
-                <strong>{score?.toFixed(0)}</strong>
+                <strong>{score?.toFixed(0)}%</strong>
               </li>
             ))}
           </ul>

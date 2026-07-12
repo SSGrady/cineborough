@@ -24,6 +24,8 @@ import {
   sandboxCbsaForCounty,
   METRIC_LAYERS,
   rankNeighborhoods,
+  DISCOVERY_MATCH_THRESHOLD,
+  DEFAULT_DISCOVERY_TOP_N,
   type DiscoveryCriteria,
   type DiscoveryFilterMetric,
   type RankedNeighborhood,
@@ -715,21 +717,27 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setStoryCameraActive(false);
     setSearchFlyTarget(null);
 
-    const results = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 3);
-    const passing = results.filter((r) => r.passedFilters);
+    const results = rankNeighborhoods(
+      activeShardGeoJson,
+      discoveryCriteria,
+      DEFAULT_DISCOVERY_TOP_N,
+    );
+    const qualifying = results.filter((r) => r.matchPercent >= DISCOVERY_MATCH_THRESHOLD);
 
-    if (passing.length === 0) {
+    if (qualifying.length === 0) {
       setDiscoveryResults(results);
-      setDiscoveryMessage("No neighborhoods match your criteria — relax filters and try again");
+      setDiscoveryMessage(
+        `No neighborhoods match your criteria — all scores below ${DISCOVERY_MATCH_THRESHOLD}%`,
+      );
       setDrawerOpen(true);
       return;
     }
 
-    setDiscoveryResults(passing);
+    setDiscoveryResults(qualifying);
     setSandboxDrillActive(true);
     setGeography("zip");
-    setSelectedZip(passing[0].zip);
-    setDiscoveryFlyover({ results: passing, index: 0, phase: "flying" });
+    setSelectedZip(qualifying[0].zip);
+    setDiscoveryFlyover({ results: qualifying, index: 0, phase: "flying" });
   }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria]);
 
   const handleSkipFlyover = useCallback(() => {
@@ -914,7 +922,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: `${discoveryFlyover.index + 1} / ${discoveryFlyover.results.length}`,
         title: `#${current.rank} · ${current.zip} — ${current.name}`,
-        detail: `${phaseLabel} · forecast ${formatPercent(m.homePriceForecast1yr)} · cap ${formatPercent(m.capRate)} · walk ${Math.round(m.walkabilityScore)} · remote ${m.remoteWorkPct.toFixed(0)}%`,
+        detail: `${phaseLabel} · ${current.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · cap ${formatPercent(m.capRate)} · walk ${Math.round(m.walkabilityScore)}`,
         canOpen: true,
         action: { label: "Skip tour", onClick: handleSkipFlyover },
       };
@@ -925,7 +933,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: "Tour complete",
         title: `#${activeDiscoveryNeighborhood.rank} · ${activeDiscoveryNeighborhood.zip} — ${activeDiscoveryNeighborhood.name}`,
-        detail: `Score ${activeDiscoveryNeighborhood.score} · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
+        detail: `${activeDiscoveryNeighborhood.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
         canOpen: true,
         action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
       };
@@ -1036,7 +1044,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (discoveryResults && discoveryResults.length > 0) {
       return (
         <>
-          <p>Top matches from hybrid scoring (financial + hope-core weights).</p>
+          <p>Top matches by criteria match % (partial matches included).</p>
           <ol className="discovery-results">
             {discoveryResults.map((r) => (
               <li key={r.zip} className="discovery-results__item">
@@ -1045,15 +1053,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
                     #{r.rank} {r.zip} — {r.name}
                   </strong>
                   {!r.passedFilters && (
-                    <span className="discovery-results__fail"> · filtered out</span>
+                    <span className="discovery-results__partial"> · partial match</span>
                   )}
                 </button>
-                <span className="discovery-results__score">Score {r.score}</span>
+                <span className="discovery-results__score">{r.matchPercent}% match</span>
                 <ul className="discovery-results__breakdown">
                   {Object.entries(r.breakdown.byMetric).map(([metric, score]) => (
                     <li key={metric}>
-                      {getDiscoveryMetricLabel(metric as DiscoveryFilterMetric)} norm:{" "}
-                      {score?.toFixed(0)}
+                      {getDiscoveryMetricLabel(metric as DiscoveryFilterMetric)}:{" "}
+                      {score?.toFixed(0)}%
                     </li>
                   ))}
                 </ul>
@@ -1292,6 +1300,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         open={criteriaPanelOpen}
         criteria={discoveryCriteria}
         resetCriteria={sandboxDiscoveryCriteria}
+        geoJson={!isOverviewMode ? activeShardGeoJson : null}
         onClose={() => setCriteriaPanelOpen(false)}
         onApply={handleApplyCriteria}
       />

@@ -39,6 +39,12 @@ export interface DiscoveryCriteria {
 export const DISCOVERY_CRITERIA_STORAGE_KEY = "cineborough:discovery-criteria";
 export const DISCOVERY_CRITERIA_STORAGE_VERSION = 2;
 
+/** Minimum match % to count as a qualifying neighborhood (Where Might I Live–style partial matches). */
+export const DISCOVERY_MATCH_THRESHOLD = 40;
+
+/** Default number of top neighborhoods returned by discovery. */
+export const DEFAULT_DISCOVERY_TOP_N = 10;
+
 const METRIC_FILTER_KIND: Record<
   DiscoveryFilterMetric,
   Omit<DiscoveryMetricDef, "metric">
@@ -178,11 +184,15 @@ export interface RankedNeighborhood {
   zip: string;
   name: string;
   state: string;
+  /** Weighted criteria match percentage (0–100). Primary discovery rank key. */
+  matchPercent: number;
+  /** Display score — equals matchPercent when filters are active, else relative metro rank. */
   score: number;
   rank: number;
   center: [number, number];
   breakdown: ScoreBreakdown;
   metrics: ZipMetrics;
+  /** True when every active criterion scores 100% (perfect match). */
   passedFilters: boolean;
   filterReasons: string[];
 }
@@ -206,29 +216,114 @@ function formatFilterValue(metric: DiscoveryFilterMetric, value: number): string
   return `${value}${unit ? ` ${unit}` : ""}`;
 }
 
-function evaluateFilters(
+/**
+ * Per-criterion partial match (0–100).
+ * 100 = inside target; linear decay outside over a soft margin (~50% of target span).
+ */
+function criterionMatchScore(
+  value: number,
+  filter: DiscoveryFilter,
+  def: DiscoveryMetricDef,
+): number {
+  if (def.kind === "min" && filter.min !== undefined) {
+    const target = filter.min;
+    if (value >= target) return 100;
+    const margin = Math.max(Math.abs(target) * 0.5, 1);
+    return Math.max(0, 100 * (1 - (target - value) / margin));
+  }
+
+  if (def.kind === "max" && filter.max !== undefined) {
+    const target = filter.max;
+    if (value <= target) return 100;
+    const margin = Math.max(Math.abs(target) * 0.5, 1);
+    return Math.max(0, 100 * (1 - (value - target) / margin));
+  }
+
+  if (def.kind === "range") {
+    const min = filter.min ?? 0;
+    const max = filter.max ?? min;
+    if (value >= min && value <= max) return 100;
+
+    const span = Math.max(max - min, 1);
+    const margin = span * 0.5;
+
+    if (value < min) {
+      return Math.max(0, 100 * (1 - (min - value) / margin));
+    }
+    return Math.max(0, 100 * (1 - (value - max) / margin));
+  }
+
+  return 100;
+}
+
+function describeCriterionGap(
+  metric: DiscoveryFilterMetric,
+  value: number,
+  filter: DiscoveryFilter,
+  criterionScore: number,
+): string | null {
+  if (criterionScore >= 100) return null;
+
+  const label = getDiscoveryMetricLabel(metric);
+  const formatted = formatFilterValue(metric, value);
+
+  if (filter.min !== undefined && filter.max !== undefined) {
+    return `${label} ${formatted} outside ${formatFilterValue(metric, filter.min)}–${formatFilterValue(metric, filter.max)} (${Math.round(criterionScore)}% match)`;
+  }
+  if (filter.min !== undefined) {
+    return `${label} ${formatted} below ${formatFilterValue(metric, filter.min)} target (${Math.round(criterionScore)}% match)`;
+  }
+  if (filter.max !== undefined) {
+    return `${label} ${formatted} above ${formatFilterValue(metric, filter.max)} cap (${Math.round(criterionScore)}% match)`;
+  }
+  return null;
+}
+
+function computeMatchBreakdown(
   props: DcMetroFeatureProperties,
   criteria: DiscoveryCriteria,
-): { passed: boolean; reasons: string[] } {
-  const reasons: string[] = [];
+): {
+  matchPercent: number;
+  byMetric: Partial<Record<DiscoveryFilterMetric, number>>;
+  passedFilters: boolean;
+  filterReasons: string[];
+} {
+  if (criteria.filters.length === 0) {
+    return { matchPercent: 100, byMetric: {}, passedFilters: true, filterReasons: [] };
+  }
+
+  const byMetric: Partial<Record<DiscoveryFilterMetric, number>> = {};
+  const filterReasons: string[] = [];
+  let sum = 0;
+  let allPerfect = true;
 
   for (const filter of criteria.filters) {
     const value = getRawMetricFromFeature(props, filter.metric);
-    const label = getDiscoveryMetricLabel(filter.metric);
+    const def = getDiscoveryMetricDef(filter.metric);
+    const raw = criterionMatchScore(value, filter, def);
+    const rounded = Math.round(raw * 10) / 10;
+    byMetric[filter.metric] = rounded;
+    sum += raw;
+    if (raw < 100) allPerfect = false;
 
-    if (filter.min !== undefined && value < filter.min) {
-      reasons.push(
-        `${label} ${formatFilterValue(filter.metric, value)} below ${formatFilterValue(filter.metric, filter.min)} floor`,
-      );
-    }
-    if (filter.max !== undefined && value > filter.max) {
-      reasons.push(
-        `${label} ${formatFilterValue(filter.metric, value)} above ${formatFilterValue(filter.metric, filter.max)} cap`,
-      );
-    }
+    const reason = describeCriterionGap(filter.metric, value, filter, raw);
+    if (reason) filterReasons.push(reason);
   }
 
-  return { passed: reasons.length === 0, reasons };
+  const matchPercent = Math.round((sum / criteria.filters.length) * 10) / 10;
+  return { matchPercent, byMetric, passedFilters: allPerfect, filterReasons };
+}
+
+/** Count ZIPs whose weighted match % meets the discovery threshold. */
+export function countMatchingNeighborhoods(
+  geoJson: DcMetroGeoJson,
+  criteria: DiscoveryCriteria = DEFAULT_DISCOVERY_CRITERIA,
+  threshold = DISCOVERY_MATCH_THRESHOLD,
+): number {
+  return geoJson.features.filter((f) => {
+    const { matchPercent } = computeMatchBreakdown(f.properties, criteria);
+    return matchPercent >= threshold;
+  }).length;
 }
 
 function scoringMetricsForCriteria(criteria: DiscoveryCriteria): DiscoveryFilterMetric[] {
@@ -239,56 +334,52 @@ function scoringMetricsForCriteria(criteria: DiscoveryCriteria): DiscoveryFilter
 }
 
 /**
- * Weighted hybrid rank across active user criteria for sandbox ZIPs.
- * Hard filters and scoring weights follow the same dynamic filter set.
+ * Rank sandbox ZIPs by weighted criteria match % (partial matches included).
+ * Each active filter contributes equally; score decays linearly outside the target range.
  */
 export function rankNeighborhoods(
   geoJson: DcMetroGeoJson,
   criteria: DiscoveryCriteria = DEFAULT_DISCOVERY_CRITERIA,
-  topN = 3,
+  topN = DEFAULT_DISCOVERY_TOP_N,
 ): RankedNeighborhood[] {
   const features = geoJson.features;
+  const hasActiveFilters = criteria.filters.length > 0;
   const scoringMetrics = scoringMetricsForCriteria(criteria);
 
-  const eligible = features
-    .map((f) => {
-      const filter = evaluateFilters(f.properties, criteria);
-      return { feature: f, filter };
-    })
-    .filter(({ filter }) => filter.passed);
-
-  if (eligible.length === 0) {
-    return [];
-  }
-
   const normalizedByMetric = new Map<DiscoveryFilterMetric, number[]>();
-  for (const metric of scoringMetrics) {
-    const def = getDiscoveryMetricDef(metric);
-    const raw = eligible.map(({ feature }) =>
-      getRawMetricFromFeature(feature.properties, metric),
-    );
-    normalizedByMetric.set(metric, normalizeWithin(raw, def.higherIsBetter));
+  if (!hasActiveFilters) {
+    for (const metric of scoringMetrics) {
+      const def = getDiscoveryMetricDef(metric);
+      const raw = features.map((f) => getRawMetricFromFeature(f.properties, metric));
+      normalizedByMetric.set(metric, normalizeWithin(raw, def.higherIsBetter));
+    }
   }
 
-  const weight = scoringMetrics.length > 0 ? 1 / scoringMetrics.length : 1;
+  const scored = features.map((feature, featureIndex) => {
+    const match = computeMatchBreakdown(feature.properties, criteria);
 
-  const scored = eligible.map(({ feature }, i) => {
-    const byMetric: Partial<Record<DiscoveryFilterMetric, number>> = {};
+    if (hasActiveFilters) {
+      const breakdown: ScoreBreakdown = {
+        byMetric: match.byMetric,
+        composite: match.matchPercent,
+      };
+      return buildRankedEntry(feature, match.matchPercent, match.matchPercent, breakdown, match);
+    }
+
+    const weight = 1 / scoringMetrics.length;
     let composite = 0;
-
+    const byMetric: Partial<Record<DiscoveryFilterMetric, number>> = {};
     for (const metric of scoringMetrics) {
-      const norm = normalizedByMetric.get(metric)?.[i] ?? 0;
+      const norm = normalizedByMetric.get(metric)?.[featureIndex] ?? 0;
       byMetric[metric] = norm;
       composite += norm * weight;
     }
 
-    const breakdown: ScoreBreakdown = { byMetric, composite: 0 };
-    breakdown.composite = composite;
-
-    return buildRankedEntry(feature, breakdown.composite, breakdown);
+    const breakdown: ScoreBreakdown = { byMetric, composite };
+    return buildRankedEntry(feature, composite, match.matchPercent, breakdown, match);
   });
 
-  scored.sort((a, b) => b.score - a.score);
+  scored.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
 
   return scored.slice(0, topN).map((entry, i) => ({ ...entry, rank: i + 1 }));
 }
@@ -338,8 +429,10 @@ function featureCenter(
 
 function buildRankedEntry(
   feature: DcMetroGeoJson["features"][number],
-  composite: number,
+  displayScore: number,
+  matchPercent: number,
   breakdown: ScoreBreakdown,
+  match: Pick<RankedNeighborhood, "passedFilters" | "filterReasons">,
 ): RankedNeighborhood {
   const props = feature.properties;
 
@@ -347,12 +440,13 @@ function buildRankedEntry(
     zip: props.zipCode,
     name: props.neighborhoodName,
     state: props.state,
-    score: Math.round(composite * 10) / 10,
+    matchPercent: Math.round(matchPercent * 10) / 10,
+    score: Math.round(displayScore * 10) / 10,
     rank: 0,
     center: featureCenter(feature),
     breakdown,
     metrics: featurePropertiesToZipMetrics(props),
-    passedFilters: true,
-    filterReasons: [],
+    passedFilters: match.passedFilters,
+    filterReasons: match.filterReasons,
   };
 }

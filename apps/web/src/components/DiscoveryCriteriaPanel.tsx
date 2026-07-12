@@ -2,11 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import {
+  type DcMetroGeoJson,
   type DiscoveryCriteria,
   type DiscoveryFilter,
   type DiscoveryFilterMetric,
   DEFAULT_DISCOVERY_CRITERIA,
   DISCOVERY_FILTER_METRICS,
+  DISCOVERY_MATCH_THRESHOLD,
+  countMatchingNeighborhoods,
   createDiscoveryFilter,
   getDiscoveryMetricDef,
   getDiscoveryMetricLabel,
@@ -18,6 +21,7 @@ interface DiscoveryCriteriaPanelProps {
   open: boolean;
   criteria: DiscoveryCriteria;
   resetCriteria?: DiscoveryCriteria;
+  geoJson?: DcMetroGeoJson | null;
   onClose: () => void;
   onApply: (criteria: DiscoveryCriteria) => void;
 }
@@ -52,6 +56,7 @@ export function DiscoveryCriteriaPanel({
   open,
   criteria,
   resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
+  geoJson = null,
   onClose,
   onApply,
 }: DiscoveryCriteriaPanelProps) {
@@ -74,6 +79,14 @@ export function DiscoveryCriteriaPanel({
     () => DISCOVERY_FILTER_METRICS.filter((metric) => !activeMetrics.has(metric)),
     [activeMetrics],
   );
+
+  const matchPreview = useMemo(() => {
+    if (!geoJson) return null;
+    const normalized = normalizeCriteria(draft);
+    const count = countMatchingNeighborhoods(geoJson, normalized, DISCOVERY_MATCH_THRESHOLD);
+    const total = geoJson.features.length;
+    return { count, total };
+  }, [geoJson, draft]);
 
   const updateFilter = (id: string, patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => {
     setDraft((prev) => ({
@@ -102,9 +115,24 @@ export function DiscoveryCriteriaPanel({
   return (
     <StoryDrawer open={open} title="Discovery criteria" onClose={onClose}>
       <p className="discovery-criteria__intro">
-        Add the metrics that matter to you. Each active filter narrows results and contributes to
-        the hybrid score.
+        Add the metrics that matter to you. Each active filter contributes to a match percentage —
+        neighborhoods need not be perfect fits to appear in results.
       </p>
+
+      {matchPreview !== null && (
+        <p
+          className={`discovery-criteria__preview${matchPreview.count === 0 ? " discovery-criteria__preview--empty" : ""}`}
+          aria-live="polite"
+        >
+          {matchPreview.count === 0
+            ? `No neighborhoods match (below ${DISCOVERY_MATCH_THRESHOLD}% threshold)`
+            : `${matchPreview.count} neighborhood${matchPreview.count === 1 ? "" : "s"} match`}
+          <span className="discovery-criteria__preview-meta">
+            {" "}
+            · {matchPreview.total} in metro · ≥{DISCOVERY_MATCH_THRESHOLD}% match
+          </span>
+        </p>
+      )}
 
       {draft.filters.length === 0 ? (
         <p className="discovery-criteria__empty">No active filters — all neighborhoods qualify.</p>
