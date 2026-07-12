@@ -2,6 +2,7 @@ export * from "./types";
 export * from "./opportunity-index";
 export * from "./hybrid-scoring";
 export * from "./wish-metrics";
+export * from "./wish-histogram";
 export * from "./opportunity-index-examples";
 export * from "./metric-utils";
 export * from "./metric-provenance";
