@@ -1,6 +1,7 @@
 "use client";
 
-import type { RankedNeighborhood } from "@cineborough/data";
+import { useMemo } from "react";
+import { dedupeRankedMatchesByDisplayName, type RankedNeighborhood } from "@cineborough/data";
 import { formatUsStateHeading } from "@/lib/us-state-names";
 import { matchKey } from "@/lib/match-keys";
 import { CompareChips } from "./CompareChips";
@@ -71,7 +72,11 @@ export function MatchesList({
   onCompareRemove,
   onCompareReorder,
 }: MatchesListProps) {
-  const stateGroups = groupMatchesByState(results);
+  const displayResults = useMemo(
+    () => dedupeRankedMatchesByDisplayName(results),
+    [results],
+  );
+  const stateGroups = groupMatchesByState(displayResults);
   const rootClass =
     variant === "deck"
       ? `match-deck${collapsed ? " match-deck--collapsed" : ""}`
@@ -84,11 +89,11 @@ export function MatchesList({
           type="button"
           className="match-deck__expand match-deck__expand--pill"
           onClick={onToggleCollapse}
-          aria-label={`${results.length} matches found — expand list`}
+          aria-label={`${displayResults.length} matches found — expand list`}
         >
           <span aria-hidden="true">🍿</span>
           <span className="match-deck__expand-label">
-            {results.length} Match{results.length === 1 ? "" : "es"} Found
+            {displayResults.length} Match{displayResults.length === 1 ? "" : "es"} Found
           </span>
         </button>
       </aside>
@@ -101,7 +106,7 @@ export function MatchesList({
         <div className="match-deck__title-row">
           <h2>Matches</h2>
           <span className="match-deck__count">
-            {results.length} neighborhood{results.length === 1 ? "" : "s"}
+            {displayResults.length} neighborhood{displayResults.length === 1 ? "" : "s"}
           </span>
         </div>
         {onToggleCollapse && (

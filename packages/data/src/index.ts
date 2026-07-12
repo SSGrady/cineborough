@@ -22,6 +22,7 @@ export * from "./neighborhood-photos";
 export * from "./paths";
 export * from "./amenity-pois";
 export * from "./similarity-scoring";
+export * from "./discovery-match-dedupe";
 export * from "./validation";
 export * from "./property-valuation";
 export type { MetroCatalog, MetroCatalogEntry, IngestProgress } from "./metro-catalog/types";

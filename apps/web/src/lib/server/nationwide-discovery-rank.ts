@@ -4,6 +4,7 @@ import {
   loadMetroShard,
   loadUsMetrosGeoJson,
   rankNeighborhoods,
+  dedupeRankedMatchesByDisplayName,
   type DiscoveryCriteria,
   type DcMetroGeoJson,
   type RankedNeighborhood,
@@ -164,14 +165,7 @@ export function rankNationwideNeighborhoods(
 
   merged.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
 
-  const seen = new Set<string>();
-  const deduped: RankedNeighborhood[] = [];
-  for (const entry of merged) {
-    const key = `${entry.cbsaCode ?? "local"}-${entry.zip}`;
-    if (seen.has(key)) continue;
-    seen.add(key);
-    deduped.push(entry);
-  }
+  const deduped = dedupeRankedMatchesByDisplayName(merged);
 
   const results = deduped.slice(0, topN).map((entry, index) => ({
     ...entry,
