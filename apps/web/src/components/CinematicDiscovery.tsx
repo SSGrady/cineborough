@@ -24,6 +24,8 @@ import {
   sandboxCbsaForCounty,
   METRIC_LAYERS,
   rankNeighborhoods,
+  applySimilarityScores,
+  MAX_EXAMPLE_ZIPS,
   type DiscoveryCriteria,
   type DiscoveryFilterMetric,
   type RankedNeighborhood,
@@ -86,6 +88,10 @@ import {
   loadDiscoveryFavorites,
   saveDiscoveryFavorites,
 } from "@/lib/discovery-favorites-storage";
+import {
+  loadDiscoveryExamples,
+  saveDiscoveryExamples,
+} from "@/lib/discovery-examples-storage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -179,6 +185,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [discoveryShellActive, setDiscoveryShellActive] = useState(false);
   const [comparePins, setComparePins] = useState<string[]>([]);
+  const [comparePinOfferZip, setComparePinOfferZip] = useState<string | null>(null);
+  const [exampleZips, setExampleZips] = useState<string[]>(() => loadDiscoveryExamples());
   const [favorites, setFavorites] = useState<Set<string>>(() => loadDiscoveryFavorites());
   const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria>(() =>
     loadDiscoveryCriteria(),
@@ -706,6 +714,16 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       .filter((r): r is RankedNeighborhood => r !== undefined);
   }, [comparePins, discoveryResults]);
 
+  const zipLabelMap = useMemo(() => {
+    const map = new Map<string, string>();
+    for (const f of activeShardGeoJson.features) {
+      map.set(f.properties.zipCode, f.properties.neighborhoodName);
+    }
+    return map;
+  }, [activeShardGeoJson]);
+
+  const comparePinOfferName = comparePinOfferZip ? zipLabelMap.get(comparePinOfferZip) : null;
+
   const showMetricSidebar = !discoveryShellVisible;
 
   const sidebarMode =
@@ -742,9 +760,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     saveDiscoveryCriteria(criteria);
     setDiscoveryResults((prev) => {
       if (prev === null) return prev;
-      return rankNeighborhoods(activeShardGeoJson, criteria, 0);
+      const ranked = rankNeighborhoods(activeShardGeoJson, criteria, 0);
+      return applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
     });
-  }, [activeShardGeoJson]);
+  }, [activeShardGeoJson, exampleZips]);
 
   const handleOpenCriteria = useCallback(() => {
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
@@ -786,6 +805,66 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleRemoveComparePin = useCallback((zip: string) => {
     setComparePins((prev) => prev.filter((z) => z !== zip));
+    setComparePinOfferZip((prev) => (prev === zip ? null : prev));
+  }, []);
+
+  const handleReorderComparePins = useCallback((fromIndex: number, toIndex: number) => {
+    setComparePins((prev) => {
+      const next = [...prev];
+      const [moved] = next.splice(fromIndex, 1);
+      next.splice(toIndex, 0, moved);
+      return next;
+    });
+  }, []);
+
+  const handlePinToCompare = useCallback(
+    (zip: string) => {
+      if (comparePins.includes(zip)) {
+        setComparePinOfferZip(null);
+        return;
+      }
+      if (comparePins.length >= 4) {
+        setDiscoveryMessage("Compare bar full — remove a chip to pin another (max 4)");
+        return;
+      }
+      setDiscoveryMessage(null);
+      setComparePins((prev) => [...prev, zip]);
+      setComparePinOfferZip(null);
+    },
+    [comparePins],
+  );
+
+  const handleMapZipSelect = useCallback(
+    (regionId: string | null) => {
+      handleZipSelect(regionId);
+      if (!regionId || !discoveryShellActive || !sandboxDrillActive || isOverviewMode) {
+        setComparePinOfferZip(null);
+        return;
+      }
+      if (!comparePins.includes(regionId)) {
+        setComparePinOfferZip(regionId);
+      } else {
+        setComparePinOfferZip(null);
+      }
+    },
+    [handleZipSelect, discoveryShellActive, sandboxDrillActive, isOverviewMode, comparePins],
+  );
+
+  const handleAddExample = useCallback((zip: string) => {
+    setExampleZips((prev) => {
+      if (prev.includes(zip) || prev.length >= MAX_EXAMPLE_ZIPS) return prev;
+      const next = [...prev, zip];
+      saveDiscoveryExamples(next);
+      return next;
+    });
+  }, []);
+
+  const handleRemoveExample = useCallback((zip: string) => {
+    setExampleZips((prev) => {
+      const next = prev.filter((z) => z !== zip);
+      saveDiscoveryExamples(next);
+      return next;
+    });
   }, []);
 
   const runDiscoveryRanking = useCallback(() => {
@@ -803,7 +882,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setExitRestoreTarget(null);
     setDiscoveryShellActive(true);
 
-    const results = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
+    const ranked = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
+    const results = applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
 
     if (results.length === 0) {
       setDiscoveryResults([]);
@@ -816,7 +896,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSandboxDrillActive(true);
     setGeography("zip");
     setSelectedZip(results[0].zip);
-  }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria]);
+  }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria, exampleZips]);
 
   useEffect(() => {
     if (!discoveryShellVisible) return;
@@ -1320,6 +1400,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             geoJson={activeShardGeoJson}
             onChange={handleApplyCriteria}
             onFindMatches={handleDiscover}
+            exampleZips={exampleZips}
+            selectedZip={selectedZip}
+            zipLabels={zipLabelMap}
+            onAddExample={handleAddExample}
+            onRemoveExample={handleRemoveExample}
           />
         )}
 
@@ -1352,7 +1437,30 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
               activeZip={selectedZip}
               onSelect={handleMatchSelect}
               onRemove={handleRemoveComparePin}
+              onReorder={handleReorderComparePins}
             />
+          )}
+          {discoveryShellVisible && comparePinOfferZip && (
+            <div className="compare-pin-offer" role="status">
+              <span>
+                Pin {comparePinOfferZip}
+                {comparePinOfferName ? ` · ${comparePinOfferName}` : ""} to compare?
+              </span>
+              <button
+                type="button"
+                className="compare-pin-offer__pin"
+                onClick={() => handlePinToCompare(comparePinOfferZip)}
+              >
+                Pin
+              </button>
+              <button
+                type="button"
+                className="compare-pin-offer__dismiss"
+                onClick={() => setComparePinOfferZip(null)}
+              >
+                Dismiss
+              </button>
+            </div>
           )}
           <ContextChip
             stepLabel={contextChip.stepLabel}
@@ -1365,7 +1473,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             geoJson={activeGeoJson}
             activeMetric={activeMetric}
             selectedZip={selectedZip}
-            onZipSelect={handleZipSelect}
+            onZipSelect={discoveryShellVisible ? handleMapZipSelect : handleZipSelect}
             onBackgroundClick={handleBackgroundClick}
             cameraTarget={cameraTarget}
             cameraInstant={dcStoryActive}

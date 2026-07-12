@@ -15,6 +15,9 @@ import {
 } from "@cineborough/data";
 import { CriterionRangeSlider } from "./CriterionRangeSlider";
 import { CriterionCategoryPicker } from "./CriterionCategoryPicker";
+import { ByExamplePanel } from "./ByExamplePanel";
+
+type CriteriaPanelTab = "criteria" | "by-example";
 
 interface CriteriaPanelProps {
   criteria: DiscoveryCriteria;
@@ -24,6 +27,11 @@ interface CriteriaPanelProps {
   onFindMatches: () => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  exampleZips?: string[];
+  selectedZip?: string | null;
+  zipLabels?: Map<string, string>;
+  onAddExample?: (zip: string) => void;
+  onRemoveExample?: (zip: string) => void;
 }
 
 function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
@@ -54,8 +62,14 @@ export function CriteriaPanel({
   onFindMatches,
   collapsed = false,
   onToggleCollapse,
+  exampleZips = [],
+  selectedZip = null,
+  zipLabels = new Map(),
+  onAddExample,
+  onRemoveExample,
 }: CriteriaPanelProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<CriteriaPanelTab>("criteria");
 
   const activeMetrics = useMemo(
     () => new Set(criteria.filters.map((f) => f.metric)),
@@ -141,80 +155,116 @@ export function CriteriaPanel({
           )}
         </header>
 
-        <p className="criteria-panel__intro">
-          Set what matters to you. Every neighborhood gets a Match&nbsp;%.
-        </p>
-
-        {matchPreview !== null && (
-          <p className="criteria-panel__preview" aria-live="polite">
-            {matchPreview.count} of {matchPreview.total} neighborhoods ≥{DISCOVERY_MATCH_THRESHOLD}% match
-          </p>
-        )}
-
-        <div className="criteria-panel__cards">
-          {criteria.filters.length === 0 ? (
-            <p className="criteria-panel__empty">No criteria yet — add metrics that matter to you.</p>
-          ) : (
-            criteria.filters.map((filter) => (
-              <article key={filter.id} className="criterion-card">
-                <div className="criterion-card__header">
-                  <span className="criterion-card__title">
-                    {getDiscoveryMetricLabel(filter.metric)}
-                  </span>
-                  <button
-                    type="button"
-                    className="criterion-card__remove"
-                    aria-label={`Remove ${getDiscoveryMetricLabel(filter.metric)}`}
-                    onClick={() => removeFilter(filter.id)}
-                  >
-                    ×
-                  </button>
-                </div>
-                <CriterionRangeSlider
-                  filter={filter}
-                  geoJson={geoJson}
-                  onChange={(patch) => updateFilter(filter.id, patch)}
-                />
-                <div className="criterion-card__toggles" role="group" aria-label="Criterion controls">
-                  <button
-                    type="button"
-                    className={`criterion-card__toggle${filter.heatmapActive ? " criterion-card__toggle--on" : ""}`}
-                    aria-pressed={filter.heatmapActive ?? false}
-                    onClick={() =>
-                      updateFilter(filter.id, { heatmapActive: !filter.heatmapActive })
-                    }
-                  >
-                    Heatmap
-                  </button>
-                  <button
-                    type="button"
-                    className={`criterion-card__toggle${filter.priority ? " criterion-card__toggle--on" : ""}`}
-                    aria-pressed={filter.priority ?? false}
-                    onClick={() => updateFilter(filter.id, { priority: !filter.priority })}
-                  >
-                    High Priority
-                  </button>
-                  <button
-                    type="button"
-                    className={`criterion-card__toggle${filter.sortMode ? " criterion-card__toggle--on" : ""}`}
-                    aria-pressed={filter.sortMode ?? false}
-                    onClick={() => updateFilter(filter.id, { sortMode: !filter.sortMode })}
-                  >
-                    Just This
-                  </button>
-                </div>
-              </article>
-            ))
-          )}
+        <div className="criteria-panel__tabs" role="tablist" aria-label="Discovery mode">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "criteria"}
+            className={`criteria-panel__tab${activeTab === "criteria" ? " criteria-panel__tab--active" : ""}`}
+            onClick={() => setActiveTab("criteria")}
+          >
+            Criteria
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === "by-example"}
+            className={`criteria-panel__tab${activeTab === "by-example" ? " criteria-panel__tab--active" : ""}`}
+            onClick={() => setActiveTab("by-example")}
+          >
+            By Example
+          </button>
         </div>
 
-        <button
-          type="button"
-          className="criteria-panel__add"
-          onClick={() => setPickerOpen(true)}
-        >
-          + Add criterion
-        </button>
+        {activeTab === "by-example" ? (
+          <ByExamplePanel
+            exampleZips={exampleZips}
+            selectedZip={selectedZip}
+            zipLabels={zipLabels}
+            onAdd={(zip) => onAddExample?.(zip)}
+            onRemove={(zip) => onRemoveExample?.(zip)}
+          />
+        ) : (
+          <>
+            <p className="criteria-panel__intro">
+              Set what matters to you. Every neighborhood gets a Match&nbsp;%.
+            </p>
+
+            {matchPreview !== null && (
+              <p className="criteria-panel__preview" aria-live="polite">
+                {matchPreview.count} of {matchPreview.total} neighborhoods ≥{DISCOVERY_MATCH_THRESHOLD}% match
+              </p>
+            )}
+
+            <div className="criteria-panel__cards">
+              {criteria.filters.length === 0 ? (
+                <p className="criteria-panel__empty">No criteria yet — add metrics that matter to you.</p>
+              ) : (
+                criteria.filters.map((filter) => (
+                  <article key={filter.id} className="criterion-card">
+                    <div className="criterion-card__header">
+                      <span className="criterion-card__title">
+                        {getDiscoveryMetricLabel(filter.metric)}
+                      </span>
+                      <button
+                        type="button"
+                        className="criterion-card__remove"
+                        aria-label={`Remove ${getDiscoveryMetricLabel(filter.metric)}`}
+                        onClick={() => removeFilter(filter.id)}
+                      >
+                        ×
+                      </button>
+                    </div>
+                    <CriterionRangeSlider
+                      filter={filter}
+                      geoJson={geoJson}
+                      heatmapActive={filter.heatmapActive}
+                      onChange={(patch) => updateFilter(filter.id, patch)}
+                    />
+                    <div className="criterion-card__toggles" role="group" aria-label="Criterion controls">
+                      <button
+                        type="button"
+                        className={`criterion-card__toggle${filter.heatmapActive ? " criterion-card__toggle--on" : ""}`}
+                        aria-pressed={filter.heatmapActive ?? false}
+                        onClick={() =>
+                          updateFilter(filter.id, { heatmapActive: !filter.heatmapActive })
+                        }
+                      >
+                        Heatmap
+                      </button>
+                      <button
+                        type="button"
+                        className={`criterion-card__toggle${filter.priority ? " criterion-card__toggle--on" : ""}`}
+                        aria-pressed={filter.priority ?? false}
+                        onClick={() => updateFilter(filter.id, { priority: !filter.priority })}
+                      >
+                        High Priority
+                      </button>
+                      <button
+                        type="button"
+                        className={`criterion-card__toggle${filter.sortMode ? " criterion-card__toggle--on" : ""}`}
+                        aria-pressed={filter.sortMode ?? false}
+                        onClick={() =>
+                          updateFilter(filter.id, { sortMode: !filter.sortMode })
+                        }
+                      >
+                        Just This
+                      </button>
+                    </div>
+                  </article>
+                ))
+              )}
+            </div>
+
+            <button
+              type="button"
+              className="criteria-panel__add"
+              onClick={() => setPickerOpen(true)}
+            >
+              + Add criterion
+            </button>
+          </>
+        )}
 
         <div className="criteria-panel__actions">
           <button

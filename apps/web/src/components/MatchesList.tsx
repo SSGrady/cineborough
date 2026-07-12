@@ -133,7 +133,15 @@ export function MatchesList({
                       </span>
                       <span className="matches-list__info">
                         <span className="matches-list__name">{r.name}</span>
-                        <span className="matches-list__zip">{r.zip}</span>
+                        <span className="matches-list__zip">
+                          {r.zip}
+                          {r.similarityPercent !== undefined && (
+                            <span className="matches-list__similarity">
+                              {" "}
+                              · {Math.round(r.similarityPercent)}% similar
+                            </span>
+                          )}
+                        </span>
                       </span>
                       <span
                         className={`matches-list__badge ${matchTierClass(rounded)}`}

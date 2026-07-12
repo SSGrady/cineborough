@@ -1219,16 +1219,60 @@ body {
   height: 2.5rem;
   margin-bottom: 0.375rem;
   border-radius: 4px;
-  overflow: hidden;
+  overflow: visible;
   background: rgba(0, 0, 0, 0.2);
 }
 
 .criterion-range__bar {
+  position: relative;
   flex: 1;
   min-width: 2px;
   background: rgba(148, 163, 184, 0.35);
   border-radius: 1px 1px 0 0;
   align-self: flex-end;
+  transition: background 0.12s;
+}
+
+.criterion-range__bar--in-band {
+  background: rgba(225, 29, 72, 0.45);
+}
+
+.criterion-range--heatmap .criterion-range__bar--in-band {
+  background: rgba(225, 29, 72, 0.62);
+}
+
+.criterion-range__bar--hover {
+  background: rgba(248, 113, 113, 0.75);
+}
+
+.criterion-range__tooltip {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.0625rem;
+  padding: 0.2rem 0.35rem;
+  font-size: 0.625rem;
+  line-height: 1.2;
+  color: #f8fafc;
+  background: rgba(15, 23, 42, 0.92);
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.criterion-range__tooltip-count {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.criterion-range__tooltip-range {
+  color: #94a3b8;
+  font-variant-numeric: tabular-nums;
 }
 
 .criterion-range__band {
@@ -1991,6 +2035,15 @@ body {
   border-color: var(--accent);
 }
 
+.compare-chips__chip--dragging {
+  opacity: 0.55;
+}
+
+.compare-chips__chip--drop-target {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(225, 29, 72, 0.25);
+}
+
 .compare-chips__zip {
   font-weight: 600;
   font-variant-numeric: tabular-nums;
@@ -2036,6 +2089,118 @@ body {
 
 .compare-chips__remove:hover {
   color: var(--accent);
+}
+
+.compare-pin-offer {
+  position: absolute;
+  top: 3.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.1);
+  pointer-events: auto;
+}
+
+.compare-pin-offer__pin {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--accent);
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.compare-pin-offer__dismiss {
+  padding: 0.2rem 0.45rem;
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.criteria-panel__tabs {
+  display: flex;
+  gap: 0.25rem;
+  padding: 0 1rem 0.5rem;
+}
+
+.criteria-panel__tab {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--discovery-rail-muted);
+  background: transparent;
+  border: 1px solid var(--discovery-rail-border);
+  border-radius: 0.375rem;
+  cursor: pointer;
+}
+
+.criteria-panel__tab--active {
+  color: var(--discovery-rail-text);
+  border-color: rgba(225, 29, 72, 0.45);
+  background: rgba(225, 29, 72, 0.12);
+}
+
+.by-example__intro {
+  margin: 0 1rem 0.75rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--discovery-rail-muted);
+}
+
+.by-example__examples {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin: 0 1rem 0.75rem;
+}
+
+.by-example__chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.45rem 0.6rem;
+  font-size: 0.8125rem;
+  background: var(--discovery-rail-surface);
+  border: 1px solid var(--discovery-rail-border);
+  border-radius: 0.5rem;
+}
+
+.by-example__add {
+  margin: 0 1rem 0.75rem;
+  padding: 0.45rem 0.65rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--discovery-rail-text);
+  background: transparent;
+  border: 1px dashed var(--discovery-rail-border);
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.by-example__add:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.matches-list__similarity {
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--discovery-rail-muted);
+  font-variant-numeric: tabular-nums;
 }
 
 .cinematic--discovery .context-chip {

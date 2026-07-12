@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   type DcMetroGeoJson,
   type DiscoveryFilter,
@@ -9,11 +9,13 @@ import {
   getDiscoveryMetricLabel,
   getDiscoveryMetricUnit,
   getShardMetricHistogram,
+  type HistogramBin,
 } from "@cineborough/data";
 
 interface CriterionRangeSliderProps {
   filter: DiscoveryFilter;
   geoJson: DcMetroGeoJson | null;
+  heatmapActive?: boolean;
   onChange: (patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => void;
 }
 
@@ -28,10 +30,39 @@ function formatValue(metric: DiscoveryFilterMetric, value: number): string {
   if (unit === "days") return `${Math.round(value)}d`;
   if (unit === "$/sqft") return `$${Math.round(value)}`;
   if (unit === "0–100") return `${Math.round(value)}`;
+  if (unit === "1–10") return value.toFixed(1);
+  if (unit === "min") return `${Math.round(value)} min`;
+  if (unit === "per 10k") return value.toFixed(1);
   return value.toFixed(1);
 }
 
-export function CriterionRangeSlider({ filter, geoJson, onChange }: CriterionRangeSliderProps) {
+function formatBinRange(metric: DiscoveryFilterMetric, bin: HistogramBin): string {
+  return `${formatValue(metric, bin.start)} – ${formatValue(metric, bin.end)}`;
+}
+
+function bandBounds(
+  kind: ReturnType<typeof getDiscoveryMetricDef>["kind"],
+  sliderMin: number,
+  sliderMax: number,
+  currentMin: number,
+  currentMax: number,
+): { lo: number; hi: number } {
+  if (kind === "min") return { lo: currentMin, hi: sliderMax };
+  if (kind === "max") return { lo: sliderMin, hi: currentMax };
+  return { lo: Math.min(currentMin, currentMax), hi: Math.max(currentMin, currentMax) };
+}
+
+function binInBand(bin: HistogramBin, lo: number, hi: number): boolean {
+  return bin.end > lo && bin.start < hi;
+}
+
+export function CriterionRangeSlider({
+  filter,
+  geoJson,
+  heatmapActive = false,
+  onChange,
+}: CriterionRangeSliderProps) {
+  const [hoveredBin, setHoveredBin] = useState<number | null>(null);
   const def = getDiscoveryMetricDef(filter.metric);
   const histogram = useMemo(() => {
     if (!geoJson) return null;
@@ -49,21 +80,37 @@ export function CriterionRangeSlider({ filter, geoJson, onChange }: CriterionRan
 
   const currentMin = filter.min ?? def.defaultMin ?? sliderMin;
   const currentMax = filter.max ?? def.defaultMax ?? sliderMax;
+  const { lo: bandLo, hi: bandHi } = bandBounds(def.kind, sliderMin, sliderMax, currentMin, currentMax);
 
-  const bandLeft = ((Math.min(currentMin, currentMax) - sliderMin) / span) * 100;
-  const bandWidth = ((Math.abs(currentMax - currentMin)) / span) * 100;
+  const bandLeft = ((bandLo - sliderMin) / span) * 100;
+  const bandWidth = ((bandHi - bandLo) / span) * 100;
 
   return (
-    <div className="criterion-range">
+    <div className={`criterion-range${heatmapActive ? " criterion-range--heatmap" : ""}`}>
       {histogram && histogram.bins.length > 0 && (
         <div className="criterion-range__histogram" aria-hidden="true">
-          {histogram.bins.map((bin, i) => (
-            <div
-              key={i}
-              className="criterion-range__bar"
-              style={{ height: `${(bin.count / maxCount) * 100}%` }}
-            />
-          ))}
+          {histogram.bins.map((bin, i) => {
+            const inBand = binInBand(bin, bandLo, bandHi);
+            const isHovered = hoveredBin === i;
+            return (
+              <div
+                key={i}
+                className={`criterion-range__bar${inBand ? " criterion-range__bar--in-band" : ""}${isHovered ? " criterion-range__bar--hover" : ""}`}
+                style={{ height: `${(bin.count / maxCount) * 100}%` }}
+                onMouseEnter={() => setHoveredBin(i)}
+                onMouseLeave={() => setHoveredBin((prev) => (prev === i ? null : prev))}
+              >
+                {isHovered && (
+                  <span className="criterion-range__tooltip" role="tooltip">
+                    <span className="criterion-range__tooltip-count">{bin.count}</span>
+                    <span className="criterion-range__tooltip-range">
+                      {formatBinRange(filter.metric, bin)}
+                    </span>
+                  </span>
+                )}
+              </div>
+            );
+          })}
           <div
             className="criterion-range__band"
             style={{ left: `${bandLeft}%`, width: `${Math.max(bandWidth, 2)}%` }}
