@@ -29,6 +29,12 @@ export interface DiscoveryFilter {
   metric: DiscoveryFilterMetric;
   min?: number;
   max?: number;
+  /** High Priority — doubles weight in composite Match %. */
+  priority?: boolean;
+  /** Heatmap — map choropleth uses this metric (one active at a time). */
+  heatmapActive?: boolean;
+  /** Just This — sort matches by this criterion only. */
+  sortMode?: boolean;
 }
 
 /** User criteria for hybrid neighborhood discovery — dynamic add/remove filters. */
@@ -37,7 +43,7 @@ export interface DiscoveryCriteria {
 }
 
 export const DISCOVERY_CRITERIA_STORAGE_KEY = "cineborough:discovery-criteria";
-export const DISCOVERY_CRITERIA_STORAGE_VERSION = 2;
+export const DISCOVERY_CRITERIA_STORAGE_VERSION = 3;
 
 /** Minimum match % to count as a qualifying neighborhood (Where Might I Live–style partial matches). */
 export const DISCOVERY_MATCH_THRESHOLD = 40;
@@ -162,8 +168,45 @@ function normalizeFilters(filters: DiscoveryFilter[]): DiscoveryFilter[] {
       metric: f.metric,
       ...(f.min !== undefined ? { min: f.min } : {}),
       ...(f.max !== undefined ? { max: f.max } : {}),
+      ...(f.priority ? { priority: true } : {}),
+      ...(f.heatmapActive ? { heatmapActive: true } : {}),
+      ...(f.sortMode ? { sortMode: true } : {}),
     }))
     .sort((a, b) => a.metric.localeCompare(b.metric) || a.id.localeCompare(b.id));
+}
+
+/** Per-criterion match tier for deep-dive breakdown UI. */
+export type CriterionMatchStatus = "pass" | "close" | "no-match";
+
+export function criterionMatchStatus(score: number): CriterionMatchStatus {
+  if (score >= 90) return "pass";
+  if (score >= 70) return "close";
+  return "no-match";
+}
+
+export function criterionMatchStatusLabel(status: CriterionMatchStatus): string {
+  if (status === "pass") return "Pass";
+  if (status === "close") return "Close";
+  return "No match";
+}
+
+/** Active heatmap criterion metric, if any. */
+export function getActiveHeatmapMetric(
+  criteria: DiscoveryCriteria,
+): DiscoveryFilterMetric | null {
+  return criteria.filters.find((f) => f.heatmapActive)?.metric ?? null;
+}
+
+/** Active Just This sort metric, if any. */
+export function getActiveSortMetric(criteria: DiscoveryCriteria): DiscoveryFilterMetric | null {
+  return criteria.filters.find((f) => f.sortMode)?.metric ?? null;
+}
+
+/** Choropleth metric from criteria toggles — heatmap wins over Just This. */
+export function getCriteriaChoroplethMetric(
+  criteria: DiscoveryCriteria,
+): DiscoveryFilterMetric | null {
+  return getActiveHeatmapMetric(criteria) ?? getActiveSortMetric(criteria);
 }
 
 export function discoveryCriteriaEqual(a: DiscoveryCriteria, b: DiscoveryCriteria): boolean {
@@ -294,7 +337,8 @@ function computeMatchBreakdown(
 
   const byMetric: Partial<Record<DiscoveryFilterMetric, number>> = {};
   const filterReasons: string[] = [];
-  let sum = 0;
+  let weightedSum = 0;
+  let weightTotal = 0;
   let allPerfect = true;
 
   for (const filter of criteria.filters) {
@@ -303,14 +347,19 @@ function computeMatchBreakdown(
     const raw = criterionMatchScore(value, filter, def);
     const rounded = Math.round(raw * 10) / 10;
     byMetric[filter.metric] = rounded;
-    sum += raw;
+    const weight = filter.priority ? 2 : 1;
+    weightedSum += raw * weight;
+    weightTotal += weight;
     if (raw < 100) allPerfect = false;
 
     const reason = describeCriterionGap(filter.metric, value, filter, raw);
     if (reason) filterReasons.push(reason);
   }
 
-  const matchPercent = Math.round((sum / criteria.filters.length) * 10) / 10;
+  const matchPercent =
+    weightTotal > 0
+      ? Math.round((weightedSum / weightTotal) * 10) / 10
+      : 100;
   return { matchPercent, byMetric, passedFilters: allPerfect, filterReasons };
 }
 
@@ -379,7 +428,15 @@ export function rankNeighborhoods(
     return buildRankedEntry(feature, composite, match.matchPercent, breakdown, match);
   });
 
-  scored.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
+  const sortMetric = getActiveSortMetric(criteria);
+  scored.sort((a, b) => {
+    if (sortMetric) {
+      const aKey = a.breakdown.byMetric[sortMetric] ?? 0;
+      const bKey = b.breakdown.byMetric[sortMetric] ?? 0;
+      return bKey - aKey || b.matchPercent - a.matchPercent || b.score - a.score;
+    }
+    return b.matchPercent - a.matchPercent || b.score - a.score;
+  });
 
   const limit = topN <= 0 ? scored.length : Math.min(topN, scored.length);
   return scored.slice(0, limit).map((entry, i) => ({ ...entry, rank: i + 1 }));

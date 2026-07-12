@@ -30,6 +30,7 @@ import {
   discoveryCriteriaForSandbox,
   getDiscoveryMetricLabel,
   getRawMetricFromFeature,
+  getCriteriaChoroplethMetric,
 } from "@cineborough/data";
 import {
   resolveMapCamera,
@@ -65,6 +66,7 @@ import { PropertyValuationPanel } from "./PropertyValuationPanel";
 import { UsMapInsets } from "./UsMapInsets";
 import { AnalyticsOverlay } from "./AnalyticsOverlay";
 import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
+import { DiscoveryDeepDivePanel } from "./DiscoveryDeepDivePanel";
 import { NeighborhoodPhotoHero } from "./NeighborhoodPhotoHero";
 import { CinematicEntryBar } from "./CinematicEntryBar";
 import { Google3DTilesBadge } from "./Google3DTilesBadge";
@@ -185,6 +187,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [discoveryResults, setDiscoveryResults] = useState<RankedNeighborhood[] | null>(null);
   const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
   const [discoveryTourComplete, setDiscoveryTourComplete] = useState(false);
+  const [deepDiveOpen, setDeepDiveOpen] = useState(false);
   const [pathTraceProgress, setPathTraceProgress] = useState(0);
   const pathTraceRafRef = useRef<number | null>(null);
   const prevFlyoverRef = useRef(false);
@@ -544,6 +547,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSelectedZip(null);
       setSelectedPropertyId(null);
       setGeography("metro");
+      setDeepDiveOpen(false);
     }
 
     if (storyCameraActive || discoveryFlyoverActive) {
@@ -592,6 +596,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const discoveryShellVisible =
     discoveryShellActive && sandboxDrillActive && !isOverviewMode;
+
+  const deepDiveNeighborhood = useMemo((): RankedNeighborhood | null => {
+    if (!deepDiveOpen || !selectedZip || !discoveryResults) return null;
+    return discoveryResults.find((r) => r.zip === selectedZip) ?? null;
+  }, [deepDiveOpen, selectedZip, discoveryResults]);
 
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
@@ -731,7 +740,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const handleApplyCriteria = useCallback((criteria: DiscoveryCriteria) => {
     setDiscoveryCriteria(criteria);
     saveDiscoveryCriteria(criteria);
-  }, []);
+    setDiscoveryResults((prev) => {
+      if (prev === null) return prev;
+      return rankNeighborhoods(activeShardGeoJson, criteria, 0);
+    });
+  }, [activeShardGeoJson]);
 
   const handleOpenCriteria = useCallback(() => {
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
@@ -757,10 +770,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setExitRestoreTarget(null);
       setSearchFlyTarget(null);
       handleZipSelect(zip);
-      setDrawerOpen(true);
+      if (discoveryShellActive && sandboxDrillActive && !isOverviewMode) {
+        setDeepDiveOpen(true);
+        setDrawerOpen(false);
+      } else {
+        setDrawerOpen(true);
+      }
     },
-    [handleZipSelect],
+    [handleZipSelect, discoveryShellActive, sandboxDrillActive, isOverviewMode],
   );
+
+  const handleDeepDiveBack = useCallback(() => {
+    setDeepDiveOpen(false);
+  }, []);
 
   const handleRemoveComparePin = useCallback((zip: string) => {
     setComparePins((prev) => prev.filter((z) => z !== zip));
@@ -795,6 +817,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setGeography("zip");
     setSelectedZip(results[0].zip);
   }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria]);
+
+  useEffect(() => {
+    if (!discoveryShellVisible) return;
+    const metric = getCriteriaChoroplethMetric(discoveryCriteria);
+    if (metric) {
+      setActiveMetric(metric);
+    }
+  }, [discoveryCriteria, discoveryShellVisible]);
 
   const handleDiscover = useCallback(() => {
     runDiscoveryRanking();
@@ -1269,7 +1299,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       />
 
       <div
-        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}`}
+        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}${deepDiveOpen ? " cinematic--deep-dive" : ""}`}
       >
         {showMetricSidebar && (
           <aside className="cinematic__sidebar">
@@ -1293,13 +1323,25 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           />
         )}
 
-        {discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && (
+        {discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && !deepDiveOpen && (
           <MatchesList
             results={discoveryResults}
             selectedZip={selectedZip}
             favorites={favorites}
             onSelect={handleMatchSelect}
             onToggleFavorite={handleToggleFavorite}
+          />
+        )}
+
+        {discoveryShellVisible && deepDiveOpen && deepDiveNeighborhood && (
+          <DiscoveryDeepDivePanel
+            neighborhood={deepDiveNeighborhood}
+            criteria={discoveryCriteria}
+            geoJson={activeShardGeoJson}
+            metroAvgPsf={metroAvgPsf}
+            featureProps={selectedFeature}
+            mapCenter={zipCenter}
+            onBack={handleDeepDiveBack}
           />
         )}
 

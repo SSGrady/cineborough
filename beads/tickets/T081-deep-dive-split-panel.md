@@ -1,7 +1,7 @@
 ---
 id: T081
 title: Deep-dive split panel (hero + Criteria vs All Data tabs)
-status: open
+status: done
 type: feature
 priority: P1
 epic: E009
@@ -26,3 +26,9 @@ Tabbed location detail for discovery mode per ADR-015 §2d. Supersedes S014 T071
 ## Notes
 
 Part 1 WMIL gap #4. Reuses T064 photo hero pipeline and `ZipDetailPanel` blocks.
+
+## Completion (2026-07-12)
+
+- `DiscoveryDeepDivePanel` replaces matches rail on select (~40% width)
+- Hero image, Match % badge, My criteria / All data tabs, locale quote, external links
+- Back to matches list; discovery shell skips drawer-only flow

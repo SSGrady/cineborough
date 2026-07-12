@@ -17,6 +17,15 @@ function isDiscoveryFilter(value: unknown): value is DiscoveryFilter {
   return typeof f.id === "string" && typeof f.metric === "string";
 }
 
+function migrateFiltersToV3(filters: DiscoveryFilter[]): DiscoveryFilter[] {
+  return filters.map((f) => ({
+    ...f,
+    priority: f.priority ?? false,
+    heatmapActive: f.heatmapActive ?? false,
+    sortMode: f.sortMode ?? false,
+  }));
+}
+
 function parseStoredCriteria(raw: string): DiscoveryCriteria | null {
   const parsed = JSON.parse(raw) as unknown;
 
@@ -24,12 +33,17 @@ function parseStoredCriteria(raw: string): DiscoveryCriteria | null {
 
   if ("version" in parsed && "filters" in parsed) {
     const stored = parsed as StoredDiscoveryCriteria;
-    if (
-      stored.version === DISCOVERY_CRITERIA_STORAGE_VERSION &&
-      Array.isArray(stored.filters) &&
-      stored.filters.every(isDiscoveryFilter)
-    ) {
-      return { filters: stored.filters };
+    if (!Array.isArray(stored.filters) || !stored.filters.every(isDiscoveryFilter)) {
+      return null;
+    }
+
+    if (stored.version === DISCOVERY_CRITERIA_STORAGE_VERSION) {
+      return { filters: migrateFiltersToV3(stored.filters) };
+    }
+
+    // v2 → v3: add default toggle fields
+    if (stored.version === 2) {
+      return { filters: migrateFiltersToV3(stored.filters) };
     }
   }
 
@@ -62,7 +76,7 @@ export function saveDiscoveryCriteria(criteria: DiscoveryCriteria): void {
   try {
     const payload: StoredDiscoveryCriteria = {
       version: DISCOVERY_CRITERIA_STORAGE_VERSION,
-      filters: criteria.filters,
+      filters: migrateFiltersToV3(criteria.filters),
     };
     localStorage.setItem(DISCOVERY_CRITERIA_STORAGE_KEY, JSON.stringify(payload));
   } catch {

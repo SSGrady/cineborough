@@ -70,9 +70,25 @@ export function CriteriaPanel({
     return { count, total };
   }, [geoJson, criteria]);
 
-  const updateFilter = (id: string, patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => {
+  const updateFilter = (
+    id: string,
+    patch: Partial<
+      Pick<DiscoveryFilter, "min" | "max" | "priority" | "heatmapActive" | "sortMode">
+    >,
+  ) => {
     onChange({
-      filters: criteria.filters.map((f) => (f.id === id ? { ...f, ...patch } : f)),
+      filters: criteria.filters.map((f) => {
+        if (f.id !== id) {
+          if (patch.heatmapActive && f.heatmapActive) {
+            return { ...f, heatmapActive: false };
+          }
+          if (patch.sortMode && f.sortMode) {
+            return { ...f, sortMode: false };
+          }
+          return f;
+        }
+        return { ...f, ...patch };
+      }),
     });
   };
 
@@ -159,6 +175,34 @@ export function CriteriaPanel({
                   geoJson={geoJson}
                   onChange={(patch) => updateFilter(filter.id, patch)}
                 />
+                <div className="criterion-card__toggles" role="group" aria-label="Criterion controls">
+                  <button
+                    type="button"
+                    className={`criterion-card__toggle${filter.heatmapActive ? " criterion-card__toggle--on" : ""}`}
+                    aria-pressed={filter.heatmapActive ?? false}
+                    onClick={() =>
+                      updateFilter(filter.id, { heatmapActive: !filter.heatmapActive })
+                    }
+                  >
+                    Heatmap
+                  </button>
+                  <button
+                    type="button"
+                    className={`criterion-card__toggle${filter.priority ? " criterion-card__toggle--on" : ""}`}
+                    aria-pressed={filter.priority ?? false}
+                    onClick={() => updateFilter(filter.id, { priority: !filter.priority })}
+                  >
+                    High Priority
+                  </button>
+                  <button
+                    type="button"
+                    className={`criterion-card__toggle${filter.sortMode ? " criterion-card__toggle--on" : ""}`}
+                    aria-pressed={filter.sortMode ?? false}
+                    onClick={() => updateFilter(filter.id, { sortMode: !filter.sortMode })}
+                  >
+                    Just This
+                  </button>
+                </div>
               </article>
             ))
           )}

@@ -1,7 +1,7 @@
 ---
 id: T080
 title: Criterion priority toggles (Heatmap / High Priority / Just This)
-status: open
+status: done
 type: feature
 priority: P1
 epic: E009
@@ -27,3 +27,10 @@ Per-criterion card controls wired to scoring engine and `MapView` active layer. 
 ## Notes
 
 Part 1 WMIL gap #3. Blocks T078 heatmap-sidebar integration.
+
+## Completion (2026-07-12)
+
+- Per-criterion Heatmap / High Priority / Just This toggles on `CriteriaPanel`
+- Weighted composite Match % (2× for High Priority) in `hybrid-scoring.ts`
+- Just This re-sorts via `getActiveSortMetric`; heatmap sets choropleth via `getCriteriaChoroplethMetric`
+- Storage v3 persists `priority`, `heatmapActive`, `sortMode` per filter

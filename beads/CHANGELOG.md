@@ -6,6 +6,22 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### T080 — Criterion Priority Toggles
+
+- Heatmap / High Priority / Just This toggles per criterion card (WMIL parity)
+- High Priority doubles weight in composite Match %; Just This re-sorts by single criterion
+- Storage v3 (`priority`, `heatmapActive`, `sortMode`); choropleth wired from criteria toggles
+
+**Status:** T080 → `done`.
+
+### T081 — Deep-Dive Split Panel
+
+- `DiscoveryDeepDivePanel` (~40% right rail) with photo hero, Match % badge, tabbed breakdown
+- My criteria tab: pass/close/no-match rows with mini bars; All data tab: `ZipDetailPanel` blocks
+- Locale quote + Google Maps / Walk Score placeholder links; back to matches list
+
+**Status:** T081 → `done`.
+
 ### T078 — State-Grouped Fly-To Matches Sidebar
 
 - MatchesList groups ranked neighborhoods by state (WMIL-style headings)
