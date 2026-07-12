@@ -6,6 +6,14 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### Reactive matching + national rank API (T066/T078)
+
+- Server-only nationwide scoring at `apps/web/src/lib/server/nationwide-discovery-rank.ts`
+- Client fetches `/api/v1/discovery/rank` — no `node:fs` in client bundle
+- 200ms debounced reactive matching; match ticker replaces Find matches button
+- Floating Match Deck; composite `${cbsa}-${zip}` keys; histogram bar click filtering
+- By Example city archetype cards (SF walkability, Austin growth, etc.)
+
 ### Find matches — discovery shell wiring (T066/T073)
 
 - `rankNeighborhoods` applies `DISCOVERY_MATCH_THRESHOLD` (40%) before returning ranked matches

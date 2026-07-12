@@ -103,6 +103,22 @@ export function CriterionRangeSlider({
     onChange({ max: nextMax });
   };
 
+  const applyBinRange = (bin: HistogramBin, mode: "set" | "extend-min" | "extend-max") => {
+    if (mode === "set") {
+      onChange({ min: bin.start, max: bin.end });
+      return;
+    }
+    if (mode === "extend-min") {
+      onChange({ min: Math.min(bin.start, currentMin) });
+      return;
+    }
+    onChange({ max: Math.max(bin.end, currentMax) });
+  };
+
+  const handleBinPointer = (bin: HistogramBin, shiftKey: boolean) => {
+    applyBinRange(bin, shiftKey ? "extend-max" : "set");
+  };
+
   return (
     <div className={`criterion-range${heatmapActive ? " criterion-range--heatmap" : ""}`}>
       {histogram && histogram.bins.length > 0 && (
@@ -115,8 +131,18 @@ export function CriterionRangeSlider({
                 key={i}
                 className={`criterion-range__bar${inBand ? " criterion-range__bar--in-band" : ""}${isHovered ? " criterion-range__bar--hover" : ""}`}
                 style={{ height: `${(bin.count / maxCount) * 100}%` }}
+                role="button"
+                tabIndex={0}
+                aria-label={`Set range to ${formatBinRange(filter.metric, bin)}`}
                 onMouseEnter={() => setHoveredBin(i)}
                 onMouseLeave={() => setHoveredBin((prev) => (prev === i ? null : prev))}
+                onClick={(e) => handleBinPointer(bin, e.shiftKey)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleBinPointer(bin, e.shiftKey);
+                  }
+                }}
               >
                 {isHovered && (
                   <span className="criterion-range__tooltip" role="tooltip">

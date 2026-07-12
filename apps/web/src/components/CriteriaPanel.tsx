@@ -25,7 +25,6 @@ interface CriteriaPanelProps {
   resetCriteria?: DiscoveryCriteria;
   geoJson: DcMetroGeoJson | null;
   onChange: (criteria: DiscoveryCriteria) => void;
-  onFindMatches: (criteria: DiscoveryCriteria) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   exampleZips?: string[];
@@ -33,7 +32,11 @@ interface CriteriaPanelProps {
   zipLabels?: Map<string, string>;
   onAddExample?: (zip: string) => void;
   onRemoveExample?: (zip: string) => void;
-  needsMetroSelection?: boolean;
+  nationalMode?: boolean;
+  nationalMetroCount?: number;
+  matchCount?: number;
+  matchingInFlight?: boolean;
+  onApplyArchetype?: (criteria: DiscoveryCriteria) => void;
 }
 
 function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
@@ -52,19 +55,22 @@ function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
 
 export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(function CriteriaPanel(
   {
-  criteria,
-  resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
-  geoJson,
-  onChange,
-  onFindMatches,
-  collapsed = false,
-  onToggleCollapse,
-  exampleZips = [],
-  selectedZip = null,
-  zipLabels = new Map(),
-  onAddExample,
-  onRemoveExample,
-  needsMetroSelection = false,
+    criteria,
+    resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
+    geoJson,
+    onChange,
+    collapsed = false,
+    onToggleCollapse,
+    exampleZips = [],
+    selectedZip = null,
+    zipLabels = new Map(),
+    onAddExample,
+    onRemoveExample,
+    nationalMode = false,
+    nationalMetroCount = 0,
+    matchCount = 0,
+    matchingInFlight = false,
+    onApplyArchetype,
   },
   ref,
 ) {
@@ -84,13 +90,17 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
     return { count, total };
   }, [geoJson, criteria]);
 
+  const emitChange = (next: DiscoveryCriteria) => {
+    onChange(normalizeCriteria(next));
+  };
+
   const updateFilter = (
     id: string,
     patch: Partial<
       Pick<DiscoveryFilter, "min" | "max" | "priority" | "heatmapActive" | "sortMode">
     >,
   ) => {
-    onChange({
+    emitChange({
       filters: criteria.filters.map((f) => {
         if (f.id !== id) {
           if (patch.heatmapActive && f.heatmapActive) {
@@ -107,21 +117,15 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
   };
 
   const removeFilter = (id: string) => {
-    onChange({
+    emitChange({
       filters: criteria.filters.filter((f) => f.id !== id),
     });
   };
 
   const addCriterion = (metric: DiscoveryFilterMetric) => {
-    onChange({
+    emitChange({
       filters: [...criteria.filters, createDiscoveryFilter(metric, crypto.randomUUID())],
     });
-  };
-
-  const handleFindMatches = () => {
-    const normalized = normalizeCriteria(criteria);
-    onChange(normalized);
-    onFindMatches(normalized);
   };
 
   if (collapsed) {
@@ -148,7 +152,22 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
         tabIndex={-1}
       >
         <header className="criteria-panel__header">
-          <h2>Your criteria</h2>
+          <div className="criteria-panel__header-main">
+            <h2>Your criteria</h2>
+            <span
+              className={`criteria-panel__match-ticker${matchingInFlight ? " criteria-panel__match-ticker--loading" : ""}`}
+              role="status"
+              aria-live="polite"
+            >
+              {matchingInFlight ? (
+                "Matching…"
+              ) : criteria.filters.length === 0 ? (
+                "Add criteria"
+              ) : (
+                `🍿 ${matchCount} match${matchCount === 1 ? "" : "es"}`
+              )}
+            </span>
+          </div>
           {onToggleCollapse && (
             <button
               type="button"
@@ -189,22 +208,24 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
             zipLabels={zipLabels}
             onAdd={(zip) => onAddExample?.(zip)}
             onRemove={(zip) => onRemoveExample?.(zip)}
+            onApplyArchetype={onApplyArchetype}
           />
         ) : (
           <>
-            {needsMetroSelection ? (
-              <p className="criteria-panel__metro-hint" role="status">
-                Select a metro on the map to preview match counts and rank neighborhoods.
+            {nationalMode ? (
+              <p className="criteria-panel__intro" role="status">
+                Matches update live across{" "}
+                {nationalMetroCount > 0 ? `${nationalMetroCount} metros` : "all ingested metros"}.
               </p>
             ) : (
               <p className="criteria-panel__intro">
-                Set what matters to you. Every neighborhood gets a Match&nbsp;%.
+                Drag sliders or tap histogram bars — matches update automatically.
               </p>
             )}
 
             {matchPreview !== null && (
               <p className="criteria-panel__preview" aria-live="polite">
-                {matchPreview.count} of {matchPreview.total} neighborhoods ≥{DISCOVERY_MATCH_THRESHOLD}% match
+                {matchPreview.count} of {matchPreview.total} in metro ≥{DISCOVERY_MATCH_THRESHOLD}%
               </p>
             )}
 
@@ -287,17 +308,9 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
           <button
             type="button"
             className="criteria-panel__reset"
-            onClick={() => onChange(resetCriteria)}
+            onClick={() => emitChange(resetCriteria)}
           >
             Reset
-          </button>
-          <button
-            type="button"
-            className="criteria-panel__find"
-            onClick={handleFindMatches}
-            disabled={needsMetroSelection}
-          >
-            Find matches
           </button>
         </div>
       </aside>

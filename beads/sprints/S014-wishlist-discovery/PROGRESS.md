@@ -24,6 +24,15 @@
 - WMIL benchmark: partial matches, criterion cards, compare chips
 - **T077 (2026-07-12):** Renamed Wish* → Criteria*; spec at `docs/specifications/discovery-criteria-ux-v2.md`
 
+## Session 2026-07-12 (Reactive matching + national rank)
+
+- Removed blocking Find matches buttons; 200ms debounced reactive ranking with AbortController
+- National rank via server-only `/api/v1/discovery/rank` (no client `node:fs` import)
+- Floating Match Deck bottom-right; map stays edge-to-edge when deck collapsed
+- Composite match keys `${cbsa}-${zip}` fix duplicate React keys nationally
+- Histogram bar click sets criterion range; By Example city archetype cards
+- Match ticker badge in TopBar + criteria header
+
 ## Session 2026-07-12 (Find matches fix)
 
 - `rankNeighborhoods` filters by `DISCOVERY_MATCH_THRESHOLD` (40%) before returning matches

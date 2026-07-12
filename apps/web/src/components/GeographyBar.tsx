@@ -12,7 +12,7 @@ interface GeographyBarProps {
   geography: GeographyLevel;
   onGeographyChange: (level: GeographyLevel) => void;
   sandboxDrillActive?: boolean;
-  /** Hide National/State when criteria or discovery shell is active */
+  /** Hide State when criteria or discovery shell is active; National stays available for nationwide find */
   criteriaMode?: boolean;
 }
 
@@ -26,8 +26,7 @@ export function GeographyBar({
     <div className="geo-bar" role="group" aria-label="Geography level">
       {GEOGRAPHY_OPTIONS.map((opt) => {
         const zipLocked = opt.key === "zip" && !sandboxDrillActive;
-        const scopeLocked =
-          criteriaMode && (opt.key === "national" || opt.key === "state");
+        const scopeLocked = criteriaMode && opt.key === "state";
         const disabled = zipLocked || scopeLocked;
         return (
           <button

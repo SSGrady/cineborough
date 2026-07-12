@@ -16,6 +16,9 @@ interface TopBarProps {
   onDiscover?: () => void;
   discoverDisabled?: boolean;
   discoverLabel?: string;
+  matchCount?: number;
+  matchingInFlight?: boolean;
+  showMatchTicker?: boolean;
 }
 
 export function TopBar({
@@ -31,6 +34,9 @@ export function TopBar({
   onDiscover,
   discoverDisabled = false,
   discoverLabel = "Find matches",
+  matchCount = 0,
+  matchingInFlight = false,
+  showMatchTicker = false,
 }: TopBarProps) {
   return (
     <header className="top-bar">
@@ -47,7 +53,7 @@ export function TopBar({
           criteriaMode={criteriaMode}
         />
       </div>
-      {(onToggleCriteriaView || onDiscover) && (
+      {(onToggleCriteriaView || onDiscover || showMatchTicker) && (
         <div className="top-bar__what" role="group" aria-label="Discovery filters">
           {onToggleCriteriaView && (
             <button
@@ -59,7 +65,23 @@ export function TopBar({
               {criteriaViewActive ? "Map overview" : "Your criteria"}
             </button>
           )}
-          {onDiscover && (
+          {showMatchTicker && (
+            <span
+              className={`match-ticker${matchingInFlight ? " match-ticker--loading" : ""}`}
+              role="status"
+              aria-live="polite"
+            >
+              {matchingInFlight ? (
+                <>
+                  <span className="match-ticker__pulse" aria-hidden="true" />
+                  Matching…
+                </>
+              ) : (
+                <>🍿 {matchCount} Match{matchCount === 1 ? "" : "es"} Found</>
+              )}
+            </span>
+          )}
+          {onDiscover && !showMatchTicker && (
             <button
               type="button"
               className="top-bar__discover-btn"

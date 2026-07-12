@@ -55,6 +55,8 @@ import {
   type UsInsetRegion,
   type MapCameraTarget,
 } from "@cineborough/geo";
+import { fetchDiscoveryRank, criteriaHash } from "@/lib/reactive-discovery";
+import { matchKey } from "@/lib/match-keys";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
@@ -201,6 +203,8 @@ function metroCameraFromShard(shard: DcMetroGeoJson): MapCameraTarget {
   };
 }
 
+type DiscoveryScope = "metro" | "national" | null;
+
 type DiscoveryFlyoverPhase = "flying" | "highlight";
 
 interface DiscoveryFlyoverState {
@@ -244,6 +248,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [searchFlyTarget, setSearchFlyTarget] = useState<[number, number] | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [discoveryShellActive, setDiscoveryShellActive] = useState(false);
+  const [discoveryScope, setDiscoveryScope] = useState<DiscoveryScope>(null);
   const [criteriaPanelOpen, setCriteriaPanelOpen] = useState(false);
   const criteriaPanelRef = useRef<HTMLElement>(null);
   const [comparePins, setComparePins] = useState<string[]>([]);
@@ -258,6 +263,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [discoveryMessage, setDiscoveryMessage] = useState<string | null>(null);
   const [discoveryTourComplete, setDiscoveryTourComplete] = useState(false);
   const [deepDiveOpen, setDeepDiveOpen] = useState(false);
+  const [matchingInFlight, setMatchingInFlight] = useState(false);
+  const [matchesDeckOpen, setMatchesDeckOpen] = useState(false);
+  const [matchesDeckCollapsed, setMatchesDeckCollapsed] = useState(false);
+  const [selectedMatchKey, setSelectedMatchKey] = useState<string | null>(null);
+  const rankAbortRef = useRef<AbortController | null>(null);
+  const rankDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastRankedHashRef = useRef<string | null>(null);
   const [pathTraceProgress, setPathTraceProgress] = useState(0);
   const pathTraceRafRef = useRef<number | null>(null);
   const prevFlyoverRef = useRef(false);
@@ -533,6 +545,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     (targetLevel: GeographyLevel, options?: { closeCriteria?: boolean }) => {
       if (options?.closeCriteria) {
         setCriteriaPanelOpen(false);
+        setDiscoveryShellActive(false);
+        setDiscoveryResults(null);
+        setDiscoveryScope(null);
       }
 
       setSearchFlyTarget(null);
@@ -833,11 +848,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return null;
   }, [activeShardGeoJson, selectedZip]);
 
-  const discoveryShellVisible =
-    discoveryShellActive && sandboxDrillActive && !isOverviewMode;
-
+  const discoveryShellVisible = criteriaPanelOpen;
   const criteriaPanelVisible = criteriaPanelOpen;
-  const criteriaGeographyRestricted = criteriaPanelOpen || discoveryShellVisible;
+  const criteriaGeographyRestricted = criteriaPanelOpen;
+  const showMatchDeck =
+    matchesDeckOpen && !matchesDeckCollapsed && Boolean(discoveryResults?.length);
+  const matchCount = discoveryResults?.length ?? 0;
+
+  const scorableMetroCount = ingestedCbsas.size > 0 ? ingestedCbsas.size : SANDBOX_CBSA.size;
 
   const selectedDiscoveryCbsa = useMemo(
     () =>
@@ -851,6 +869,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   );
 
   const criteriaNeedsMetroSelection = criteriaPanelVisible && selectedDiscoveryCbsa === null;
+  const nationalCriteriaMode = criteriaNeedsMetroSelection && isOverviewMode;
 
   const criteriaShardGeoJson = useMemo((): DcMetroGeoJson | null => {
     if (!selectedDiscoveryCbsa) return null;
@@ -876,9 +895,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   }, [criteriaPanelVisible, selectedDiscoveryCbsa, criteriaShardGeoJson, ensureMetroShard]);
 
   const deepDiveNeighborhood = useMemo((): RankedNeighborhood | null => {
-    if (!deepDiveOpen || !selectedZip || !discoveryResults) return null;
+    if (!deepDiveOpen || !discoveryResults) return null;
+    if (selectedMatchKey) {
+      return discoveryResults.find((r) => matchKey(r) === selectedMatchKey) ?? null;
+    }
+    if (!selectedZip) return null;
     return discoveryResults.find((r) => r.zip === selectedZip) ?? null;
-  }, [deepDiveOpen, selectedZip, discoveryResults]);
+  }, [deepDiveOpen, selectedMatchKey, selectedZip, discoveryResults]);
 
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
@@ -887,8 +910,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return exitRestoreTarget;
     }
 
-    if (discoveryShellVisible && !discoveryFlyoverActive && selectedZip && discoveryResults) {
-      const match = discoveryResults.find((r) => r.zip === selectedZip);
+    if (discoveryShellVisible && !discoveryFlyoverActive && discoveryResults) {
+      const match =
+        (selectedMatchKey
+          ? discoveryResults.find((r) => matchKey(r) === selectedMatchKey)
+          : null) ??
+        (selectedZip ? discoveryResults.find((r) => r.zip === selectedZip) : null);
       if (match && isFiniteLngLat(match.center)) {
         return discoveryFlyoverCamera(match.center);
       }
@@ -991,7 +1018,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const comparePinnedNeighborhoods = useMemo(() => {
     if (!discoveryResults) return [];
     return comparePins
-      .map((zip) => discoveryResults.find((r) => r.zip === zip))
+      .map((key) => discoveryResults.find((r) => matchKey(r) === key))
       .filter((r): r is RankedNeighborhood => r !== undefined);
   }, [comparePins, discoveryResults]);
 
@@ -1039,12 +1066,143 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const handleApplyCriteria = useCallback((criteria: DiscoveryCriteria) => {
     setDiscoveryCriteria(criteria);
     saveDiscoveryCriteria(criteria);
-    setDiscoveryResults((prev) => {
-      if (prev === null) return prev;
-      const ranked = rankNeighborhoods(activeShardGeoJson, criteria, { topN: 0 });
-      return applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
-    });
-  }, [activeShardGeoJson, exampleZips]);
+  }, []);
+
+  const applyRankedResults = useCallback(
+    (
+      results: RankedNeighborhood[],
+      scope: DiscoveryScope,
+      criteria: DiscoveryCriteria,
+    ) => {
+      setDiscoveryScope(scope);
+      setDiscoveryShellActive(true);
+      setDiscoveryCriteria(criteria);
+      saveDiscoveryCriteria(criteria);
+      setDiscoveryResults(results);
+      setComparePins(results.slice(0, 3).map((r) => matchKey(r)));
+      setDiscoveryMessage(null);
+      if (results.length > 0) {
+        setMatchesDeckOpen(true);
+        setMatchesDeckCollapsed(false);
+      } else {
+        setMatchesDeckOpen(false);
+        setDiscoveryMessage(
+          `No neighborhoods match your criteria (below ${DISCOVERY_MATCH_THRESHOLD}% match)`,
+        );
+      }
+    },
+    [],
+  );
+
+  const runReactiveRanking = useCallback(
+    async (criteria: DiscoveryCriteria) => {
+      if (criteria.filters.length === 0) {
+        rankAbortRef.current?.abort();
+        setDiscoveryResults(null);
+        setMatchesDeckOpen(false);
+        setMatchingInFlight(false);
+        lastRankedHashRef.current = null;
+        return;
+      }
+
+      const hash = `${criteriaHash(criteria)}|${exampleZips.join(",")}`;
+      if (hash === lastRankedHashRef.current && discoveryResults !== null) {
+        return;
+      }
+
+      rankAbortRef.current?.abort();
+      const controller = new AbortController();
+      rankAbortRef.current = controller;
+      setMatchingInFlight(true);
+
+      const selectedCbsa = resolveSelectedDiscoveryCbsa(
+        sandboxDrillActive,
+        activeSandboxCbsa,
+        selectedOverviewMetro,
+        ingestedCbsas,
+      );
+
+      try {
+        if (
+          selectedCbsa &&
+          sandboxDrillActive &&
+          activeSandboxCbsa === selectedCbsa &&
+          activeShardReady &&
+          activeShardGeoJson.features.length > 0
+        ) {
+          const ranked = rankNeighborhoods(activeShardGeoJson, criteria, { topN: 0 });
+          const results = applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
+          if (controller.signal.aborted) return;
+          lastRankedHashRef.current = hash;
+          applyRankedResults(results, "metro", criteria);
+          return;
+        }
+
+        if (selectedCbsa && isDiscoveryMetro(selectedCbsa, ingestedCbsas)) {
+          const payload = await fetchDiscoveryRank(criteria, {
+            scope: "metro",
+            cbsaCode: selectedCbsa,
+            signal: controller.signal,
+          });
+          if (controller.signal.aborted) return;
+          lastRankedHashRef.current = hash;
+          applyRankedResults(payload.results, "metro", criteria);
+          return;
+        }
+
+        const payload = await fetchDiscoveryRank(criteria, {
+          scope: "national",
+          signal: controller.signal,
+        });
+        if (controller.signal.aborted) return;
+        lastRankedHashRef.current = hash;
+        applyRankedResults(payload.results, "national", criteria);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setDiscoveryMessage("Matching failed — try adjusting criteria");
+      } finally {
+        if (!controller.signal.aborted) {
+          setMatchingInFlight(false);
+        }
+      }
+    },
+    [
+      sandboxDrillActive,
+      activeSandboxCbsa,
+      selectedOverviewMetro,
+      ingestedCbsas,
+      activeShardReady,
+      activeShardGeoJson,
+      exampleZips,
+      discoveryResults,
+      applyRankedResults,
+    ],
+  );
+
+  useEffect(() => {
+    if (!criteriaPanelOpen) return;
+
+    if (rankDebounceRef.current) {
+      clearTimeout(rankDebounceRef.current);
+    }
+
+    rankDebounceRef.current = setTimeout(() => {
+      void runReactiveRanking(discoveryCriteria);
+    }, 200);
+
+    return () => {
+      if (rankDebounceRef.current) {
+        clearTimeout(rankDebounceRef.current);
+      }
+    };
+  }, [criteriaPanelOpen, discoveryCriteria, exampleZips, runReactiveRanking]);
+
+  useEffect(() => {
+    if (!criteriaPanelOpen) {
+      rankAbortRef.current?.abort();
+      setMatchingInFlight(false);
+    }
+  }, [criteriaPanelOpen]);
 
   const drillIntoDiscoveryMetro = useCallback(
     async (cbsa: string): Promise<DcMetroGeoJson | null> => {
@@ -1064,21 +1222,45 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [ensureMetroShard],
   );
 
-  const handleToggleFavorite = useCallback((zip: string) => {
+  const handleToggleFavorite = useCallback((key: string) => {
     setFavorites((prev) => {
       const next = new Set(prev);
-      if (next.has(zip)) next.delete(zip);
-      else next.add(zip);
+      if (next.has(key)) next.delete(key);
+      else next.add(key);
       saveDiscoveryFavorites(next);
       return next;
     });
   }, []);
 
   const handleMatchSelect = useCallback(
-    (zip: string) => {
+    (key: string, match: RankedNeighborhood) => {
+      setSelectedMatchKey(key);
+
+      if (discoveryScope === "national" && match.cbsaCode) {
+        setExploreCityLoading(true);
+        void drillIntoDiscoveryMetro(match.cbsaCode)
+          .then((shard) => {
+            if (!shard) {
+              setDiscoveryMessage("Metro data unavailable — try another match");
+              return;
+            }
+            setDiscoveryScope("metro");
+            setExitRestoreTarget(null);
+            setSearchFlyTarget(null);
+            setSelectedZip(match.zip);
+            setGeography("zip");
+            setDeepDiveOpen(true);
+            setDrawerOpen(false);
+          })
+          .finally(() => {
+            setExploreCityLoading(false);
+          });
+        return;
+      }
+
       setExitRestoreTarget(null);
       setSearchFlyTarget(null);
-      handleZipSelect(zip);
+      handleZipSelect(match.zip);
       if (discoveryShellActive && sandboxDrillActive && !isOverviewMode) {
         setDeepDiveOpen(true);
         setDrawerOpen(false);
@@ -1086,7 +1268,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setDrawerOpen(true);
       }
     },
-    [handleZipSelect, discoveryShellActive, sandboxDrillActive, isOverviewMode],
+    [
+      discoveryScope,
+      drillIntoDiscoveryMetro,
+      handleZipSelect,
+      discoveryShellActive,
+      sandboxDrillActive,
+      isOverviewMode,
+    ],
   );
 
   const handleDeepDiveBack = useCallback(() => {
@@ -1174,6 +1363,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setExitRestoreTarget(null);
       setDiscoveryShellActive(true);
       setCriteriaPanelOpen(true);
+      setDiscoveryScope("metro");
 
       if (options?.markTourComplete !== false) {
         setDiscoveryTourComplete(true);
@@ -1208,7 +1398,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
 
       setDiscoveryResults(results);
-      setComparePins(results.slice(0, 3).map((r) => r.zip));
+      setComparePins(results.slice(0, 3).map((r) => matchKey(r)));
       setSandboxDrillActive(true);
 
       if (options?.openDeepDive === true) {
@@ -1222,6 +1412,51 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
     },
     [activeShardGeoJson, discoveryCriteria, exampleZips],
+  );
+
+  const enterNationalDiscovery = useCallback(
+    (
+      results: RankedNeighborhood[],
+      criteria: DiscoveryCriteria,
+      stats?: { metrosScored: number; neighborhoodsScored: number },
+    ) => {
+      setDiscoveryMessage(null);
+      setDiscoveryScope("national");
+      setDiscoveryShellActive(true);
+      setCriteriaPanelOpen(true);
+      setDiscoveryCriteria(criteria);
+      saveDiscoveryCriteria(criteria);
+      setDiscoveryTourComplete(false);
+      setDeepDiveOpen(false);
+      setSelectedZip(null);
+      setDrawerOpen(false);
+      setDiscoveryResults(results);
+      setComparePins(results.slice(0, 3).map((r) => matchKey(r)));
+
+      if (results.length === 0) {
+        setDiscoveryMessage(
+          `No neighborhoods match your criteria nationally (below ${DISCOVERY_MATCH_THRESHOLD}% match)`,
+        );
+        setMatchesDeckOpen(false);
+        return;
+      }
+
+      setMatchesDeckOpen(true);
+      setMatchesDeckCollapsed(false);
+      if (stats) {
+        setDiscoveryMessage(
+          `Top ${results.length} matches across ${stats.metrosScored} metros · ${stats.neighborhoodsScored.toLocaleString()} neighborhoods scored`,
+        );
+      }
+    },
+    [],
+  );
+
+  const handleApplyArchetype = useCallback(
+    (criteria: DiscoveryCriteria) => {
+      handleApplyCriteria(criteria);
+    },
+    [handleApplyCriteria],
   );
 
   overviewMetroToCriteriaRef.current = (cbsa: string) => {
@@ -1250,54 +1485,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleOpenCriteria = useCallback(() => {
     setCriteriaPanelOpen(true);
-
-    const selectedCbsa = resolveSelectedDiscoveryCbsa(
-      sandboxDrillActive,
-      activeSandboxCbsa,
-      selectedOverviewMetro,
-      ingestedCbsas,
-    );
-
-    if (!selectedCbsa) {
-      setDiscoveryMessage("Select a metro on the map to rank neighborhoods");
-      return;
-    }
-
-    setDiscoveryMessage(null);
     setDiscoveryShellActive(true);
-
-    if (sandboxDrillActive && activeSandboxCbsa === selectedCbsa) {
-      if (!discoveryResults) {
-        enterDiscoveryMetro({ openDeepDive: false, markTourComplete: false });
-      }
-      return;
-    }
-
-    setExploreCityLoading(true);
-    void drillIntoDiscoveryMetro(selectedCbsa)
-      .then((shard) => {
-        if (!shard) {
-          setDiscoveryMessage("Metro data unavailable — try another metro");
-          return;
-        }
-        enterDiscoveryMetro({
-          openDeepDive: false,
-          markTourComplete: false,
-          geoJson: shard,
-        });
-      })
-      .finally(() => {
-        setExploreCityLoading(false);
-      });
-  }, [
-    sandboxDrillActive,
-    activeSandboxCbsa,
-    selectedOverviewMetro,
-    ingestedCbsas,
-    discoveryResults,
-    drillIntoDiscoveryMetro,
-    enterDiscoveryMetro,
-  ]);
+    setDiscoveryMessage(null);
+  }, []);
 
   const handleMapOverview = useCallback(() => {
     resetToGeographyOverview("metro", { closeCriteria: true });
@@ -1313,66 +1503,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const runDiscoveryRanking = useCallback(
     (criteriaOverride?: DiscoveryCriteria) => {
-      setDiscoveryMessage(null);
       setDiscoveryTourComplete(false);
       prevFlyoverRef.current = false;
-
-      const selectedCbsa = resolveSelectedDiscoveryCbsa(
-        sandboxDrillActive,
-        activeSandboxCbsa,
-        selectedOverviewMetro,
-        ingestedCbsas,
-      );
-
-      if (!selectedCbsa) {
-        setDiscoveryMessage("Select a metro on the map to rank neighborhoods");
-        return;
-      }
-
-      if (!isDiscoveryMetro(selectedCbsa, ingestedCbsas)) {
-        setDiscoveryMessage("Metro data unavailable — try another metro");
-        return;
-      }
-
-      setDiscoveryShellActive(true);
-
-      const rankInShard = (shard: DcMetroGeoJson) => {
-        enterDiscoveryMetro({
-          openDeepDive: false,
-          markTourComplete: false,
-          geoJson: shard,
-          criteria: criteriaOverride,
-        });
-      };
-
-      if (sandboxDrillActive && activeSandboxCbsa === selectedCbsa && activeShardReady) {
-        rankInShard(activeShardGeoJson);
-        return;
-      }
-
-      setExploreCityLoading(true);
-      void drillIntoDiscoveryMetro(selectedCbsa)
-        .then((shard) => {
-          if (!shard) {
-            setDiscoveryMessage("Metro data unavailable — try another metro");
-            return;
-          }
-          rankInShard(shard);
-        })
-        .finally(() => {
-          setExploreCityLoading(false);
-        });
+      void runReactiveRanking(criteriaOverride ?? discoveryCriteria);
     },
-    [
-      sandboxDrillActive,
-      activeSandboxCbsa,
-      selectedOverviewMetro,
-      ingestedCbsas,
-      activeShardReady,
-      activeShardGeoJson,
-      enterDiscoveryMetro,
-      drillIntoDiscoveryMetro,
-    ],
+    [discoveryCriteria, runReactiveRanking],
   );
 
   useEffect(() => {
@@ -1393,7 +1528,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   useEffect(() => {
     if (!criteriaGeographyRestricted) return;
-    if (geography === "national" || geography === "state") {
+    if (geography === "state") {
       setGeography("metro");
     }
   }, [criteriaGeographyRestricted, geography]);
@@ -1421,13 +1556,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeShardGeoJson,
     enterDiscoveryMetro,
   ]);
-
-  const handleDiscover = useCallback(
-    (criteria?: DiscoveryCriteria) => {
-      runDiscoveryRanking(criteria);
-    },
-    [runDiscoveryRanking],
-  );
 
   const handleStartFlyoverTour = useCallback(() => {
     if (!discoveryResults || discoveryResults.length === 0) {
@@ -1930,15 +2058,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         onSearchSelect={handleSearchSelect}
         onToggleCriteriaView={handleCriteriaToggle}
         criteriaViewActive={criteriaPanelOpen}
-        onDiscover={discoveryShellVisible ? handleDiscover : handleStartFlyoverTour}
+        showMatchTicker={criteriaPanelOpen}
+        matchCount={matchCount}
+        matchingInFlight={matchingInFlight}
+        onDiscover={!criteriaPanelOpen ? handleStartFlyoverTour : undefined}
         discoverDisabled={discoveryFlyoverActive}
-        discoverLabel={
-          discoveryFlyoverActive
-            ? "Tour in progress…"
-            : discoveryShellVisible
-              ? "Find matches"
-              : "Tour top neighborhoods"
-        }
+        discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Tour top neighborhoods"}
       />
 
       {compareBarVisible && (
@@ -1946,15 +2071,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           <CompareChips
             pinned={comparePinnedNeighborhoods}
             activeZip={selectedZip}
-            onSelect={handleMatchSelect}
-            onRemove={handleRemoveComparePin}
+            onSelect={(zip) => {
+              const match = comparePinnedNeighborhoods.find((r) => r.zip === zip);
+              if (match) handleMatchSelect(matchKey(match), match);
+            }}
+            onRemove={(zip) => {
+              const match = comparePinnedNeighborhoods.find((r) => r.zip === zip);
+              handleRemoveComparePin(match ? matchKey(match) : zip);
+            }}
             onReorder={handleReorderComparePins}
           />
         </div>
       )}
 
       <div
-        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}${criteriaPanelVisible && !discoveryShellVisible ? " cinematic--criteria" : ""}${deepDiveOpen ? " cinematic--deep-dive" : ""}${compareBarVisible ? " cinematic--compare" : ""}${discoveryFlyoverActive ? " cinematic--flyover" : ""}`}
+        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${criteriaPanelVisible ? " cinematic--criteria" : ""}${showMatchDeck ? " cinematic--match-deck" : ""}${deepDiveOpen ? " cinematic--deep-dive" : ""}${compareBarVisible ? " cinematic--compare" : ""}${discoveryFlyoverActive ? " cinematic--flyover" : ""}`}
       >
         {showMetricSidebar && (
           <aside className="cinematic__sidebar">
@@ -1975,23 +2106,29 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             resetCriteria={sandboxDiscoveryCriteria}
             geoJson={criteriaNeedsMetroSelection ? null : criteriaShardGeoJson}
             onChange={handleApplyCriteria}
-            onFindMatches={handleDiscover}
             exampleZips={exampleZips}
             selectedZip={selectedZip}
             zipLabels={zipLabelMap}
             onAddExample={handleAddExample}
             onRemoveExample={handleRemoveExample}
-            needsMetroSelection={criteriaNeedsMetroSelection}
+            nationalMode={nationalCriteriaMode}
+            nationalMetroCount={scorableMetroCount}
+            matchCount={matchCount}
+            matchingInFlight={matchingInFlight}
+            onApplyArchetype={handleApplyArchetype}
           />
         )}
 
-        {discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && !deepDiveOpen && (
+        {showMatchDeck && discoveryResults && !deepDiveOpen && (
           <MatchesList
             results={discoveryResults}
-            selectedZip={selectedZip}
+            selectedKey={selectedMatchKey}
             favorites={favorites}
             onSelect={handleMatchSelect}
             onToggleFavorite={handleToggleFavorite}
+            collapsed={matchesDeckCollapsed}
+            onToggleCollapse={() => setMatchesDeckCollapsed((v) => !v)}
+            variant="deck"
           />
         )}
 

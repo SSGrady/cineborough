@@ -2,15 +2,17 @@
 
 import type { RankedNeighborhood } from "@cineborough/data";
 import { formatUsStateHeading } from "@/lib/us-state-names";
+import { matchKey } from "@/lib/match-keys";
 
 interface MatchesListProps {
   results: RankedNeighborhood[];
-  selectedZip: string | null;
+  selectedKey: string | null;
   favorites: Set<string>;
-  onSelect: (zip: string) => void;
-  onToggleFavorite: (zip: string) => void;
+  onSelect: (key: string, match: RankedNeighborhood) => void;
+  onToggleFavorite: (key: string) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
+  variant?: "rail" | "deck";
 }
 
 interface StateGroup {
@@ -50,21 +52,26 @@ function groupMatchesByState(results: RankedNeighborhood[]): StateGroup[] {
 
 export function MatchesList({
   results,
-  selectedZip,
+  selectedKey,
   favorites,
   onSelect,
   onToggleFavorite,
   collapsed = false,
   onToggleCollapse,
+  variant = "deck",
 }: MatchesListProps) {
   const stateGroups = groupMatchesByState(results);
+  const rootClass =
+    variant === "deck"
+      ? `match-deck${collapsed ? " match-deck--collapsed" : ""}`
+      : `matches-list${collapsed ? " matches-list--collapsed" : ""}`;
 
   if (collapsed) {
     return (
-      <aside className="matches-list matches-list--collapsed" aria-label="Matches">
+      <aside className={rootClass} aria-label="Matches">
         <button
           type="button"
-          className="matches-list__expand"
+          className="match-deck__expand"
           onClick={onToggleCollapse}
           aria-label="Expand matches"
         >
@@ -75,68 +82,72 @@ export function MatchesList({
   }
 
   return (
-    <aside className="matches-list" aria-label="Ranked matches">
-      <header className="matches-list__header">
-        <div className="matches-list__title-row">
+    <aside className={rootClass} aria-label="Ranked matches">
+      <header className="match-deck__header">
+        <div className="match-deck__title-row">
           <h2>Matches</h2>
-          <span className="matches-list__count">
+          <span className="match-deck__count">
             {results.length} neighborhood{results.length === 1 ? "" : "s"}
           </span>
         </div>
         {onToggleCollapse && (
           <button
             type="button"
-            className="matches-list__collapse"
+            className="match-deck__collapse"
             onClick={onToggleCollapse}
             aria-label="Collapse matches"
           >
-            ›
+            ↓
           </button>
         )}
       </header>
 
-      <div className="matches-list__items">
+      <div className="match-deck__items">
         {stateGroups.map((group) => (
-          <section key={group.state} className="matches-list__group" aria-label={group.label}>
-            <h3 className="matches-list__state">{group.label}</h3>
-            <ol className="matches-list__group-items">
+          <section key={group.state} className="match-deck__group" aria-label={group.label}>
+            <h3 className="match-deck__state">{group.label}</h3>
+            <ol className="match-deck__group-items">
               {group.items.map((r) => {
-                const isSelected = selectedZip === r.zip;
-                const isFavorite = favorites.has(r.zip);
+                const key = matchKey(r);
+                const isSelected = selectedKey === key;
+                const isFavorite = favorites.has(key);
                 const rounded = Math.round(r.matchPercent);
                 return (
-                  <li key={r.zip}>
+                  <li key={key}>
                     <button
                       type="button"
-                      className={`matches-list__row${isSelected ? " matches-list__row--active" : ""}`}
-                      onClick={() => onSelect(r.zip)}
+                      className={`match-deck__row${isSelected ? " match-deck__row--active" : ""}`}
+                      onClick={() => onSelect(key, r)}
                       aria-current={isSelected ? "true" : undefined}
                     >
                       <span
                         role="button"
                         tabIndex={0}
-                        className={`matches-list__heart${isFavorite ? " matches-list__heart--on" : ""}`}
+                        className={`match-deck__heart${isFavorite ? " match-deck__heart--on" : ""}`}
                         aria-label={isFavorite ? "Remove favorite" : "Add favorite"}
                         onClick={(e) => {
                           e.stopPropagation();
-                          onToggleFavorite(r.zip);
+                          onToggleFavorite(key);
                         }}
                         onKeyDown={(e) => {
                           if (e.key === "Enter" || e.key === " ") {
                             e.preventDefault();
                             e.stopPropagation();
-                            onToggleFavorite(r.zip);
+                            onToggleFavorite(key);
                           }
                         }}
                       >
                         {isFavorite ? "♥" : "♡"}
                       </span>
-                      <span className="matches-list__info">
-                        <span className="matches-list__name">{r.name}</span>
-                        <span className="matches-list__zip">
+                      <span className="match-deck__info">
+                        <span className="match-deck__name">{r.name}</span>
+                        <span className="match-deck__zip">
                           {r.zip}
+                          {r.metroName && (
+                            <span className="match-deck__metro"> · {r.metroName}</span>
+                          )}
                           {r.similarityPercent !== undefined && (
-                            <span className="matches-list__similarity">
+                            <span className="match-deck__similarity">
                               {" "}
                               · {Math.round(r.similarityPercent)}% similar
                             </span>
@@ -144,7 +155,7 @@ export function MatchesList({
                         </span>
                       </span>
                       <span
-                        className={`matches-list__badge ${matchTierClass(rounded)}`}
+                        className={`match-deck__badge ${matchTierClass(rounded)}`}
                         aria-label={`${rounded}% match`}
                       >
                         {rounded}%

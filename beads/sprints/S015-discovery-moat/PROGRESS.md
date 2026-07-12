@@ -7,8 +7,12 @@
 - [x] T066 — Partial match % scoring engine *(threshold + Find matches wiring; unit tests pending)*
 - [ ] T067 — Criteria storage v3 *(S014 prerequisite)*
 - [x] T080 — Criterion priority toggles (Heatmap / High Priority / Just This)
-- [x] T078 — State-grouped fly-to matches sidebar
-- [x] T081 — Deep-dive split panel (hero + Criteria vs All Data tabs)
+- [x] T078 — State-grouped fly-to matches sidebar *(Match Deck floating shelf)*
+
+## Phase 1 — WMIL Parity MVP (reactive)
+
+- Reactive criteria matching replaces batch Find matches (WMIL-style)
+- National + metro scope via `/api/v1/discovery/rank`
 
 ## Phase 2 — Discovery v2
 

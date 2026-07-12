@@ -293,6 +293,10 @@ export interface RankedNeighborhood {
   zip: string;
   name: string;
   state: string;
+  /** CBSA for nationwide results — used to drill into metro on match select. */
+  cbsaCode?: string;
+  /** Metro display name when ranked nationally across shards. */
+  metroName?: string;
   /** Weighted criteria match percentage (0–100). Primary discovery rank key. */
   matchPercent: number;
   /** Cosine similarity to pinned example ZIPs (0–100), when By Example mode is active. */
