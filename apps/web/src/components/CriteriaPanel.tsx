@@ -37,6 +37,8 @@ interface CriteriaPanelProps {
   matchCount?: number;
   matchingInFlight?: boolean;
   onApplyArchetype?: (criteria: DiscoveryCriteria) => void;
+  /** Fired when criteria should trigger a rank pass (slider release, add/remove, etc.). */
+  onCriteriaCommit?: () => void;
 }
 
 function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
@@ -71,6 +73,7 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
     matchCount = 0,
     matchingInFlight = false,
     onApplyArchetype,
+    onCriteriaCommit,
   },
   ref,
 ) {
@@ -90,8 +93,13 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
     return { count, total };
   }, [geoJson, criteria]);
 
-  const emitChange = (next: DiscoveryCriteria) => {
+  const emitChange = (next: DiscoveryCriteria, commit = false) => {
     onChange(normalizeCriteria(next));
+    if (commit) onCriteriaCommit?.();
+  };
+
+  const commitChange = (next: DiscoveryCriteria) => {
+    emitChange(next, true);
   };
 
   const updateFilter = (
@@ -117,13 +125,13 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
   };
 
   const removeFilter = (id: string) => {
-    emitChange({
+    commitChange({
       filters: criteria.filters.filter((f) => f.id !== id),
     });
   };
 
   const addCriterion = (metric: DiscoveryFilterMetric) => {
-    emitChange({
+    commitChange({
       filters: [...criteria.filters, createDiscoveryFilter(metric, crypto.randomUUID())],
     });
   };
@@ -258,6 +266,7 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
                       geoJson={geoJson}
                       heatmapActive={filter.heatmapActive}
                       onChange={(patch) => updateFilter(filter.id, patch)}
+                      onChangeEnd={onCriteriaCommit}
                     />
                     <div className="criterion-card__toggles" role="group" aria-label="Criterion controls">
                       <button

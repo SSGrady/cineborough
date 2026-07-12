@@ -1296,8 +1296,13 @@ body {
   right: 0;
 }
 
-.cinematic--discovery.cinematic--deep-dive .cinematic__map {
-  right: var(--deep-dive-rail-width);
+.cinematic--deep-dive.cinematic--discovery .cinematic__map {
+  left: var(--deep-dive-rail-width);
+  right: 0;
+}
+
+.cinematic--deep-dive.cinematic--discovery .criteria-panel {
+  display: none;
 }
 
 .criteria-panel {
@@ -1419,13 +1424,40 @@ body {
 }
 
 .match-deck--collapsed {
-  width: 3rem;
-  height: 3rem;
-  max-height: 3rem;
+  width: auto;
+  min-width: 3rem;
+  height: auto;
+  min-height: 3rem;
+  max-height: none;
   border-radius: 999px;
   align-items: center;
   justify-content: center;
-  padding: 0;
+  padding: 0.5rem 1rem;
+}
+
+.match-deck__expand--pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 0.25rem 0.125rem;
+}
+
+.match-deck__expand-label {
+  font-variant-numeric: tabular-nums;
+}
+
+.match-deck__compare {
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--discovery-rail-border);
+  overflow-x: auto;
+}
+
+.match-deck__compare .compare-chips {
+  flex-wrap: nowrap;
 }
 
 .match-deck__expand {
@@ -2333,14 +2365,15 @@ body {
 .deep-dive {
   position: fixed;
   top: var(--stack-offset);
-  right: 0;
+  left: 0;
+  right: auto;
   bottom: 0;
   width: var(--deep-dive-rail-width);
   z-index: 32;
   display: flex;
   flex-direction: column;
   background: var(--discovery-rail-bg);
-  border-left: 1px solid var(--discovery-rail-border);
+  border-right: 1px solid var(--discovery-rail-border);
   color: var(--discovery-rail-text);
   overflow: hidden;
 }

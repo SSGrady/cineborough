@@ -36,3 +36,4 @@
 - ADR-015 + `docs/specifications/discovery-moat-roadmap.md` locked
 - Epic E009 depends on E008 S014 shell (T068/T069/T073/T077 done)
 - T070/T071/T072/T075/T076 scopes carried into T080/T081/T088/T089/T090
+- 2026-07-12: Camera loop trap fixed; progressive match deck layout; national rank funnel + cache

@@ -3,6 +3,7 @@
 import type { RankedNeighborhood } from "@cineborough/data";
 import { formatUsStateHeading } from "@/lib/us-state-names";
 import { matchKey } from "@/lib/match-keys";
+import { CompareChips } from "./CompareChips";
 
 interface MatchesListProps {
   results: RankedNeighborhood[];
@@ -13,6 +14,11 @@ interface MatchesListProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   variant?: "rail" | "deck";
+  comparePinned?: RankedNeighborhood[];
+  compareActiveZip?: string | null;
+  onCompareSelect?: (zip: string) => void;
+  onCompareRemove?: (zip: string) => void;
+  onCompareReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 interface StateGroup {
@@ -59,6 +65,11 @@ export function MatchesList({
   collapsed = false,
   onToggleCollapse,
   variant = "deck",
+  comparePinned = [],
+  compareActiveZip = null,
+  onCompareSelect,
+  onCompareRemove,
+  onCompareReorder,
 }: MatchesListProps) {
   const stateGroups = groupMatchesByState(results);
   const rootClass =
@@ -71,11 +82,14 @@ export function MatchesList({
       <aside className={rootClass} aria-label="Matches">
         <button
           type="button"
-          className="match-deck__expand"
+          className="match-deck__expand match-deck__expand--pill"
           onClick={onToggleCollapse}
-          aria-label="Expand matches"
+          aria-label={`${results.length} matches found — expand list`}
         >
-          {results.length}
+          <span aria-hidden="true">🍿</span>
+          <span className="match-deck__expand-label">
+            {results.length} Match{results.length === 1 ? "" : "es"} Found
+          </span>
         </button>
       </aside>
     );
@@ -101,6 +115,18 @@ export function MatchesList({
           </button>
         )}
       </header>
+
+      {comparePinned.length > 0 && onCompareSelect && onCompareRemove && onCompareReorder && (
+        <div className="match-deck__compare">
+          <CompareChips
+            pinned={comparePinned}
+            activeZip={compareActiveZip}
+            onSelect={onCompareSelect}
+            onRemove={onCompareRemove}
+            onReorder={onCompareReorder}
+          />
+        </div>
+      )}
 
       <div className="match-deck__items">
         {stateGroups.map((group) => (

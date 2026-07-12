@@ -27,6 +27,7 @@ export async function fetchDiscoveryRank(
     cbsaCode?: string;
     topN?: number;
     signal?: AbortSignal;
+    viewportBounds?: [[number, number], [number, number]];
   },
 ): Promise<DiscoveryRankResponse> {
   const res = await fetch("/api/v1/discovery/rank", {
@@ -37,6 +38,7 @@ export async function fetchDiscoveryRank(
       topN: options?.topN,
       cbsaCode: options?.cbsaCode,
       scope: options?.scope ?? (options?.cbsaCode ? "metro" : "national"),
+      viewportBounds: options?.viewportBounds,
     }),
     signal: options?.signal,
   });

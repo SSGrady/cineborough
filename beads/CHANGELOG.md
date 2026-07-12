@@ -6,6 +6,12 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### Discovery UX — camera trap fix, progressive layout, national rank perf
+
+- Camera: explicit one-shot `flyTo` on match/select; `cameraLockedByUser` stops snap-back after pan
+- Layout: criteria + edge-to-edge map by default; collapsed 🍿 match pill; compare chips in match deck header; deep-dive left rail
+- National rank: slider commit debounce (350ms), metro catalog funnel (max 50 metros), viewport bbox filter, 30s API cache
+
 ### Reactive matching + national rank API (T066/T078)
 
 - Server-only nationwide scoring at `apps/web/src/lib/server/nationwide-discovery-rank.ts`

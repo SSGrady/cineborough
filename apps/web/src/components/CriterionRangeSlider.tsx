@@ -18,6 +18,8 @@ interface CriterionRangeSliderProps {
   geoJson: DcMetroGeoJson | null;
   heatmapActive?: boolean;
   onChange: (patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => void;
+  /** Fired when the user releases a slider thumb or commits a histogram pick. */
+  onChangeEnd?: () => void;
 }
 
 function formatValue(metric: DiscoveryFilterMetric, value: number): string {
@@ -50,6 +52,7 @@ export function CriterionRangeSlider({
   geoJson,
   heatmapActive = false,
   onChange,
+  onChangeEnd,
 }: CriterionRangeSliderProps) {
   const [hoveredBin, setHoveredBin] = useState<number | null>(null);
   const [activeThumb, setActiveThumb] = useState<"min" | "max" | null>(null);
@@ -117,6 +120,12 @@ export function CriterionRangeSlider({
 
   const handleBinPointer = (bin: HistogramBin, shiftKey: boolean) => {
     applyBinRange(bin, shiftKey ? "extend-max" : "set");
+    onChangeEnd?.();
+  };
+
+  const handleThumbRelease = () => {
+    setActiveThumb(null);
+    onChangeEnd?.();
   };
 
   return (
@@ -177,8 +186,8 @@ export function CriterionRangeSlider({
           value={currentMin}
           aria-label={`${getDiscoveryMetricLabel(filter.metric)} minimum`}
           onPointerDown={() => setActiveThumb("min")}
-          onPointerUp={() => setActiveThumb(null)}
-          onBlur={() => setActiveThumb(null)}
+          onPointerUp={handleThumbRelease}
+          onBlur={handleThumbRelease}
           onChange={(e) => handleMinChange(Number(e.target.value))}
         />
         <input
@@ -190,8 +199,8 @@ export function CriterionRangeSlider({
           value={currentMax}
           aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
           onPointerDown={() => setActiveThumb("max")}
-          onPointerUp={() => setActiveThumb(null)}
-          onBlur={() => setActiveThumb(null)}
+          onPointerUp={handleThumbRelease}
+          onBlur={handleThumbRelease}
           onChange={(e) => handleMaxChange(Number(e.target.value))}
         />
         <div className="criterion-range__labels">

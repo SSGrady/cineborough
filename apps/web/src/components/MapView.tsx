@@ -70,6 +70,8 @@ interface MapViewProps {
   onUserMapMove?: () => void;
   /** Retains continental overview center/zoom for cinematic exit restore */
   onOverviewCameraCapture?: (camera: MapCameraTarget) => void;
+  /** Current map bounds for geographic ranking funnel (overview / discovery). */
+  onViewportBoundsChange?: (bounds: [[number, number], [number, number]]) => void;
   mapBounds?: [[number, number], [number, number]] | null;
   geographyLevel?: GeographyLevel;
   /** Flat continental overview — national/state/metro/county tabs */
@@ -339,6 +341,7 @@ export function MapView({
   onToggleExploreMode,
   onUserMapMove,
   onOverviewCameraCapture,
+  onViewportBoundsChange,
   mapBounds = US_CONTINENTAL_BOUNDS,
   geographyLevel = "metro",
   overviewMode = false,
@@ -362,16 +365,20 @@ export function MapView({
   const lastCameraKeyRef = useRef<string | null>(null);
   const programmaticMoveRef = useRef(false);
   const exploreModeRef = useRef(exploreMode);
+  const overviewModeRef = useRef(overviewMode);
   const onUserMapMoveRef = useRef(onUserMapMove);
   const onOverviewCameraCaptureRef = useRef(onOverviewCameraCapture);
+  const onViewportBoundsChangeRef = useRef(onViewportBoundsChange);
   const [mapReady, setMapReady] = useState(false);
   const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
   const [hoveredZip, setHoveredZip] = useState<string | null>(null);
 
   exploreModeRef.current = exploreMode;
+  overviewModeRef.current = overviewMode;
   onUserMapMoveRef.current = onUserMapMove;
   onOverviewCameraCaptureRef.current = onOverviewCameraCapture;
+  onViewportBoundsChangeRef.current = onViewportBoundsChange;
 
   const isOverviewView = overviewMode;
   const cameraTargetKey = cameraTarget ? cameraKey(cameraTarget) : null;
@@ -1006,6 +1013,15 @@ export function MapView({
     const onUserGestureEnd = () => {
       if (!programmaticMoveRef.current && onUserMapMoveRef.current) {
         onUserMapMoveRef.current();
+      }
+      if (overviewModeRef.current && onViewportBoundsChangeRef.current) {
+        const bounds = map.getBounds();
+        if (bounds) {
+          onViewportBoundsChangeRef.current([
+            [bounds.getWest(), bounds.getSouth()],
+            [bounds.getEast(), bounds.getNorth()],
+          ]);
+        }
       }
     };
 
