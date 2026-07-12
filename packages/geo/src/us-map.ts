@@ -54,10 +54,22 @@ export const SF_BAY_METRO_CAMERA: MapCameraTarget = {
   duration: 800,
 };
 
+/** San Jose-Sunnyvale-Santa Clara sandbox shard */
+export const SAN_JOSE_METRO_CENTER: [number, number] = [-121.95, 37.35];
+
+export const SAN_JOSE_METRO_CAMERA: MapCameraTarget = {
+  center: SAN_JOSE_METRO_CENTER,
+  zoom: 10.4,
+  pitch: 0,
+  bearing: 0,
+  duration: 800,
+};
+
 /** Flat overview cameras for non-DC sandbox metros (CBSA → camera) */
 export const SANDBOX_METRO_CAMERAS: Record<string, MapCameraTarget> = {
   "36740": ORLANDO_METRO_CAMERA,
   "41860": SF_BAY_METRO_CAMERA,
+  "41940": SAN_JOSE_METRO_CAMERA,
 };
 
 /** Padding-aware fit for sidebar + header — used by MapView at national scale */

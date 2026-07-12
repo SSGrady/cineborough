@@ -44,6 +44,26 @@ export const SF_BAY_SANDBOX_ZIPS = [
   "94549",
 ] as const;
 
+/** San Jose-Sunnyvale-Santa Clara metro sandbox ZIPs */
+export const SAN_JOSE_SANDBOX_ZIPS = [
+  "95110",
+  "95112",
+  "95116",
+  "95125",
+  "95126",
+  "95128",
+  "95129",
+  "94086",
+  "95050",
+  "94301",
+  "94306",
+  "94040",
+  "95014",
+  "95008",
+  "95030",
+  "95035",
+] as const;
+
 /** Orlando metro sandbox ZIPs */
 export const ORLANDO_SANDBOX_ZIPS = [
   "32801",
@@ -69,6 +89,7 @@ export const ALL_SANDBOX_ZIPS = [
   ...SANDBOX_ZIPS,
   ...ORLANDO_SANDBOX_ZIPS,
   ...SF_BAY_SANDBOX_ZIPS,
+  ...SAN_JOSE_SANDBOX_ZIPS,
 ] as const;
 
 function isFiniteNumber(value: unknown): value is number {

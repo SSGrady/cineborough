@@ -9,10 +9,11 @@
 - [x] T053 — Unified tour chrome (`cinematicTourActive`, `cinematic--tour`, analytics CSS entrance)
 - [x] T054 — Orlando SunRail + Lake Eola trail mock paths
 - [x] T056 — SF Bay BART + park trail paths, amenity POIs, live ingest overlay
+- [x] T057 — San Jose VTA/Caltrain/trail paths, amenity POIs, live ingest overlay
 
 ## Remaining
 
-- [ ] T055 — Manual QA DC + Orlando + SF Bay discovery tour end-to-end
+- [ ] T055 — Manual QA DC + Orlando + SF Bay + San Jose discovery tour end-to-end
 
 ## Notes
 

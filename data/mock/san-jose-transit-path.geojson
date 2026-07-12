@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "VTA Light Rail First Street corridor",
+        "type": "transit",
+        "zip": "95110"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-121.894, 37.338],
+          [-121.889, 37.341],
+          [-121.884, 37.344],
+          [-121.879, 37.347],
+          [-121.874, 37.35]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Caltrain Palo Alto corridor",
+        "type": "transit",
+        "zip": "94301"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.148, 37.444],
+          [-122.143, 37.441],
+          [-122.138, 37.438],
+          [-122.133, 37.435]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Los Gatos Creek trail",
+        "type": "trail",
+        "zip": "95030"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-121.982, 37.228],
+          [-121.978, 37.232],
+          [-121.974, 37.236],
+          [-121.97, 37.24],
+          [-121.982, 37.228]
+        ]
+      }
+    }
+  ]
+}

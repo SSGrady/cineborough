@@ -175,3 +175,28 @@ Aggregated progress log for Cineborough development.
 - Discovery guidance copy includes SF Bay sandbox
 
 **Status:** T056 → `done`. T055 QA scope expanded to DC + Orlando + SF Bay.
+
+### E007 / S008 — San Jose metro sandbox (T057)
+
+- Added CBSA **41940** (San Jose-Sunnyvale-Santa Clara) with **16** sandbox ZIPs
+- TIGER ZCTA boundaries, mock metrics, locale quotes, and `data/metros/41940.geojson` shard
+- Live ingest overlay: ACS + ZHVI + FHFA (direct 41940) + Redfin for **68** total sandbox ZIPs
+- FHFA direct CBSA 41940; ZHVI regionId 395059
+
+### E002 / S011 — San Jose cinematic paths + amenities (T057)
+
+- `data/mock/san-jose-transit-path.geojson` — VTA Light Rail, Caltrain Palo Alto, Los Gatos Creek trail
+- 48 amenity POIs for San Jose ZIPs in `sandbox-amenities.geojson`
+- `CinematicDiscovery` + `SANDBOX_METRO_CAMERAS` wired for San Jose drill-in
+
+**Status:** T057 → `done`. T055 QA scope expanded to DC + Orlando + SF Bay + San Jose.
+
+### E007 / S008 — San Jose metro sandbox (T057)
+
+- Added CBSA **41940** (San Jose-Sunnyvale-Santa Clara) with **16** sandbox ZIPs
+- TIGER ZCTA boundaries, mock metrics/quotes, live ACS + ZHVI + FHFA + Redfin overlay
+- `data/metros/41940.geojson` shard; `SANDBOX_METRO_CAMERAS` + `CinematicDiscovery` wired
+- VTA Light Rail, Caltrain Palo Alto, Los Gatos Creek trail paths + 48 amenity POIs
+- Re-ran ingest for **68** total sandbox ZIPs
+
+**Status:** T057 → `done`. T055 QA scope expanded to include San Jose.

@@ -14,6 +14,7 @@ import {
   DC_METRO_CBSA,
   ORLANDO_METRO_CBSA,
   SF_METRO_CBSA,
+  SAN_JOSE_METRO_CBSA,
   loadMetroShard,
   fetchMetroShard,
   sandboxCbsaForZip,
@@ -106,7 +107,7 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   county: "County view · state aggregates (county GeoJSON pending)",
 };
 
-const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA]);
+const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
 
 type DiscoveryFlyoverPhase = "flying" | "highlight";
 
@@ -357,7 +358,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         if (
           regionId === DC_METRO_CBSA ||
           regionId === ORLANDO_METRO_CBSA ||
-          regionId === SF_METRO_CBSA
+          regionId === SF_METRO_CBSA ||
+          regionId === SAN_JOSE_METRO_CBSA
         ) {
           setActiveSandboxCbsa(regionId);
           setSandboxDrillActive(true);
@@ -628,7 +630,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     prevFlyoverRef.current = false;
 
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
-      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, or SF Bay) first");
+      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, SF Bay, or San Jose) first");
       return;
     }
 
@@ -832,7 +834,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: "Discovery",
         title: discoveryMessage,
-        detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay)",
+        detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay, San Jose)",
         canOpen: true,
         action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
       };
@@ -968,7 +970,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           <p>
             {overviewFeatureCount} metros with live home values ·{" "}
             {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"} layer.
-            Click Washington-Arlington-Alexandria or Orlando to open ZIP sandbox detail.
+            Click Washington-Arlington-Alexandria, Orlando, SF Bay, or San Jose to open ZIP sandbox detail.
           </p>
         </>
       );

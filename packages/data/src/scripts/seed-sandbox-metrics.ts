@@ -6,7 +6,7 @@
 import { writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { SANDBOX_ZIPS, ORLANDO_SANDBOX_ZIPS, SF_BAY_SANDBOX_ZIPS } from "../validation.ts";
+import { SANDBOX_ZIPS, ORLANDO_SANDBOX_ZIPS, SF_BAY_SANDBOX_ZIPS, SAN_JOSE_SANDBOX_ZIPS } from "../validation.ts";
 import type { ZipMetricsInput } from "../validation.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -59,6 +59,25 @@ const SF_BAY_SEEDS: ZipSeed[] = [
   { zip: "94596", name: "Walnut Creek", state: "CA", tier: "premium" },
   { zip: "94520", name: "Concord", state: "CA", tier: "mid" },
   { zip: "94549", name: "Lafayette", state: "CA", tier: "premium" },
+];
+
+const SAN_JOSE_SEEDS: ZipSeed[] = [
+  { zip: "95110", name: "San Jose (Downtown)", state: "CA", tier: "premium" },
+  { zip: "95112", name: "San Jose (Japantown)", state: "CA", tier: "mid" },
+  { zip: "95116", name: "San Jose (East San Jose)", state: "CA", tier: "value" },
+  { zip: "95125", name: "San Jose (Willow Glen)", state: "CA", tier: "premium" },
+  { zip: "95126", name: "San Jose (Rose Garden)", state: "CA", tier: "premium" },
+  { zip: "95128", name: "San Jose (Burbank)", state: "CA", tier: "mid" },
+  { zip: "95129", name: "San Jose (West San Jose)", state: "CA", tier: "premium" },
+  { zip: "94086", name: "Sunnyvale (Downtown)", state: "CA", tier: "premium" },
+  { zip: "95050", name: "Santa Clara (Central)", state: "CA", tier: "mid" },
+  { zip: "94301", name: "Palo Alto (Downtown)", state: "CA", tier: "premium" },
+  { zip: "94306", name: "Palo Alto (South)", state: "CA", tier: "premium" },
+  { zip: "94040", name: "Mountain View (Downtown)", state: "CA", tier: "premium" },
+  { zip: "95014", name: "Cupertino", state: "CA", tier: "premium" },
+  { zip: "95008", name: "Campbell", state: "CA", tier: "mid" },
+  { zip: "95030", name: "Los Gatos", state: "CA", tier: "premium" },
+  { zip: "95035", name: "Milpitas", state: "CA", tier: "mid" },
 ];
 
 const ORLANDO_SEEDS: ZipSeed[] = [
@@ -175,6 +194,7 @@ function assertSeeds(seeds: ZipSeed[], expected: readonly string[]) {
 assertSeeds(DC_SEEDS, SANDBOX_ZIPS);
 assertSeeds(ORLANDO_SEEDS, ORLANDO_SANDBOX_ZIPS);
 assertSeeds(SF_BAY_SEEDS, SF_BAY_SANDBOX_ZIPS);
+assertSeeds(SAN_JOSE_SEEDS, SAN_JOSE_SANDBOX_ZIPS);
 
 const dcCollection = {
   metro: "Washington-Arlington-Alexandria MSA",
@@ -196,9 +216,17 @@ const sfBayCollection = {
   zips: SF_BAY_SEEDS.map(buildZip),
 };
 
+const sanJoseCollection = {
+  metro: "San Jose-Sunnyvale-Santa Clara MSA",
+  cbsaCode: "41940",
+  updatedAt: "2026-07-11",
+  zips: SAN_JOSE_SEEDS.map(buildZip),
+};
+
 writeFileSync(resolve(MOCK_DIR, "zip-metrics.json"), `${JSON.stringify(dcCollection, null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "orlando-zip-metrics.json"), `${JSON.stringify(orlandoCollection, null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "sf-bay-zip-metrics.json"), `${JSON.stringify(sfBayCollection, null, 2)}\n`, "utf8");
+writeFileSync(resolve(MOCK_DIR, "san-jose-zip-metrics.json"), `${JSON.stringify(sanJoseCollection, null, 2)}\n`, "utf8");
 
 function buildQuotes(seeds: ZipSeed[], source: string) {
   return {
@@ -215,7 +243,9 @@ function buildQuotes(seeds: ZipSeed[], source: string) {
 writeFileSync(resolve(MOCK_DIR, "locale-quotes.json"), `${JSON.stringify(buildQuotes(DC_SEEDS, "r/washingtondc"), null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "orlando-locale-quotes.json"), `${JSON.stringify(buildQuotes(ORLANDO_SEEDS, "r/orlando"), null, 2)}\n`, "utf8");
 writeFileSync(resolve(MOCK_DIR, "sf-bay-locale-quotes.json"), `${JSON.stringify(buildQuotes(SF_BAY_SEEDS, "r/sanfrancisco"), null, 2)}\n`, "utf8");
+writeFileSync(resolve(MOCK_DIR, "san-jose-locale-quotes.json"), `${JSON.stringify(buildQuotes(SAN_JOSE_SEEDS, "r/SanJose"), null, 2)}\n`, "utf8");
 
 console.info(`Wrote zip-metrics.json (${dcCollection.zips.length} ZIPs)`);
 console.info(`Wrote orlando-zip-metrics.json (${orlandoCollection.zips.length} ZIPs)`);
 console.info(`Wrote sf-bay-zip-metrics.json (${sfBayCollection.zips.length} ZIPs)`);
+console.info(`Wrote san-jose-zip-metrics.json (${sanJoseCollection.zips.length} ZIPs)`);
