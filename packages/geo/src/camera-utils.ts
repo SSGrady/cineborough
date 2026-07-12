@@ -115,6 +115,48 @@ export function centroidFromRing(ring: LngLat[]): LngLat | null {
   return [sumLng / n, sumLat / n];
 }
 
+export type GeoBounds = [[number, number], [number, number]];
+
+/** Axis-aligned bounding box for polygon / multipolygon geometries. */
+export function boundsFromGeoJsonGeometry(geometry: {
+  type: string;
+  coordinates: unknown;
+}): GeoBounds | null {
+  let minLng = Infinity;
+  let minLat = Infinity;
+  let maxLng = -Infinity;
+  let maxLat = -Infinity;
+
+  const consider = (lng: number, lat: number) => {
+    if (!Number.isFinite(lng) || !Number.isFinite(lat)) return;
+    minLng = Math.min(minLng, lng);
+    maxLng = Math.max(maxLng, lng);
+    minLat = Math.min(minLat, lat);
+    maxLat = Math.max(maxLat, lat);
+  };
+
+  const processRing = (ring: LngLat[]) => {
+    for (const coord of ring) {
+      if (isFiniteLngLat(coord)) consider(coord[0], coord[1]);
+    }
+  };
+
+  if (geometry.type === "Polygon") {
+    const rings = geometry.coordinates as LngLat[][];
+    for (const ring of rings) processRing(ring);
+  } else if (geometry.type === "MultiPolygon") {
+    const polygons = geometry.coordinates as LngLat[][][];
+    for (const polygon of polygons) {
+      for (const ring of polygon) processRing(ring);
+    }
+  } else {
+    return null;
+  }
+
+  if (!Number.isFinite(minLng)) return null;
+  return [[minLng, minLat], [maxLng, maxLat]];
+}
+
 export function centroidFromGeoJsonGeometry(geometry: {
   type: string;
   coordinates: unknown;

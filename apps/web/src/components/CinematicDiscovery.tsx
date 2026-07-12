@@ -39,6 +39,7 @@ import {
   isOverviewGeography,
   buildOverviewRestoreCamera,
   buildSandboxFlatRestore,
+  boundsFromGeoJsonGeometry,
   centroidFromGeoJsonGeometry,
   isFiniteLngLat,
   isValidCameraTarget,
@@ -134,9 +135,9 @@ const SANDBOX_SHARDS_GEOJSON = loadMetroShardsGeoJson();
 const SEARCH_INDEX = buildSearchIndex(US_METROS_GEOJSON);
 
 const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
-  national: "Continental US · click a metro to drill in",
-  state: "State view · metric label per state",
-  metro: "All metros · green outline = ingested · click to select",
+  national: "Continental US · read-only overview",
+  state: "State view · click a state to zoom to its metros",
+  metro: "All metros · click to open Your criteria",
   county: "County view · national counties · click sandbox county to drill in",
 };
 
@@ -264,9 +265,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [metroCameras, setMetroCameras] = useState<Record<string, MapCameraTarget>>({});
   const [selectedOverviewMetro, setSelectedOverviewMetro] = useState<string | null>(null);
   const [selectedMetroCamera, setSelectedMetroCamera] = useState<MapCameraTarget | null>(null);
+  const [metroStateFilter, setMetroStateFilter] = useState<string | null>(null);
+  const [stateFitBounds, setStateFitBounds] = useState<{
+    bounds: [[number, number], [number, number]];
+    token: number;
+  } | null>(null);
   const [exploreCityLoading, setExploreCityLoading] = useState(false);
   const loadingShardsRef = useRef<Set<string>>(new Set());
   const discoveryActivatedRef = useRef<string | null>(null);
+  const overviewMetroToCriteriaRef = useRef<(cbsa: string) => void>(() => {});
 
   const discoveryFlyoverActive = discoveryFlyover !== null;
 
@@ -380,8 +387,16 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (geography === "county") {
       return buildCountyChoropleth(US_METROS_GEOJSON, SANDBOX_SHARDS_GEOJSON, activeMetric);
     }
+    if (metroStateFilter) {
+      return {
+        ...US_METROS_GEOJSON,
+        features: US_METROS_GEOJSON.features.filter(
+          (f) => f.properties.state?.trim() === metroStateFilter,
+        ),
+      };
+    }
     return US_METROS_GEOJSON;
-  }, [geography, activeMetric]);
+  }, [geography, activeMetric, metroStateFilter]);
 
   const activeGeoJson = useMemo(
     () => (isOverviewMode ? overviewGeoJson : activeShardGeoJson),
@@ -522,6 +537,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSearchFlyTarget(null);
       setSelectedOverviewMetro(null);
       setSelectedMetroCamera(null);
+      setMetroStateFilter(null);
+      setStateFitBounds(null);
       setSelectedZip(null);
       setSelectedPropertyId(null);
       setDiscoveryFlyover(null);
@@ -617,6 +634,29 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSelectedMetroCamera(null);
   }, []);
 
+  const handleStateSelect = useCallback(
+    (stateAbbr: string) => {
+      const stateFeature = buildStateChoroplethFromMetros(
+        US_METROS_GEOJSON,
+        activeMetric,
+      ).features.find((f) => f.properties.zipCode === stateAbbr);
+      if (!stateFeature) return;
+
+      const bounds = boundsFromGeoJsonGeometry(stateFeature.geometry);
+      if (bounds) {
+        setStateFitBounds({ bounds, token: Date.now() });
+      }
+
+      setMetroStateFilter(stateAbbr);
+      setSelectedOverviewMetro(null);
+      setSelectedMetroCamera(null);
+      setSearchFlyTarget(null);
+      setExitRestoreTarget(null);
+      setGeography("metro");
+    },
+    [activeMetric],
+  );
+
   const handleZipSelect = useCallback(
     (regionId: string | null) => {
       if (!regionId) {
@@ -642,6 +682,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           setSelectedZip(null);
           setSelectedPropertyId(null);
           setUsInsetRegion("continental");
+          return;
+        }
+
+        if (geography === "metro" && !criteriaPanelOpen) {
+          overviewMetroToCriteriaRef.current(regionId);
           return;
         }
 
@@ -681,7 +726,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setStoryCameraActive(true);
       setScrollProgress(1);
     },
-    [isOverviewMode, sandboxDrillActive, ingestedCbsas],
+    [
+      isOverviewMode,
+      geography,
+      criteriaPanelOpen,
+      sandboxDrillActive,
+      ingestedCbsas,
+    ],
   );
 
   const handleSearchSelect = useCallback(
@@ -742,6 +793,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (isOverviewMode) {
       setSelectedOverviewMetro(null);
       setSelectedMetroCamera(null);
+      setMetroStateFilter(null);
       setExitRestoreTarget(
         buildOverviewRestoreCamera(savedOverviewCameraRef.current, usInsetRegion),
       );
@@ -1131,6 +1183,30 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     },
     [activeShardGeoJson, discoveryCriteria, exampleZips],
   );
+
+  overviewMetroToCriteriaRef.current = (cbsa: string) => {
+    if (!isDiscoveryMetro(cbsa, ingestedCbsas)) {
+      setDiscoveryMessage("Metro data unavailable — try another metro");
+      return;
+    }
+
+    setExploreCityLoading(true);
+    void drillIntoDiscoveryMetro(cbsa)
+      .then((shard) => {
+        if (!shard) {
+          setDiscoveryMessage("Metro data unavailable — try another metro");
+          return;
+        }
+        enterDiscoveryMetro({
+          openDeepDive: false,
+          markTourComplete: false,
+          geoJson: shard,
+        });
+      })
+      .finally(() => {
+        setExploreCityLoading(false);
+      });
+  };
 
   const handleOpenCriteria = useCallback(() => {
     setCriteriaPanelOpen(true);
@@ -1900,6 +1976,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             labelHighlightZip={labelHighlightZip}
             ingestedCbsas={ingestedCbsas}
             criteriaMode={criteriaGeographyRestricted}
+            onStateSelect={handleStateSelect}
+            fitBoundsTarget={stateFitBounds}
           />
           {showExploreCityBar && selectedOverviewMetroFeature && (
             <ExploreCityBar

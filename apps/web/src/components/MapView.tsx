@@ -94,6 +94,10 @@ interface MapViewProps {
   ingestedCbsas?: ReadonlySet<string>;
   /** Criteria/discovery mode — metric-matched hover highlight on polygons */
   criteriaMode?: boolean;
+  /** State overview click — fit bounds and switch to metro tab */
+  onStateSelect?: (stateAbbr: string) => void;
+  /** One-shot fitBounds trigger (e.g. state click) */
+  fitBoundsTarget?: { bounds: [[number, number], [number, number]]; token: number } | null;
 }
 
 const CRITERIA_HOVER_FILL_ALPHA = 200;
@@ -349,6 +353,8 @@ export function MapView({
   labelHighlightZip = null,
   ingestedCbsas,
   criteriaMode = false,
+  onStateSelect,
+  fitBoundsTarget = null,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -385,14 +391,25 @@ export function MapView({
   const isStateGeography = overviewMode && geographyLevel === "state";
   const isCountyGeography = overviewMode && geographyLevel === "county";
 
-  /** Metric-matched hover in criteria/discovery — metro, county, and drilled ZIP; not during flyover/story. */
-  const criteriaHoverActive =
-    criteriaMode &&
+  /**
+   * Metric-matched hover — criteria/discovery and data-layers overview (metro/state/county/zip).
+   * Off for national tab and during flyover/story.
+   */
+  const choroplethHoverActive =
     !cinematicTourActive &&
-    (geographyLevel === "metro" ||
-      geographyLevel === "county" ||
-      geographyLevel === "zip" ||
-      !isOverviewView);
+    geographyLevel !== "national" &&
+    (criteriaMode ||
+      (isOverviewView &&
+        (geographyLevel === "metro" ||
+          geographyLevel === "state" ||
+          geographyLevel === "county" ||
+          geographyLevel === "zip")));
+
+  useEffect(() => {
+    if (!choroplethHoverActive) {
+      setHoveredZip(null);
+    }
+  }, [choroplethHoverActive]);
 
   const choroplethSpec = useMemo(
     () => getChoroplethSpecFromGeoJson(geoJson, activeMetric),
@@ -483,7 +500,7 @@ export function MapView({
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
-        const isHovered = criteriaHoverActive && zip === hoveredZip;
+        const isHovered = choroplethHoverActive && zip === hoveredZip;
         if (isHovered) {
           const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
           const [r, g, b] = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
@@ -513,7 +530,7 @@ export function MapView({
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        const isHovered = criteriaHoverActive && zip === hoveredZip;
+        const isHovered = choroplethHoverActive && zip === hoveredZip;
         if (isHovered) {
           const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
           const base = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
@@ -530,7 +547,7 @@ export function MapView({
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        const isHovered = criteriaHoverActive && zip === hoveredZip;
+        const isHovered = choroplethHoverActive && zip === hoveredZip;
         if (isHovered) return 2;
         if (zip === selectedZip) return 1.25;
         if (isNationalGeography) return 0.5;
@@ -540,12 +557,12 @@ export function MapView({
       lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
       lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
-        getFillColor: [choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, criteriaHoverActive, hoveredZip],
-        getLineColor: [choroplethRgbByFeatureId, selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaHoverActive, hoveredZip],
-        getLineWidth: [selectedZip, isOverviewView, geographyLevel, criteriaHoverActive, hoveredZip],
+        getFillColor: [choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, choroplethHoverActive, hoveredZip],
+        getLineColor: [choroplethRgbByFeatureId, selectedZip, isOverviewView, geographyLevel, ingestedCbsas, choroplethHoverActive, hoveredZip],
+        getLineWidth: [selectedZip, isOverviewView, geographyLevel, choroplethHoverActive, hoveredZip],
       },
     });
-  }, [geoJson, choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaHoverActive, hoveredZip]);
+  }, [geoJson, choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, choroplethHoverActive, hoveredZip]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
@@ -851,10 +868,18 @@ export function MapView({
     return stack;
   }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, google3DTilesLayer, pathLayer, amenityLayers, labelLayers, pathVisible]);
 
-  const handleHover = useCallback((info: PickingInfo) => {
-    const zip = (info.object?.properties as { zipCode?: string } | undefined)?.zipCode ?? null;
-    setHoveredZip(zip);
-  }, []);
+  const handleHover = useCallback(
+    (info: PickingInfo) => {
+      if (!choroplethHoverActive) {
+        setHoveredZip(null);
+        return;
+      }
+      const zip =
+        (info.object?.properties as { zipCode?: string } | undefined)?.zipCode ?? null;
+      setHoveredZip(zip);
+    },
+    [choroplethHoverActive],
+  );
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -870,8 +895,12 @@ export function MapView({
         onBackgroundClick?.();
         return;
       }
-      if (isOverviewView && (geographyLevel === "state" || geographyLevel === "county")) {
-        if (geographyLevel === "county" && sandboxCbsaForCounty(zip)) {
+      if (isOverviewView && geographyLevel === "state") {
+        onStateSelect?.(zip);
+        return;
+      }
+      if (isOverviewView && geographyLevel === "county") {
+        if (sandboxCbsaForCounty(zip)) {
           onZipSelect?.(zip);
         }
         return;
@@ -904,7 +933,7 @@ export function MapView({
         programmaticMoveRef,
       );
     },
-    [onZipSelect, onBackgroundClick, cinematicOnSelect, isOverviewView, geographyLevel, geoJson],
+    [onZipSelect, onStateSelect, onBackgroundClick, cinematicOnSelect, isOverviewView, geographyLevel, geoJson],
   );
 
   const syncOverlay = useCallback(() => {
@@ -1042,6 +1071,7 @@ export function MapView({
   }, [exploreMode, mapReady, applyInteractionMode]);
 
   const prevNationalFitRef = useRef(false);
+  const prevFitBoundsTokenRef = useRef<number | null>(null);
 
   const captureOverviewCamera = useCallback((map: mapboxgl.Map) => {
     if (!overviewMode || exploreModeRef.current) return;
@@ -1059,6 +1089,22 @@ export function MapView({
       bearing: 0,
     });
   }, [overviewMode]);
+
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || exploreMode || !fitBoundsTarget) return;
+    if (prevFitBoundsTokenRef.current === fitBoundsTarget.token) return;
+    prevFitBoundsTokenRef.current = fitBoundsTarget.token;
+
+    programmaticMoveRef.current = true;
+    map.fitBounds(fitBoundsTarget.bounds, {
+      padding: US_NATIONAL_FIT_PADDING,
+      pitch: 0,
+      bearing: 0,
+      duration: 800,
+    });
+    map.once("moveend", () => captureOverviewCamera(map));
+  }, [fitBoundsTarget, mapReady, exploreMode, captureOverviewCamera]);
 
   useEffect(() => {
     const map = mapRef.current;
