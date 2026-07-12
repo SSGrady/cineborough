@@ -567,6 +567,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setDiscoveryShellActive(false);
         setDiscoveryResults(null);
         setDiscoveryScope(null);
+      } else {
+        // Criteria stay open — drop cached rank so scope change re-runs matching.
+        lastRankedHashRef.current = null;
       }
 
       setSearchFlyTarget(null);
@@ -876,11 +879,16 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const discoveryShellVisible = criteriaPanelOpen;
   const criteriaPanelVisible = criteriaPanelOpen && !deepDiveOpen;
   const criteriaGeographyRestricted = criteriaPanelOpen;
+  const displayMatchResults = useMemo(() => {
+    if (!discoveryResults?.length) return [];
+    return dedupeRankedMatchesByDisplayName(discoveryResults);
+  }, [discoveryResults]);
+
   const showMatchDeckPill =
-    criteriaPanelOpen && Boolean(discoveryResults?.length) && !deepDiveOpen;
+    criteriaPanelOpen && displayMatchResults.length > 0 && !deepDiveOpen;
   const showMatchDeckExpanded =
     showMatchDeckPill && matchesDeckOpen && !matchesDeckCollapsed;
-  const matchCount = discoveryResults?.length ?? 0;
+  const matchCount = displayMatchResults.length;
 
   const scorableMetroCount = ingestedCbsas.size > 0 ? ingestedCbsas.size : SANDBOX_CBSA.size;
 
@@ -1135,8 +1143,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         return;
       }
 
-      const hash = `${criteriaHash(criteria)}|${exampleZips.join(",")}`;
-      if (hash === lastRankedHashRef.current && discoveryResults !== null) {
+      const selectedCbsa = resolveSelectedDiscoveryCbsa(
+        sandboxDrillActive,
+        activeSandboxCbsa,
+        selectedOverviewMetro,
+        ingestedCbsas,
+      );
+      const scopeKey = selectedCbsa ?? "national";
+      const hash = `${criteriaHash(criteria)}|${exampleZips.join(",")}|${scopeKey}`;
+      if (hash === lastRankedHashRef.current) {
         return;
       }
 
@@ -1144,13 +1159,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       const controller = new AbortController();
       rankAbortRef.current = controller;
       setMatchingInFlight(true);
-
-      const selectedCbsa = resolveSelectedDiscoveryCbsa(
-        sandboxDrillActive,
-        activeSandboxCbsa,
-        selectedOverviewMetro,
-        ingestedCbsas,
-      );
 
       try {
         if (
@@ -1211,7 +1219,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       activeShardReady,
       activeShardGeoJson,
       exampleZips,
-      discoveryResults,
       applyRankedResults,
       viewportBounds,
     ],
@@ -2225,9 +2232,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           />
         )}
 
-        {showMatchDeckPill && discoveryResults && (
+        {showMatchDeckPill && (
           <MatchesList
-            results={discoveryResults}
+            results={displayMatchResults}
+            matchCount={matchCount}
             selectedKey={selectedMatchKey}
             favorites={favorites}
             onSelect={handleMatchSelect}
