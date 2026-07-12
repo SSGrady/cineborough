@@ -31,6 +31,12 @@
 - CompareChips auto-pins top 3; favorites in localStorage
 - Wired to `rankNeighborhoods(..., topN=0)` partial match % from hybrid-scoring
 
+## Session 2026-07-12 (Part 1 gap #1 — interactive fly-to)
+
+- MatchesList groups by state (Florida, Virginia, etc.) with WMIL-style headings
+- Row + CompareChips click → `discoveryFlyoverCamera` flyTo; selected row syncs map + ContextChip
+- `formatUsStateHeading` utility for state labels
+
 ## Session 2026-07-12 (UX v2 hybrid)
 
 - Cineborough-native vocabulary: "Your criteria", "+ Add criterion", Match % hero badges

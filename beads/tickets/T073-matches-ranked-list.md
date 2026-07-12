@@ -12,6 +12,9 @@ depends_on:
 acceptance:
   - MatchesList sidebar shows all sandbox ZIPs ranked by Match %
   - Heart toggles favorites in discovery favorites storage
+  - Matches grouped by state with WMIL-style headings
+  - Click row or compare chip flies camera to ZIP centroid via discoveryFlyoverCamera
+  - Selected row highlights; syncs with map selection and ContextChip
 ---
 
 # T073 — Matches Ranked List + Favorites
@@ -21,3 +24,9 @@ acceptance:
 ## Description
 
 Left-rail ranked matches list per WMIL pattern. Replaces empty-results dead-end from hard filters.
+
+## Completion (2026-07-12, Part 1 gap #1)
+
+- State-grouped headings via `formatUsStateHeading` (`apps/web/src/lib/us-state-names.ts`)
+- Row click + CompareChips → `discoveryFlyoverCamera` pitched flyTo in discovery shell
+- ContextChip shows match % metrics when a match is selected

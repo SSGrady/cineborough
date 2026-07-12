@@ -429,6 +429,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
 
       setSearchFlyTarget(null);
+      setExitRestoreTarget(null);
 
       if (isOverviewMode) {
         const countyCbsa = sandboxCbsaForCounty(regionId);
@@ -589,11 +590,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return null;
   }, [activeShardGeoJson, selectedZip]);
 
+  const discoveryShellVisible =
+    discoveryShellActive && sandboxDrillActive && !isOverviewMode;
+
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
 
     if (exitRestoreTarget && isValidCameraTarget(exitRestoreTarget)) {
       return exitRestoreTarget;
+    }
+
+    if (discoveryShellVisible && !discoveryFlyoverActive && selectedZip && discoveryResults) {
+      const match = discoveryResults.find((r) => r.zip === selectedZip);
+      if (match && isFiniteLngLat(match.center)) {
+        return discoveryFlyoverCamera(match.center);
+      }
     }
 
     if (discoveryFlyover) {
@@ -655,6 +666,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryFlyover,
     exitRestoreTarget,
     use3DCameraPath,
+    discoveryShellVisible,
+    discoveryResults,
+    selectedZip,
   ]);
 
   const pathVisible =
@@ -675,9 +689,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryFlyoverActive && discoveryFlyover.phase === "highlight"
       ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
       : null;
-
-  const discoveryShellVisible =
-    discoveryShellActive && sandboxDrillActive && !isOverviewMode;
 
   const comparePinnedNeighborhoods = useMemo(() => {
     if (!discoveryResults) return [];
@@ -743,6 +754,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleMatchSelect = useCallback(
     (zip: string) => {
+      setExitRestoreTarget(null);
+      setSearchFlyTarget(null);
       handleZipSelect(zip);
       setDrawerOpen(true);
     },
@@ -765,6 +778,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
     setStoryCameraActive(false);
     setSearchFlyTarget(null);
+    setExitRestoreTarget(null);
     setDiscoveryShellActive(true);
 
     const results = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
@@ -997,6 +1011,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       };
     }
 
+    if (discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && selectedZip) {
+      const match =
+        discoveryResults.find((r) => r.zip === selectedZip) ?? discoveryResults[0];
+      const { metrics: m } = match;
+      return {
+        stepLabel: "Match",
+        title: `${match.zip} — ${match.name}`,
+        detail: `${match.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · cap ${formatPercent(m.capRate)} · walk ${Math.round(m.walkabilityScore)}`,
+        canOpen: true,
+      };
+    }
+
     if (discoveryMessage) {
       return {
         stepLabel: "Discovery",
@@ -1072,6 +1098,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryShellVisible,
     discoveryTourComplete,
     activeDiscoveryNeighborhood,
+    discoveryResults,
+    selectedZip,
   ]);
 
   const drawerContent = useMemo(() => {

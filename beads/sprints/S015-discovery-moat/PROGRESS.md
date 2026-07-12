@@ -7,7 +7,7 @@
 - [ ] T066 — Partial match % scoring engine *(S014 prerequisite)*
 - [ ] T067 — Criteria storage v3 *(S014 prerequisite)*
 - [ ] T080 — Criterion priority toggles (Heatmap / High Priority / Just This)
-- [ ] T078 — State-grouped fly-to matches sidebar
+- [x] T078 — State-grouped fly-to matches sidebar
 - [ ] T081 — Deep-dive split panel (hero + Criteria vs All Data tabs)
 
 ## Phase 2 — Discovery v2

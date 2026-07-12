@@ -6,6 +6,14 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### T078 — State-Grouped Fly-To Matches Sidebar
+
+- MatchesList groups ranked neighborhoods by state (WMIL-style headings)
+- Row + CompareChips click → pitched `discoveryFlyoverCamera` flyTo; selected row syncs map + ContextChip
+- `formatUsStateHeading` utility; discovery shell ContextChip shows match metrics
+
+**Status:** T078 → `done`.
+
 ### E009 / S015 — Discovery Moat Strategy (ADR-015)
 
 - **ADR-015** Discovery Moat Strategy — WMIL parity gaps (Part 1) + Cineborough differentiation (Part 2)
