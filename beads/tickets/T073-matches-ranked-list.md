@@ -11,12 +11,12 @@ depends_on:
   - T067
 acceptance:
   - MatchesList sidebar shows all sandbox ZIPs ranked by Match %
-  - Heart toggles favorites in wishlist storage
-  - Click row selects ZIP and opens detail
-  - List re-sorts on Just This toggle
+  - Heart toggles favorites in discovery favorites storage
 ---
 
 # T073 — Matches Ranked List + Favorites
+
+> **Terminology refresh (T077):** Match % hero badges with tiered styling added in UX v2.
 
 ## Description
 

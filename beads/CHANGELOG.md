@@ -6,6 +6,16 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### T077 — Discovery Criteria UX v2
+
+- Renamed Wish* components to Criteria* (`CriteriaPanel`, `CriterionRangeSlider`, `CriterionCategoryPicker`)
+- User-facing vocabulary: "Your criteria", "+ Add criterion" — no "wish" in UI/CSS
+- `CriterionCategory` + `criterionCategory` in types; `criterion-metrics.ts`, `criterion-histogram.ts`
+- Dark three-pane discovery shell CSS; tiered Match % badges in MatchesList + CompareChips
+- Spec: `docs/specifications/discovery-criteria-ux-v2.md`
+
+**Status:** T077 → `done`.
+
 ### T068/T069/T073 — WMIL Discovery Shell
 
 - `WishlistPanel` replaces criteria drawer in sandbox discovery mode (dark #1a1a2e left rail)

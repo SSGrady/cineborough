@@ -112,7 +112,7 @@ Display labels and sidebar/wish categories reorganized for Where Might I Live pa
 | **Investor Signals** | `overvaluationPct`, `sellerDesperationScore`, `marketPsf` | Overvalued % → Overvaluation %; Seller Urgency → Seller Motivation |
 | **Education & Schools** | `collegeDegreeRate` | College Degree Rate → Education Level; School Rating placeholder (T075) |
 
-`METRIC_LAYERS` entries include optional `wishCategory` (defaults to `category`). Choropleth sidebar and discovery "Add filter" dropdown share `METRIC_CATEGORY_ORDER` from `packages/data/src/types.ts`.
+`METRIC_LAYERS` entries include optional `criterionCategory` (defaults to `category`). Choropleth sidebar and discovery add-criterion picker use distinct category systems from `packages/data/src/types.ts`.
 
 ## Property-Level Valuation (Level 3)
 

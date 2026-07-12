@@ -2,41 +2,41 @@
 
 import {
   type DiscoveryFilterMetric,
-  WISH_CATEGORIES,
+  CRITERION_CATEGORIES,
   getDiscoveryMetricLabel,
 } from "@cineborough/data";
 
-interface WishCategoryPickerProps {
+interface CriterionCategoryPickerProps {
   open: boolean;
   activeMetrics: Set<DiscoveryFilterMetric>;
   onSelect: (metric: DiscoveryFilterMetric) => void;
   onClose: () => void;
 }
 
-export function WishCategoryPicker({
+export function CriterionCategoryPicker({
   open,
   activeMetrics,
   onSelect,
   onClose,
-}: WishCategoryPickerProps) {
+}: CriterionCategoryPickerProps) {
   if (!open) return null;
 
   return (
-    <div className="wish-picker" role="dialog" aria-label="Add a wish">
-      <div className="wish-picker__backdrop" onClick={onClose} aria-hidden="true" />
-      <div className="wish-picker__panel">
-        <header className="wish-picker__header">
-          <h3>Add a Wish</h3>
-          <button type="button" className="wish-picker__close" onClick={onClose} aria-label="Close">
+    <div className="criterion-picker" role="dialog" aria-label="Add a criterion">
+      <div className="criterion-picker__backdrop" onClick={onClose} aria-hidden="true" />
+      <div className="criterion-picker__panel">
+        <header className="criterion-picker__header">
+          <h3>Add criterion</h3>
+          <button type="button" className="criterion-picker__close" onClick={onClose} aria-label="Close">
             ×
           </button>
         </header>
-        <div className="wish-picker__categories">
-          {WISH_CATEGORIES.map((category) => (
-            <section key={category.id} className="wish-picker__category">
+        <div className="criterion-picker__categories">
+          {CRITERION_CATEGORIES.map((category) => (
+            <section key={category.id} className="criterion-picker__category">
               <h4>{category.label}</h4>
               {category.metrics.length === 0 ? (
-                <p className="wish-picker__coming-soon">Coming soon</p>
+                <p className="criterion-picker__coming-soon">Coming soon</p>
               ) : (
                 <ul>
                   {category.metrics.map((metric) => {
@@ -52,7 +52,7 @@ export function WishCategoryPicker({
                           }}
                         >
                           {getDiscoveryMetricLabel(metric)}
-                          {added && <span className="wish-picker__added">Added</span>}
+                          {added && <span className="criterion-picker__added">Added</span>}
                         </button>
                       </li>
                     );

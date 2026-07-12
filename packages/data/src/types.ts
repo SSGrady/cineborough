@@ -133,8 +133,8 @@ export type MetricLayerCategory =
   | "investor-signals"
   | "education-schools";
 
-/** Wish picker categories — ADR-014 §5 (distinct from sidebar). */
-export type WishCategory =
+/** Criterion picker categories — ADR-014 §5 (distinct from sidebar). */
+export type CriterionCategory =
   | "housing-market"
   | "demographics"
   | "education"
@@ -165,8 +165,8 @@ export interface MetricLayerDefinition {
   unit: string;
   /** Choropleth sidebar grouping */
   category: MetricLayerCategory;
-  /** Wish / discovery filter grouping (defaults to category when omitted) */
-  wishCategory?: WishCategory;
+  /** Criterion / discovery filter grouping (defaults to category when omitted) */
+  criterionCategory?: CriterionCategory;
   /** Short plain-language hint for sidebar (2–3 words) */
   helperText?: string;
 }
@@ -246,7 +246,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Median Age",
     unit: "years",
     category: "demographics",
-    wishCategory: "demographics",
+    criterionCategory: "demographics",
     helperText: "Typical resident age",
   },
   {
@@ -254,7 +254,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Population Growth",
     unit: "%",
     category: "demographics",
-    wishCategory: "demographics",
+    criterionCategory: "demographics",
     helperText: "People moving in",
   },
   {
@@ -262,7 +262,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Remote Work %",
     unit: "%",
     category: "demographics",
-    wishCategory: "demographics",
+    criterionCategory: "demographics",
     helperText: "Work from home",
   },
   {
@@ -284,7 +284,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Median Home Price",
     unit: "$",
     category: "market-economics",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Typical sale price",
   },
   {
@@ -292,7 +292,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "1-Yr Price Forecast",
     unit: "%",
     category: "market-economics",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Expected price change",
   },
   {
@@ -300,7 +300,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Cap Rate",
     unit: "%",
     category: "market-economics",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Rental yield %",
   },
   {
@@ -308,7 +308,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Days on Market",
     unit: "days",
     category: "market-economics",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Avg listing time",
   },
   {
@@ -316,7 +316,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Home Value Growth",
     unit: "%",
     category: "market-economics",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Past year change",
   },
   {
@@ -324,7 +324,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Walk Score",
     unit: "0–100",
     category: "lifestyle-walkability",
-    wishCategory: "environment",
+    criterionCategory: "environment",
     helperText: "Walk to amenities",
   },
   {
@@ -332,7 +332,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Overvaluation %",
     unit: "%",
     category: "investor-signals",
-    wishCategory: "investor-signals",
+    criterionCategory: "investor-signals",
     helperText: "Vs fair value",
   },
   {
@@ -340,7 +340,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Seller Motivation",
     unit: "0–100",
     category: "investor-signals",
-    wishCategory: "housing-market",
+    criterionCategory: "housing-market",
     helperText: "Negotiation leverage",
   },
   {
@@ -348,7 +348,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Market PSF",
     unit: "$/sqft",
     category: "investor-signals",
-    wishCategory: "investor-signals",
+    criterionCategory: "investor-signals",
     helperText: "Price per sq ft",
   },
   {
@@ -356,7 +356,7 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     label: "Education Level",
     unit: "%",
     category: "education-schools",
-    wishCategory: "education",
+    criterionCategory: "education",
     helperText: "College-educated %",
   },
 ];

@@ -10,14 +10,15 @@ depends_on:
   - T067
   - T074
 acceptance:
-  - WishlistPanel replaces DiscoveryCriteriaPanel in CinematicDiscovery
-  - WishRangeSlider shows 20-bin histogram from shard values
-  - Dual-handle range, single-handle min/max kinds
-  - Drop wish removes card; Find matches applies wishlist
+  - CriteriaPanel replaces DiscoveryCriteriaPanel in CinematicDiscovery
+  - CriterionRangeSlider shows 20-bin histogram from shard values
+  - Drop criterion removes card; Find matches applies criteria
 ---
 
-# T068 — Wish Card UI + Histogram Slider
+# T068 — Criterion Card UI + Histogram Slider
+
+> **Terminology refresh (T077):** Wish* renamed to Criteria* — see `discovery-criteria-ux-v2.md`.
 
 ## Description
 
-Build `WishlistPanel` and `WishRangeSlider` per `docs/specifications/wishlist-discovery.md` §2–4.
+Build `CriteriaPanel` and `CriterionRangeSlider` per `docs/specifications/discovery-criteria-ux-v2.md` §2–4.

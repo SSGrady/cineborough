@@ -56,7 +56,7 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { ContextChip } from "./ContextChip";
 import { StoryDrawer } from "./StoryDrawer";
-import { WishlistPanel } from "./WishlistPanel";
+import { CriteriaPanel } from "./CriteriaPanel";
 import { MatchesList } from "./MatchesList";
 import { CompareChips } from "./CompareChips";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
@@ -722,7 +722,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     saveDiscoveryCriteria(criteria);
   }, []);
 
-  const handleOpenWishlist = useCallback(() => {
+  const handleOpenCriteria = useCallback(() => {
     if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
       setDiscoveryMessage("Open a sandbox metro (DC, Orlando, SF Bay, or San Jose) first");
       return;
@@ -993,7 +993,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: `#${activeDiscoveryNeighborhood.rank} · ${activeDiscoveryNeighborhood.zip} — ${activeDiscoveryNeighborhood.name}`,
         detail: `${activeDiscoveryNeighborhood.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
         canOpen: true,
-        action: { label: "Wishlist", onClick: handleOpenWishlist },
+        action: { label: "Your criteria", onClick: handleOpenCriteria },
       };
     }
 
@@ -1003,7 +1003,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: discoveryMessage,
         detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay, San Jose)",
         canOpen: true,
-        action: { label: "Wishlist", onClick: handleOpenWishlist },
+        action: { label: "Your criteria", onClick: handleOpenCriteria },
       };
     }
 
@@ -1068,7 +1068,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryFlyover,
     discoveryMessage,
     handleSkipFlyover,
-    handleOpenWishlist,
+    handleOpenCriteria,
     discoveryShellVisible,
     discoveryTourComplete,
     activeDiscoveryNeighborhood,
@@ -1228,7 +1228,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         sandboxDrillActive={sandboxDrillActive}
         searchIndex={SEARCH_INDEX}
         onSearchSelect={handleSearchSelect}
-        onOpenWishlist={handleOpenWishlist}
+        onOpenCriteria={handleOpenCriteria}
         onDiscover={discoveryShellVisible ? handleDiscover : handleStartFlyoverTour}
         discoverDisabled={discoveryFlyoverActive}
         discoverLabel={
@@ -1256,7 +1256,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         )}
 
         {discoveryShellVisible && (
-          <WishlistPanel
+          <CriteriaPanel
             criteria={discoveryCriteria}
             resetCriteria={sandboxDiscoveryCriteria}
             geoJson={activeShardGeoJson}

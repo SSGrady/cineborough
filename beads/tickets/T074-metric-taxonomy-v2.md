@@ -8,7 +8,7 @@ epic: E008
 sprint: S014
 depends_on: []
 acceptance:
-  - METRIC_LAYERS gains wishCategory field
+  - METRIC_LAYERS gains criterionCategory field
   - Display label renames per ADR-014 (Median Home Price, Park & Walk Score, etc.)
   - docs/schema/metrics-taxonomy.md v2 section added
   - Wish picker and sidebar remain distinct category systems

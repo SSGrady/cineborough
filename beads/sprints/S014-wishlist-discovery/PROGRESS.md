@@ -6,25 +6,33 @@
 
 - [ ] T066 — Partial match % scoring engine
 - [ ] T067 — Wishlist types + storage v3
-- [x] T074 — Metric taxonomy v2 + wish categories
-- [x] T068 — Wish card UI + histogram slider
-- [x] T069 — Add Wish category picker
+- [x] T074 — Metric taxonomy v2 + criterion categories
+- [x] T068 — Criterion card UI + histogram slider *(terminology refresh: T077)*
+- [x] T069 — Add criterion category picker *(terminology refresh: T077)*
 - [ ] T070 — Priority + heatmap + Just This toggles
-- [x] T073 — Matches ranked list + favorites
-- [ ] T071 — Match breakdown + My Wishes / All Data tabs
+- [x] T073 — Matches ranked list + favorites *(terminology refresh: T077)*
+- [ ] T071 — Match breakdown + Criteria vs All Data tabs
 - [ ] T072 — Compare location chips
 - [ ] T075 — New metrics: park, airport, school, physicians
 - [ ] T076 — By Example similarity search
+- [x] T077 — Discovery criteria UX v2 (terminology + hybrid shell)
 
 ## Notes
 
 - Grill-me session 2026-07-12 locked ADR-014 + UX spec
 - E007 hard filters identified as root cause of "criteria no-op" perception
-- WMIL benchmark: partial matches, wish cards, compare chips
+- WMIL benchmark: partial matches, criterion cards, compare chips
+- **T077 (2026-07-12):** Renamed Wish* → Criteria*; spec at `docs/specifications/discovery-criteria-ux-v2.md`
 
 ## Session 2026-07-12 (WMIL shell)
 
-- Three-pane discovery layout: dark left WishlistPanel, center map, right MatchesList
-- WishRangeSlider (20-bin histogram), WishCategoryPicker (7 categories)
+- Three-pane discovery layout: dark left CriteriaPanel, center map, right MatchesList
+- CriterionRangeSlider (20-bin histogram), CriterionCategoryPicker (7 categories)
 - CompareChips auto-pins top 3; favorites in localStorage
 - Wired to `rankNeighborhoods(..., topN=0)` partial match % from hybrid-scoring
+
+## Session 2026-07-12 (UX v2 hybrid)
+
+- Cineborough-native vocabulary: "Your criteria", "+ Add criterion", Match % hero badges
+- Dark rails `#14141f` + pink accent `#e11d48`; tiered match badge colors
+- `CriterionCategory` / `criterionCategory` replaces wishCategory in types

@@ -11,7 +11,7 @@ import {
   getShardMetricHistogram,
 } from "@cineborough/data";
 
-interface WishRangeSliderProps {
+interface CriterionRangeSliderProps {
   filter: DiscoveryFilter;
   geoJson: DcMetroGeoJson | null;
   onChange: (patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => void;
@@ -31,7 +31,7 @@ function formatValue(metric: DiscoveryFilterMetric, value: number): string {
   return value.toFixed(1);
 }
 
-export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderProps) {
+export function CriterionRangeSlider({ filter, geoJson, onChange }: CriterionRangeSliderProps) {
   const def = getDiscoveryMetricDef(filter.metric);
   const histogram = useMemo(() => {
     if (!geoJson) return null;
@@ -54,28 +54,28 @@ export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderPr
   const bandWidth = ((Math.abs(currentMax - currentMin)) / span) * 100;
 
   return (
-    <div className="wish-range">
+    <div className="criterion-range">
       {histogram && histogram.bins.length > 0 && (
-        <div className="wish-range__histogram" aria-hidden="true">
+        <div className="criterion-range__histogram" aria-hidden="true">
           {histogram.bins.map((bin, i) => (
             <div
               key={i}
-              className="wish-range__bar"
+              className="criterion-range__bar"
               style={{ height: `${(bin.count / maxCount) * 100}%` }}
             />
           ))}
           <div
-            className="wish-range__band"
+            className="criterion-range__band"
             style={{ left: `${bandLeft}%`, width: `${Math.max(bandWidth, 2)}%` }}
           />
         </div>
       )}
 
       {def.kind === "range" ? (
-        <div className="wish-range__dual">
+        <div className="criterion-range__dual">
           <input
             type="range"
-            className="wish-range__input wish-range__input--min"
+            className="criterion-range__input criterion-range__input--min"
             min={sliderMin}
             max={sliderMax}
             step={def.step}
@@ -85,7 +85,7 @@ export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderPr
           />
           <input
             type="range"
-            className="wish-range__input wish-range__input--max"
+            className="criterion-range__input criterion-range__input--max"
             min={sliderMin}
             max={sliderMax}
             step={def.step}
@@ -93,16 +93,16 @@ export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderPr
             aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
             onChange={(e) => onChange({ max: Number(e.target.value) })}
           />
-          <div className="wish-range__labels">
+          <div className="criterion-range__labels">
             <span>{formatValue(filter.metric, currentMin)}</span>
             <span>{formatValue(filter.metric, currentMax)}</span>
           </div>
         </div>
       ) : def.kind === "min" ? (
-        <div className="wish-range__single">
+        <div className="criterion-range__single">
           <input
             type="range"
-            className="wish-range__input"
+            className="criterion-range__input"
             min={sliderMin}
             max={sliderMax}
             step={def.step}
@@ -110,15 +110,15 @@ export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderPr
             aria-label={`${getDiscoveryMetricLabel(filter.metric)} minimum`}
             onChange={(e) => onChange({ min: Number(e.target.value) })}
           />
-          <div className="wish-range__labels">
+          <div className="criterion-range__labels">
             <span>Min: {formatValue(filter.metric, currentMin)}</span>
           </div>
         </div>
       ) : (
-        <div className="wish-range__single">
+        <div className="criterion-range__single">
           <input
             type="range"
-            className="wish-range__input"
+            className="criterion-range__input"
             min={sliderMin}
             max={sliderMax}
             step={def.step}
@@ -126,7 +126,7 @@ export function WishRangeSlider({ filter, geoJson, onChange }: WishRangeSliderPr
             aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
             onChange={(e) => onChange({ max: Number(e.target.value) })}
           />
-          <div className="wish-range__labels">
+          <div className="criterion-range__labels">
             <span>Max: {formatValue(filter.metric, currentMax)}</span>
           </div>
         </div>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   type DcMetroGeoJson,
   type DiscoveryCriteria,
@@ -13,10 +13,10 @@ import {
   getDiscoveryMetricDef,
   getDiscoveryMetricLabel,
 } from "@cineborough/data";
-import { WishRangeSlider } from "./WishRangeSlider";
-import { WishCategoryPicker } from "./WishCategoryPicker";
+import { CriterionRangeSlider } from "./CriterionRangeSlider";
+import { CriterionCategoryPicker } from "./CriterionCategoryPicker";
 
-interface WishlistPanelProps {
+interface CriteriaPanelProps {
   criteria: DiscoveryCriteria;
   resetCriteria?: DiscoveryCriteria;
   geoJson: DcMetroGeoJson | null;
@@ -46,7 +46,7 @@ function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
   };
 }
 
-export function WishlistPanel({
+export function CriteriaPanel({
   criteria,
   resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
   geoJson,
@@ -54,7 +54,7 @@ export function WishlistPanel({
   onFindMatches,
   collapsed = false,
   onToggleCollapse,
-}: WishlistPanelProps) {
+}: CriteriaPanelProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
 
   const activeMetrics = useMemo(
@@ -82,7 +82,7 @@ export function WishlistPanel({
     });
   };
 
-  const addWish = (metric: DiscoveryFilterMetric) => {
+  const addCriterion = (metric: DiscoveryFilterMetric) => {
     onChange({
       filters: [...criteria.filters, createDiscoveryFilter(metric, crypto.randomUUID())],
     });
@@ -95,14 +95,14 @@ export function WishlistPanel({
 
   if (collapsed) {
     return (
-      <aside className="wishlist-panel wishlist-panel--collapsed" aria-label="Wishlist">
+      <aside className="criteria-panel criteria-panel--collapsed" aria-label="Your criteria">
         <button
           type="button"
-          className="wishlist-panel__expand"
+          className="criteria-panel__expand"
           onClick={onToggleCollapse}
-          aria-label="Expand wishlist"
+          aria-label="Expand criteria panel"
         >
-          Wishes
+          Criteria
         </button>
       </aside>
     );
@@ -110,51 +110,51 @@ export function WishlistPanel({
 
   return (
     <>
-      <aside className="wishlist-panel" aria-label="My Wishes">
-        <header className="wishlist-panel__header">
-          <h2>My Wishes</h2>
+      <aside className="criteria-panel" aria-label="Your criteria">
+        <header className="criteria-panel__header">
+          <h2>Your criteria</h2>
           {onToggleCollapse && (
             <button
               type="button"
-              className="wishlist-panel__collapse"
+              className="criteria-panel__collapse"
               onClick={onToggleCollapse}
-              aria-label="Collapse wishlist"
+              aria-label="Collapse criteria panel"
             >
               ‹
             </button>
           )}
         </header>
 
-        <p className="wishlist-panel__intro">
-          Add what matters to you. Every neighborhood gets a Match&nbsp;%.
+        <p className="criteria-panel__intro">
+          Set what matters to you. Every neighborhood gets a Match&nbsp;%.
         </p>
 
         {matchPreview !== null && (
-          <p className="wishlist-panel__preview" aria-live="polite">
-            {matchPreview.count} of {matchPreview.total} neighborhoods ≥{DISCOVERY_MATCH_THRESHOLD}%
+          <p className="criteria-panel__preview" aria-live="polite">
+            {matchPreview.count} of {matchPreview.total} neighborhoods ≥{DISCOVERY_MATCH_THRESHOLD}% match
           </p>
         )}
 
-        <div className="wishlist-panel__cards">
+        <div className="criteria-panel__cards">
           {criteria.filters.length === 0 ? (
-            <p className="wishlist-panel__empty">No wishes yet — add what matters to you.</p>
+            <p className="criteria-panel__empty">No criteria yet — add metrics that matter to you.</p>
           ) : (
             criteria.filters.map((filter) => (
-              <article key={filter.id} className="wish-card">
-                <div className="wish-card__header">
-                  <span className="wish-card__title">
+              <article key={filter.id} className="criterion-card">
+                <div className="criterion-card__header">
+                  <span className="criterion-card__title">
                     {getDiscoveryMetricLabel(filter.metric)}
                   </span>
                   <button
                     type="button"
-                    className="wish-card__remove"
+                    className="criterion-card__remove"
                     aria-label={`Remove ${getDiscoveryMetricLabel(filter.metric)}`}
                     onClick={() => removeFilter(filter.id)}
                   >
                     ×
                   </button>
                 </div>
-                <WishRangeSlider
+                <CriterionRangeSlider
                   filter={filter}
                   geoJson={geoJson}
                   onChange={(patch) => updateFilter(filter.id, patch)}
@@ -166,35 +166,35 @@ export function WishlistPanel({
 
         <button
           type="button"
-          className="wishlist-panel__add"
+          className="criteria-panel__add"
           onClick={() => setPickerOpen(true)}
         >
-          + Add a Wish
+          + Add criterion
         </button>
 
-        <div className="wishlist-panel__actions">
+        <div className="criteria-panel__actions">
           <button
             type="button"
-            className="wishlist-panel__reset"
+            className="criteria-panel__reset"
             onClick={() => onChange(resetCriteria)}
           >
             Reset
           </button>
-          <button type="button" className="wishlist-panel__find" onClick={handleFindMatches}>
+          <button type="button" className="criteria-panel__find" onClick={handleFindMatches}>
             Find matches
           </button>
         </div>
       </aside>
 
-      <WishCategoryPicker
+      <CriterionCategoryPicker
         open={pickerOpen}
         activeMetrics={activeMetrics}
-        onSelect={addWish}
+        onSelect={addCriterion}
         onClose={() => setPickerOpen(false)}
       />
     </>
   );
 }
 
-/** @deprecated Use WishlistPanel — shim for one sprint */
-export { WishlistPanel as DiscoveryCriteriaPanelShim };
+/** @deprecated Use CriteriaPanel — shim for one sprint */
+export { CriteriaPanel as DiscoveryCriteriaPanelShim };

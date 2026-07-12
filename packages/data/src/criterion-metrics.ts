@@ -1,17 +1,17 @@
 import type { DiscoveryFilterMetric } from "./hybrid-scoring";
 import { DISCOVERY_FILTER_METRICS } from "./hybrid-scoring";
-import type { WishCategory } from "./types";
+import type { CriterionCategory } from "./types";
 import { METRIC_LAYERS } from "./types";
 
-export type { WishCategory };
+export type { CriterionCategory };
 
-export interface WishCategoryDef {
-  id: WishCategory;
+export interface CriterionCategoryDef {
+  id: CriterionCategory;
   label: string;
   metrics: DiscoveryFilterMetric[];
 }
 
-export const WISH_CATEGORIES: WishCategoryDef[] = [
+export const CRITERION_CATEGORIES: CriterionCategoryDef[] = [
   {
     id: "housing-market",
     label: "Housing & Market",
@@ -56,20 +56,20 @@ export const WISH_CATEGORIES: WishCategoryDef[] = [
   },
 ];
 
-const METRIC_TO_CATEGORY = new Map<DiscoveryFilterMetric, WishCategory>();
+const METRIC_TO_CATEGORY = new Map<DiscoveryFilterMetric, CriterionCategory>();
 for (const layer of METRIC_LAYERS) {
-  if (layer.wishCategory && layer.key !== "opportunityScore") {
-    METRIC_TO_CATEGORY.set(layer.key as DiscoveryFilterMetric, layer.wishCategory);
+  if (layer.criterionCategory && layer.key !== "opportunityScore") {
+    METRIC_TO_CATEGORY.set(layer.key as DiscoveryFilterMetric, layer.criterionCategory);
   }
 }
 
-export function wishCategoryForMetric(metric: DiscoveryFilterMetric): WishCategory | undefined {
+export function criterionCategoryForMetric(metric: DiscoveryFilterMetric): CriterionCategory | undefined {
   return METRIC_TO_CATEGORY.get(metric);
 }
 
-export function metricsForWishCategory(category: WishCategory): DiscoveryFilterMetric[] {
-  return WISH_CATEGORIES.find((c) => c.id === category)?.metrics ?? [];
+export function metricsForCriterionCategory(category: CriterionCategory): DiscoveryFilterMetric[] {
+  return CRITERION_CATEGORIES.find((c) => c.id === category)?.metrics ?? [];
 }
 
-/** All discoverable wish metrics (flat list). */
-export const ALL_WISH_METRICS: DiscoveryFilterMetric[] = DISCOVERY_FILTER_METRICS;
+/** All discoverable criterion metrics (flat list). */
+export const ALL_CRITERION_METRICS: DiscoveryFilterMetric[] = DISCOVERY_FILTER_METRICS;

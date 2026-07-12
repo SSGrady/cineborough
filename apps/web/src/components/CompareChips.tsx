@@ -9,13 +9,21 @@ interface CompareChipsProps {
   onRemove: (zip: string) => void;
 }
 
+function matchTierClass(pct: number): string {
+  if (pct >= 90) return "compare-chips__pct--strong";
+  if (pct >= 70) return "compare-chips__pct--close";
+  return "compare-chips__pct--partial";
+}
+
 export function CompareChips({ pinned, activeZip, onSelect, onRemove }: CompareChipsProps) {
   if (pinned.length === 0) return null;
 
   return (
     <div className="compare-chips" role="group" aria-label="Compare neighborhoods">
+      <span className="compare-chips__label">Compare</span>
       {pinned.map((r) => {
         const isActive = activeZip === r.zip;
+        const rounded = Math.round(r.matchPercent);
         return (
           <button
             key={r.zip}
@@ -23,10 +31,9 @@ export function CompareChips({ pinned, activeZip, onSelect, onRemove }: CompareC
             className={`compare-chips__chip${isActive ? " compare-chips__chip--active" : ""}`}
             onClick={() => onSelect(r.zip)}
           >
-            <span className="compare-chips__label">
-              {r.zip} · {r.name}
-            </span>
-            <span className="compare-chips__pct">{Math.round(r.matchPercent)}%</span>
+            <span className="compare-chips__zip">{r.zip}</span>
+            <span className="compare-chips__name">{r.name}</span>
+            <span className={`compare-chips__pct ${matchTierClass(rounded)}`}>{rounded}%</span>
             <span
               role="button"
               tabIndex={0}
