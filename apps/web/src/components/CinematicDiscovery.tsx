@@ -10,7 +10,9 @@ import {
   zipMetricsFromGeoJson,
   loadUsMetrosGeoJson,
   buildStateChoroplethFromMetros,
+  buildCountyChoroplethFromShards,
   buildNationalChoroplethFromMetros,
+  loadMetroShardsGeoJson,
   DC_METRO_CBSA,
   ORLANDO_METRO_CBSA,
   SF_METRO_CBSA,
@@ -22,6 +24,10 @@ import {
   rankNeighborhoods,
   type DiscoveryCriteria,
   type RankedNeighborhood,
+  DEFAULT_DISCOVERY_CRITERIA,
+  SAN_JOSE_DISCOVERY_CRITERIA,
+  discoveryCriteriaForSandbox,
+  discoveryCriteriaEqual,
 } from "@cineborough/data";
 import {
   resolveMapCamera,
@@ -98,13 +104,14 @@ interface CinematicDiscoveryProps {
 }
 
 const US_METROS_GEOJSON = loadUsMetrosGeoJson();
+const SANDBOX_SHARDS_GEOJSON = loadMetroShardsGeoJson();
 const SEARCH_INDEX = buildSearchIndex(US_METROS_GEOJSON);
 
 const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · click a metro to drill in",
   state: "State view · metric label per state",
   metro: "All metros · click a region to open sandbox detail",
-  county: "County view · state aggregates (county GeoJSON pending)",
+  county: "County view · sandbox states (VA, MD, DC, FL, CA)",
 };
 
 const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
@@ -171,12 +178,36 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [activeSandboxCbsa, geoJson],
   );
 
+  const sandboxDiscoveryCriteria = useMemo(
+    () => discoveryCriteriaForSandbox(activeSandboxCbsa),
+    [activeSandboxCbsa],
+  );
+
+  const discoveryCriteriaPresets = useMemo(
+    () => [DEFAULT_DISCOVERY_CRITERIA, SAN_JOSE_DISCOVERY_CRITERIA],
+    [],
+  );
+
+  useEffect(() => {
+    if (!SANDBOX_CBSA.has(activeSandboxCbsa)) return;
+    setDiscoveryCriteria((prev) => {
+      const isPreset = discoveryCriteriaPresets.some((preset) =>
+        discoveryCriteriaEqual(prev, preset),
+      );
+      if (!isPreset) return prev;
+      return sandboxDiscoveryCriteria;
+    });
+  }, [activeSandboxCbsa, sandboxDiscoveryCriteria, discoveryCriteriaPresets]);
+
   const overviewGeoJson = useMemo(() => {
     if (geography === "national") {
       return buildNationalChoroplethFromMetros(US_METROS_GEOJSON, activeMetric);
     }
-    if (geography === "state" || geography === "county") {
+    if (geography === "state") {
       return buildStateChoroplethFromMetros(US_METROS_GEOJSON, activeMetric);
+    }
+    if (geography === "county") {
+      return buildCountyChoroplethFromShards(SANDBOX_SHARDS_GEOJSON, activeMetric);
     }
     return US_METROS_GEOJSON;
   }, [geography, activeMetric]);
@@ -1169,6 +1200,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       <DiscoveryCriteriaPanel
         open={criteriaPanelOpen}
         criteria={discoveryCriteria}
+        resetCriteria={sandboxDiscoveryCriteria}
         onClose={() => setCriteriaPanelOpen(false)}
         onApply={handleApplyCriteria}
       />

@@ -227,3 +227,10 @@ Aggregated progress log for Cineborough development.
 
 **Status:** E007 → `done`. S008, S009, S010 → `done`. 20/21 E007 tickets done; T047 closed deferred.
 
+### T058 — Sandbox county choropleth (S012)
+
+- County tab wired to `buildCountyChoroplethFromShards` — 10 sandbox counties (VA/MD/DC/FL/CA)
+- `ZIP_TO_COUNTY` mapping for 68 sandbox ZIPs; Census TIGER boundaries in `data/boundaries/sandbox-counties.geojson`
+- `MapView` county labels + blocked drill-in clicks
+
+**Status:** T058 → `done`. S012 → `done`.

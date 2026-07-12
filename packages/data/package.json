@@ -23,7 +23,8 @@
     "ingest:redfin": "node --experimental-strip-types src/ingest/ingest-redfin.ts",
     "ingest:osm-walkability": "node --experimental-strip-types src/ingest/ingest-osm-walkability.ts",
     "seed:sandbox-metrics": "node --experimental-strip-types src/scripts/seed-sandbox-metrics.ts",
-    "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts"
+    "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts",
+    "fetch:sandbox-counties": "node --experimental-strip-types src/scripts/fetch-sandbox-counties.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

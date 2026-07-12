@@ -165,6 +165,13 @@ function buildStateLabelData(
     .filter((point): point is LabelPoint => point !== null);
 }
 
+function buildCountyLabelData(
+  geoJson: DcMetroGeoJson,
+  activeMetric: MetricLayerKey,
+): LabelPoint[] {
+  return buildStateLabelData(geoJson, activeMetric);
+}
+
 function buildNationalLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
@@ -308,6 +315,7 @@ export function MapView({
   const choroplethPalette = choroplethPaletteForMetric(activeMetric);
   const isNationalGeography = overviewMode && geographyLevel === "national";
   const isStateGeography = overviewMode && geographyLevel === "state";
+  const isCountyGeography = overviewMode && geographyLevel === "county";
 
   const choroplethSpec = useMemo(
     () => getChoroplethSpecFromGeoJson(geoJson, activeMetric),
@@ -357,7 +365,7 @@ export function MapView({
       return buildStateLabelData(geoJson, activeMetric);
     }
     if (geographyLevel === "county") {
-      return buildMetroLabelData(geoJson, activeMetric, mapZoom);
+      return buildCountyLabelData(geoJson, activeMetric);
     }
     return buildMetroLabelData(geoJson, activeMetric, mapZoom);
   }, [geoJson, activeMetric, overviewMode, geographyLevel, mapZoom]);
@@ -394,21 +402,29 @@ export function MapView({
         const score = zip ? (colorByZip.get(zip) ?? 0) : 0;
         const hex = colorForChoropleth(choroplethPalette, score);
         const [r, g, b] = hexToRgb(hex);
-        const fillAlpha = isNationalGeography ? 200 : isStateGeography ? 210 : isOverviewView ? 120 : 75;
+        const fillAlpha = isNationalGeography
+          ? 200
+          : isStateGeography
+            ? 210
+            : isCountyGeography
+              ? 195
+              : isOverviewView
+                ? 120
+                : 75;
         return [r, g, b, isSelected ? 150 : fillAlpha];
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
         if (zip === selectedZip) return [255, 255, 255, 110];
         if (isNationalGeography) return [255, 255, 255, 60];
-        if (isStateGeography) return [15, 23, 42, 200];
+        if (isStateGeography || isCountyGeography) return [15, 23, 42, 200];
         return isOverviewView ? [15, 23, 42, 220] : [30, 41, 59, 160];
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
         if (zip === selectedZip) return 1.25;
         if (isNationalGeography) return 0.5;
-        if (isStateGeography) return 1.25;
+        if (isStateGeography || isCountyGeography) return 1.1;
         return isOverviewView ? 1.1 : 0.75;
       },
       lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
@@ -419,7 +435,7 @@ export function MapView({
         getLineWidth: [selectedZip, isOverviewView, geographyLevel],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
@@ -542,14 +558,13 @@ export function MapView({
     if (!labelsVisible || labelData.length === 0) return [];
 
     const overview = isOverviewView;
-    const isMetroOverview =
-      overview && (geographyLevel === "metro" || geographyLevel === "county");
+    const isMetroOverview = overview && geographyLevel === "metro";
     const showMetroValues = !isMetroOverview || mapZoom >= METRO_VALUE_LABEL_MIN_ZOOM;
     const nameSize = overview
       ? geographyLevel === "national"
         ? 18
-        : geographyLevel === "state"
-          ? 14
+        : geographyLevel === "state" || geographyLevel === "county"
+          ? 13
           : mapZoom < 7
             ? 12
             : 13
@@ -697,7 +712,7 @@ export function MapView({
         onBackgroundClick?.();
         return;
       }
-      if (isOverviewView && geographyLevel === "state") {
+      if (isOverviewView && (geographyLevel === "state" || geographyLevel === "county")) {
         return;
       }
 
