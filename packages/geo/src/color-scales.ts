@@ -53,8 +53,8 @@ export interface ColorStop {
 
 /** Rich blue — positive / high tier (affordable, opportunity). */
 export const CHOROPLETH_COLOR_HIGH = "#2563EB";
-/** Soft yellow — neutral / middle tier; reads on light map basemaps. */
-export const CHOROPLETH_COLOR_MID = "#F5D547";
+/** Purple — neutral / middle tier; distinct from blue and red on light basemaps. */
+export const CHOROPLETH_COLOR_MID = "#8B5CF6";
 /** Red — low / caution tier. */
 export const CHOROPLETH_COLOR_LOW = "#ef4444";
 
