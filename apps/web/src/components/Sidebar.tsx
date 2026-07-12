@@ -6,7 +6,11 @@ import type {
   MetricLayerDefinition,
   MetricLayerKey,
 } from "@cineborough/data";
-import { METRIC_LAYERS } from "@cineborough/data";
+import {
+  METRIC_CATEGORY_LABELS,
+  METRIC_CATEGORY_ORDER,
+  METRIC_LAYERS,
+} from "@cineborough/data";
 import type { ZipMetrics } from "@cineborough/data";
 import { formatCurrency, formatPercent } from "@/lib/format";
 
@@ -17,22 +21,6 @@ interface SidebarProps {
   selectedZip?: string | null;
   zips?: ZipMetrics[];
 }
-
-const CATEGORY_LABELS: Record<MetricLayerCategory, string> = {
-  popular: "Popular Data",
-  investor: "Investor Metrics",
-  "market-trends": "Market Trends",
-  demographics: "Demographics",
-  "hope-core": "Hope-Core Discovery",
-};
-
-const CATEGORY_ORDER: MetricLayerCategory[] = [
-  "popular",
-  "investor",
-  "market-trends",
-  "demographics",
-  "hope-core",
-];
 
 function layersByCategory(
   category: MetricLayerCategory,
@@ -121,7 +109,7 @@ function CollapsibleSection({
         aria-controls={sectionId}
         onClick={onToggle}
       >
-        <span>{CATEGORY_LABELS[category]}</span>
+        <span>{METRIC_CATEGORY_LABELS[category]}</span>
         <span className="sidebar__section-count">{layers.length}</span>
         <span className="sidebar__section-chevron" aria-hidden="true">
           {expanded ? "−" : "+"}
@@ -152,7 +140,7 @@ export function Sidebar({
   const selected = zips.find((z) => z.zip === selectedZip);
   const [layerFilter, setLayerFilter] = useState("");
   const [expandedSections, setExpandedSections] = useState<Set<MetricLayerCategory>>(
-    () => new Set(["popular"]),
+    () => new Set(["market-economics"]),
   );
 
   const normalizedFilter = layerFilter.trim().toLowerCase();
@@ -176,7 +164,7 @@ export function Sidebar({
 
   useEffect(() => {
     if (!normalizedFilter) return;
-    setExpandedSections(new Set(CATEGORY_ORDER));
+    setExpandedSections(new Set(METRIC_CATEGORY_ORDER));
   }, [normalizedFilter]);
 
   const toggleSection = (category: MetricLayerCategory) => {
@@ -218,7 +206,7 @@ export function Sidebar({
           />
         </div>
 
-        {CATEGORY_ORDER.map((category) => {
+        {METRIC_CATEGORY_ORDER.map((category) => {
           const layers = layersByCategory(category, filteredLayers);
           return (
             <CollapsibleSection
@@ -247,7 +235,7 @@ export function Sidebar({
         <p>Select a metric to color the map</p>
       </header>
 
-      {CATEGORY_ORDER.map((category) => (
+      {METRIC_CATEGORY_ORDER.map((category) => (
         <CollapsibleSection
           key={category}
           category={category}

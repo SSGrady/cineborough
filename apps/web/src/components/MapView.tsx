@@ -355,7 +355,7 @@ export function MapView({
   const useMetroTiles = false;
 
   const metricLabel =
-    METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Home Value";
+    METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "Median Home Price";
 
   const choroplethPalette = choroplethPaletteForMetric(activeMetric);
   const isNationalGeography = overviewMode && geographyLevel === "national";

@@ -1,7 +1,7 @@
 ---
 id: T073
 title: Matches ranked list + favorites
-status: open
+status: done
 type: feature
 priority: P1
 epic: E008

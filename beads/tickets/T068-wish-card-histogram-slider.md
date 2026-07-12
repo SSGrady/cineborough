@@ -1,7 +1,7 @@
 ---
 id: T068
 title: Wish card UI + histogram slider
-status: open
+status: done
 type: feature
 priority: P1
 epic: E008

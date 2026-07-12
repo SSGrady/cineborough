@@ -125,18 +125,48 @@ export type MetricLayerKey =
   | "walkabilityScore"
   | "collegeDegreeRate";
 
+/** Choropleth sidebar categories — WMIL visual polish (T074). */
 export type MetricLayerCategory =
-  | "popular"
-  | "investor"
-  | "market-trends"
   | "demographics"
-  | "hope-core";
+  | "market-economics"
+  | "lifestyle-walkability"
+  | "investor-signals"
+  | "education-schools";
+
+/** Wish picker categories — ADR-014 §5 (distinct from sidebar). */
+export type WishCategory =
+  | "housing-market"
+  | "demographics"
+  | "education"
+  | "environment"
+  | "health"
+  | "commute-access"
+  | "investor-signals";
+
+export const METRIC_CATEGORY_LABELS: Record<MetricLayerCategory, string> = {
+  demographics: "Demographics",
+  "market-economics": "Market & Economics",
+  "lifestyle-walkability": "Lifestyle & Walkability",
+  "investor-signals": "Investor Signals",
+  "education-schools": "Education & Schools",
+};
+
+export const METRIC_CATEGORY_ORDER: MetricLayerCategory[] = [
+  "demographics",
+  "market-economics",
+  "lifestyle-walkability",
+  "investor-signals",
+  "education-schools",
+];
 
 export interface MetricLayerDefinition {
   key: MetricLayerKey;
   label: string;
   unit: string;
+  /** Choropleth sidebar grouping */
   category: MetricLayerCategory;
+  /** Wish / discovery filter grouping (defaults to category when omitted) */
+  wishCategory?: WishCategory;
   /** Short plain-language hint for sidebar (2–3 words) */
   helperText?: string;
 }
@@ -212,74 +242,27 @@ export const RENOVATION_TIERS: RenovationTier[] = [
 
 export const METRIC_LAYERS: MetricLayerDefinition[] = [
   {
-    key: "opportunityScore",
-    label: "Opportunity Index",
-    unit: "0–100",
-    category: "popular",
-    helperText: "ROI + livability",
+    key: "medianAge",
+    label: "Median Age",
+    unit: "years",
+    category: "demographics",
+    wishCategory: "demographics",
+    helperText: "Typical resident age",
   },
   {
-    key: "medianHomeValue",
-    label: "Home Value",
-    unit: "$",
-    category: "popular",
-    helperText: "Median home price",
-  },
-  {
-    key: "homePriceForecast1yr",
-    label: "1-Year Price Forecast",
+    key: "populationGrowthRate",
+    label: "Population Growth",
     unit: "%",
-    category: "popular",
-    helperText: "Expected price change",
-  },
-  {
-    key: "overvaluationPct",
-    label: "Overvalued %",
-    unit: "%",
-    category: "popular",
-    helperText: "Vs fair value",
-  },
-  {
-    key: "capRate",
-    label: "Cap Rate",
-    unit: "%",
-    category: "popular",
-    helperText: "Rental yield %",
-  },
-  {
-    key: "sellerDesperationScore",
-    label: "Seller Urgency",
-    unit: "0–100",
-    category: "investor",
-    helperText:
-      "How motivated sellers are to discount. Low = firm pricing; high = more room to negotiate.",
-  },
-  {
-    key: "marketPsf",
-    label: "Market PSF",
-    unit: "$/sqft",
-    category: "investor",
-    helperText: "Price per sq ft",
-  },
-  {
-    key: "daysOnMarket",
-    label: "Days on Market",
-    unit: "days",
-    category: "market-trends",
-    helperText: "Avg listing time",
-  },
-  {
-    key: "homeValueGrowthYoy",
-    label: "Home Value Growth YoY",
-    unit: "%",
-    category: "market-trends",
-    helperText: "Past year change",
+    category: "demographics",
+    wishCategory: "demographics",
+    helperText: "People moving in",
   },
   {
     key: "remoteWorkPct",
     label: "Remote Work %",
     unit: "%",
     category: "demographics",
+    wishCategory: "demographics",
     helperText: "Work from home",
   },
   {
@@ -290,31 +273,90 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     helperText: "Young homeowners",
   },
   {
-    key: "populationGrowthRate",
-    label: "Population Growth",
-    unit: "%",
-    category: "demographics",
-    helperText: "People moving in",
+    key: "opportunityScore",
+    label: "Opportunity Index",
+    unit: "0–100",
+    category: "market-economics",
+    helperText: "ROI + livability",
   },
   {
-    key: "medianAge",
-    label: "Median Age",
-    unit: "years",
-    category: "demographics",
-    helperText: "Typical resident age",
+    key: "medianHomeValue",
+    label: "Median Home Price",
+    unit: "$",
+    category: "market-economics",
+    wishCategory: "housing-market",
+    helperText: "Typical sale price",
   },
   {
-    key: "collegeDegreeRate",
-    label: "College Degree Rate",
+    key: "homePriceForecast1yr",
+    label: "1-Yr Price Forecast",
     unit: "%",
-    category: "demographics",
-    helperText: "College-educated %",
+    category: "market-economics",
+    wishCategory: "housing-market",
+    helperText: "Expected price change",
+  },
+  {
+    key: "capRate",
+    label: "Cap Rate",
+    unit: "%",
+    category: "market-economics",
+    wishCategory: "housing-market",
+    helperText: "Rental yield %",
+  },
+  {
+    key: "daysOnMarket",
+    label: "Days on Market",
+    unit: "days",
+    category: "market-economics",
+    wishCategory: "housing-market",
+    helperText: "Avg listing time",
+  },
+  {
+    key: "homeValueGrowthYoy",
+    label: "Home Value Growth",
+    unit: "%",
+    category: "market-economics",
+    wishCategory: "housing-market",
+    helperText: "Past year change",
   },
   {
     key: "walkabilityScore",
-    label: "Walkability Score",
+    label: "Walk Score",
     unit: "0–100",
-    category: "hope-core",
+    category: "lifestyle-walkability",
+    wishCategory: "environment",
     helperText: "Walk to amenities",
+  },
+  {
+    key: "overvaluationPct",
+    label: "Overvaluation %",
+    unit: "%",
+    category: "investor-signals",
+    wishCategory: "investor-signals",
+    helperText: "Vs fair value",
+  },
+  {
+    key: "sellerDesperationScore",
+    label: "Seller Motivation",
+    unit: "0–100",
+    category: "investor-signals",
+    wishCategory: "housing-market",
+    helperText: "Negotiation leverage",
+  },
+  {
+    key: "marketPsf",
+    label: "Market PSF",
+    unit: "$/sqft",
+    category: "investor-signals",
+    wishCategory: "investor-signals",
+    helperText: "Price per sq ft",
+  },
+  {
+    key: "collegeDegreeRate",
+    label: "Education Level",
+    unit: "%",
+    category: "education-schools",
+    wishCategory: "education",
+    helperText: "College-educated %",
   },
 ];

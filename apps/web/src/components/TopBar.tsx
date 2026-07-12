@@ -10,7 +10,7 @@ interface TopBarProps {
   sandboxDrillActive?: boolean;
   searchIndex: SearchResult[];
   onSearchSelect: (result: SearchResult) => void;
-  onOpenCriteria?: () => void;
+  onOpenWishlist?: () => void;
   onDiscover?: () => void;
   discoverDisabled?: boolean;
   discoverLabel?: string;
@@ -23,10 +23,10 @@ export function TopBar({
   sandboxDrillActive = false,
   searchIndex,
   onSearchSelect,
-  onOpenCriteria,
+  onOpenWishlist,
   onDiscover,
   discoverDisabled = false,
-  discoverLabel = "Find neighborhoods",
+  discoverLabel = "Find matches",
 }: TopBarProps) {
   return (
     <header className="top-bar">
@@ -35,11 +35,11 @@ export function TopBar({
         <p>{subtitle}</p>
       </div>
       <SearchBar index={searchIndex} onSelect={onSearchSelect} />
-      {(onOpenCriteria || onDiscover) && (
+      {(onOpenWishlist || onDiscover) && (
         <div className="top-bar__discovery" role="group" aria-label="Neighborhood discovery">
-          {onOpenCriteria && (
-            <button type="button" className="top-bar__criteria-btn" onClick={onOpenCriteria}>
-              Criteria
+          {onOpenWishlist && (
+            <button type="button" className="top-bar__wishlist-btn" onClick={onOpenWishlist}>
+              Wishlist
             </button>
           )}
           {onDiscover && (

@@ -24,8 +24,6 @@ import {
   sandboxCbsaForCounty,
   METRIC_LAYERS,
   rankNeighborhoods,
-  DISCOVERY_MATCH_THRESHOLD,
-  DEFAULT_DISCOVERY_TOP_N,
   type DiscoveryCriteria,
   type DiscoveryFilterMetric,
   type RankedNeighborhood,
@@ -58,7 +56,9 @@ import { Sidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { ContextChip } from "./ContextChip";
 import { StoryDrawer } from "./StoryDrawer";
-import { DiscoveryCriteriaPanel } from "./DiscoveryCriteriaPanel";
+import { WishlistPanel } from "./WishlistPanel";
+import { MatchesList } from "./MatchesList";
+import { CompareChips } from "./CompareChips";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 import { ZipDetailPanel } from "./ZipDetailPanel";
 import { PropertyValuationPanel } from "./PropertyValuationPanel";
@@ -80,6 +80,10 @@ import {
   loadDiscoveryCriteria,
   saveDiscoveryCriteria,
 } from "@/lib/discovery-criteria-storage";
+import {
+  loadDiscoveryFavorites,
+  saveDiscoveryFavorites,
+} from "@/lib/discovery-favorites-storage";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -171,7 +175,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [activeSandboxCbsa, setActiveSandboxCbsa] = useState(DC_METRO_CBSA);
   const [searchFlyTarget, setSearchFlyTarget] = useState<[number, number] | null>(null);
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [criteriaPanelOpen, setCriteriaPanelOpen] = useState(false);
+  const [discoveryShellActive, setDiscoveryShellActive] = useState(false);
+  const [comparePins, setComparePins] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<Set<string>>(() => loadDiscoveryFavorites());
   const [discoveryCriteria, setDiscoveryCriteria] = useState<DiscoveryCriteria>(() =>
     loadDiscoveryCriteria(),
   );
@@ -670,6 +676,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
       : null;
 
+  const discoveryShellVisible =
+    discoveryShellActive && sandboxDrillActive && !isOverviewMode;
+
+  const comparePinnedNeighborhoods = useMemo(() => {
+    if (!discoveryResults) return [];
+    return comparePins
+      .map((zip) => discoveryResults.find((r) => r.zip === zip))
+      .filter((r): r is RankedNeighborhood => r !== undefined);
+  }, [comparePins, discoveryResults]);
+
+  const showMetricSidebar = !discoveryShellVisible;
+
   const sidebarMode =
     isOverviewMode || (activeSection === "metro" && dcStoryActive) ? "full" : "slim";
 
@@ -704,7 +722,38 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     saveDiscoveryCriteria(criteria);
   }, []);
 
-  const handleDiscover = useCallback(() => {
+  const handleOpenWishlist = useCallback(() => {
+    if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
+      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, SF Bay, or San Jose) first");
+      return;
+    }
+    setDiscoveryMessage(null);
+    setDiscoveryShellActive(true);
+  }, [isOverviewMode, activeSandboxCbsa]);
+
+  const handleToggleFavorite = useCallback((zip: string) => {
+    setFavorites((prev) => {
+      const next = new Set(prev);
+      if (next.has(zip)) next.delete(zip);
+      else next.add(zip);
+      saveDiscoveryFavorites(next);
+      return next;
+    });
+  }, []);
+
+  const handleMatchSelect = useCallback(
+    (zip: string) => {
+      handleZipSelect(zip);
+      setDrawerOpen(true);
+    },
+    [handleZipSelect],
+  );
+
+  const handleRemoveComparePin = useCallback((zip: string) => {
+    setComparePins((prev) => prev.filter((z) => z !== zip));
+  }, []);
+
+  const runDiscoveryRanking = useCallback(() => {
     setDiscoveryMessage(null);
     setDiscoveryTourComplete(false);
     prevFlyoverRef.current = false;
@@ -716,29 +765,38 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
     setStoryCameraActive(false);
     setSearchFlyTarget(null);
+    setDiscoveryShellActive(true);
 
-    const results = rankNeighborhoods(
-      activeShardGeoJson,
-      discoveryCriteria,
-      DEFAULT_DISCOVERY_TOP_N,
-    );
-    const qualifying = results.filter((r) => r.matchPercent >= DISCOVERY_MATCH_THRESHOLD);
+    const results = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
 
-    if (qualifying.length === 0) {
-      setDiscoveryResults(results);
-      setDiscoveryMessage(
-        `No neighborhoods match your criteria — all scores below ${DISCOVERY_MATCH_THRESHOLD}%`,
-      );
-      setDrawerOpen(true);
+    if (results.length === 0) {
+      setDiscoveryResults([]);
+      setDiscoveryMessage("No neighborhoods in this sandbox");
       return;
     }
 
-    setDiscoveryResults(qualifying);
+    setDiscoveryResults(results);
+    setComparePins(results.slice(0, 3).map((r) => r.zip));
     setSandboxDrillActive(true);
     setGeography("zip");
-    setSelectedZip(qualifying[0].zip);
-    setDiscoveryFlyover({ results: qualifying, index: 0, phase: "flying" });
+    setSelectedZip(results[0].zip);
   }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria]);
+
+  const handleDiscover = useCallback(() => {
+    runDiscoveryRanking();
+  }, [runDiscoveryRanking]);
+
+  const handleStartFlyoverTour = useCallback(() => {
+    if (!discoveryResults || discoveryResults.length === 0) {
+      runDiscoveryRanking();
+      return;
+    }
+
+    const top3 = discoveryResults.slice(0, 3);
+    setDiscoveryTourComplete(false);
+    setSelectedZip(top3[0].zip);
+    setDiscoveryFlyover({ results: top3, index: 0, phase: "flying" });
+  }, [discoveryResults, runDiscoveryRanking]);
 
   const handleSkipFlyover = useCallback(() => {
     setDiscoveryFlyover(null);
@@ -935,7 +993,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: `#${activeDiscoveryNeighborhood.rank} · ${activeDiscoveryNeighborhood.zip} — ${activeDiscoveryNeighborhood.name}`,
         detail: `${activeDiscoveryNeighborhood.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
         canOpen: true,
-        action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
+        action: { label: "Wishlist", onClick: handleOpenWishlist },
       };
     }
 
@@ -945,7 +1003,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: discoveryMessage,
         detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay, San Jose)",
         canOpen: true,
-        action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
+        action: { label: "Wishlist", onClick: handleOpenWishlist },
       };
     }
 
@@ -1010,6 +1068,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryFlyover,
     discoveryMessage,
     handleSkipFlyover,
+    handleOpenWishlist,
+    discoveryShellVisible,
     discoveryTourComplete,
     activeDiscoveryNeighborhood,
   ]);
@@ -1168,26 +1228,62 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         sandboxDrillActive={sandboxDrillActive}
         searchIndex={SEARCH_INDEX}
         onSearchSelect={handleSearchSelect}
-        onOpenCriteria={() => setCriteriaPanelOpen(true)}
-        onDiscover={handleDiscover}
+        onOpenWishlist={handleOpenWishlist}
+        onDiscover={discoveryShellVisible ? handleDiscover : handleStartFlyoverTour}
         discoverDisabled={discoveryFlyoverActive}
-        discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Tour top neighborhoods"}
+        discoverLabel={
+          discoveryFlyoverActive
+            ? "Tour in progress…"
+            : discoveryShellVisible
+              ? "Find matches"
+              : "Tour top neighborhoods"
+        }
       />
 
       <div
-        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}`}
+        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}`}
       >
-        <aside className="cinematic__sidebar">
-          <Sidebar
-            activeMetric={activeMetric}
-            onMetricChange={setActiveMetric}
-            mode={sidebarMode}
-            selectedZip={selectedZip}
-            zips={zips}
+        {showMetricSidebar && (
+          <aside className="cinematic__sidebar">
+            <Sidebar
+              activeMetric={activeMetric}
+              onMetricChange={setActiveMetric}
+              mode={sidebarMode}
+              selectedZip={selectedZip}
+              zips={zips}
+            />
+          </aside>
+        )}
+
+        {discoveryShellVisible && (
+          <WishlistPanel
+            criteria={discoveryCriteria}
+            resetCriteria={sandboxDiscoveryCriteria}
+            geoJson={activeShardGeoJson}
+            onChange={handleApplyCriteria}
+            onFindMatches={handleDiscover}
           />
-        </aside>
+        )}
+
+        {discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && (
+          <MatchesList
+            results={discoveryResults}
+            selectedZip={selectedZip}
+            favorites={favorites}
+            onSelect={handleMatchSelect}
+            onToggleFavorite={handleToggleFavorite}
+          />
+        )}
 
         <div className="cinematic__map">
+          {discoveryShellVisible && comparePinnedNeighborhoods.length > 0 && (
+            <CompareChips
+              pinned={comparePinnedNeighborhoods}
+              activeZip={selectedZip}
+              onSelect={handleMatchSelect}
+              onRemove={handleRemoveComparePin}
+            />
+          )}
           <ContextChip
             stepLabel={contextChip.stepLabel}
             title={contextChip.title}
@@ -1225,7 +1321,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             <CinematicEntryBar
               metroName={activeShardGeoJson.metadata.metro}
               showStoryMode={activeSandboxCbsa === DC_METRO_CBSA}
-              onTourTopNeighborhoods={handleDiscover}
+              onTourTopNeighborhoods={handleStartFlyoverTour}
               onStoryMode={
                 activeSandboxCbsa === DC_METRO_CBSA ? handleResumeDcStory : undefined
               }
@@ -1295,15 +1391,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       >
         {drawerContent}
       </StoryDrawer>
-
-      <DiscoveryCriteriaPanel
-        open={criteriaPanelOpen}
-        criteria={discoveryCriteria}
-        resetCriteria={sandboxDiscoveryCriteria}
-        geoJson={!isOverviewMode ? activeShardGeoJson : null}
-        onClose={() => setCriteriaPanelOpen(false)}
-        onApply={handleApplyCriteria}
-      />
     </>
   );
 }

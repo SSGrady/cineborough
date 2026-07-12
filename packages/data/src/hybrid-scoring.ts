@@ -381,7 +381,8 @@ export function rankNeighborhoods(
 
   scored.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
 
-  return scored.slice(0, topN).map((entry, i) => ({ ...entry, rank: i + 1 }));
+  const limit = topN <= 0 ? scored.length : Math.min(topN, scored.length);
+  return scored.slice(0, limit).map((entry, i) => ({ ...entry, rank: i + 1 }));
 }
 
 function isFiniteLngLat(coord: unknown): coord is [number, number] {

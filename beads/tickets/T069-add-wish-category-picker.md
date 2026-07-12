@@ -1,7 +1,7 @@
 ---
 id: T069
 title: Add Wish category picker
-status: open
+status: done
 type: feature
 priority: P1
 epic: E008

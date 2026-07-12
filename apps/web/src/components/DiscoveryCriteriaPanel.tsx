@@ -9,6 +9,9 @@ import {
   DEFAULT_DISCOVERY_CRITERIA,
   DISCOVERY_FILTER_METRICS,
   DISCOVERY_MATCH_THRESHOLD,
+  METRIC_CATEGORY_LABELS,
+  METRIC_CATEGORY_ORDER,
+  METRIC_LAYERS,
   countMatchingNeighborhoods,
   createDiscoveryFilter,
   getDiscoveryMetricDef,
@@ -79,6 +82,18 @@ export function DiscoveryCriteriaPanel({
     () => DISCOVERY_FILTER_METRICS.filter((metric) => !activeMetrics.has(metric)),
     [activeMetrics],
   );
+
+  const availableMetricsByCategory = useMemo(() => {
+    const grouped = new Map<(typeof METRIC_CATEGORY_ORDER)[number], DiscoveryFilterMetric[]>();
+    for (const category of METRIC_CATEGORY_ORDER) {
+      const metrics = availableMetrics.filter((metric) => {
+        const layer = METRIC_LAYERS.find((entry) => entry.key === metric);
+        return layer?.category === category;
+      });
+      if (metrics.length > 0) grouped.set(category, metrics);
+    }
+    return grouped;
+  }, [availableMetrics]);
 
   const matchPreview = useMemo(() => {
     if (!geoJson) return null;
@@ -233,11 +248,20 @@ export function DiscoveryCriteriaPanel({
         </button>
         {addMenuOpen && availableMetrics.length > 0 && (
           <ul className="discovery-criteria__add-menu" role="listbox">
-            {availableMetrics.map((metric) => (
-              <li key={metric}>
-                <button type="button" onClick={() => addFilter(metric)}>
-                  {getDiscoveryMetricLabel(metric)}
-                </button>
+            {[...availableMetricsByCategory.entries()].map(([category, metrics]) => (
+              <li key={category} className="discovery-criteria__add-category-group">
+                <div className="discovery-criteria__add-category">
+                  {METRIC_CATEGORY_LABELS[category]}
+                </div>
+                <ul className="discovery-criteria__add-category-items">
+                  {metrics.map((metric) => (
+                    <li key={metric}>
+                      <button type="button" onClick={() => addFilter(metric)}>
+                        {getDiscoveryMetricLabel(metric)}
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </li>
             ))}
           </ul>

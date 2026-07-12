@@ -100,6 +100,20 @@ Hope-Core Discovery
 └── College Degree Rate
 ```
 
+## Taxonomy v2 — WMIL Categories (T074 / ADR-014)
+
+Display labels and sidebar/wish categories reorganized for Where Might I Live parity. Metric keys unchanged; `incomeGrowthRate` remains hidden from `METRIC_LAYERS` and discovery filters.
+
+| Category | Metrics | Display label changes |
+|----------|---------|----------------------|
+| **Demographics** | `medianAge`, `populationGrowthRate`, `remoteWorkPct`, `homeowners25to44Pct` | — |
+| **Market & Economics** | `opportunityScore`, `medianHomeValue`, `homePriceForecast1yr`, `capRate`, `daysOnMarket`, `homeValueGrowthYoy` | `medianHomeValue` → Median Home Price; `homePriceForecast1yr` → 1-Yr Price Forecast; `homeValueGrowthYoy` → Home Value Growth |
+| **Lifestyle & Walkability** | `walkabilityScore` | Walkability Score → Walk Score |
+| **Investor Signals** | `overvaluationPct`, `sellerDesperationScore`, `marketPsf` | Overvalued % → Overvaluation %; Seller Urgency → Seller Motivation |
+| **Education & Schools** | `collegeDegreeRate` | College Degree Rate → Education Level; School Rating placeholder (T075) |
+
+`METRIC_LAYERS` entries include optional `wishCategory` (defaults to `category`). Choropleth sidebar and discovery "Add filter" dropdown share `METRIC_CATEGORY_ORDER` from `packages/data/src/types.ts`.
+
 ## Property-Level Valuation (Level 3)
 
 See [property-valuation.md](./property-valuation.md) for offer ranges, renovation tiers, calculation breakdown, and comparable sales schema. Mock fixtures in `data/mock/properties.json`.

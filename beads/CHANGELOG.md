@@ -4,6 +4,27 @@ Aggregated progress log for Cineborough development.
 
 ---
 
+## 2026-07-12
+
+### T068/T069/T073 — WMIL Discovery Shell
+
+- `WishlistPanel` replaces criteria drawer in sandbox discovery mode (dark #1a1a2e left rail)
+- `WishRangeSlider` + `WishCategoryPicker`; `MatchesList` + `CompareChips`
+- Three-pane layout in `CinematicDiscovery`; metric choropleth sidebar preserved outside discovery
+- Partial match % from `hybrid-scoring` ranks all sandbox ZIPs (no hard-filter dead-end)
+
+**Status:** T068, T069, T073 → `done`.
+
+### T074 — Metric Taxonomy v2
+
+- WMIL-aligned categories: Demographics, Market & Economics, Lifestyle & Walkability, Investor Signals, Education & Schools
+- Display label renames (Median Home Price, Walk Score, Education Level, Seller Motivation)
+- Sidebar + discovery add-filter dropdown share `METRIC_CATEGORY_ORDER`
+
+**Status:** T074 → `done`.
+
+---
+
 ## 2026-07-08
 
 ### Scaffold Complete
