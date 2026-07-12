@@ -8,10 +8,11 @@ interface TopBarProps {
   geography: GeographyLevel;
   onGeographyChange: (level: GeographyLevel) => void;
   sandboxDrillActive?: boolean;
+  criteriaMode?: boolean;
   searchIndex: SearchResult[];
   onSearchSelect: (result: SearchResult) => void;
-  onOpenCriteria?: () => void;
-  criteriaActive?: boolean;
+  onToggleCriteriaView?: () => void;
+  criteriaViewActive?: boolean;
   onDiscover?: () => void;
   discoverDisabled?: boolean;
   discoverLabel?: string;
@@ -22,10 +23,11 @@ export function TopBar({
   geography,
   onGeographyChange,
   sandboxDrillActive = false,
+  criteriaMode = false,
   searchIndex,
   onSearchSelect,
-  onOpenCriteria,
-  criteriaActive = false,
+  onToggleCriteriaView,
+  criteriaViewActive = false,
   onDiscover,
   discoverDisabled = false,
   discoverLabel = "Find matches",
@@ -42,18 +44,19 @@ export function TopBar({
           geography={geography}
           onGeographyChange={onGeographyChange}
           sandboxDrillActive={sandboxDrillActive}
+          criteriaMode={criteriaMode}
         />
       </div>
-      {(onOpenCriteria || onDiscover) && (
+      {(onToggleCriteriaView || onDiscover) && (
         <div className="top-bar__what" role="group" aria-label="Discovery filters">
-          {onOpenCriteria && (
+          {onToggleCriteriaView && (
             <button
               type="button"
-              className={`top-bar__criteria-btn${criteriaActive ? " top-bar__criteria-btn--active" : ""}`}
-              onClick={onOpenCriteria}
-              aria-pressed={criteriaActive}
+              className={`top-bar__criteria-btn${criteriaViewActive ? " top-bar__criteria-btn--active" : ""}`}
+              onClick={onToggleCriteriaView}
+              aria-pressed={criteriaViewActive}
             >
-              Your criteria
+              {criteriaViewActive ? "Map overview" : "Your criteria"}
             </button>
           )}
           {onDiscover && (

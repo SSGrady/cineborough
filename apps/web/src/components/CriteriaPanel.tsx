@@ -12,6 +12,7 @@ import {
   createDiscoveryFilter,
   getDiscoveryMetricDef,
   getDiscoveryMetricLabel,
+  getDiscoveryMetricHelperText,
 } from "@cineborough/data";
 import { CriterionRangeSlider } from "./CriterionRangeSlider";
 import { CriterionCategoryPicker } from "./CriterionCategoryPicker";
@@ -40,16 +41,10 @@ function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
     filters: criteria.filters.map((filter) => {
       const def = getDiscoveryMetricDef(filter.metric);
       const next: DiscoveryFilter = { id: filter.id, metric: filter.metric };
-      if (def.kind === "range" || def.kind === "min") {
-        next.min = filter.min ?? def.defaultMin;
-      }
-      if (def.kind === "range" || def.kind === "max") {
-        next.max = filter.max ?? def.defaultMax;
-      }
-      if (def.kind === "range" && next.min !== undefined && next.max !== undefined) {
-        next.min = Math.min(next.min, next.max);
-        next.max = Math.max(next.min, next.max);
-      }
+      next.min = filter.min ?? def.defaultMin ?? 0;
+      next.max = filter.max ?? def.defaultMax ?? next.min;
+      next.min = Math.min(next.min, next.max);
+      next.max = Math.max(next.min, next.max);
       return next;
     }),
   };
@@ -231,6 +226,11 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
                         ×
                       </button>
                     </div>
+                    {getDiscoveryMetricHelperText(filter.metric) && (
+                      <p className="criterion-card__helper">
+                        {getDiscoveryMetricHelperText(filter.metric)}
+                      </p>
+                    )}
                     <CriterionRangeSlider
                       filter={filter}
                       geoJson={geoJson}

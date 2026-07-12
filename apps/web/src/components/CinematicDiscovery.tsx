@@ -789,7 +789,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const discoveryShellVisible =
     discoveryShellActive && sandboxDrillActive && !isOverviewMode;
 
-  const criteriaPanelVisible = criteriaPanelOpen || discoveryShellVisible;
+  const criteriaPanelVisible = criteriaPanelOpen;
+  const criteriaGeographyRestricted = criteriaPanelOpen || discoveryShellVisible;
 
   const selectedDiscoveryCbsa = useMemo(
     () =>
@@ -1188,6 +1189,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     enterDiscoveryMetro,
   ]);
 
+  const handleCriteriaToggle = useCallback(() => {
+    if (criteriaPanelOpen) {
+      setCriteriaPanelOpen(false);
+      return;
+    }
+    handleOpenCriteria();
+  }, [criteriaPanelOpen, handleOpenCriteria]);
+
+  const handleMapOverview = useCallback(() => {
+    setCriteriaPanelOpen(false);
+  }, []);
+
   const runDiscoveryRanking = useCallback(() => {
     setDiscoveryMessage(null);
     setDiscoveryTourComplete(false);
@@ -1221,6 +1234,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     });
     return () => cancelAnimationFrame(frame);
   }, [criteriaPanelVisible]);
+
+  useEffect(() => {
+    if (!criteriaGeographyRestricted) return;
+    if (geography === "national" || geography === "state") {
+      setGeography("metro");
+    }
+  }, [criteriaGeographyRestricted, geography]);
 
   useEffect(() => {
     if (!sandboxDrillActive || isOverviewMode) {
@@ -1467,7 +1487,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: `#${activeDiscoveryNeighborhood.rank} · ${activeDiscoveryNeighborhood.zip} — ${activeDiscoveryNeighborhood.name}`,
         detail: `${activeDiscoveryNeighborhood.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · PSF $${Math.round(m.marketPsf)}/sqft`,
         canOpen: true,
-        action: { label: "Your criteria", onClick: handleOpenCriteria },
+        action: criteriaPanelOpen
+          ? { label: "Map overview", onClick: handleMapOverview }
+          : { label: "Your criteria", onClick: handleOpenCriteria },
       };
     }
 
@@ -1570,6 +1592,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryMessage,
     handleSkipFlyover,
     handleOpenCriteria,
+    handleMapOverview,
+    criteriaPanelOpen,
     discoveryShellVisible,
     discoveryTourComplete,
     activeDiscoveryNeighborhood,
@@ -1742,10 +1766,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         geography={geography}
         onGeographyChange={handleGeographyChange}
         sandboxDrillActive={sandboxDrillActive}
+        criteriaMode={criteriaGeographyRestricted}
         searchIndex={SEARCH_INDEX}
         onSearchSelect={handleSearchSelect}
-        onOpenCriteria={handleOpenCriteria}
-        criteriaActive={criteriaPanelVisible}
+        onToggleCriteriaView={handleCriteriaToggle}
+        criteriaViewActive={criteriaPanelOpen}
         onDiscover={discoveryShellVisible ? handleDiscover : handleStartFlyoverTour}
         discoverDisabled={discoveryFlyoverActive}
         discoverLabel={
@@ -1880,6 +1905,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             cinematicTourActive={cinematicTourActive}
             labelHighlightZip={labelHighlightZip}
             ingestedCbsas={ingestedCbsas}
+            criteriaMode={criteriaGeographyRestricted}
           />
           {showExploreCityBar && selectedOverviewMetroFeature && (
             <ExploreCityBar

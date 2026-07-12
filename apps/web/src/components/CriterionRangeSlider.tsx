@@ -8,6 +8,7 @@ import {
   getDiscoveryMetricDef,
   getDiscoveryMetricLabel,
   getDiscoveryMetricUnit,
+  getMetricSliderBounds,
   getShardMetricHistogram,
   type HistogramBin,
 } from "@cineborough/data";
@@ -40,18 +41,6 @@ function formatBinRange(metric: DiscoveryFilterMetric, bin: HistogramBin): strin
   return `${formatValue(metric, bin.start)} – ${formatValue(metric, bin.end)}`;
 }
 
-function bandBounds(
-  kind: ReturnType<typeof getDiscoveryMetricDef>["kind"],
-  sliderMin: number,
-  sliderMax: number,
-  currentMin: number,
-  currentMax: number,
-): { lo: number; hi: number } {
-  if (kind === "min") return { lo: currentMin, hi: sliderMax };
-  if (kind === "max") return { lo: sliderMin, hi: currentMax };
-  return { lo: Math.min(currentMin, currentMax), hi: Math.max(currentMin, currentMax) };
-}
-
 function binInBand(bin: HistogramBin, lo: number, hi: number): boolean {
   return bin.end > lo && bin.start < hi;
 }
@@ -63,27 +52,56 @@ export function CriterionRangeSlider({
   onChange,
 }: CriterionRangeSliderProps) {
   const [hoveredBin, setHoveredBin] = useState<number | null>(null);
+  const [activeThumb, setActiveThumb] = useState<"min" | "max" | null>(null);
   const def = getDiscoveryMetricDef(filter.metric);
-  const histogram = useMemo(() => {
+
+  const rawHistogram = useMemo(() => {
     if (!geoJson) return null;
     return getShardMetricHistogram(geoJson, filter.metric, 20);
   }, [geoJson, filter.metric]);
+
+  const { sliderMin, sliderMax, histogram } = useMemo(() => {
+    const bounds = getMetricSliderBounds(filter.metric, rawHistogram);
+    if (!geoJson) {
+      return { sliderMin: bounds.min, sliderMax: bounds.max, histogram: null };
+    }
+    const hist = getShardMetricHistogram(
+      geoJson,
+      filter.metric,
+      20,
+      bounds.min,
+      bounds.max,
+    );
+    return { sliderMin: bounds.min, sliderMax: bounds.max, histogram: hist };
+  }, [geoJson, filter.metric, rawHistogram]);
 
   const maxCount = useMemo(
     () => Math.max(1, ...(histogram?.bins.map((b) => b.count) ?? [1])),
     [histogram],
   );
 
-  const sliderMin = histogram?.min ?? def.defaultMin ?? 0;
-  const sliderMax = histogram?.max ?? def.defaultMax ?? 100;
   const span = sliderMax - sliderMin || 1;
 
   const currentMin = filter.min ?? def.defaultMin ?? sliderMin;
   const currentMax = filter.max ?? def.defaultMax ?? sliderMax;
-  const { lo: bandLo, hi: bandHi } = bandBounds(def.kind, sliderMin, sliderMax, currentMin, currentMax);
+  const bandLo = Math.min(currentMin, currentMax);
+  const bandHi = Math.max(currentMin, currentMax);
 
   const bandLeft = ((bandLo - sliderMin) / span) * 100;
   const bandWidth = ((bandHi - bandLo) / span) * 100;
+
+  const minPercent = ((currentMin - sliderMin) / span) * 100;
+  const maxPercent = ((currentMax - sliderMin) / span) * 100;
+
+  const handleMinChange = (value: number) => {
+    const nextMin = Math.max(sliderMin, Math.min(value, currentMax));
+    onChange({ min: nextMin });
+  };
+
+  const handleMaxChange = (value: number) => {
+    const nextMax = Math.min(sliderMax, Math.max(value, currentMin));
+    onChange({ max: nextMax });
+  };
 
   return (
     <div className={`criterion-range${heatmapActive ? " criterion-range--heatmap" : ""}`}>
@@ -118,66 +136,43 @@ export function CriterionRangeSlider({
         </div>
       )}
 
-      {def.kind === "range" ? (
-        <div className="criterion-range__dual">
-          <input
-            type="range"
-            className="criterion-range__input criterion-range__input--min"
-            min={sliderMin}
-            max={sliderMax}
-            step={def.step}
-            value={currentMin}
-            aria-label={`${getDiscoveryMetricLabel(filter.metric)} minimum`}
-            onChange={(e) => onChange({ min: Number(e.target.value) })}
-          />
-          <input
-            type="range"
-            className="criterion-range__input criterion-range__input--max"
-            min={sliderMin}
-            max={sliderMax}
-            step={def.step}
-            value={currentMax}
-            aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
-            onChange={(e) => onChange({ max: Number(e.target.value) })}
-          />
-          <div className="criterion-range__labels">
-            <span>{formatValue(filter.metric, currentMin)}</span>
-            <span>{formatValue(filter.metric, currentMax)}</span>
-          </div>
+      <div className="criterion-range__dual">
+        <div
+          className="criterion-range__track"
+          style={{ left: `${minPercent}%`, width: `${Math.max(maxPercent - minPercent, 0)}%` }}
+          aria-hidden="true"
+        />
+        <input
+          type="range"
+          className={`criterion-range__input criterion-range__input--min${activeThumb === "min" ? " criterion-range__input--active" : ""}`}
+          min={sliderMin}
+          max={sliderMax}
+          step={def.step}
+          value={currentMin}
+          aria-label={`${getDiscoveryMetricLabel(filter.metric)} minimum`}
+          onPointerDown={() => setActiveThumb("min")}
+          onPointerUp={() => setActiveThumb(null)}
+          onBlur={() => setActiveThumb(null)}
+          onChange={(e) => handleMinChange(Number(e.target.value))}
+        />
+        <input
+          type="range"
+          className={`criterion-range__input criterion-range__input--max${activeThumb === "max" ? " criterion-range__input--active" : ""}`}
+          min={sliderMin}
+          max={sliderMax}
+          step={def.step}
+          value={currentMax}
+          aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
+          onPointerDown={() => setActiveThumb("max")}
+          onPointerUp={() => setActiveThumb(null)}
+          onBlur={() => setActiveThumb(null)}
+          onChange={(e) => handleMaxChange(Number(e.target.value))}
+        />
+        <div className="criterion-range__labels">
+          <span>{formatValue(filter.metric, currentMin)}</span>
+          <span>{formatValue(filter.metric, currentMax)}</span>
         </div>
-      ) : def.kind === "min" ? (
-        <div className="criterion-range__single">
-          <input
-            type="range"
-            className="criterion-range__input"
-            min={sliderMin}
-            max={sliderMax}
-            step={def.step}
-            value={currentMin}
-            aria-label={`${getDiscoveryMetricLabel(filter.metric)} minimum`}
-            onChange={(e) => onChange({ min: Number(e.target.value) })}
-          />
-          <div className="criterion-range__labels">
-            <span>Min: {formatValue(filter.metric, currentMin)}</span>
-          </div>
-        </div>
-      ) : (
-        <div className="criterion-range__single">
-          <input
-            type="range"
-            className="criterion-range__input"
-            min={sliderMin}
-            max={sliderMax}
-            step={def.step}
-            value={currentMax}
-            aria-label={`${getDiscoveryMetricLabel(filter.metric)} maximum`}
-            onChange={(e) => onChange({ max: Number(e.target.value) })}
-          />
-          <div className="criterion-range__labels">
-            <span>Max: {formatValue(filter.metric, currentMax)}</span>
-          </div>
-        </div>
-      )}
+      </div>
     </div>
   );
 }

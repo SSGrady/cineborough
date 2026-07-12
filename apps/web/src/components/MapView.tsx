@@ -91,6 +91,8 @@ interface MapViewProps {
   labelHighlightZip?: string | null;
   /** CBSAs with ingested neighborhood shards — highlighted in overview metro view */
   ingestedCbsas?: ReadonlySet<string>;
+  /** Criteria/discovery mode — purple hover highlight on ZIP polygons */
+  criteriaMode?: boolean;
 }
 
 interface LabelPoint {
@@ -324,6 +326,7 @@ export function MapView({
   cinematicTourActive = false,
   labelHighlightZip = null,
   ingestedCbsas,
+  criteriaMode = false,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -336,6 +339,7 @@ export function MapView({
   const [mapReady, setMapReady] = useState(false);
   const [mapZoom, setMapZoom] = useState(US_NATIONAL_CAMERA.zoom);
   const [tooltipsEnabled, setTooltipsEnabled] = useState(true);
+  const [hoveredZip, setHoveredZip] = useState<string | null>(null);
 
   exploreModeRef.current = exploreMode;
   onUserMapMoveRef.current = onUserMapMove;
@@ -427,6 +431,9 @@ export function MapView({
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
+        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        if (isHovered) return [157, 0, 255, 180];
+
         const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
 
         // Baked fillColorRgb is opportunity-score only; other metrics use runtime choropleth.
@@ -451,6 +458,8 @@ export function MapView({
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
+        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        if (isHovered) return [126, 29, 251, 255];
         if (zip === selectedZip) return [255, 255, 255, 110];
         if (isNationalGeography) return [255, 255, 255, 60];
         if (isStateGeography || isCountyGeography) return [15, 23, 42, 200];
@@ -461,6 +470,8 @@ export function MapView({
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
+        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        if (isHovered) return 2;
         if (zip === selectedZip) return 1.25;
         if (isNationalGeography) return 0.5;
         if (isStateGeography || isCountyGeography) return 1.1;
@@ -469,12 +480,12 @@ export function MapView({
       lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
       lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
-        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel],
-        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas],
-        getLineWidth: [selectedZip, isOverviewView, geographyLevel],
+        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, criteriaMode, hoveredZip],
+        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaMode, hoveredZip],
+        getLineWidth: [selectedZip, isOverviewView, geographyLevel, criteriaMode, hoveredZip],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaMode, hoveredZip]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
@@ -780,6 +791,11 @@ export function MapView({
     return stack;
   }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, google3DTilesLayer, pathLayer, amenityLayers, labelLayers, pathVisible]);
 
+  const handleHover = useCallback((info: PickingInfo) => {
+    const zip = (info.object?.properties as { zipCode?: string } | undefined)?.zipCode ?? null;
+    setHoveredZip(zip);
+  }, []);
+
   const handleClick = useCallback(
     (info: PickingInfo) => {
       const zip = (info.object?.properties as { zipCode?: string })?.zipCode;
@@ -835,11 +851,11 @@ export function MapView({
     const overlay = overlayRef.current;
     if (!overlay || !mapReady) return;
     try {
-      overlay.setProps({ layers, onClick: handleClick });
+      overlay.setProps({ layers, onClick: handleClick, onHover: handleHover });
     } catch {
       // Deck.gl rejects non-mercator Mapbox projections
     }
-  }, [layers, handleClick, mapReady]);
+  }, [layers, handleClick, handleHover, mapReady]);
 
   const applyInteractionMode = useCallback((map: mapboxgl.Map, exploring: boolean) => {
     map.dragPan.enable();

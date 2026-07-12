@@ -63,80 +63,122 @@ const METRIC_FILTER_KIND: Record<
     step: 10_000,
   },
   homePriceForecast1yr: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 0,
-    step: 0.5,
+    defaultMin: -1,
+    defaultMax: 4,
+    step: 0.1,
   },
   overvaluationPct: {
-    kind: "max",
+    kind: "range",
     higherIsBetter: false,
+    defaultMin: 0,
     defaultMax: 40,
     step: 0.5,
   },
-  capRate: { kind: "min", higherIsBetter: true, defaultMin: 2.5, step: 0.1 },
-  daysOnMarket: { kind: "max", higherIsBetter: false, defaultMax: 60, step: 1 },
-  sellerDesperationScore: {
-    kind: "min",
+  capRate: {
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 30,
+    defaultMin: 2,
+    defaultMax: 8,
+    step: 0.1,
+  },
+  daysOnMarket: {
+    kind: "range",
+    higherIsBetter: false,
+    defaultMin: 0,
+    defaultMax: 60,
     step: 1,
   },
-  marketPsf: { kind: "min", higherIsBetter: true, defaultMin: 100, step: 5 },
-  homeValueGrowthYoy: {
-    kind: "min",
+  sellerDesperationScore: {
+    kind: "range",
     higherIsBetter: true,
     defaultMin: 0,
+    defaultMax: 100,
+    step: 1,
+  },
+  marketPsf: {
+    kind: "range",
+    higherIsBetter: true,
+    defaultMin: 50,
+    defaultMax: 500,
+    step: 5,
+  },
+  homeValueGrowthYoy: {
+    kind: "range",
+    higherIsBetter: true,
+    defaultMin: -5,
+    defaultMax: 15,
     step: 0.5,
   },
-  remoteWorkPct: { kind: "min", higherIsBetter: true, defaultMin: 15, step: 0.5 },
-  homeowners25to44Pct: {
-    kind: "min",
+  remoteWorkPct: {
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 20,
+    defaultMin: 0,
+    defaultMax: 50,
+    step: 0.5,
+  },
+  homeowners25to44Pct: {
+    kind: "range",
+    higherIsBetter: true,
+    defaultMin: 0,
+    defaultMax: 60,
     step: 0.5,
   },
   populationGrowthRate: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 0,
+    defaultMin: -2,
+    defaultMax: 5,
     step: 0.5,
   },
-  medianAge: { kind: "max", higherIsBetter: false, defaultMax: 45, step: 1 },
+  medianAge: {
+    kind: "range",
+    higherIsBetter: false,
+    defaultMin: 25,
+    defaultMax: 55,
+    step: 1,
+  },
   collegeDegreeRate: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 30,
+    defaultMin: 0,
+    defaultMax: 80,
     step: 0.5,
   },
   walkabilityScore: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 35,
+    defaultMin: 0,
+    defaultMax: 100,
     step: 1,
   },
   parkScoreProxy: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 30,
+    defaultMin: 0,
+    defaultMax: 100,
     step: 1,
   },
   physiciansPer10k: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 20,
+    defaultMin: 0,
+    defaultMax: 80,
     step: 0.5,
   },
   schoolRatingPlaceholder: {
-    kind: "min",
+    kind: "range",
     higherIsBetter: true,
-    defaultMin: 5,
+    defaultMin: 1,
+    defaultMax: 10,
     step: 0.1,
   },
   airportDriveMin: {
-    kind: "max",
+    kind: "range",
     higherIsBetter: false,
-    defaultMax: 45,
+    defaultMin: 5,
+    defaultMax: 90,
     step: 1,
   },
 };
@@ -148,8 +190,8 @@ export const DISCOVERY_FILTER_METRICS: DiscoveryFilterMetric[] = Object.keys(
 /** Permissive hope-core defaults — no financial hard filters. */
 export const DEFAULT_DISCOVERY_CRITERIA: DiscoveryCriteria = {
   filters: [
-    { id: "default-walk", metric: "walkabilityScore", min: 0 },
-    { id: "default-forecast", metric: "homePriceForecast1yr", min: -100 },
+    { id: "default-walk", metric: "walkabilityScore", min: 0, max: 100 },
+    { id: "default-forecast", metric: "homePriceForecast1yr", min: -1, max: 4 },
   ],
 };
 
@@ -170,19 +212,19 @@ export function getDiscoveryMetricUnit(metric: DiscoveryFilterMetric): string {
   return METRIC_LAYERS.find((m) => m.key === metric)?.unit ?? "";
 }
 
+/** Plain-language one-liner for criterion cards (from METRIC_LAYERS helperText). */
+export function getDiscoveryMetricHelperText(metric: DiscoveryFilterMetric): string | undefined {
+  return METRIC_LAYERS.find((m) => m.key === metric)?.helperText;
+}
+
 export function createDiscoveryFilter(metric: DiscoveryFilterMetric, id?: string): DiscoveryFilter {
   const def = getDiscoveryMetricDef(metric);
-  const filter: DiscoveryFilter = {
+  return {
     id: id ?? `${metric}-${Date.now()}`,
     metric,
+    min: def.defaultMin,
+    max: def.defaultMax,
   };
-  if (def.kind === "range" || def.kind === "min") {
-    filter.min = def.defaultMin;
-  }
-  if (def.kind === "range" || def.kind === "max") {
-    filter.max = def.defaultMax;
-  }
-  return filter;
 }
 
 function normalizeFilters(filters: DiscoveryFilter[]): DiscoveryFilter[] {

@@ -4,6 +4,7 @@ import {
   type DiscoveryFilterMetric,
   CRITERION_CATEGORIES,
   getDiscoveryMetricLabel,
+  getDiscoveryMetricHelperText,
 } from "@cineborough/data";
 
 interface CriterionCategoryPickerProps {
@@ -51,7 +52,14 @@ export function CriterionCategoryPicker({
                             onClose();
                           }}
                         >
-                          {getDiscoveryMetricLabel(metric)}
+                          <span className="criterion-picker__metric-label">
+                            {getDiscoveryMetricLabel(metric)}
+                            {getDiscoveryMetricHelperText(metric) && (
+                              <span className="criterion-picker__helper">
+                                {getDiscoveryMetricHelperText(metric)}
+                              </span>
+                            )}
+                          </span>
                           {added && <span className="criterion-picker__added">Added</span>}
                         </button>
                       </li>
