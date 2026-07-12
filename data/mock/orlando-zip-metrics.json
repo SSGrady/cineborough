@@ -22,7 +22,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 73,
-      "collegeDegreeRate": 56
+      "collegeDegreeRate": 56,
+      "parkScoreProxy": 81,
+      "physiciansPer10k": 17,
+      "schoolRatingPlaceholder": 4.9,
+      "airportDriveMin": 49
     },
     {
       "zip": "32803",
@@ -43,7 +47,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 36.5,
       "walkabilityScore": 58,
-      "collegeDegreeRate": 42
+      "collegeDegreeRate": 42,
+      "parkScoreProxy": 86,
+      "physiciansPer10k": 32,
+      "schoolRatingPlaceholder": 9.1,
+      "airportDriveMin": 36
     },
     {
       "zip": "32804",
@@ -64,7 +72,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 59,
-      "collegeDegreeRate": 43
+      "collegeDegreeRate": 43,
+      "parkScoreProxy": 32,
+      "physiciansPer10k": 34,
+      "schoolRatingPlaceholder": 9.3,
+      "airportDriveMin": 38
     },
     {
       "zip": "32805",
@@ -85,7 +97,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 38,
       "walkabilityScore": 47,
-      "collegeDegreeRate": 34
+      "collegeDegreeRate": 34,
+      "parkScoreProxy": 60,
+      "physiciansPer10k": 23,
+      "schoolRatingPlaceholder": 8.2,
+      "airportDriveMin": 27
     },
     {
       "zip": "32806",
@@ -106,7 +122,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 37,
       "walkabilityScore": 48,
-      "collegeDegreeRate": 29
+      "collegeDegreeRate": 29,
+      "parkScoreProxy": 83,
+      "physiciansPer10k": 25,
+      "schoolRatingPlaceholder": 8.4,
+      "airportDriveMin": 29
     },
     {
       "zip": "32807",
@@ -127,7 +147,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 38,
       "walkabilityScore": 49,
-      "collegeDegreeRate": 30
+      "collegeDegreeRate": 30,
+      "parkScoreProxy": 28,
+      "physiciansPer10k": 27,
+      "schoolRatingPlaceholder": 8.6,
+      "airportDriveMin": 31
     },
     {
       "zip": "32814",
@@ -148,7 +172,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 59,
-      "collegeDegreeRate": 43
+      "collegeDegreeRate": 43,
+      "parkScoreProxy": 32,
+      "physiciansPer10k": 35,
+      "schoolRatingPlaceholder": 9.3,
+      "airportDriveMin": 38
     },
     {
       "zip": "32819",
@@ -169,7 +197,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 81,
-      "collegeDegreeRate": 58
+      "collegeDegreeRate": 58,
+      "parkScoreProxy": 28,
+      "physiciansPer10k": 34,
+      "schoolRatingPlaceholder": 6.5,
+      "airportDriveMin": 17
     },
     {
       "zip": "32822",
@@ -190,7 +222,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 37,
       "walkabilityScore": 44,
-      "collegeDegreeRate": 31
+      "collegeDegreeRate": 31,
+      "parkScoreProxy": 70,
+      "physiciansPer10k": 19,
+      "schoolRatingPlaceholder": 7.6,
+      "airportDriveMin": 21
     },
     {
       "zip": "32825",
@@ -211,7 +247,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 36.5,
       "walkabilityScore": 60,
-      "collegeDegreeRate": 44
+      "collegeDegreeRate": 44,
+      "parkScoreProxy": 54,
+      "physiciansPer10k": 38,
+      "schoolRatingPlaceholder": 4,
+      "airportDriveMin": 40
     },
     {
       "zip": "32828",
@@ -232,7 +272,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 63,
-      "collegeDegreeRate": 41
+      "collegeDegreeRate": 41,
+      "parkScoreProxy": 44,
+      "physiciansPer10k": 16,
+      "schoolRatingPlaceholder": 4.6,
+      "airportDriveMin": 46
     },
     {
       "zip": "32832",
@@ -253,7 +297,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 74,
-      "collegeDegreeRate": 57
+      "collegeDegreeRate": 57,
+      "parkScoreProxy": 26,
+      "physiciansPer10k": 22,
+      "schoolRatingPlaceholder": 5.1,
+      "airportDriveMin": 51
     },
     {
       "zip": "32835",
@@ -274,7 +322,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 36.5,
       "walkabilityScore": 60,
-      "collegeDegreeRate": 44
+      "collegeDegreeRate": 44,
+      "parkScoreProxy": 54,
+      "physiciansPer10k": 39,
+      "schoolRatingPlaceholder": 4,
+      "airportDriveMin": 40
     },
     {
       "zip": "32789",
@@ -295,7 +347,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 81,
-      "collegeDegreeRate": 58
+      "collegeDegreeRate": 58,
+      "parkScoreProxy": 94,
+      "physiciansPer10k": 34,
+      "schoolRatingPlaceholder": 6.4,
+      "airportDriveMin": 23
     },
     {
       "zip": "34741",
@@ -316,7 +372,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 38,
       "walkabilityScore": 43,
-      "collegeDegreeRate": 30
+      "collegeDegreeRate": 30,
+      "parkScoreProxy": 45,
+      "physiciansPer10k": 18,
+      "schoolRatingPlaceholder": 7.3,
+      "airportDriveMin": 25
     },
     {
       "zip": "34747",
@@ -337,7 +397,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 79,
-      "collegeDegreeRate": 56
+      "collegeDegreeRate": 56,
+      "parkScoreProxy": 58,
+      "physiciansPer10k": 32,
+      "schoolRatingPlaceholder": 6,
+      "airportDriveMin": 19
     }
   ]
 }

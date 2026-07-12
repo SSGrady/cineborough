@@ -22,7 +22,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 72,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 59,
+      "physiciansPer10k": 15,
+      "schoolRatingPlaceholder": 4.6,
+      "airportDriveMin": 47
     },
     {
       "zip": "95112",
@@ -43,7 +47,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 57,
-      "collegeDegreeRate": 41
+      "collegeDegreeRate": 41,
+      "parkScoreProxy": 65,
+      "physiciansPer10k": 30,
+      "schoolRatingPlaceholder": 8.8,
+      "airportDriveMin": 34
     },
     {
       "zip": "95116",
@@ -64,7 +72,11 @@
       "incomeGrowthRate": 2.3,
       "medianAge": 37,
       "walkabilityScore": 48,
-      "collegeDegreeRate": 29
+      "collegeDegreeRate": 29,
+      "parkScoreProxy": 84,
+      "physiciansPer10k": 25,
+      "schoolRatingPlaceholder": 8.3,
+      "airportDriveMin": 29
     },
     {
       "zip": "95125",
@@ -85,7 +97,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 77,
-      "collegeDegreeRate": 60
+      "collegeDegreeRate": 60,
+      "parkScoreProxy": 94,
+      "physiciansPer10k": 26,
+      "schoolRatingPlaceholder": 5.6,
+      "airportDriveMin": 57
     },
     {
       "zip": "95126",
@@ -106,7 +122,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 78,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 39,
+      "physiciansPer10k": 28,
+      "schoolRatingPlaceholder": 5.8,
+      "airportDriveMin": 59
     },
     {
       "zip": "95128",
@@ -127,7 +147,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 63,
-      "collegeDegreeRate": 41
+      "collegeDegreeRate": 41,
+      "parkScoreProxy": 45,
+      "physiciansPer10k": 15,
+      "schoolRatingPlaceholder": 4.5,
+      "airportDriveMin": 46
     },
     {
       "zip": "95129",
@@ -148,7 +172,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 81,
-      "collegeDegreeRate": 58
+      "collegeDegreeRate": 58,
+      "parkScoreProxy": 100,
+      "physiciansPer10k": 34,
+      "schoolRatingPlaceholder": 6.4,
+      "airportDriveMin": 17
     },
     {
       "zip": "94086",
@@ -169,7 +197,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 78,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 100,
+      "physiciansPer10k": 27,
+      "schoolRatingPlaceholder": 5.7,
+      "airportDriveMin": 57
     },
     {
       "zip": "95050",
@@ -190,7 +222,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 55,
-      "collegeDegreeRate": 39
+      "collegeDegreeRate": 39,
+      "parkScoreProxy": 86,
+      "physiciansPer10k": 29,
+      "schoolRatingPlaceholder": 8.3,
+      "airportDriveMin": 28
     },
     {
       "zip": "94301",
@@ -211,7 +247,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 35,
       "walkabilityScore": 73,
-      "collegeDegreeRate": 56
+      "collegeDegreeRate": 56,
+      "parkScoreProxy": 100,
+      "physiciansPer10k": 18,
+      "schoolRatingPlaceholder": 5,
+      "airportDriveMin": 53
     },
     {
       "zip": "94306",
@@ -232,7 +272,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 78,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 57,
+      "physiciansPer10k": 28,
+      "schoolRatingPlaceholder": 6,
+      "airportDriveMin": 15
     },
     {
       "zip": "94040",
@@ -253,7 +297,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 72,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 44,
+      "physiciansPer10k": 17,
+      "schoolRatingPlaceholder": 4.5,
+      "airportDriveMin": 45
     },
     {
       "zip": "95014",
@@ -274,7 +322,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 76,
-      "collegeDegreeRate": 59
+      "collegeDegreeRate": 59,
+      "parkScoreProxy": 61,
+      "physiciansPer10k": 22,
+      "schoolRatingPlaceholder": 5.3,
+      "airportDriveMin": 53
     },
     {
       "zip": "95008",
@@ -295,7 +347,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 35.5,
       "walkabilityScore": 63,
-      "collegeDegreeRate": 41
+      "collegeDegreeRate": 41,
+      "parkScoreProxy": 34,
+      "physiciansPer10k": 12,
+      "schoolRatingPlaceholder": 4.4,
+      "airportDriveMin": 44
     },
     {
       "zip": "95030",
@@ -316,7 +372,11 @@
       "incomeGrowthRate": 3.5,
       "medianAge": 34,
       "walkabilityScore": 72,
-      "collegeDegreeRate": 55
+      "collegeDegreeRate": 55,
+      "parkScoreProxy": 48,
+      "physiciansPer10k": 16,
+      "schoolRatingPlaceholder": 4.5,
+      "airportDriveMin": 45
     },
     {
       "zip": "95035",
@@ -337,7 +397,11 @@
       "incomeGrowthRate": 3,
       "medianAge": 36.5,
       "walkabilityScore": 60,
-      "collegeDegreeRate": 44
+      "collegeDegreeRate": 44,
+      "parkScoreProxy": 44,
+      "physiciansPer10k": 37,
+      "schoolRatingPlaceholder": 9.3,
+      "airportDriveMin": 38
     }
   ]
 }
