@@ -57,7 +57,7 @@ export function CompareChips({
   if (pinned.length === 0) return null;
 
   return (
-    <div className="compare-chips" role="group" aria-label="Compare neighborhoods">
+    <div className="compare-chips" role="tablist" aria-label="Compare neighborhoods">
       <span className="compare-chips__label">Compare</span>
       {pinned.map((r, index) => {
         const isActive = activeZip === r.zip;
@@ -68,6 +68,8 @@ export function CompareChips({
           <button
             key={r.zip}
             type="button"
+            role="tab"
+            aria-selected={isActive}
             draggable
             className={`compare-chips__chip${isActive ? " compare-chips__chip--active" : ""}${isDragging ? " compare-chips__chip--dragging" : ""}${isDropTarget ? " compare-chips__chip--drop-target" : ""}`}
             onClick={() => onSelect(r.zip)}

@@ -30,13 +30,20 @@ export function TopBar({
 }: TopBarProps) {
   return (
     <header className="top-bar">
-      <div className="top-bar__brand">
-        <h1>Cineborough</h1>
-        <p>{subtitle}</p>
+      <div className="top-bar__where" aria-label="Scope and search">
+        <div className="top-bar__brand">
+          <h1>Cineborough</h1>
+          <p>{subtitle}</p>
+        </div>
+        <SearchBar index={searchIndex} onSelect={onSearchSelect} />
+        <GeographyBar
+          geography={geography}
+          onGeographyChange={onGeographyChange}
+          sandboxDrillActive={sandboxDrillActive}
+        />
       </div>
-      <SearchBar index={searchIndex} onSelect={onSearchSelect} />
       {(onOpenCriteria || onDiscover) && (
-        <div className="top-bar__discovery" role="group" aria-label="Neighborhood discovery">
+        <div className="top-bar__what" role="group" aria-label="Discovery filters">
           {onOpenCriteria && (
             <button type="button" className="top-bar__criteria-btn" onClick={onOpenCriteria}>
               Your criteria
@@ -54,11 +61,6 @@ export function TopBar({
           )}
         </div>
       )}
-      <GeographyBar
-        geography={geography}
-        onGeographyChange={onGeographyChange}
-        sandboxDrillActive={sandboxDrillActive}
-      />
     </header>
   );
 }
