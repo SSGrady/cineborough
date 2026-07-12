@@ -158,3 +158,20 @@ Aggregated progress log for Cineborough development.
 - Orlando SunRail + Lake Eola trail mock paths
 
 **Status:** T051, T052, T053, T054 → `done`. T055 (QA) → `open`.
+
+## 2026-07-12
+
+### E007 / S008 — SF Bay live ingest + FHFA fix (T056)
+
+- Re-ran `ingest:census-acs`, `ingest:zhvi --only=zip`, `ingest:redfin` for all **52** sandbox ZIPs (DC + Orlando + SF Bay)
+- Fixed FHFA mapping: CBSA 41860 → MSAD **41884** (SF core proxy) for derived forecast/overvaluation
+- `build-metro-shard.ts` MultiPolygon centroid fix (94611, 94704 flyover labels)
+- Rebuilt `data/metros/{47900,36740,41860}.geojson` with full live stack
+
+### E002 / S011 — SF Bay cinematic paths + amenities (T056)
+
+- `data/mock/sf-bay-transit-path.geojson` — BART Market St, Golden Gate Park trail, Rockridge BART
+- 54 amenity POIs for SF Bay ZIPs in `sandbox-amenities.geojson`
+- Discovery guidance copy includes SF Bay sandbox
+
+**Status:** T056 → `done`. T055 QA scope expanded to DC + Orlando + SF Bay.

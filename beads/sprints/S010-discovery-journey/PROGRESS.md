@@ -11,11 +11,11 @@
 
 ## Remaining
 
-- [ ] S010 wrap — manual QA on DC + Orlando discovery tour end-to-end
+- [ ] S010 wrap — manual QA on DC + Orlando + SF Bay discovery tour end-to-end
 
 ## Notes
 
-- Discovery works in DC (47900) and Orlando (36740) sandbox metros only
+- Discovery works in DC (47900), Orlando (36740), and SF Bay (41860) sandbox metros
 - National / non-sandbox metros show guidance via context chip
 - Flyover uses pitched camera to ZIP centroids; amenity POI glow + route trace-in shipped in S011 (T051–T054)
 - Analytics overlay shows on highlight phase + tour complete; mock fields labeled via `METRIC_PROVENANCE`

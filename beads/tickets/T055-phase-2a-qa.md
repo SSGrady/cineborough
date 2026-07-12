@@ -14,6 +14,7 @@ depends_on:
 acceptance:
   - DC sandbox discovery tour shows amenities + route trace-in
   - Orlando sandbox same flow
+  - SF Bay sandbox same flow (BART + park trail paths)
   - State default overview unchanged
   - pnpm typecheck and lint pass
 ---

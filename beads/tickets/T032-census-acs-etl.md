@@ -1,7 +1,7 @@
 ---
 id: T032
 title: Census ACS demographics ETL
-status: open
+status: done
 type: feature
 priority: P1
 epic: E007

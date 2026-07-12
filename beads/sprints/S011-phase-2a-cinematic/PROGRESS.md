@@ -8,10 +8,11 @@
 - [x] T052 — Route path trace-in animation (`path-trace.ts`, RAF progress during flying phase)
 - [x] T053 — Unified tour chrome (`cinematicTourActive`, `cinematic--tour`, analytics CSS entrance)
 - [x] T054 — Orlando SunRail + Lake Eola trail mock paths
+- [x] T056 — SF Bay BART + park trail paths, amenity POIs, live ingest overlay
 
 ## Remaining
 
-- [ ] T055 — Manual QA DC + Orlando discovery tour end-to-end
+- [ ] T055 — Manual QA DC + Orlando + SF Bay discovery tour end-to-end
 
 ## Notes
 

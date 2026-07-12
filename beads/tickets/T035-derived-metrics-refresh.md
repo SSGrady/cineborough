@@ -1,7 +1,7 @@
 ---
 id: T035
 title: Derived metrics and refresh cron
-status: open
+status: done
 type: task
 priority: P1
 epic: E007
