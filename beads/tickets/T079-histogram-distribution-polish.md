@@ -1,7 +1,7 @@
 ---
 id: T079
 title: Histogram distribution polish
-status: open
+status: done
 type: feature
 priority: P2
 epic: E009

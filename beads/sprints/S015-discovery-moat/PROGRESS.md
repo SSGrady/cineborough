@@ -12,11 +12,11 @@
 
 ## Phase 2 — Discovery v2
 
-- [ ] T079 — Histogram distribution polish
-- [ ] T088 — Compare chips pin-from-map
-- [ ] T082 — Criteria terminology audit
-- [ ] T089 — New criterion metrics (park, physicians, airport, school)
-- [ ] T090 — By Example similarity mode
+- [x] T079 — Histogram distribution polish
+- [x] T088 — Compare chips pin-from-map
+- [x] T082 — Criteria terminology audit
+- [x] T089 — New criterion metrics (park, physicians, airport, school)
+- [x] T090 — By Example similarity mode
 
 ## Phase 3 — Cineborough Moat
 

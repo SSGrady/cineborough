@@ -1,7 +1,7 @@
 ---
 id: T088
 title: Compare chips pin-from-map action
-status: open
+status: done
 type: feature
 priority: P2
 epic: E009

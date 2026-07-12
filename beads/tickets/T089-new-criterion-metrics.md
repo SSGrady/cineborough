@@ -1,7 +1,7 @@
 ---
 id: T089
 title: New criterion metrics (park, physicians, airport, school)
-status: open
+status: done
 type: feature
 priority: P2
 epic: E009

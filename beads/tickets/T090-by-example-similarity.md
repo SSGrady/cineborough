@@ -1,7 +1,7 @@
 ---
 id: T090
 title: By Example similarity mode
-status: open
+status: done
 type: feature
 priority: P3
 epic: E009

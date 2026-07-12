@@ -6,6 +6,16 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### S015 Phase 2 — Discovery v2 (T079, T088, T082, T089, T090)
+
+- **T079** — Histogram bars with hover bin count, in-band shading, heatmap-sync accent
+- **T088** — Map-click pin-to-compare offer (max 4), drag-reorder chips, full-bar hint
+- **T089** — Four new criterion metrics in schema + shards: parkScoreProxy, physiciansPer10k, schoolRatingPlaceholder, airportDriveMin
+- **T090** — By Example tab, cosine similarity on normalized metric vector, similarity % in matches list
+- **T082** — `pnpm lint:discovery-terms` guard; zero user-facing "wish" strings; deprecation doc
+
+**Status:** T079, T088, T082, T089, T090 → `done`.
+
 ### T080 — Criterion Priority Toggles
 
 - Heatmap / High Priority / Just This toggles per criterion card (WMIL parity)

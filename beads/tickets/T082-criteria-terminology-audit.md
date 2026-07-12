@@ -1,7 +1,7 @@
 ---
 id: T082
 title: Criteria terminology audit & lint guard
-status: open
+status: done
 type: chore
 priority: P2
 epic: E009
