@@ -11,10 +11,11 @@
 - [x] T056 — SF Bay BART + park trail paths, amenity POIs, live ingest overlay
 - [x] T057 — San Jose VTA/Caltrain/trail paths, amenity POIs, live ingest overlay
 - [x] T055 — Manual QA DC + Orlando + SF Bay discovery tour end-to-end
+- [x] T059 — San Jose Phase 2a QA (discovery criteria + tour paths)
 
 ## Remaining
 
-- (none — Phase 2a QA complete for DC, Orlando, SF Bay)
+- (none — Phase 2a QA complete for DC, Orlando, SF Bay, San Jose)
 
 ## Notes
 

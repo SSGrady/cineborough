@@ -8,6 +8,7 @@ import { StoryDrawer } from "./StoryDrawer";
 interface DiscoveryCriteriaPanelProps {
   open: boolean;
   criteria: DiscoveryCriteria;
+  resetCriteria?: DiscoveryCriteria;
   onClose: () => void;
   onApply: (criteria: DiscoveryCriteria) => void;
 }
@@ -21,6 +22,7 @@ function formatBudget(value: number): string {
 export function DiscoveryCriteriaPanel({
   open,
   criteria,
+  resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
   onClose,
   onApply,
 }: DiscoveryCriteriaPanelProps) {
@@ -132,7 +134,7 @@ export function DiscoveryCriteriaPanel({
       </fieldset>
 
       <div className="discovery-criteria__actions">
-        <button type="button" className="discovery-criteria__reset" onClick={() => setDraft(DEFAULT_DISCOVERY_CRITERIA)}>
+        <button type="button" className="discovery-criteria__reset" onClick={() => setDraft(resetCriteria)}>
           Reset defaults
         </button>
         <button type="button" className="discovery-criteria__apply" onClick={handleApply}>

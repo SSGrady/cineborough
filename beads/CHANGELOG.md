@@ -234,3 +234,11 @@ Aggregated progress log for Cineborough development.
 - `MapView` county labels + blocked drill-in clicks
 
 **Status:** T058 → `done`. S012 → `done`.
+
+### T059 — San Jose Phase 2a QA (S011)
+
+- Default discovery criteria yielded 0 matches for CBSA 41940 on live ingest; added `SAN_JOSE_DISCOVERY_CRITERIA` with auto-apply on sandbox drill-in
+- Added BART Milpitas (95035) and VTA Rose Garden (95126) transit paths for top-3 tour stops
+- Playwright headless QA + API verification pass
+
+**Status:** T059 → `done`. All four sandboxes (DC, Orlando, SF Bay, San Jose) Phase 2a QA complete.

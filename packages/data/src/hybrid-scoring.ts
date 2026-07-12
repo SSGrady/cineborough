@@ -23,6 +23,36 @@ export const DEFAULT_DISCOVERY_CRITERIA: DiscoveryCriteria = {
   minRemoteWorkPct: 20,
 };
 
+/** Silicon Valley price/cap-rate profile — yields ≥3 matches on live 41940 shard. */
+export const SAN_JOSE_DISCOVERY_CRITERIA: DiscoveryCriteria = {
+  budgetMin: 500_000,
+  budgetMax: 1_500_000,
+  minCapRate: 2.0,
+  maxOvervaluationPct: 35,
+  minWalkability: 35,
+  minRemoteWorkPct: 15,
+};
+
+const SANDBOX_DISCOVERY_CRITERIA: Record<string, DiscoveryCriteria> = {
+  "41940": SAN_JOSE_DISCOVERY_CRITERIA,
+};
+
+export function discoveryCriteriaEqual(a: DiscoveryCriteria, b: DiscoveryCriteria): boolean {
+  return (
+    a.budgetMin === b.budgetMin &&
+    a.budgetMax === b.budgetMax &&
+    a.minCapRate === b.minCapRate &&
+    a.maxOvervaluationPct === b.maxOvervaluationPct &&
+    a.minWalkability === b.minWalkability &&
+    a.minRemoteWorkPct === b.minRemoteWorkPct
+  );
+}
+
+/** Default criteria for a sandbox CBSA; falls back to global defaults. */
+export function discoveryCriteriaForSandbox(cbsaCode: string): DiscoveryCriteria {
+  return SANDBOX_DISCOVERY_CRITERIA[cbsaCode] ?? DEFAULT_DISCOVERY_CRITERIA;
+}
+
 export interface ScoreBreakdown {
   capRate: number;
   overvaluation: number;

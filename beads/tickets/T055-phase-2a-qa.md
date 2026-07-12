@@ -15,6 +15,7 @@ acceptance:
   - DC sandbox discovery tour shows amenities + route trace-in
   - Orlando sandbox same flow
   - SF Bay sandbox same flow (BART + park trail paths)
+  - San Jose sandbox QA tracked in T059 (added after T055 closed)
   - State default overview unchanged
   - pnpm typecheck and lint pass
 ---
