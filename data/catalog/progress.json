@@ -1,0 +1,4820 @@
+{
+  "version": 1,
+  "updatedAt": "2026-07-12T13:21:58.614Z",
+  "totalMetros": 918,
+  "completedMetros": 29,
+  "failedMetros": 0,
+  "totalNeighborhoods": 543,
+  "entries": {
+    "10100": {
+      "cbsaCode": "10100",
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T13:17:44.969Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10100.geojson",
+      "completedAt": "2026-07-12T13:17:48.542Z"
+    },
+    "10140": {
+      "cbsaCode": "10140",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "10180": {
+      "cbsaCode": "10180",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "10220": {
+      "cbsaCode": "10220",
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T13:17:48.551Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10220.geojson",
+      "completedAt": "2026-07-12T13:17:51.125Z"
+    },
+    "10260": {
+      "cbsaCode": "10260",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "10300": {
+      "cbsaCode": "10300",
+      "status": "done",
+      "zipCount": 17,
+      "startedAt": "2026-07-12T13:18:07.567Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10300.geojson",
+      "completedAt": "2026-07-12T13:18:15.483Z"
+    },
+    "10380": {
+      "cbsaCode": "10380",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "10420": {
+      "cbsaCode": "10420",
+      "status": "done",
+      "zipCount": 44,
+      "startedAt": "2026-07-12T13:18:15.491Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10420.geojson",
+      "completedAt": "2026-07-12T13:18:34.572Z"
+    },
+    "10460": {
+      "cbsaCode": "10460",
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T13:18:34.582Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10460.geojson",
+      "completedAt": "2026-07-12T13:18:38.221Z"
+    },
+    "10500": {
+      "cbsaCode": "10500",
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T13:18:38.231Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10500.geojson",
+      "completedAt": "2026-07-12T13:18:45.890Z"
+    },
+    "10540": {
+      "cbsaCode": "10540",
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T13:18:45.899Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10540.geojson",
+      "completedAt": "2026-07-12T13:18:53.673Z"
+    },
+    "10580": {
+      "cbsaCode": "10580",
+      "status": "done",
+      "zipCount": 110,
+      "startedAt": "2026-07-12T13:18:53.682Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10580.geojson",
+      "completedAt": "2026-07-12T13:19:42.264Z"
+    },
+    "10620": {
+      "cbsaCode": "10620",
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T13:19:42.278Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10620.geojson",
+      "completedAt": "2026-07-12T13:19:46.238Z"
+    },
+    "10660": {
+      "cbsaCode": "10660",
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T13:19:46.247Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10660.geojson",
+      "completedAt": "2026-07-12T13:19:51.615Z"
+    },
+    "10700": {
+      "cbsaCode": "10700",
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T13:19:51.624Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10700.geojson",
+      "completedAt": "2026-07-12T13:19:55.984Z"
+    },
+    "10740": {
+      "cbsaCode": "10740",
+      "status": "done",
+      "zipCount": 38,
+      "startedAt": "2026-07-12T13:19:55.992Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10740.geojson",
+      "completedAt": "2026-07-12T13:20:13.210Z"
+    },
+    "10760": {
+      "cbsaCode": "10760",
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T13:20:13.219Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10760.geojson",
+      "completedAt": "2026-07-12T13:20:18.588Z"
+    },
+    "10780": {
+      "cbsaCode": "10780",
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T13:20:18.597Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10780.geojson",
+      "completedAt": "2026-07-12T13:20:28.937Z"
+    },
+    "10820": {
+      "cbsaCode": "10820",
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T13:20:28.946Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10820.geojson",
+      "completedAt": "2026-07-12T13:20:33.958Z"
+    },
+    "10860": {
+      "cbsaCode": "10860",
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T13:20:33.967Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10860.geojson",
+      "completedAt": "2026-07-12T13:20:37.630Z"
+    },
+    "10900": {
+      "cbsaCode": "10900",
+      "status": "done",
+      "zipCount": 66,
+      "startedAt": "2026-07-12T13:20:37.639Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10900.geojson",
+      "completedAt": "2026-07-12T13:21:08.732Z"
+    },
+    "10940": {
+      "cbsaCode": "10940",
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T13:21:08.742Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10940.geojson",
+      "completedAt": "2026-07-12T13:21:13.456Z"
+    },
+    "10980": {
+      "cbsaCode": "10980",
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T13:21:13.464Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/10980.geojson",
+      "completedAt": "2026-07-12T13:21:16.578Z"
+    },
+    "11020": {
+      "cbsaCode": "11020",
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T13:21:16.588Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11020.geojson",
+      "completedAt": "2026-07-12T13:21:21.448Z"
+    },
+    "11060": {
+      "cbsaCode": "11060",
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T13:21:21.457Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11060.geojson",
+      "completedAt": "2026-07-12T13:21:23.654Z"
+    },
+    "11100": {
+      "cbsaCode": "11100",
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T13:21:23.665Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11100.geojson",
+      "completedAt": "2026-07-12T13:21:32.684Z"
+    },
+    "11140": {
+      "cbsaCode": "11140",
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T13:21:32.693Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11140.geojson",
+      "completedAt": "2026-07-12T13:21:36.023Z"
+    },
+    "11180": {
+      "cbsaCode": "11180",
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T13:21:36.032Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11180.geojson",
+      "completedAt": "2026-07-12T13:21:44.329Z"
+    },
+    "11220": {
+      "cbsaCode": "11220",
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T13:21:44.338Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11220.geojson",
+      "completedAt": "2026-07-12T13:21:48.609Z"
+    },
+    "11260": {
+      "cbsaCode": "11260",
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T13:21:48.619Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11260.geojson",
+      "completedAt": "2026-07-12T13:21:57.877Z"
+    },
+    "11380": {
+      "cbsaCode": "11380",
+      "status": "done",
+      "zipCount": 1,
+      "startedAt": "2026-07-12T13:21:57.886Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/11380.geojson",
+      "completedAt": "2026-07-12T13:21:58.612Z"
+    },
+    "11420": {
+      "cbsaCode": "11420",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "11460": {
+      "cbsaCode": "11460",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "11500": {
+      "cbsaCode": "11500",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "11540": {
+      "cbsaCode": "11540",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "11580": {
+      "cbsaCode": "11580",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "11620": {
+      "cbsaCode": "11620",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "11640": {
+      "cbsaCode": "11640",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "11660": {
+      "cbsaCode": "11660",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "11680": {
+      "cbsaCode": "11680",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "11700": {
+      "cbsaCode": "11700",
+      "status": "pending",
+      "zipCount": 34
+    },
+    "11740": {
+      "cbsaCode": "11740",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "11780": {
+      "cbsaCode": "11780",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "11820": {
+      "cbsaCode": "11820",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "11860": {
+      "cbsaCode": "11860",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "11900": {
+      "cbsaCode": "11900",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "11940": {
+      "cbsaCode": "11940",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "11980": {
+      "cbsaCode": "11980",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "12020": {
+      "cbsaCode": "12020",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "12060": {
+      "cbsaCode": "12060",
+      "status": "pending",
+      "zipCount": 203
+    },
+    "12100": {
+      "cbsaCode": "12100",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "12120": {
+      "cbsaCode": "12120",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "12140": {
+      "cbsaCode": "12140",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "12180": {
+      "cbsaCode": "12180",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "12220": {
+      "cbsaCode": "12220",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "12260": {
+      "cbsaCode": "12260",
+      "status": "pending",
+      "zipCount": 43
+    },
+    "12300": {
+      "cbsaCode": "12300",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "12380": {
+      "cbsaCode": "12380",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "12420": {
+      "cbsaCode": "12420",
+      "status": "pending",
+      "zipCount": 87
+    },
+    "12460": {
+      "cbsaCode": "12460",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "12540": {
+      "cbsaCode": "12540",
+      "status": "pending",
+      "zipCount": 40
+    },
+    "12580": {
+      "cbsaCode": "12580",
+      "status": "pending",
+      "zipCount": 150
+    },
+    "12620": {
+      "cbsaCode": "12620",
+      "status": "pending",
+      "zipCount": 33
+    },
+    "12660": {
+      "cbsaCode": "12660",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "12680": {
+      "cbsaCode": "12680",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "12700": {
+      "cbsaCode": "12700",
+      "status": "pending",
+      "zipCount": 38
+    },
+    "12740": {
+      "cbsaCode": "12740",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "12780": {
+      "cbsaCode": "12780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "12820": {
+      "cbsaCode": "12820",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "12860": {
+      "cbsaCode": "12860",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "12900": {
+      "cbsaCode": "12900",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "12940": {
+      "cbsaCode": "12940",
+      "status": "pending",
+      "zipCount": 53
+    },
+    "12980": {
+      "cbsaCode": "12980",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "13020": {
+      "cbsaCode": "13020",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "13060": {
+      "cbsaCode": "13060",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "13100": {
+      "cbsaCode": "13100",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "13140": {
+      "cbsaCode": "13140",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "13180": {
+      "cbsaCode": "13180",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "13220": {
+      "cbsaCode": "13220",
+      "status": "pending",
+      "zipCount": 37
+    },
+    "13260": {
+      "cbsaCode": "13260",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "13300": {
+      "cbsaCode": "13300",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "13340": {
+      "cbsaCode": "13340",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "13380": {
+      "cbsaCode": "13380",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "13420": {
+      "cbsaCode": "13420",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "13460": {
+      "cbsaCode": "13460",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "13500": {
+      "cbsaCode": "13500",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "13540": {
+      "cbsaCode": "13540",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "13620": {
+      "cbsaCode": "13620",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "13660": {
+      "cbsaCode": "13660",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "13700": {
+      "cbsaCode": "13700",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "13720": {
+      "cbsaCode": "13720",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "13740": {
+      "cbsaCode": "13740",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "13780": {
+      "cbsaCode": "13780",
+      "status": "pending",
+      "zipCount": 33
+    },
+    "13820": {
+      "cbsaCode": "13820",
+      "status": "pending",
+      "zipCount": 91
+    },
+    "13900": {
+      "cbsaCode": "13900",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "13940": {
+      "cbsaCode": "13940",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "13980": {
+      "cbsaCode": "13980",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "14010": {
+      "cbsaCode": "14010",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "14020": {
+      "cbsaCode": "14020",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "14100": {
+      "cbsaCode": "14100",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "14140": {
+      "cbsaCode": "14140",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "14180": {
+      "cbsaCode": "14180",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "14220": {
+      "cbsaCode": "14220",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "14260": {
+      "cbsaCode": "14260",
+      "status": "pending",
+      "zipCount": 37
+    },
+    "14300": {
+      "cbsaCode": "14300",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "14340": {
+      "cbsaCode": "14340",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "14380": {
+      "cbsaCode": "14380",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "14420": {
+      "cbsaCode": "14420",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "14460": {
+      "cbsaCode": "14460",
+      "status": "pending",
+      "zipCount": 272
+    },
+    "14500": {
+      "cbsaCode": "14500",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "14540": {
+      "cbsaCode": "14540",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "14580": {
+      "cbsaCode": "14580",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "14620": {
+      "cbsaCode": "14620",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "14660": {
+      "cbsaCode": "14660",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "14700": {
+      "cbsaCode": "14700",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "14720": {
+      "cbsaCode": "14720",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "14740": {
+      "cbsaCode": "14740",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "14780": {
+      "cbsaCode": "14780",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "14820": {
+      "cbsaCode": "14820",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "14860": {
+      "cbsaCode": "14860",
+      "status": "pending",
+      "zipCount": 46
+    },
+    "15020": {
+      "cbsaCode": "15020",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "15060": {
+      "cbsaCode": "15060",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "15100": {
+      "cbsaCode": "15100",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "15140": {
+      "cbsaCode": "15140",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "15180": {
+      "cbsaCode": "15180",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "15220": {
+      "cbsaCode": "15220",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "15260": {
+      "cbsaCode": "15260",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "15340": {
+      "cbsaCode": "15340",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "15380": {
+      "cbsaCode": "15380",
+      "status": "pending",
+      "zipCount": 79
+    },
+    "15420": {
+      "cbsaCode": "15420",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "15460": {
+      "cbsaCode": "15460",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "15500": {
+      "cbsaCode": "15500",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "15540": {
+      "cbsaCode": "15540",
+      "status": "pending",
+      "zipCount": 36
+    },
+    "15580": {
+      "cbsaCode": "15580",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "15620": {
+      "cbsaCode": "15620",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "15660": {
+      "cbsaCode": "15660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "15680": {
+      "cbsaCode": "15680",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "15700": {
+      "cbsaCode": "15700",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "15740": {
+      "cbsaCode": "15740",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "15780": {
+      "cbsaCode": "15780",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "15820": {
+      "cbsaCode": "15820",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "15860": {
+      "cbsaCode": "15860",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "15900": {
+      "cbsaCode": "15900",
+      "status": "pending",
+      "zipCount": 36
+    },
+    "15940": {
+      "cbsaCode": "15940",
+      "status": "pending",
+      "zipCount": 36
+    },
+    "15980": {
+      "cbsaCode": "15980",
+      "status": "pending",
+      "zipCount": 34
+    },
+    "16020": {
+      "cbsaCode": "16020",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "16060": {
+      "cbsaCode": "16060",
+      "status": "pending",
+      "zipCount": 29
+    },
+    "16100": {
+      "cbsaCode": "16100",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "16140": {
+      "cbsaCode": "16140",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "16180": {
+      "cbsaCode": "16180",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "16220": {
+      "cbsaCode": "16220",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "16260": {
+      "cbsaCode": "16260",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "16300": {
+      "cbsaCode": "16300",
+      "status": "pending",
+      "zipCount": 48
+    },
+    "16340": {
+      "cbsaCode": "16340",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "16380": {
+      "cbsaCode": "16380",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "16420": {
+      "cbsaCode": "16420",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "16460": {
+      "cbsaCode": "16460",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "16500": {
+      "cbsaCode": "16500",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "16540": {
+      "cbsaCode": "16540",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "16580": {
+      "cbsaCode": "16580",
+      "status": "pending",
+      "zipCount": 32
+    },
+    "16620": {
+      "cbsaCode": "16620",
+      "status": "pending",
+      "zipCount": 75
+    },
+    "16660": {
+      "cbsaCode": "16660",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "16700": {
+      "cbsaCode": "16700",
+      "status": "pending",
+      "zipCount": 43
+    },
+    "16740": {
+      "cbsaCode": "16740",
+      "status": "pending",
+      "zipCount": 105
+    },
+    "16820": {
+      "cbsaCode": "16820",
+      "status": "pending",
+      "zipCount": 37
+    },
+    "16860": {
+      "cbsaCode": "16860",
+      "status": "pending",
+      "zipCount": 49
+    },
+    "16940": {
+      "cbsaCode": "16940",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "16980": {
+      "cbsaCode": "16980",
+      "status": "pending",
+      "zipCount": 380
+    },
+    "17020": {
+      "cbsaCode": "17020",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "17060": {
+      "cbsaCode": "17060",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "17140": {
+      "cbsaCode": "17140",
+      "status": "pending",
+      "zipCount": 156
+    },
+    "17200": {
+      "cbsaCode": "17200",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "17220": {
+      "cbsaCode": "17220",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "17260": {
+      "cbsaCode": "17260",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "17300": {
+      "cbsaCode": "17300",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "17340": {
+      "cbsaCode": "17340",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "17380": {
+      "cbsaCode": "17380",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "17420": {
+      "cbsaCode": "17420",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "17460": {
+      "cbsaCode": "17460",
+      "status": "pending",
+      "zipCount": 96
+    },
+    "17500": {
+      "cbsaCode": "17500",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "17540": {
+      "cbsaCode": "17540",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "17580": {
+      "cbsaCode": "17580",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "17620": {
+      "cbsaCode": "17620",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "17640": {
+      "cbsaCode": "17640",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "17660": {
+      "cbsaCode": "17660",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "17700": {
+      "cbsaCode": "17700",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "17740": {
+      "cbsaCode": "17740",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "17780": {
+      "cbsaCode": "17780",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "17820": {
+      "cbsaCode": "17820",
+      "status": "pending",
+      "zipCount": 38
+    },
+    "17860": {
+      "cbsaCode": "17860",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "17900": {
+      "cbsaCode": "17900",
+      "status": "pending",
+      "zipCount": 44
+    },
+    "17980": {
+      "cbsaCode": "17980",
+      "status": "pending",
+      "zipCount": 31
+    },
+    "18020": {
+      "cbsaCode": "18020",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "18060": {
+      "cbsaCode": "18060",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "18100": {
+      "cbsaCode": "18100",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "18140": {
+      "cbsaCode": "18140",
+      "status": "pending",
+      "zipCount": 116
+    },
+    "18180": {
+      "cbsaCode": "18180",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "18220": {
+      "cbsaCode": "18220",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "18260": {
+      "cbsaCode": "18260",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "18300": {
+      "cbsaCode": "18300",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "18380": {
+      "cbsaCode": "18380",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "18420": {
+      "cbsaCode": "18420",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "18460": {
+      "cbsaCode": "18460",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "18500": {
+      "cbsaCode": "18500",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "18580": {
+      "cbsaCode": "18580",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "18620": {
+      "cbsaCode": "18620",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "18660": {
+      "cbsaCode": "18660",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "18700": {
+      "cbsaCode": "18700",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "18740": {
+      "cbsaCode": "18740",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "18780": {
+      "cbsaCode": "18780",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "18820": {
+      "cbsaCode": "18820",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "18860": {
+      "cbsaCode": "18860",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "18880": {
+      "cbsaCode": "18880",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "18900": {
+      "cbsaCode": "18900",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "18980": {
+      "cbsaCode": "18980",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "19000": {
+      "cbsaCode": "19000",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "19060": {
+      "cbsaCode": "19060",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "19100": {
+      "cbsaCode": "19100",
+      "status": "pending",
+      "zipCount": 255
+    },
+    "19140": {
+      "cbsaCode": "19140",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "19180": {
+      "cbsaCode": "19180",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "19220": {
+      "cbsaCode": "19220",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "19260": {
+      "cbsaCode": "19260",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "19300": {
+      "cbsaCode": "19300",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "19340": {
+      "cbsaCode": "19340",
+      "status": "pending",
+      "zipCount": 54
+    },
+    "19380": {
+      "cbsaCode": "19380",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "19420": {
+      "cbsaCode": "19420",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "19460": {
+      "cbsaCode": "19460",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "19500": {
+      "cbsaCode": "19500",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "19540": {
+      "cbsaCode": "19540",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "19580": {
+      "cbsaCode": "19580",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "19620": {
+      "cbsaCode": "19620",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "19660": {
+      "cbsaCode": "19660",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "19700": {
+      "cbsaCode": "19700",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "19740": {
+      "cbsaCode": "19740",
+      "status": "pending",
+      "zipCount": 126
+    },
+    "19760": {
+      "cbsaCode": "19760",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "19780": {
+      "cbsaCode": "19780",
+      "status": "pending",
+      "zipCount": 84
+    },
+    "19820": {
+      "cbsaCode": "19820",
+      "status": "pending",
+      "zipCount": 217
+    },
+    "19860": {
+      "cbsaCode": "19860",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "19940": {
+      "cbsaCode": "19940",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "19980": {
+      "cbsaCode": "19980",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "20020": {
+      "cbsaCode": "20020",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "20060": {
+      "cbsaCode": "20060",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "20100": {
+      "cbsaCode": "20100",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "20140": {
+      "cbsaCode": "20140",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "20180": {
+      "cbsaCode": "20180",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "20220": {
+      "cbsaCode": "20220",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "20260": {
+      "cbsaCode": "20260",
+      "status": "pending",
+      "zipCount": 72
+    },
+    "20300": {
+      "cbsaCode": "20300",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "20340": {
+      "cbsaCode": "20340",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "20380": {
+      "cbsaCode": "20380",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "20420": {
+      "cbsaCode": "20420",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "20460": {
+      "cbsaCode": "20460",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "20500": {
+      "cbsaCode": "20500",
+      "status": "pending",
+      "zipCount": 32
+    },
+    "20540": {
+      "cbsaCode": "20540",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "20580": {
+      "cbsaCode": "20580",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "20660": {
+      "cbsaCode": "20660",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "20700": {
+      "cbsaCode": "20700",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "20740": {
+      "cbsaCode": "20740",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "20780": {
+      "cbsaCode": "20780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "20820": {
+      "cbsaCode": "20820",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "20900": {
+      "cbsaCode": "20900",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "20940": {
+      "cbsaCode": "20940",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "20980": {
+      "cbsaCode": "20980",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "21020": {
+      "cbsaCode": "21020",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "21060": {
+      "cbsaCode": "21060",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "21120": {
+      "cbsaCode": "21120",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "21140": {
+      "cbsaCode": "21140",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "21180": {
+      "cbsaCode": "21180",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "21220": {
+      "cbsaCode": "21220",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "21260": {
+      "cbsaCode": "21260",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "21300": {
+      "cbsaCode": "21300",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "21340": {
+      "cbsaCode": "21340",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "21380": {
+      "cbsaCode": "21380",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "21420": {
+      "cbsaCode": "21420",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "21460": {
+      "cbsaCode": "21460",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "21500": {
+      "cbsaCode": "21500",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "21540": {
+      "cbsaCode": "21540",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "21580": {
+      "cbsaCode": "21580",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "21640": {
+      "cbsaCode": "21640",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "21660": {
+      "cbsaCode": "21660",
+      "status": "pending",
+      "zipCount": 31
+    },
+    "21700": {
+      "cbsaCode": "21700",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "21740": {
+      "cbsaCode": "21740",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "21780": {
+      "cbsaCode": "21780",
+      "status": "pending",
+      "zipCount": 31
+    },
+    "21820": {
+      "cbsaCode": "21820",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "21840": {
+      "cbsaCode": "21840",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "21860": {
+      "cbsaCode": "21860",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "21900": {
+      "cbsaCode": "21900",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "21980": {
+      "cbsaCode": "21980",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "22020": {
+      "cbsaCode": "22020",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "22060": {
+      "cbsaCode": "22060",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "22100": {
+      "cbsaCode": "22100",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "22140": {
+      "cbsaCode": "22140",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "22180": {
+      "cbsaCode": "22180",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "22220": {
+      "cbsaCode": "22220",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "22260": {
+      "cbsaCode": "22260",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "22280": {
+      "cbsaCode": "22280",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "22300": {
+      "cbsaCode": "22300",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "22340": {
+      "cbsaCode": "22340",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "22380": {
+      "cbsaCode": "22380",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "22420": {
+      "cbsaCode": "22420",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "22500": {
+      "cbsaCode": "22500",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "22520": {
+      "cbsaCode": "22520",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "22540": {
+      "cbsaCode": "22540",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "22580": {
+      "cbsaCode": "22580",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "22620": {
+      "cbsaCode": "22620",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "22660": {
+      "cbsaCode": "22660",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "22700": {
+      "cbsaCode": "22700",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "22780": {
+      "cbsaCode": "22780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "22800": {
+      "cbsaCode": "22800",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "22820": {
+      "cbsaCode": "22820",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "22840": {
+      "cbsaCode": "22840",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "22860": {
+      "cbsaCode": "22860",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "22900": {
+      "cbsaCode": "22900",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "23060": {
+      "cbsaCode": "23060",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "23140": {
+      "cbsaCode": "23140",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "23180": {
+      "cbsaCode": "23180",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "23240": {
+      "cbsaCode": "23240",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "23300": {
+      "cbsaCode": "23300",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "23340": {
+      "cbsaCode": "23340",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "23380": {
+      "cbsaCode": "23380",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "23420": {
+      "cbsaCode": "23420",
+      "status": "pending",
+      "zipCount": 49
+    },
+    "23460": {
+      "cbsaCode": "23460",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "23500": {
+      "cbsaCode": "23500",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "23540": {
+      "cbsaCode": "23540",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "23580": {
+      "cbsaCode": "23580",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "23620": {
+      "cbsaCode": "23620",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "23660": {
+      "cbsaCode": "23660",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "23700": {
+      "cbsaCode": "23700",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "23780": {
+      "cbsaCode": "23780",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "23820": {
+      "cbsaCode": "23820",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "23860": {
+      "cbsaCode": "23860",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "23900": {
+      "cbsaCode": "23900",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "23940": {
+      "cbsaCode": "23940",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "23980": {
+      "cbsaCode": "23980",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "24020": {
+      "cbsaCode": "24020",
+      "status": "pending",
+      "zipCount": 40
+    },
+    "24060": {
+      "cbsaCode": "24060",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "24100": {
+      "cbsaCode": "24100",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "24140": {
+      "cbsaCode": "24140",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "24220": {
+      "cbsaCode": "24220",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "24260": {
+      "cbsaCode": "24260",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "24300": {
+      "cbsaCode": "24300",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "24330": {
+      "cbsaCode": "24330",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "24340": {
+      "cbsaCode": "24340",
+      "status": "pending",
+      "zipCount": 67
+    },
+    "24380": {
+      "cbsaCode": "24380",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "24420": {
+      "cbsaCode": "24420",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "24460": {
+      "cbsaCode": "24460",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "24500": {
+      "cbsaCode": "24500",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "24540": {
+      "cbsaCode": "24540",
+      "status": "pending",
+      "zipCount": 29
+    },
+    "24580": {
+      "cbsaCode": "24580",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "24620": {
+      "cbsaCode": "24620",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "24640": {
+      "cbsaCode": "24640",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "24660": {
+      "cbsaCode": "24660",
+      "status": "pending",
+      "zipCount": 42
+    },
+    "24700": {
+      "cbsaCode": "24700",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "24740": {
+      "cbsaCode": "24740",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "24780": {
+      "cbsaCode": "24780",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "24820": {
+      "cbsaCode": "24820",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "24860": {
+      "cbsaCode": "24860",
+      "status": "pending",
+      "zipCount": 50
+    },
+    "24900": {
+      "cbsaCode": "24900",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "24940": {
+      "cbsaCode": "24940",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "24980": {
+      "cbsaCode": "24980",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "25020": {
+      "cbsaCode": "25020",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "25060": {
+      "cbsaCode": "25060",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "25100": {
+      "cbsaCode": "25100",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "25180": {
+      "cbsaCode": "25180",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "25200": {
+      "cbsaCode": "25200",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "25220": {
+      "cbsaCode": "25220",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "25260": {
+      "cbsaCode": "25260",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "25300": {
+      "cbsaCode": "25300",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "25420": {
+      "cbsaCode": "25420",
+      "status": "pending",
+      "zipCount": 51
+    },
+    "25460": {
+      "cbsaCode": "25460",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "25500": {
+      "cbsaCode": "25500",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "25540": {
+      "cbsaCode": "25540",
+      "status": "pending",
+      "zipCount": 87
+    },
+    "25580": {
+      "cbsaCode": "25580",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "25620": {
+      "cbsaCode": "25620",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "25700": {
+      "cbsaCode": "25700",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "25720": {
+      "cbsaCode": "25720",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "25740": {
+      "cbsaCode": "25740",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "25760": {
+      "cbsaCode": "25760",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "25780": {
+      "cbsaCode": "25780",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "25820": {
+      "cbsaCode": "25820",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "25840": {
+      "cbsaCode": "25840",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "25860": {
+      "cbsaCode": "25860",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "25880": {
+      "cbsaCode": "25880",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "25900": {
+      "cbsaCode": "25900",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "25940": {
+      "cbsaCode": "25940",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "25980": {
+      "cbsaCode": "25980",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "26020": {
+      "cbsaCode": "26020",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "26090": {
+      "cbsaCode": "26090",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "26140": {
+      "cbsaCode": "26140",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "26220": {
+      "cbsaCode": "26220",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "26260": {
+      "cbsaCode": "26260",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "26300": {
+      "cbsaCode": "26300",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "26340": {
+      "cbsaCode": "26340",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "26380": {
+      "cbsaCode": "26380",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "26420": {
+      "cbsaCode": "26420",
+      "status": "pending",
+      "zipCount": 220
+    },
+    "26460": {
+      "cbsaCode": "26460",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "26500": {
+      "cbsaCode": "26500",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "26540": {
+      "cbsaCode": "26540",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "26580": {
+      "cbsaCode": "26580",
+      "status": "pending",
+      "zipCount": 52
+    },
+    "26620": {
+      "cbsaCode": "26620",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "26660": {
+      "cbsaCode": "26660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "26700": {
+      "cbsaCode": "26700",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "26740": {
+      "cbsaCode": "26740",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "26780": {
+      "cbsaCode": "26780",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "26820": {
+      "cbsaCode": "26820",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "26860": {
+      "cbsaCode": "26860",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "26900": {
+      "cbsaCode": "26900",
+      "status": "pending",
+      "zipCount": 117
+    },
+    "26940": {
+      "cbsaCode": "26940",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "26960": {
+      "cbsaCode": "26960",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "26980": {
+      "cbsaCode": "26980",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "27020": {
+      "cbsaCode": "27020",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "27060": {
+      "cbsaCode": "27060",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "27100": {
+      "cbsaCode": "27100",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "27140": {
+      "cbsaCode": "27140",
+      "status": "pending",
+      "zipCount": 48
+    },
+    "27160": {
+      "cbsaCode": "27160",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "27180": {
+      "cbsaCode": "27180",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "27220": {
+      "cbsaCode": "27220",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "27260": {
+      "cbsaCode": "27260",
+      "status": "pending",
+      "zipCount": 59
+    },
+    "27300": {
+      "cbsaCode": "27300",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "27340": {
+      "cbsaCode": "27340",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "27380": {
+      "cbsaCode": "27380",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "27420": {
+      "cbsaCode": "27420",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "27460": {
+      "cbsaCode": "27460",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "27500": {
+      "cbsaCode": "27500",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "27540": {
+      "cbsaCode": "27540",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "27580": {
+      "cbsaCode": "27580",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "27600": {
+      "cbsaCode": "27600",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "27620": {
+      "cbsaCode": "27620",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "27660": {
+      "cbsaCode": "27660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "27700": {
+      "cbsaCode": "27700",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "27740": {
+      "cbsaCode": "27740",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "27780": {
+      "cbsaCode": "27780",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "27860": {
+      "cbsaCode": "27860",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "27900": {
+      "cbsaCode": "27900",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "27920": {
+      "cbsaCode": "27920",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "27940": {
+      "cbsaCode": "27940",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "27980": {
+      "cbsaCode": "27980",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "28020": {
+      "cbsaCode": "28020",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "28060": {
+      "cbsaCode": "28060",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "28100": {
+      "cbsaCode": "28100",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "28140": {
+      "cbsaCode": "28140",
+      "status": "pending",
+      "zipCount": 188
+    },
+    "28180": {
+      "cbsaCode": "28180",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "28260": {
+      "cbsaCode": "28260",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "28300": {
+      "cbsaCode": "28300",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "28340": {
+      "cbsaCode": "28340",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "28380": {
+      "cbsaCode": "28380",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "28420": {
+      "cbsaCode": "28420",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "28500": {
+      "cbsaCode": "28500",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "28540": {
+      "cbsaCode": "28540",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "28580": {
+      "cbsaCode": "28580",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "28620": {
+      "cbsaCode": "28620",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "28660": {
+      "cbsaCode": "28660",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "28700": {
+      "cbsaCode": "28700",
+      "status": "pending",
+      "zipCount": 34
+    },
+    "28740": {
+      "cbsaCode": "28740",
+      "status": "pending",
+      "zipCount": 52
+    },
+    "28780": {
+      "cbsaCode": "28780",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "28820": {
+      "cbsaCode": "28820",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "28860": {
+      "cbsaCode": "28860",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "28900": {
+      "cbsaCode": "28900",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "28940": {
+      "cbsaCode": "28940",
+      "status": "pending",
+      "zipCount": 67
+    },
+    "29020": {
+      "cbsaCode": "29020",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "29060": {
+      "cbsaCode": "29060",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "29100": {
+      "cbsaCode": "29100",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "29180": {
+      "cbsaCode": "29180",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "29200": {
+      "cbsaCode": "29200",
+      "status": "pending",
+      "zipCount": 29
+    },
+    "29260": {
+      "cbsaCode": "29260",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "29300": {
+      "cbsaCode": "29300",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "29340": {
+      "cbsaCode": "29340",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "29380": {
+      "cbsaCode": "29380",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "29420": {
+      "cbsaCode": "29420",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "29460": {
+      "cbsaCode": "29460",
+      "status": "pending",
+      "zipCount": 35
+    },
+    "29500": {
+      "cbsaCode": "29500",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "29540": {
+      "cbsaCode": "29540",
+      "status": "pending",
+      "zipCount": 45
+    },
+    "29620": {
+      "cbsaCode": "29620",
+      "status": "pending",
+      "zipCount": 49
+    },
+    "29660": {
+      "cbsaCode": "29660",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "29700": {
+      "cbsaCode": "29700",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "29740": {
+      "cbsaCode": "29740",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "29780": {
+      "cbsaCode": "29780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "29820": {
+      "cbsaCode": "29820",
+      "status": "pending",
+      "zipCount": 70
+    },
+    "29860": {
+      "cbsaCode": "29860",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "29900": {
+      "cbsaCode": "29900",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "29940": {
+      "cbsaCode": "29940",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "29980": {
+      "cbsaCode": "29980",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "30020": {
+      "cbsaCode": "30020",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "30060": {
+      "cbsaCode": "30060",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "30140": {
+      "cbsaCode": "30140",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "30220": {
+      "cbsaCode": "30220",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "30260": {
+      "cbsaCode": "30260",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "30280": {
+      "cbsaCode": "30280",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "30300": {
+      "cbsaCode": "30300",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "30340": {
+      "cbsaCode": "30340",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "30380": {
+      "cbsaCode": "30380",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "30420": {
+      "cbsaCode": "30420",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "30460": {
+      "cbsaCode": "30460",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "30580": {
+      "cbsaCode": "30580",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "30620": {
+      "cbsaCode": "30620",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "30660": {
+      "cbsaCode": "30660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "30700": {
+      "cbsaCode": "30700",
+      "status": "pending",
+      "zipCount": 45
+    },
+    "30780": {
+      "cbsaCode": "30780",
+      "status": "pending",
+      "zipCount": 53
+    },
+    "30820": {
+      "cbsaCode": "30820",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "30860": {
+      "cbsaCode": "30860",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "30880": {
+      "cbsaCode": "30880",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "30900": {
+      "cbsaCode": "30900",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "30940": {
+      "cbsaCode": "30940",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "30980": {
+      "cbsaCode": "30980",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "31020": {
+      "cbsaCode": "31020",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "31060": {
+      "cbsaCode": "31060",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "31080": {
+      "cbsaCode": "31080",
+      "status": "pending",
+      "zipCount": 360
+    },
+    "31140": {
+      "cbsaCode": "31140",
+      "status": "pending",
+      "zipCount": 91
+    },
+    "31180": {
+      "cbsaCode": "31180",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "31220": {
+      "cbsaCode": "31220",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "31260": {
+      "cbsaCode": "31260",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "31300": {
+      "cbsaCode": "31300",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "31340": {
+      "cbsaCode": "31340",
+      "status": "pending",
+      "zipCount": 29
+    },
+    "31380": {
+      "cbsaCode": "31380",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "31420": {
+      "cbsaCode": "31420",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "31460": {
+      "cbsaCode": "31460",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "31500": {
+      "cbsaCode": "31500",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "31540": {
+      "cbsaCode": "31540",
+      "status": "pending",
+      "zipCount": 58
+    },
+    "31580": {
+      "cbsaCode": "31580",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "31620": {
+      "cbsaCode": "31620",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "31660": {
+      "cbsaCode": "31660",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "31680": {
+      "cbsaCode": "31680",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "31700": {
+      "cbsaCode": "31700",
+      "status": "pending",
+      "zipCount": 34
+    },
+    "31740": {
+      "cbsaCode": "31740",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "31820": {
+      "cbsaCode": "31820",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "31860": {
+      "cbsaCode": "31860",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "31900": {
+      "cbsaCode": "31900",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "31930": {
+      "cbsaCode": "31930",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "31940": {
+      "cbsaCode": "31940",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "31980": {
+      "cbsaCode": "31980",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "32000": {
+      "cbsaCode": "32000",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "32020": {
+      "cbsaCode": "32020",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "32100": {
+      "cbsaCode": "32100",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "32140": {
+      "cbsaCode": "32140",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "32180": {
+      "cbsaCode": "32180",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "32220": {
+      "cbsaCode": "32220",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "32260": {
+      "cbsaCode": "32260",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "32280": {
+      "cbsaCode": "32280",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "32300": {
+      "cbsaCode": "32300",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "32340": {
+      "cbsaCode": "32340",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "32380": {
+      "cbsaCode": "32380",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "32420": {
+      "cbsaCode": "32420",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "32460": {
+      "cbsaCode": "32460",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "32500": {
+      "cbsaCode": "32500",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "32540": {
+      "cbsaCode": "32540",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "32580": {
+      "cbsaCode": "32580",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "32620": {
+      "cbsaCode": "32620",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "32660": {
+      "cbsaCode": "32660",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "32700": {
+      "cbsaCode": "32700",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "32740": {
+      "cbsaCode": "32740",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "32780": {
+      "cbsaCode": "32780",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "32820": {
+      "cbsaCode": "32820",
+      "status": "pending",
+      "zipCount": 71
+    },
+    "32860": {
+      "cbsaCode": "32860",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "32900": {
+      "cbsaCode": "32900",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "32940": {
+      "cbsaCode": "32940",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "32980": {
+      "cbsaCode": "32980",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "33020": {
+      "cbsaCode": "33020",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "33060": {
+      "cbsaCode": "33060",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "33100": {
+      "cbsaCode": "33100",
+      "status": "pending",
+      "zipCount": 181
+    },
+    "33140": {
+      "cbsaCode": "33140",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "33180": {
+      "cbsaCode": "33180",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "33220": {
+      "cbsaCode": "33220",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "33260": {
+      "cbsaCode": "33260",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "33300": {
+      "cbsaCode": "33300",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "33340": {
+      "cbsaCode": "33340",
+      "status": "pending",
+      "zipCount": 79
+    },
+    "33420": {
+      "cbsaCode": "33420",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "33460": {
+      "cbsaCode": "33460",
+      "status": "pending",
+      "zipCount": 225
+    },
+    "33500": {
+      "cbsaCode": "33500",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "33540": {
+      "cbsaCode": "33540",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "33580": {
+      "cbsaCode": "33580",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "33620": {
+      "cbsaCode": "33620",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "33660": {
+      "cbsaCode": "33660",
+      "status": "pending",
+      "zipCount": 33
+    },
+    "33700": {
+      "cbsaCode": "33700",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "33740": {
+      "cbsaCode": "33740",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "33780": {
+      "cbsaCode": "33780",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "33860": {
+      "cbsaCode": "33860",
+      "status": "pending",
+      "zipCount": 36
+    },
+    "33940": {
+      "cbsaCode": "33940",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "33980": {
+      "cbsaCode": "33980",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "34020": {
+      "cbsaCode": "34020",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "34060": {
+      "cbsaCode": "34060",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "34100": {
+      "cbsaCode": "34100",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "34140": {
+      "cbsaCode": "34140",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "34180": {
+      "cbsaCode": "34180",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "34220": {
+      "cbsaCode": "34220",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "34260": {
+      "cbsaCode": "34260",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "34300": {
+      "cbsaCode": "34300",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "34340": {
+      "cbsaCode": "34340",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "34380": {
+      "cbsaCode": "34380",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "34420": {
+      "cbsaCode": "34420",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "34460": {
+      "cbsaCode": "34460",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "34500": {
+      "cbsaCode": "34500",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "34540": {
+      "cbsaCode": "34540",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "34580": {
+      "cbsaCode": "34580",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "34620": {
+      "cbsaCode": "34620",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "34660": {
+      "cbsaCode": "34660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "34700": {
+      "cbsaCode": "34700",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "34740": {
+      "cbsaCode": "34740",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "34780": {
+      "cbsaCode": "34780",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "34820": {
+      "cbsaCode": "34820",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "34860": {
+      "cbsaCode": "34860",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "34900": {
+      "cbsaCode": "34900",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "34940": {
+      "cbsaCode": "34940",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "34980": {
+      "cbsaCode": "34980",
+      "status": "pending",
+      "zipCount": 102
+    },
+    "35020": {
+      "cbsaCode": "35020",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "35060": {
+      "cbsaCode": "35060",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "35100": {
+      "cbsaCode": "35100",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "35140": {
+      "cbsaCode": "35140",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "35220": {
+      "cbsaCode": "35220",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "35260": {
+      "cbsaCode": "35260",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "35300": {
+      "cbsaCode": "35300",
+      "status": "pending",
+      "zipCount": 40
+    },
+    "35380": {
+      "cbsaCode": "35380",
+      "status": "pending",
+      "zipCount": 72
+    },
+    "35420": {
+      "cbsaCode": "35420",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "35440": {
+      "cbsaCode": "35440",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "35460": {
+      "cbsaCode": "35460",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "35500": {
+      "cbsaCode": "35500",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "35580": {
+      "cbsaCode": "35580",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "35620": {
+      "cbsaCode": "35620",
+      "status": "pending",
+      "zipCount": 830
+    },
+    "35660": {
+      "cbsaCode": "35660",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "35700": {
+      "cbsaCode": "35700",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "35740": {
+      "cbsaCode": "35740",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "35820": {
+      "cbsaCode": "35820",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "35840": {
+      "cbsaCode": "35840",
+      "status": "pending",
+      "zipCount": 43
+    },
+    "35860": {
+      "cbsaCode": "35860",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "35900": {
+      "cbsaCode": "35900",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "35940": {
+      "cbsaCode": "35940",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "35980": {
+      "cbsaCode": "35980",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "36020": {
+      "cbsaCode": "36020",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "36100": {
+      "cbsaCode": "36100",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "36140": {
+      "cbsaCode": "36140",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "36220": {
+      "cbsaCode": "36220",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "36260": {
+      "cbsaCode": "36260",
+      "status": "pending",
+      "zipCount": 32
+    },
+    "36300": {
+      "cbsaCode": "36300",
+      "status": "pending",
+      "zipCount": 33
+    },
+    "36340": {
+      "cbsaCode": "36340",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "36380": {
+      "cbsaCode": "36380",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "36420": {
+      "cbsaCode": "36420",
+      "status": "pending",
+      "zipCount": 105
+    },
+    "36460": {
+      "cbsaCode": "36460",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "36500": {
+      "cbsaCode": "36500",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "36540": {
+      "cbsaCode": "36540",
+      "status": "pending",
+      "zipCount": 110
+    },
+    "36580": {
+      "cbsaCode": "36580",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "36620": {
+      "cbsaCode": "36620",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "36660": {
+      "cbsaCode": "36660",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "36700": {
+      "cbsaCode": "36700",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "36740": {
+      "cbsaCode": "36740",
+      "status": "done",
+      "zipCount": 16,
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36740.geojson",
+      "completedAt": "2026-07-12T13:17:51.142Z"
+    },
+    "36780": {
+      "cbsaCode": "36780",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "36820": {
+      "cbsaCode": "36820",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "36830": {
+      "cbsaCode": "36830",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "36840": {
+      "cbsaCode": "36840",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "36860": {
+      "cbsaCode": "36860",
+      "status": "pending",
+      "zipCount": 32
+    },
+    "36900": {
+      "cbsaCode": "36900",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "36940": {
+      "cbsaCode": "36940",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "36980": {
+      "cbsaCode": "36980",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "37020": {
+      "cbsaCode": "37020",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "37060": {
+      "cbsaCode": "37060",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "37080": {
+      "cbsaCode": "37080",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "37100": {
+      "cbsaCode": "37100",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "37120": {
+      "cbsaCode": "37120",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "37140": {
+      "cbsaCode": "37140",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "37220": {
+      "cbsaCode": "37220",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "37260": {
+      "cbsaCode": "37260",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "37300": {
+      "cbsaCode": "37300",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "37340": {
+      "cbsaCode": "37340",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "37420": {
+      "cbsaCode": "37420",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "37460": {
+      "cbsaCode": "37460",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "37500": {
+      "cbsaCode": "37500",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "37540": {
+      "cbsaCode": "37540",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "37580": {
+      "cbsaCode": "37580",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "37620": {
+      "cbsaCode": "37620",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "37660": {
+      "cbsaCode": "37660",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "37740": {
+      "cbsaCode": "37740",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "37780": {
+      "cbsaCode": "37780",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "37800": {
+      "cbsaCode": "37800",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "37860": {
+      "cbsaCode": "37860",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "37900": {
+      "cbsaCode": "37900",
+      "status": "pending",
+      "zipCount": 69
+    },
+    "37940": {
+      "cbsaCode": "37940",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "37980": {
+      "cbsaCode": "37980",
+      "status": "pending",
+      "zipCount": 334
+    },
+    "38060": {
+      "cbsaCode": "38060",
+      "status": "pending",
+      "zipCount": 149
+    },
+    "38100": {
+      "cbsaCode": "38100",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "38180": {
+      "cbsaCode": "38180",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "38220": {
+      "cbsaCode": "38220",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "38240": {
+      "cbsaCode": "38240",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "38260": {
+      "cbsaCode": "38260",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "38300": {
+      "cbsaCode": "38300",
+      "status": "pending",
+      "zipCount": 295
+    },
+    "38340": {
+      "cbsaCode": "38340",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "38380": {
+      "cbsaCode": "38380",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "38420": {
+      "cbsaCode": "38420",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "38460": {
+      "cbsaCode": "38460",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "38500": {
+      "cbsaCode": "38500",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "38540": {
+      "cbsaCode": "38540",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "38580": {
+      "cbsaCode": "38580",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "38620": {
+      "cbsaCode": "38620",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "38660": {
+      "cbsaCode": "38660",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "38700": {
+      "cbsaCode": "38700",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "38740": {
+      "cbsaCode": "38740",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "38780": {
+      "cbsaCode": "38780",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "38820": {
+      "cbsaCode": "38820",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "38840": {
+      "cbsaCode": "38840",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "38860": {
+      "cbsaCode": "38860",
+      "status": "pending",
+      "zipCount": 73
+    },
+    "38900": {
+      "cbsaCode": "38900",
+      "status": "pending",
+      "zipCount": 121
+    },
+    "38920": {
+      "cbsaCode": "38920",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "38940": {
+      "cbsaCode": "38940",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "39020": {
+      "cbsaCode": "39020",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "39060": {
+      "cbsaCode": "39060",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "39140": {
+      "cbsaCode": "39140",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "39220": {
+      "cbsaCode": "39220",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "39260": {
+      "cbsaCode": "39260",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "39300": {
+      "cbsaCode": "39300",
+      "status": "pending",
+      "zipCount": 101
+    },
+    "39340": {
+      "cbsaCode": "39340",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "39380": {
+      "cbsaCode": "39380",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "39420": {
+      "cbsaCode": "39420",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "39460": {
+      "cbsaCode": "39460",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "39500": {
+      "cbsaCode": "39500",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "39540": {
+      "cbsaCode": "39540",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "39580": {
+      "cbsaCode": "39580",
+      "status": "pending",
+      "zipCount": 47
+    },
+    "39660": {
+      "cbsaCode": "39660",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "39700": {
+      "cbsaCode": "39700",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "39740": {
+      "cbsaCode": "39740",
+      "status": "pending",
+      "zipCount": 39
+    },
+    "39780": {
+      "cbsaCode": "39780",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "39820": {
+      "cbsaCode": "39820",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "39860": {
+      "cbsaCode": "39860",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "39900": {
+      "cbsaCode": "39900",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "39940": {
+      "cbsaCode": "39940",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "39980": {
+      "cbsaCode": "39980",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "40060": {
+      "cbsaCode": "40060",
+      "status": "pending",
+      "zipCount": 88
+    },
+    "40080": {
+      "cbsaCode": "40080",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "40100": {
+      "cbsaCode": "40100",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "40140": {
+      "cbsaCode": "40140",
+      "status": "pending",
+      "zipCount": 146
+    },
+    "40180": {
+      "cbsaCode": "40180",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "40220": {
+      "cbsaCode": "40220",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "40260": {
+      "cbsaCode": "40260",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "40300": {
+      "cbsaCode": "40300",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "40340": {
+      "cbsaCode": "40340",
+      "status": "pending",
+      "zipCount": 35
+    },
+    "40380": {
+      "cbsaCode": "40380",
+      "status": "pending",
+      "zipCount": 104
+    },
+    "40420": {
+      "cbsaCode": "40420",
+      "status": "pending",
+      "zipCount": 22
+    },
+    "40460": {
+      "cbsaCode": "40460",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "40540": {
+      "cbsaCode": "40540",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "40580": {
+      "cbsaCode": "40580",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "40620": {
+      "cbsaCode": "40620",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "40660": {
+      "cbsaCode": "40660",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "40700": {
+      "cbsaCode": "40700",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "40740": {
+      "cbsaCode": "40740",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "40760": {
+      "cbsaCode": "40760",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "40780": {
+      "cbsaCode": "40780",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "40820": {
+      "cbsaCode": "40820",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "40860": {
+      "cbsaCode": "40860",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "40900": {
+      "cbsaCode": "40900",
+      "status": "pending",
+      "zipCount": 116
+    },
+    "40940": {
+      "cbsaCode": "40940",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "40980": {
+      "cbsaCode": "40980",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "41060": {
+      "cbsaCode": "41060",
+      "status": "pending",
+      "zipCount": 29
+    },
+    "41100": {
+      "cbsaCode": "41100",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "41140": {
+      "cbsaCode": "41140",
+      "status": "pending",
+      "zipCount": 35
+    },
+    "41180": {
+      "cbsaCode": "41180",
+      "status": "pending",
+      "zipCount": 223
+    },
+    "41220": {
+      "cbsaCode": "41220",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "41260": {
+      "cbsaCode": "41260",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "41400": {
+      "cbsaCode": "41400",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "41420": {
+      "cbsaCode": "41420",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "41460": {
+      "cbsaCode": "41460",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "41500": {
+      "cbsaCode": "41500",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "41540": {
+      "cbsaCode": "41540",
+      "status": "pending",
+      "zipCount": 52
+    },
+    "41620": {
+      "cbsaCode": "41620",
+      "status": "pending",
+      "zipCount": 39
+    },
+    "41660": {
+      "cbsaCode": "41660",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "41700": {
+      "cbsaCode": "41700",
+      "status": "pending",
+      "zipCount": 106
+    },
+    "41740": {
+      "cbsaCode": "41740",
+      "status": "pending",
+      "zipCount": 95
+    },
+    "41760": {
+      "cbsaCode": "41760",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "41780": {
+      "cbsaCode": "41780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "41820": {
+      "cbsaCode": "41820",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "41860": {
+      "cbsaCode": "41860",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "41900": {
+      "cbsaCode": "41900",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "41940": {
+      "cbsaCode": "41940",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "41980": {
+      "cbsaCode": "41980",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "42020": {
+      "cbsaCode": "42020",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "42100": {
+      "cbsaCode": "42100",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "42140": {
+      "cbsaCode": "42140",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "42180": {
+      "cbsaCode": "42180",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "42200": {
+      "cbsaCode": "42200",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "42220": {
+      "cbsaCode": "42220",
+      "status": "pending",
+      "zipCount": 32
+    },
+    "42300": {
+      "cbsaCode": "42300",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "42340": {
+      "cbsaCode": "42340",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "42380": {
+      "cbsaCode": "42380",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "42420": {
+      "cbsaCode": "42420",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "42460": {
+      "cbsaCode": "42460",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "42540": {
+      "cbsaCode": "42540",
+      "status": "pending",
+      "zipCount": 62
+    },
+    "42620": {
+      "cbsaCode": "42620",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "42660": {
+      "cbsaCode": "42660",
+      "status": "pending",
+      "zipCount": 155
+    },
+    "42680": {
+      "cbsaCode": "42680",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "42700": {
+      "cbsaCode": "42700",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "42740": {
+      "cbsaCode": "42740",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "42780": {
+      "cbsaCode": "42780",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "42820": {
+      "cbsaCode": "42820",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "42860": {
+      "cbsaCode": "42860",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "42900": {
+      "cbsaCode": "42900",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "42940": {
+      "cbsaCode": "42940",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "42980": {
+      "cbsaCode": "42980",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "43020": {
+      "cbsaCode": "43020",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "43060": {
+      "cbsaCode": "43060",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "43100": {
+      "cbsaCode": "43100",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "43140": {
+      "cbsaCode": "43140",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "43180": {
+      "cbsaCode": "43180",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "43220": {
+      "cbsaCode": "43220",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "43260": {
+      "cbsaCode": "43260",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "43300": {
+      "cbsaCode": "43300",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "43320": {
+      "cbsaCode": "43320",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "43340": {
+      "cbsaCode": "43340",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "43380": {
+      "cbsaCode": "43380",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "43420": {
+      "cbsaCode": "43420",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "43460": {
+      "cbsaCode": "43460",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "43500": {
+      "cbsaCode": "43500",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "43580": {
+      "cbsaCode": "43580",
+      "status": "pending",
+      "zipCount": 39
+    },
+    "43620": {
+      "cbsaCode": "43620",
+      "status": "pending",
+      "zipCount": 36
+    },
+    "43660": {
+      "cbsaCode": "43660",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "43700": {
+      "cbsaCode": "43700",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "43740": {
+      "cbsaCode": "43740",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "43760": {
+      "cbsaCode": "43760",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "43780": {
+      "cbsaCode": "43780",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "43900": {
+      "cbsaCode": "43900",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "43940": {
+      "cbsaCode": "43940",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "43980": {
+      "cbsaCode": "43980",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "44020": {
+      "cbsaCode": "44020",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "44060": {
+      "cbsaCode": "44060",
+      "status": "pending",
+      "zipCount": 48
+    },
+    "44100": {
+      "cbsaCode": "44100",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "44140": {
+      "cbsaCode": "44140",
+      "status": "pending",
+      "zipCount": 82
+    },
+    "44180": {
+      "cbsaCode": "44180",
+      "status": "pending",
+      "zipCount": 42
+    },
+    "44220": {
+      "cbsaCode": "44220",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "44260": {
+      "cbsaCode": "44260",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "44300": {
+      "cbsaCode": "44300",
+      "status": "pending",
+      "zipCount": 27
+    },
+    "44340": {
+      "cbsaCode": "44340",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "44420": {
+      "cbsaCode": "44420",
+      "status": "pending",
+      "zipCount": 21
+    },
+    "44460": {
+      "cbsaCode": "44460",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "44500": {
+      "cbsaCode": "44500",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "44540": {
+      "cbsaCode": "44540",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "44580": {
+      "cbsaCode": "44580",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "44620": {
+      "cbsaCode": "44620",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "44660": {
+      "cbsaCode": "44660",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "44700": {
+      "cbsaCode": "44700",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "44740": {
+      "cbsaCode": "44740",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "44780": {
+      "cbsaCode": "44780",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "44860": {
+      "cbsaCode": "44860",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "44900": {
+      "cbsaCode": "44900",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "44920": {
+      "cbsaCode": "44920",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "44940": {
+      "cbsaCode": "44940",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "44980": {
+      "cbsaCode": "44980",
+      "status": "pending",
+      "zipCount": 16
+    },
+    "45000": {
+      "cbsaCode": "45000",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "45020": {
+      "cbsaCode": "45020",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "45060": {
+      "cbsaCode": "45060",
+      "status": "pending",
+      "zipCount": 77
+    },
+    "45140": {
+      "cbsaCode": "45140",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "45180": {
+      "cbsaCode": "45180",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "45220": {
+      "cbsaCode": "45220",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "45300": {
+      "cbsaCode": "45300",
+      "status": "pending",
+      "zipCount": 129
+    },
+    "45340": {
+      "cbsaCode": "45340",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "45380": {
+      "cbsaCode": "45380",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "45460": {
+      "cbsaCode": "45460",
+      "status": "pending",
+      "zipCount": 38
+    },
+    "45500": {
+      "cbsaCode": "45500",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "45520": {
+      "cbsaCode": "45520",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "45540": {
+      "cbsaCode": "45540",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "45580": {
+      "cbsaCode": "45580",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "45620": {
+      "cbsaCode": "45620",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "45660": {
+      "cbsaCode": "45660",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "45700": {
+      "cbsaCode": "45700",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "45740": {
+      "cbsaCode": "45740",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "45780": {
+      "cbsaCode": "45780",
+      "status": "pending",
+      "zipCount": 63
+    },
+    "45820": {
+      "cbsaCode": "45820",
+      "status": "pending",
+      "zipCount": 55
+    },
+    "45860": {
+      "cbsaCode": "45860",
+      "status": "pending",
+      "zipCount": 37
+    },
+    "45900": {
+      "cbsaCode": "45900",
+      "status": "pending",
+      "zipCount": 30
+    },
+    "45940": {
+      "cbsaCode": "45940",
+      "status": "pending",
+      "zipCount": 19
+    },
+    "45980": {
+      "cbsaCode": "45980",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "46020": {
+      "cbsaCode": "46020",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "46060": {
+      "cbsaCode": "46060",
+      "status": "pending",
+      "zipCount": 39
+    },
+    "46100": {
+      "cbsaCode": "46100",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "46140": {
+      "cbsaCode": "46140",
+      "status": "pending",
+      "zipCount": 74
+    },
+    "46180": {
+      "cbsaCode": "46180",
+      "status": "pending",
+      "zipCount": 25
+    },
+    "46220": {
+      "cbsaCode": "46220",
+      "status": "pending",
+      "zipCount": 31
+    },
+    "46300": {
+      "cbsaCode": "46300",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "46340": {
+      "cbsaCode": "46340",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "46380": {
+      "cbsaCode": "46380",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "46460": {
+      "cbsaCode": "46460",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "46500": {
+      "cbsaCode": "46500",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "46520": {
+      "cbsaCode": "46520",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "46540": {
+      "cbsaCode": "46540",
+      "status": "pending",
+      "zipCount": 59
+    },
+    "46620": {
+      "cbsaCode": "46620",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "46660": {
+      "cbsaCode": "46660",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "46700": {
+      "cbsaCode": "46700",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "46740": {
+      "cbsaCode": "46740",
+      "status": "skipped",
+      "zipCount": 0
+    },
+    "46780": {
+      "cbsaCode": "46780",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "46820": {
+      "cbsaCode": "46820",
+      "status": "pending",
+      "zipCount": 3
+    },
+    "46860": {
+      "cbsaCode": "46860",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "46900": {
+      "cbsaCode": "46900",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "46980": {
+      "cbsaCode": "46980",
+      "status": "pending",
+      "zipCount": 2
+    },
+    "47020": {
+      "cbsaCode": "47020",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "47080": {
+      "cbsaCode": "47080",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "47180": {
+      "cbsaCode": "47180",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "47220": {
+      "cbsaCode": "47220",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "47240": {
+      "cbsaCode": "47240",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "47260": {
+      "cbsaCode": "47260",
+      "status": "pending",
+      "zipCount": 108
+    },
+    "47300": {
+      "cbsaCode": "47300",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "47340": {
+      "cbsaCode": "47340",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "47380": {
+      "cbsaCode": "47380",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "47420": {
+      "cbsaCode": "47420",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "47460": {
+      "cbsaCode": "47460",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "47540": {
+      "cbsaCode": "47540",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "47580": {
+      "cbsaCode": "47580",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "47620": {
+      "cbsaCode": "47620",
+      "status": "pending",
+      "zipCount": 12
+    },
+    "47660": {
+      "cbsaCode": "47660",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "47700": {
+      "cbsaCode": "47700",
+      "status": "pending",
+      "zipCount": 13
+    },
+    "47780": {
+      "cbsaCode": "47780",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "47820": {
+      "cbsaCode": "47820",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "47900": {
+      "cbsaCode": "47900",
+      "status": "done",
+      "zipCount": 18,
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/47900.geojson",
+      "completedAt": "2026-07-12T13:17:51.134Z"
+    },
+    "47920": {
+      "cbsaCode": "47920",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "47940": {
+      "cbsaCode": "47940",
+      "status": "pending",
+      "zipCount": 33
+    },
+    "47980": {
+      "cbsaCode": "47980",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "48020": {
+      "cbsaCode": "48020",
+      "status": "pending",
+      "zipCount": 10
+    },
+    "48060": {
+      "cbsaCode": "48060",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "48100": {
+      "cbsaCode": "48100",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "48140": {
+      "cbsaCode": "48140",
+      "status": "pending",
+      "zipCount": 23
+    },
+    "48180": {
+      "cbsaCode": "48180",
+      "status": "pending",
+      "zipCount": 9
+    },
+    "48220": {
+      "cbsaCode": "48220",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "48260": {
+      "cbsaCode": "48260",
+      "status": "pending",
+      "zipCount": 24
+    },
+    "48300": {
+      "cbsaCode": "48300",
+      "status": "pending",
+      "zipCount": 15
+    },
+    "48460": {
+      "cbsaCode": "48460",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "48500": {
+      "cbsaCode": "48500",
+      "status": "pending",
+      "zipCount": 5
+    },
+    "48540": {
+      "cbsaCode": "48540",
+      "status": "pending",
+      "zipCount": 26
+    },
+    "48580": {
+      "cbsaCode": "48580",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "48620": {
+      "cbsaCode": "48620",
+      "status": "pending",
+      "zipCount": 69
+    },
+    "48660": {
+      "cbsaCode": "48660",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "48700": {
+      "cbsaCode": "48700",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "48780": {
+      "cbsaCode": "48780",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "48820": {
+      "cbsaCode": "48820",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "48900": {
+      "cbsaCode": "48900",
+      "status": "pending",
+      "zipCount": 18
+    },
+    "48940": {
+      "cbsaCode": "48940",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "48980": {
+      "cbsaCode": "48980",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "49020": {
+      "cbsaCode": "49020",
+      "status": "pending",
+      "zipCount": 28
+    },
+    "49080": {
+      "cbsaCode": "49080",
+      "status": "pending",
+      "zipCount": 1
+    },
+    "49100": {
+      "cbsaCode": "49100",
+      "status": "pending",
+      "zipCount": 8
+    },
+    "49180": {
+      "cbsaCode": "49180",
+      "status": "pending",
+      "zipCount": 35
+    },
+    "49220": {
+      "cbsaCode": "49220",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "49260": {
+      "cbsaCode": "49260",
+      "status": "pending",
+      "zipCount": 11
+    },
+    "49300": {
+      "cbsaCode": "49300",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "49340": {
+      "cbsaCode": "49340",
+      "status": "pending",
+      "zipCount": 100
+    },
+    "49380": {
+      "cbsaCode": "49380",
+      "status": "pending",
+      "zipCount": 6
+    },
+    "49420": {
+      "cbsaCode": "49420",
+      "status": "pending",
+      "zipCount": 20
+    },
+    "49460": {
+      "cbsaCode": "49460",
+      "status": "pending",
+      "zipCount": 4
+    },
+    "49620": {
+      "cbsaCode": "49620",
+      "status": "pending",
+      "zipCount": 35
+    },
+    "49660": {
+      "cbsaCode": "49660",
+      "status": "pending",
+      "zipCount": 67
+    },
+    "49700": {
+      "cbsaCode": "49700",
+      "status": "pending",
+      "zipCount": 17
+    },
+    "49740": {
+      "cbsaCode": "49740",
+      "status": "pending",
+      "zipCount": 7
+    },
+    "49780": {
+      "cbsaCode": "49780",
+      "status": "pending",
+      "zipCount": 14
+    },
+    "49820": {
+      "cbsaCode": "49820",
+      "status": "pending",
+      "zipCount": 2
+    }
+  }
+}

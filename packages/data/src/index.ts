@@ -23,6 +23,4 @@ export * from "./amenity-pois";
 export * from "./similarity-scoring";
 export * from "./validation";
 export * from "./property-valuation";
-export * from "./metro-catalog/types";
-export { loadMetroCatalog, catalogEntryFor, ingestibleMetros } from "./metro-catalog/build-catalog";
-export { loadProgress, progressSummary } from "./metro-catalog/progress";
+export type { MetroCatalog, MetroCatalogEntry, IngestProgress } from "./metro-catalog/types";

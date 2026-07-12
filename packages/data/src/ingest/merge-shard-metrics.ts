@@ -5,7 +5,12 @@ import type { ZipMetricsInput } from "../validation.ts";
 import type { CensusAcsNormalizedBundle } from "./census-acs.ts";
 import { deriveFinancialMetrics } from "./derived-financials.ts";
 import { crossCheckRedfinWithZillow, deriveSellerDesperationFromRedfin } from "./derived-market-signals.ts";
-import { SANDBOX_CBSA_ZHVI_METRO_MAP, type FhfaHpiNormalizedBundle } from "./fhfa-hpi-sources.ts";
+import {
+  resolveFhfaRecordKey,
+  SANDBOX_CBSA_ZHVI_METRO_MAP,
+  type FhfaHpiNormalizedBundle,
+} from "./fhfa-hpi-sources.ts";
+import { resolveZhviMetroRegionId } from "../metro-catalog/zhvi-lookup.ts";
 import type { HudFmrNormalizedBundle } from "./hud-fmr-sources.ts";
 import type { OsmWalkabilityNormalizedBundle } from "./osm-walkability-sources.ts";
 import type { RedfinNormalizedBundle } from "./redfin-sources.ts";
@@ -40,6 +45,10 @@ export const DEFAULT_INGEST_PATHS: LiveIngestPaths = {
 export interface MergeLiveMetricsOptions {
   paths?: LiveIngestPaths;
   cbsaCode?: string;
+  /** Override ZHVI metro regionId (nationwide catalog provides this at shard build) */
+  zhviMetroRegionId?: string;
+  /** CBSA display name for ZHVI metro region lookup when regionId not provided */
+  cbsaName?: string;
 }
 
 export interface MergeLiveMetricsResult {
@@ -118,8 +127,16 @@ export function mergeLiveMetricsIntoZips(
   let usedOsmWalkability = false;
   let usedSellerDesperation = false;
 
-  const fhfaMetro = cbsaCode ? fhfa?.records[cbsaCode] : undefined;
-  const zhviMetroRegionId = cbsaCode ? SANDBOX_CBSA_ZHVI_METRO_MAP[cbsaCode] : undefined;
+  const fhfaKey = cbsaCode ? resolveFhfaRecordKey(cbsaCode) : undefined;
+  const fhfaMetro = fhfaKey ? fhfa?.records[fhfaKey] ?? fhfa?.records[cbsaCode ?? ""] : undefined;
+
+  let zhviMetroRegionId: string | undefined;
+  if (cbsaCode) {
+    zhviMetroRegionId =
+      options.zhviMetroRegionId ??
+      SANDBOX_CBSA_ZHVI_METRO_MAP[cbsaCode] ??
+      (options.cbsaName ? resolveZhviMetroRegionId(options.cbsaName) : undefined);
+  }
   const zhviMetroRecord = zhviMetroRegionId
     ? (zhviMetro?.records[zhviMetroRegionId] as ZhviMetroRecord | undefined)
     : undefined;

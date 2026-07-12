@@ -47,6 +47,15 @@ export const SANDBOX_CBSA_ZHVI_METRO_MAP: Record<string, string> = {
   "41940": "395059",
 };
 
+/**
+ * Resolve FHFA metro record key for a CBSA. Most metros use CBSA code directly;
+ * split MSAs (DC, SF Bay) use MSAD proxies per ADR-012.
+ */
+export function resolveFhfaRecordKey(cbsaCode: string): string {
+  const mapping = SANDBOX_CBSA_FHFA_MAP[cbsaCode];
+  return mapping?.fhfaMetroCode ?? cbsaCode;
+}
+
 export interface FhfaHpiSeriesPoint {
   year: number;
   quarter: number;

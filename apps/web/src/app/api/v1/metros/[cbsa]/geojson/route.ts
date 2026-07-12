@@ -1,7 +1,19 @@
 import { NextResponse } from "next/server";
-import { loadMetroShard } from "@cineborough/data";
+import { existsSync, readFileSync } from "node:fs";
+import { resolve } from "node:path";
+import { loadMetroShard, type DcMetroGeoJson } from "@cineborough/data";
 
 const CBSA_PATTERN = /^\d{5}$/;
+
+function metroShardPath(cbsa: string): string {
+  return resolve(process.cwd(), "../../data/metros", `${cbsa}.geojson`);
+}
+
+function loadShardFromDisk(cbsa: string): DcMetroGeoJson | undefined {
+  const path = metroShardPath(cbsa);
+  if (!existsSync(path)) return undefined;
+  return JSON.parse(readFileSync(path, "utf8")) as DcMetroGeoJson;
+}
 
 export async function GET(
   _request: Request,
@@ -16,9 +28,16 @@ export async function GET(
     );
   }
 
-  const shard = loadMetroShard(cbsa);
-  if (shard) {
-    return NextResponse.json(shard);
+  const bundled = loadMetroShard(cbsa);
+  if (bundled) {
+    return NextResponse.json(bundled);
+  }
+
+  const onDisk = loadShardFromDisk(cbsa);
+  if (onDisk) {
+    return NextResponse.json(onDisk, {
+      headers: { "Cache-Control": "public, max-age=3600" },
+    });
   }
 
   return NextResponse.json(

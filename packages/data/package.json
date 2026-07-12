@@ -27,7 +27,11 @@
     "seed:sandbox-metrics": "node --experimental-strip-types src/scripts/seed-sandbox-metrics.ts",
     "fetch:zcta-boundaries": "node --experimental-strip-types src/scripts/fetch-zcta-boundaries.ts",
     "fetch:sandbox-counties": "node --experimental-strip-types src/scripts/fetch-sandbox-counties.ts",
-    "fetch:us-counties": "node --experimental-strip-types src/scripts/fetch-us-counties.ts"
+    "fetch:us-counties": "node --experimental-strip-types src/scripts/fetch-us-counties.ts",
+    "build:metro-catalog": "node --experimental-strip-types src/scripts/build-metro-catalog.ts",
+    "build:metro-shard": "node --experimental-strip-types src/scripts/build-metro-shard-cli.ts",
+    "ingest:nationwide": "node --experimental-strip-types src/scripts/ingest-nationwide.ts",
+    "ingest:status": "node --experimental-strip-types src/scripts/ingest-status.ts"
   },
   "devDependencies": {
     "@types/node": "^22.20.1",

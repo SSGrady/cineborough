@@ -25,3 +25,13 @@ dist/
 # Ingest raw bulk downloads (regenerate via pnpm ingest:zhvi)
 data/ingest/**/raw/
 data/ingest/**/raw/**
+
+# Nationwide ingest staging (regenerate via ingest:nationwide)
+data/staging/
+
+# Generated metro shards (sandbox shards tracked; nationwide via ingest:nationwide)
+data/metros/*
+!data/metros/47900.geojson
+!data/metros/36740.geojson
+!data/metros/41860.geojson
+!data/metros/41940.geojson

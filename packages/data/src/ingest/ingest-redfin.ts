@@ -182,10 +182,14 @@ async function ingestZip(zipAllowList?: Set<string>): Promise<RedfinNormalizedBu
 }
 
 const args = process.argv.slice(2);
+const allZips = args.includes("--all");
 const zipsArg = args.find((a) => a.startsWith("--zips="))?.split("=")[1];
-const zipAllowList = zipsArg
-  ? new Set<string>(zipsArg.split(",").map((z) => z.trim().padStart(5, "0")))
-  : new Set<string>(ALL_SANDBOX_ZIPS);
+const zipAllowList = allZips
+  ? undefined
+  : zipsArg
+    ? new Set<string>(zipsArg.split(",").map((z) => z.trim().padStart(5, "0")))
+    : new Set<string>(ALL_SANDBOX_ZIPS);
 
 const bundle = await ingestZip(zipAllowList);
-console.info(`Redfin ingest complete (${bundle.recordCount} sandbox ZIP records)`);
+const scope = allZips ? "national" : zipsArg ? "custom" : "sandbox";
+console.info(`Redfin ingest complete (${bundle.recordCount} ${scope} ZIP records)`);

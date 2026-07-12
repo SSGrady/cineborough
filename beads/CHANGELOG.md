@@ -6,6 +6,14 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### Nationwide metro ingest pipeline
+
+- CBSA catalog: 945 CBSAs, 918 with ZCTAs, 20,793 neighborhoods (`build:metro-catalog`)
+- Batch orchestrator with checkpointing (`ingest:nationwide`, `ingest:status`)
+- Per-metro pipeline: TIGERweb ZCTA polygons + ZHVI/Redfin/FHFA merge → `data/metros/{cbsa}.geojson`
+- API route serves on-disk shards for metros beyond sandbox bundle
+- Initial ingest: 29/918 metros (543 neighborhoods)
+
 ### S015 Phase 2 — Discovery v2 (T079, T088, T082, T089, T090)
 
 - **T079** — Histogram bars with hover bin count, in-band shading, heatmap-sync accent

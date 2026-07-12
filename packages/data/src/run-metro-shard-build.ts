@@ -27,12 +27,17 @@ export function runMetroShardBuild(files: MetroShardBuildFiles): void {
   const metrics = JSON.parse(readFileSync(files.metricsPath, "utf8")) as {
     metro: string;
     cbsaCode?: string;
+    zhviMetroRegionId?: string;
     zips: ZipMetricsInput[];
   };
 
   const quotes = JSON.parse(readFileSync(files.quotesPath, "utf8")) as MetroShardBuildInput["quotes"];
 
-  const merged = mergeLiveMetricsIntoZips(metrics.zips, { cbsaCode: files.cbsaCode });
+  const merged = mergeLiveMetricsIntoZips(metrics.zips, {
+    cbsaCode: files.cbsaCode,
+    zhviMetroRegionId: metrics.zhviMetroRegionId,
+    cbsaName: metrics.metro,
+  });
 
   const collection = buildMetroShardGeoJson({
     metro: metrics.metro,
