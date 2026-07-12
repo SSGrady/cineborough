@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted (amended by ADR-013)
 
 ## Date
 
@@ -36,6 +36,7 @@ Lock MVP geography to the **Washington D.C. metropolitan area**, specifically:
 
 - All mock data, map tiles, and UI copy reference these 5 ZIPs.
 - Expanding to Nashville (Reventure screenshot reference market) or other metros requires a new ADR.
+- **2026-07-12:** ADR-013 expands sandbox to four metros (68 ZIPs) for E007; this ADR remains the DC origin record.
 - GeoJSON boundaries for these ZIPs will be needed for choropleth rendering.
 
 ## Alternatives Considered

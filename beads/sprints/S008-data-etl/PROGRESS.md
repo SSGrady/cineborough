@@ -12,8 +12,8 @@
 - [x] **T049** — Derived `sellerDesperationScore` from live market signals
 - [x] **T056** — SF Bay sandbox live ingest + FHFA MSAD proxy
 - [x] **T057** — San Jose metro sandbox (CBSA 41940, 16 ZIPs, live ingest)
-- [ ] **T047** — Zillow Research market metrics ingest (optional cross-check)
-- [ ] **T050** — Realtor.com monthly inventory CSV ingest (optional fallback)
+- [ ] **T047** — Zillow Research market metrics ingest (optional cross-check) → **closed** (Redfin T046 satisfies MVP)
+- [ ] **T050** — Realtor.com monthly inventory CSV ingest (optional fallback) → **deferred**
 
 ## Blockers
 
@@ -38,6 +38,6 @@ Monthly metrics source evaluation: [`docs/research/monthly-metrics-data-sources.
 - **T056:** SF Bay sandbox live ingest complete — 52 sandbox ZIPs in census/zhvi/redfin bundles; FHFA MSAD 41884 proxy for CBSA 41860 derived forecast/overvaluation.
 - **T057:** San Jose sandbox complete — 68 sandbox ZIPs; CBSA 41940 FHFA direct + ZHVI 395059; VTA/Caltrain paths + amenity POIs.
 
-**MVP slice complete:** T046 → T049 → T048 → **T056 (SF Bay)** → **T057 (San Jose)**. Optional cross-checks: T047, T050.
+**MVP slice complete:** T046 → T049 → T048 → **T056 (SF Bay)** → **T057 (San Jose)**. Sprint S008 closed with E007 (2026-07-12).
 
-**Deferred (ADR-012 paid gate):** ATTOM property-level DOM/PSF/cuts; CoreLogic microdata; Walk Score Enterprise bulk.
+**Deferred (optional):** T047 (Zillow cross-check), T050 (Realtor inventory). **Paid gate (ADR-012):** ATTOM property-level DOM/PSF/cuts; CoreLogic microdata; Walk Score Enterprise bulk.

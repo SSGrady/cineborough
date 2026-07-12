@@ -60,7 +60,7 @@ Fixed map chrome:
 
 - Tooltip toggle (show/hide hover labels)
 - Data date indicator (`Data: May 2026` from collection metadata)
-- Color legend pill for active metric
+- Color legend pill for active metric — fixed vs tercile vs gradient semantics in [`docs/schema/choropleth-color-scales.md`](../schema/choropleth-color-scales.md)
 
 ### 8. Hybrid navigation
 

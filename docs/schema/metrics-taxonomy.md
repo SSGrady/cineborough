@@ -10,10 +10,10 @@ See [ADR-005](../adr/005-data-schema-metric-taxonomy.md) for the decision record
 |-----|-------|------|------------------|------------|
 | `homePriceForecast1yr` | 1-Year Price Forecast | % | Financials | Derived (ZHVI + FHFA) |
 | `overvaluationPct` | Over / Undervaluation | % | Financials | Derived (ZHVI + ACS income) |
-| `capRate` | Cap Rate | % | Investor Metrics | Mock (HUD FMR ingest pending) |
-| `daysOnMarket` | Days on Market | days | Market Trends | Mock |
-| `sellerDesperationScore` | Seller Desperation Score | 0–100 | Investor Metrics | Mock (derived from DOM + price cuts) |
-| `marketPsf` | Market PSF | $/sqft | Financials | Mock |
+| `capRate` | Cap Rate | % | Investor Metrics | Derived (ACS B25064 rent / ZHVI) |
+| `daysOnMarket` | Days on Market | days | Market Trends | Redfin bulk (sandbox) |
+| `sellerDesperationScore` | Seller Desperation Score | 0–100 | Investor Metrics | Derived (Redfin DOM + price drops) |
+| `marketPsf` | Market PSF | $/sqft | Financials | Redfin bulk (sandbox) |
 | `homeValueGrowthYoy` | Home Value Growth YoY | % | Market Trends | ZHVI bulk |
 | `medianHomeValue` | Median Home Value | $ | Financials | ZHVI bulk |
 
@@ -67,7 +67,7 @@ Model confidence: 0.75 with income, 0.55 with metro ZHVI anchor, 0.45 zip-only.
 | `populationGrowthRate` | Population Growth Rate | % | Demographics | Census ACS |
 | `incomeGrowthRate` | Income Growth Rate | % | Demographics | Census ACS (B19013 YoY) |
 | `medianAge` | Median Age | years | Demographics | Census ACS |
-| `walkabilityScore` | Walkability Score | 0–100 | Urban Fabric | Mock → OSM |
+| `walkabilityScore` | Walkability Score | 0–100 | Urban Fabric | OSM proxy (sandbox) |
 | `collegeDegreeRate` | College Degree Rate | % | Demographics | Census ACS |
 
 ## Composite

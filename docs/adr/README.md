@@ -20,6 +20,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [010](./010-national-geography-scale.md) | National Geography Scale Architecture | Accepted | 2026-07-11 |
 | [011](./011-national-metro-tile-strategy.md) | National Metro Tile Strategy (3,100+ CBSAs) | Accepted | 2026-07-11 |
 | [012](./012-public-bulk-data-ingest.md) | Data Sourcing: Public Bulk Ingest | Accepted | 2026-07-11 |
+| [013](./013-multi-metro-sandbox-expansion.md) | Multi-Metro Sandbox Expansion | Accepted | 2026-07-12 |
 
 ---
 
@@ -57,17 +58,19 @@ Replaces mock-first with periodic public bulk downloads:
 - **FHFA HPI + HUD FMR** — growth and rent proxies for cap rate / overvaluation models
 - **Derived metrics** — forecast, overvaluation, opportunity score computed at build
 - **Mock** demoted to dev/CI fixtures only
-- **Paid APIs (ATTOM)** gated until S010 journey validated
+- **Paid APIs (ATTOM)** gated until S010 acceptance criteria met (S010 complete; gate open for future ADR)
 
 
 ### ADR 004 — DC Metro Geographic Sandbox
+
+**Amended by ADR-013.** Original five-ZIP DC sandbox; see ADR-013 for current four-metro / 68-ZIP sandbox.
 
 Constrains MVP geography to enable fast iteration:
 
 - Primary corridors: Arlington (22201, 22202, 22204) and Bethesda (20814)
 - Core DC: 20001 as urban contrast
 - Geographic units: metro → ZIP (ZCTA) → property (Phase 3)
-- No nationwide or multi-metro ingest without ADR amendment
+- No nationwide ZIP choropleth without ADR amendment
 
 ### ADR 005 — Data Schema and Metric Taxonomy
 
@@ -132,3 +135,11 @@ Documents path from 58-metro mock choropleth + sandbox shards to 3,100+ CBSAs:
 - **Metro/ZIP zoom:** enriched GeoJSON shards per CBSA (`data/metros/{cbsa}.geojson`)
 - **Long tail:** API on-demand fetch with client cache
 - `metro-tiles.ts` stub; enable via `NEXT_PUBLIC_METRO_TILES_URL`
+
+### ADR 013 — Multi-Metro Sandbox Expansion
+
+Amends ADR-004 for E007 validation sandboxes:
+
+- Four CBSAs: DC (47900), Orlando (36740), SF Bay (41860), San Jose (41940) — 68 ZCTAs
+- Live ingest + enriched shards; hybrid discovery journey sandbox-only
+- Choropleth fixed thresholds documented in `docs/schema/choropleth-color-scales.md`

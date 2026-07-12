@@ -1,9 +1,10 @@
 ---
 id: S011
 title: Phase 2a Cinematic Polish
-status: in_progress
+status: done
 epic: E002
 start: 2026-07-11
+closed_date: 2026-07-12
 ---
 
 # S011 — Phase 2a Cinematic Polish
@@ -18,7 +19,7 @@ Deliver Phase 2a items from [`docs/specifications/phase-2-cinematic-ux.md`](../.
 | T052 | Route path trace-in animation | done |
 | T053 | Unified cinematic tour chrome | done |
 | T054 | Orlando transit path mock | done |
-| T055 | Phase 2a manual QA | open |
+| T055 | Phase 2a manual QA | done |
 
 ## Exit Criteria
 

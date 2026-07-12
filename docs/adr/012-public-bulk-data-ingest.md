@@ -34,7 +34,8 @@ ADR-003 (Mock-First Strategy) is **revoked**. Live public bulk ingest begins in 
 | Zillow Research ZHVI | Bulk CSV download | Median home value, home value growth YoY/MoM, forecast proxy, overvaluation proxy | Monthly ZHVI publish |
 | FHFA House Price Index | Bulk CSV | Metro/state HPI, growth rates | Quarterly |
 | HUD FMR (optional) | Bulk | Rent proxy for cap-rate estimation | Annual |
-| OpenStreetMap / Overpass | API | Walkability proxy, green spaces, POIs | On-demand / weekly cache |
+| OpenStreetMap / Overpass | API | Walkability proxy (`walkabilityScore`), amenity density at ZCTA centroid | On-demand / weekly cache |
+| Redfin Market Tracker | Public bulk CSV | Days on market, market PSF, price drops (inventory signals) | Monthly Redfin publish |
 
 ### Derived metrics (computed at build)
 
@@ -44,7 +45,9 @@ ADR-003 (Mock-First Strategy) is **revoked**. Live public bulk ingest begins in 
 | `overvaluationPct` | ZHVI vs income-adjusted fundamental baseline |
 | `capRate` | HUD FMR annual / ZHVI (rent-to-value proxy) until property-level rents available |
 | `marketPsf` | ZHVI / ACS median sqft where available; metro fallback |
-| `sellerDesperationScore` | DOM proxy from inventory trends (Redfin public research if added) + price-cut signals when available |
+| `sellerDesperationScore` | Derived from Redfin DOM + price-drop signals (`ingest:redfin`) |
+| `walkabilityScore` | OSM amenity diversity + density within 1 km of ZCTA centroid (`ingest:osm-walkability`) |
+| `capRate` | ACS B25064 median gross rent × 12 / ZHVI (HUD FMR bulk blocked; API path retained) |
 | `opportunityScore` | Existing composite over live inputs |
 
 ### Explicit bans (unchanged)
@@ -68,17 +71,34 @@ data/
     zhvi/             # bulk CSV from Zillow Research (zip, metro, city, …)
     fhfa-hpi/         # bulk CSV
     hud/              # optional FMR
+    redfin/           # market tracker CSV (DOM, PSF, price drops)
+    osm-walkability/  # Overpass amenity counts per ZCTA
   metros/             # enriched shard output (build from ingest)
   mock/               # dev fixtures only
 ```
+
+### Ingest scripts (pnpm)
+
+| Script | Output |
+|--------|--------|
+| `ingest:census-acs` | `data/ingest/census-acs/` — demographics, income, rent |
+| `ingest:zhvi` | `data/ingest/zhvi/` — home value index by ZIP/metro |
+| `ingest:fhfa-hpi` | `data/ingest/fhfa-hpi/` — metro HPI momentum |
+| `ingest:redfin` | `data/ingest/redfin/` — DOM, PSF, price drops |
+| `ingest:osm-walkability` | `data/ingest/osm-walkability/` — walkability proxy |
+| `build:metro-shard` | Merges ingest into `data/metros/{cbsa}.geojson` |
+
+Sandbox ZIP scope: `ALL_SANDBOX_ZIPS` (68 ZCTAs across four CBSAs — see ADR-013).
 
 ### Gate to paid Tier (future ADR)
 
 Commercial property APIs (ATTOM, Redfin Data Center paid tier) unlock only when:
 
-1. S010 journey shipped and user-tested
+1. S010 journey shipped and user-tested (**met** — E007 closed 2026-07-12)
 2. Redistribution license signed
 3. Monthly refresh cost approved
+
+Optional cross-check sources (not MVP): Zillow Research DOM/inventory CSVs (T047), Realtor.com inventory CSV (T050).
 
 ## Consequences
 

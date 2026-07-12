@@ -1,7 +1,7 @@
 ---
 id: T047
 title: Zillow Research market metrics ingest (DOM, price cuts, inventory)
-status: open
+status: closed
 type: feature
 priority: P2
 epic: E007
@@ -14,4 +14,8 @@ acceptance:
 
 # T047 — Zillow Market Metrics Ingest
 
-Optional cross-check source. Not implemented in MVP slice (T046 + T048 + T049).
+Optional cross-check source. Not implemented in MVP slice — Redfin ingest (T046) satisfies DOM, PSF, and price-drop signals for seller desperation (T049).
+
+## Closure (2026-07-12)
+
+Closed with E007 epic. Re-open only if Redfin data quality gaps require Zillow Research cross-validation.

@@ -212,3 +212,18 @@ Aggregated progress log for Cineborough development.
 
 **Status:** T055 → `done`. S010/S011 discovery journey + Phase 2a cinematic QA complete.
 
+---
+
+## 2026-07-12
+
+### E007 — Epic closed (Real Data + Hybrid Discovery)
+
+- **S008** Real data ETL: Census ACS, ZHVI, FHFA, Redfin, OSM ingest for 68 sandbox ZCTAs across DC, Orlando, SF Bay, San Jose
+- **S009** Reventure shell: top search bar, geography tickers, five-category sidebar, context chip + story drawer
+- **S010** Discovery journey: criteria → hybrid scoring → top-3 flyover → analytics overlay; QA pass DC/Orlando/SF Bay
+- **S011** Phase 2a cinematic polish (E002): amenity POI, route trace-in, unified tour chrome
+- **T047** closed (optional Zillow cross-check; Redfin T046 satisfies MVP)
+- **ADRs:** ADR-013 multi-metro sandbox; ADR-012 amended (Redfin/OSM ingest); `docs/schema/choropleth-color-scales.md`
+
+**Status:** E007 → `done`. S008, S009, S010 → `done`. 20/21 E007 tickets done; T047 closed deferred.
+
