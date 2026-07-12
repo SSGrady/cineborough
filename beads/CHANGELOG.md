@@ -6,6 +6,17 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### E009 / S015 — Discovery Moat Strategy (ADR-015)
+
+- **ADR-015** Discovery Moat Strategy — WMIL parity gaps (Part 1) + Cineborough differentiation (Part 2)
+- **Roadmap:** `docs/specifications/discovery-moat-roadmap.md` — phased MVP → v2 → moat
+- **Epic E009** Discovery Moat & Match Engine; **Sprint S015** with tickets T078–T090
+- Part 1: fly-to sidebar, histogram polish, priority toggles, deep-dive split panel, terminology audit
+- Part 2: tension slider, micro-storytelling, custom index builder + choropleth wiring
+- S014 T070/T071/T072/T075/T076 scopes carried into S015 tickets
+
+**Status:** E009 → `open`. S015 → `open`. T078–T090 → `open`.
+
 ### T077 — Discovery Criteria UX v2
 
 - Renamed Wish* components to Criteria* (`CriteriaPanel`, `CriterionRangeSlider`, `CriterionCategoryPicker`)

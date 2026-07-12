@@ -22,6 +22,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [012](./012-public-bulk-data-ingest.md) | Data Sourcing: Public Bulk Ingest | Accepted | 2026-07-11 |
 | [013](./013-multi-metro-sandbox-expansion.md) | Multi-Metro Sandbox Expansion | Accepted | 2026-07-12 |
 | [014](./014-wishlist-discovery-engine.md) | Wishlist Discovery Engine | Accepted | 2026-07-12 |
+| [015](./015-discovery-moat-strategy.md) | Discovery Moat Strategy | Accepted | 2026-07-12 |
 
 ---
 
@@ -144,6 +145,15 @@ Amends ADR-004 for E007 validation sandboxes:
 - Four CBSAs: DC (47900), Orlando (36740), SF Bay (41860), San Jose (41940) — 68 ZCTAs
 - Live ingest + enriched shards; hybrid discovery journey sandbox-only
 - Choropleth fixed thresholds documented in `docs/schema/choropleth-color-scales.md`
+
+### ADR 015 — Discovery Moat Strategy
+
+Two-track discovery strategy after S014 hybrid shell — WMIL parity close-out plus Cineborough differentiation:
+
+- **Part 1 (parity):** state-grouped fly-to matches sidebar, histogram sliders, priority toggles, deep-dive split panel, criteria terminology
+- **Part 2 (moat):** investor ↔ hope-core tension slider + quadrant, cinematic micro-storytelling, custom index builder ("Digital Nomad Yield Index")
+- Epic E009 / Sprint S015; roadmap at `docs/specifications/discovery-moat-roadmap.md`
+- Builds on ADR-014 scoring semantics and `discovery-criteria-ux-v2.md` vocabulary
 
 ### ADR 014 — Wishlist Discovery Engine
 

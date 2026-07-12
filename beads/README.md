@@ -64,5 +64,6 @@ When completing a ticket:
 
 ## Current Active Work
 
-- **Epic:** [E008 — Wishlist Discovery](./epics/E008-wishlist-discovery.md)
-- **Sprint:** [S014 — Wishlist Discovery](./sprints/S014-wishlist-discovery/sprint.md)
+- **Epic:** [E009 — Discovery Moat & Match Engine](./epics/E009-discovery-moat-match-engine.md)
+- **Sprint:** [S015 — Discovery Moat](./sprints/S015-discovery-moat/sprint.md)
+- **Prior:** [E008 / S014](./epics/E008-wishlist-discovery.md) — shell shipped (T077); scoring tickets carry as prerequisites
