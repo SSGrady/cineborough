@@ -259,6 +259,29 @@ body {
   background: var(--surface-muted);
 }
 
+.discovery-criteria__add-category-group {
+  list-style: none;
+}
+
+.discovery-criteria__add-category-group + .discovery-criteria__add-category-group {
+  border-top: 1px solid var(--border);
+}
+
+.discovery-criteria__add-category {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-muted);
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+.discovery-criteria__add-category-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
 .discovery-criteria__group {
   border: none;
   margin: 0 0 1.25rem;
