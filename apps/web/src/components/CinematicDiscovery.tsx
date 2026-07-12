@@ -832,7 +832,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: "Discovery",
         title: discoveryMessage,
-        detail: "Adjust criteria or drill into DC / Orlando sandbox",
+        detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay)",
         canOpen: true,
         action: { label: "Criteria", onClick: () => setCriteriaPanelOpen(true) },
       };

@@ -29,8 +29,9 @@ export const SANDBOX_CBSA_FHFA_MAP: Record<
     label: "Arlington-Alexandria-Reston, VA-WV (MSAD)",
   },
   "41860": {
-    fhfaMetroCode: "41860",
-    label: "San Francisco-Oakland-Berkeley, CA",
+    // FHFA expanded file splits MSA 41860 into MSADs; SF core MSAD is the sandbox proxy (ADR-012).
+    fhfaMetroCode: "41884",
+    label: "San Francisco-San Mateo-Redwood City, CA (MSAD)",
   },
 };
 

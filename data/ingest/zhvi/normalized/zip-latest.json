@@ -1,10 +1,10 @@
 {
   "source": "zillow-research-zhvi",
   "attribution": "Home values from Zillow Research ZHVI bulk data (© Zillow). Not for redistribution without attribution.",
-  "downloadedAt": "2026-07-11T20:36:08.543Z",
+  "downloadedAt": "2026-07-12T01:11:40.538Z",
   "vintage": "2026-05-31",
   "geography": "zip",
-  "recordCount": 34,
+  "recordCount": 52,
   "records": {
     "20001": {
       "zipCode": "20001",
@@ -1261,6 +1261,672 @@
         {
           "date": "2026-05-31",
           "zhvi": 401449
+        }
+      ]
+    },
+    "94102": {
+      "zipCode": "94102",
+      "regionId": "97557",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 741645,
+      "zhviMomPct": 0.9392874213481373,
+      "zhviYoyPct": 2.6578484815294448,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 710660
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 717324
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 723936
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 729639
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 734744
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 741645
+        }
+      ]
+    },
+    "94103": {
+      "zipCode": "94103",
+      "regionId": "97558",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 812168,
+      "zhviMomPct": 0.7322616159099522,
+      "zhviYoyPct": 1.3819642584937568,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 778996
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 786957
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 795508
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 801668
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 806264
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 812168
+        }
+      ]
+    },
+    "94107": {
+      "zipCode": "94107",
+      "regionId": "97562",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1033061,
+      "zhviMomPct": 0.9929517433092989,
+      "zhviYoyPct": 4.4013041861503694,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 991502
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 999837
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1009264
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1016931
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1022904
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1033061
+        }
+      ]
+    },
+    "94109": {
+      "zipCode": "94109",
+      "regionId": "97564",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1040528,
+      "zhviMomPct": 0.7496438280410296,
+      "zhviYoyPct": 4.795027797746864,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 997833
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1008234
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1018509
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1027160
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1032786
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1040528
+        }
+      ]
+    },
+    "94110": {
+      "zipCode": "94110",
+      "regionId": "97565",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1386906,
+      "zhviMomPct": 1.317114763165633,
+      "zhviYoyPct": 8.426004384017872,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1324677
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1337526
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1348110
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1357917
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1368877
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1386906
+        }
+      ]
+    },
+    "94114": {
+      "zipCode": "94114",
+      "regionId": "97568",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1948470,
+      "zhviMomPct": 1.7900241263275944,
+      "zhviYoyPct": 12.849120521682597,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1806422
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1833003
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1860893
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1886605
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1914205
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1948470
+        }
+      ]
+    },
+    "94117": {
+      "zipCode": "94117",
+      "regionId": "97571",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1616826,
+      "zhviMomPct": 1.5291289972495432,
+      "zhviYoyPct": 9.978645014277312,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1507966
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1527576
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1550644
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1571678
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1592475
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1616826
+        }
+      ]
+    },
+    "94122": {
+      "zipCode": "94122",
+      "regionId": "97576",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1664037,
+      "zhviMomPct": 1.0760417927245918,
+      "zhviYoyPct": 7.017855802604439,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1595122
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1610453
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1622837
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1633693
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1646322
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1664037
+        }
+      ]
+    },
+    "94123": {
+      "zipCode": "94123",
+      "regionId": "97577",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 2408450,
+      "zhviMomPct": 1.6845868059510358,
+      "zhviYoyPct": 11.534195811593175,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 2251200
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 2283706
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 2315816
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 2341105
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 2368550
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 2408450
+        }
+      ]
+    },
+    "94131": {
+      "zipCode": "94131",
+      "regionId": "97585",
+      "state": "CA",
+      "city": "San Francisco",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "San Francisco County",
+      "zhvi": 1713078,
+      "zhviMomPct": 1.398132659889104,
+      "zhviYoyPct": 11.190559254097362,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1609738
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1636648
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1657524
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1672964
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1689457
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1713078
+        }
+      ]
+    },
+    "94520": {
+      "zipCode": "94520",
+      "regionId": "97728",
+      "state": "CA",
+      "city": "Concord",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Contra Costa County",
+      "zhvi": 615210,
+      "zhviMomPct": -0.05204340933913039,
+      "zhviYoyPct": -3.2479457840534964,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 613909
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 614539
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 615413
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 615767
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 615530
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 615210
+        }
+      ]
+    },
+    "94549": {
+      "zipCode": "94549",
+      "regionId": "97756",
+      "state": "CA",
+      "city": "Lafayette",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Contra Costa County",
+      "zhvi": 1960178,
+      "zhviMomPct": -0.0857263187127981,
+      "zhviYoyPct": 0.002886260357909131,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1956299
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1961849
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1965133
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1964397
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1961860
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1960178
+        }
+      ]
+    },
+    "94596": {
+      "zipCode": "94596",
+      "regionId": "97799",
+      "state": "CA",
+      "city": "Walnut Creek",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Contra Costa County",
+      "zhvi": 1106779,
+      "zhviMomPct": -0.2929156988013972,
+      "zhviYoyPct": 0.08845589085567508,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1112125
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1113915
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1115297
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1113407
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1110031
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1106779
+        }
+      ]
+    },
+    "94601": {
+      "zipCode": "94601",
+      "regionId": "97803",
+      "state": "CA",
+      "city": "Oakland",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Alameda County",
+      "zhvi": 559999,
+      "zhviMomPct": -0.061937441136685326,
+      "zhviYoyPct": -8.052746610657985,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 572743
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 570263
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 566457
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 562639
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 560346
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 559999
+        }
+      ]
+    },
+    "94607": {
+      "zipCode": "94607",
+      "regionId": "97809",
+      "state": "CA",
+      "city": "Oakland",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Alameda County",
+      "zhvi": 531372,
+      "zhviMomPct": -0.4547162958678144,
+      "zhviYoyPct": -9.193658762968777,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 540312
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 539173
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 537659
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 536360
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 533800
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 531372
+        }
+      ]
+    },
+    "94611": {
+      "zipCode": "94611",
+      "regionId": "97813",
+      "state": "CA",
+      "city": "Piedmont",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Alameda County",
+      "zhvi": 1421081,
+      "zhviMomPct": 0.755387536207154,
+      "zhviYoyPct": -1.1307889391994252,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1399746
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1396689
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1396239
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1401895
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1410426
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1421081
+        }
+      ]
+    },
+    "94704": {
+      "zipCode": "94704",
+      "regionId": "97838",
+      "state": "CA",
+      "city": "Berkeley",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Alameda County",
+      "zhvi": 1180427,
+      "zhviMomPct": 0.427767094599529,
+      "zhviYoyPct": -1.4745934166791415,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1173490
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 1172999
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 1173916
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 1174351
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 1175399
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 1180427
+        }
+      ]
+    },
+    "94705": {
+      "zipCode": "94705",
+      "regionId": "97839",
+      "state": "CA",
+      "city": "Berkeley",
+      "metro": "San Francisco-Oakland-Berkeley, CA",
+      "county": "Alameda County",
+      "zhvi": 2030973,
+      "zhviMomPct": 0.41769070000144315,
+      "zhviYoyPct": 0.5597758646567971,
+      "series": [
+        {
+          "date": "2025-12-31",
+          "zhvi": 1999322
+        },
+        {
+          "date": "2026-01-31",
+          "zhvi": 2014785
+        },
+        {
+          "date": "2026-02-28",
+          "zhvi": 2021183
+        },
+        {
+          "date": "2026-03-31",
+          "zhvi": 2023221
+        },
+        {
+          "date": "2026-04-30",
+          "zhvi": 2022526
+        },
+        {
+          "date": "2026-05-31",
+          "zhvi": 2030973
         }
       ]
     }

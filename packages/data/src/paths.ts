@@ -1,5 +1,6 @@
 import arlingtonPaths from "../../../data/mock/arlington-orange-line.geojson";
 import orlandoPaths from "../../../data/mock/orlando-transit-path.geojson";
+import sfBayPaths from "../../../data/mock/sf-bay-transit-path.geojson";
 import type { TransitPathCollection } from "./geojson-types";
 
 const ALL_PATHS: TransitPathCollection = {
@@ -7,6 +8,7 @@ const ALL_PATHS: TransitPathCollection = {
   features: [
     ...(arlingtonPaths as unknown as TransitPathCollection).features,
     ...(orlandoPaths as unknown as TransitPathCollection).features,
+    ...(sfBayPaths as unknown as TransitPathCollection).features,
   ],
 };
 

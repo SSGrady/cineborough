@@ -1,6 +1,6 @@
 import { computeOpportunityScore, normalizeScores } from "./opportunity-index.ts";
 import type { ZipMetricsInput } from "./validation.ts";
-import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, PolygonGeometry } from "./types.ts";
+import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, MetroGeometry } from "./types.ts";
 
 export interface MetroShardBuildInput {
   metro: string;
@@ -32,11 +32,25 @@ function colorForNormalizedScore(score: number): string {
   return "#ef4444";
 }
 
-function polygonCentroid(coordinates: number[][][]): { lng: number; lat: number } {
-  const ring = coordinates[0];
+function exteriorRing(geometry: MetroGeometry): number[][] {
+  if (geometry.type === "Polygon") {
+    return geometry.coordinates[0] ?? [];
+  }
+  const polygons = geometry.coordinates;
+  let best: number[][] = [];
+  for (const poly of polygons) {
+    const ring = poly[0] ?? [];
+    if (ring.length > best.length) best = ring;
+  }
+  return best;
+}
+
+function polygonCentroid(geometry: MetroGeometry): { lng: number; lat: number } {
+  const ring = exteriorRing(geometry);
   let sumLng = 0;
   let sumLat = 0;
-  const n = ring.length - 1;
+  const n = Math.max(ring.length - 1, 0);
+  if (n === 0) return { lng: 0, lat: 0 };
   for (let i = 0; i < n; i++) {
     sumLng += ring[i][0];
     sumLat += ring[i][1];
@@ -46,13 +60,13 @@ function polygonCentroid(coordinates: number[][][]): { lng: number; lat: number 
 
 function buildFeature(
   zip: ZipMetricsInput,
-  geometry: PolygonGeometry,
+  geometry: MetroGeometry,
   opportunityScore: number,
   opportunityScoreNormalized: number,
   quote?: { text: string; primaryVibe?: string },
 ): DcMetroFeature {
   const fillColor = colorForNormalizedScore(opportunityScoreNormalized);
-  const centroid = polygonCentroid(geometry.coordinates as number[][][]);
+  const centroid = polygonCentroid(geometry);
 
   const properties: DcMetroFeatureProperties = {
     zipCode: zip.zip,

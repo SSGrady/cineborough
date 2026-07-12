@@ -1,7 +1,7 @@
 {
   "source": "fhfa-hpi-expanded-metro",
   "attribution": "House price momentum from FHFA House Price Index bulk data (© FHFA).",
-  "downloadedAt": "2026-07-11T19:49:02.265Z",
+  "downloadedAt": "2026-07-12T01:11:00.705Z",
   "vintage": "2026Q1",
   "recordCount": 410,
   "records": {
@@ -19357,8 +19357,8 @@
         }
       ]
     },
-    "41884": {
-      "cbsaCode": "41884",
+    "41860": {
+      "cbsaCode": "41860",
       "fhfaMetroCode": "41884",
       "name": "San Francisco-San Mateo-Redwood City, CA (MSAD)",
       "indexNsa": 570.2,

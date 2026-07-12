@@ -1,0 +1,58 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BART Market Street corridor",
+        "type": "transit",
+        "zip": "94102"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.407, 37.784],
+          [-122.411, 37.781],
+          [-122.416, 37.778],
+          [-122.421, 37.775],
+          [-122.426, 37.772]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "Golden Gate Park loop trail",
+        "type": "trail",
+        "zip": "94117"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.462, 37.769],
+          [-122.456, 37.772],
+          [-122.451, 37.768],
+          [-122.455, 37.764],
+          [-122.462, 37.769]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "BART Rockridge corridor",
+        "type": "transit",
+        "zip": "94611"
+      },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-122.252, 37.844],
+          [-122.258, 37.838],
+          [-122.265, 37.832],
+          [-122.272, 37.826]
+        ]
+      }
+    }
+  ]
+}

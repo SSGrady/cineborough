@@ -1392,6 +1392,870 @@
           28.32095
         ]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94102",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.41448299999999,
+          37.783699
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94102",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.421483,
+          37.778698999999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94102",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.416483,
+          37.777699
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94103",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.409184,
+          37.775169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94103",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.416184,
+          37.770168999999996
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94103",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.411184,
+          37.769169
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94107",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.39222699999999,
+          37.77353
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94107",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.399227,
+          37.76853
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94107",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.394227,
+          37.76753
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94109",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.416786,
+          37.799937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94109",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.423786,
+          37.794937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94109",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.41878600000001,
+          37.793937
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94110",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.41411099999999,
+          37.751677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94110",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.421111,
+          37.746677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94110",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.416111,
+          37.745677
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94114",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.434146,
+          37.760608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94114",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.441146,
+          37.755607999999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94114",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.43614600000001,
+          37.754608
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94117",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.440422,
+          37.772628
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94117",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.447422,
+          37.767627999999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94117",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.44242200000001,
+          37.766628
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94122",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.472837,
+          37.766616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94122",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.479837,
+          37.761616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94122",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.47483700000001,
+          37.760616
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94123",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.429778,
+          37.802396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94123",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.436778,
+          37.797396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94123",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.43177800000001,
+          37.796396
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94131",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.43822899999999,
+          37.750478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94131",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.445229,
+          37.745478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94131",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.440229,
+          37.744478
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94601",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.215729,
+          37.782689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94601",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.222729,
+          37.777688999999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94601",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.217729,
+          37.776689
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94607",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.279246,
+          37.8135
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94607",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.286246,
+          37.808499999999995
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94607",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.28124600000001,
+          37.8075
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94611",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.24199999999999,
+          37.847
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94611",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.249,
+          37.842
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94611",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.244,
+          37.841
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94704",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.264,
+          37.874
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94704",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.271,
+          37.869
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94704",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.266,
+          37.868
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94705",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.23644,
+          37.864465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94705",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.24344,
+          37.859465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94705",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.23844000000001,
+          37.858465
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94596",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.041705,
+          37.897738
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94596",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.048705,
+          37.892737999999994
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94596",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.043705,
+          37.891738
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94520",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.02233,
+          38.003076
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94520",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.02933,
+          37.998076
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94520",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.02433,
+          37.997076
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94549",
+        "name": "Neighborhood Park",
+        "category": "park",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.122535,
+          37.908279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94549",
+        "name": "Transit Hub",
+        "category": "transit",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.129535,
+          37.903279
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "zip": "94549",
+        "name": "Local Coffee",
+        "category": "coffee",
+        "cbsa": "41860"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -122.12453500000001,
+          37.902279
+        ]
+      }
     }
   ]
 }
