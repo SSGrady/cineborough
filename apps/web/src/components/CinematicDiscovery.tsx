@@ -142,6 +142,10 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
 
 const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
 
+function isDiscoveryMetro(cbsa: string, ingested: ReadonlySet<string>): boolean {
+  return SANDBOX_CBSA.has(cbsa) || ingested.has(cbsa);
+}
+
 function metroOverviewCamera(cbsa: string): MapCameraTarget | null {
   const feature = US_METROS_GEOJSON.features.find((f) => f.properties.zipCode === cbsa);
   if (!feature) return null;
@@ -245,6 +249,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const [selectedMetroCamera, setSelectedMetroCamera] = useState<MapCameraTarget | null>(null);
   const [exploreCityLoading, setExploreCityLoading] = useState(false);
   const loadingShardsRef = useRef<Set<string>>(new Set());
+  const discoveryActivatedRef = useRef<string | null>(null);
 
   const discoveryFlyoverActive = discoveryFlyover !== null;
 
@@ -304,7 +309,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     !isOverviewMode &&
     !discoveryFlyoverActive &&
     !dcStoryActive &&
-    !discoveryTourComplete &&
+    discoveryShellActive &&
     !exploreMode;
 
   const labelHighlightZip = useMemo((): string | null => {
@@ -337,6 +342,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       geoJson,
     [activeSandboxCbsa, geoJson, loadedShards],
   );
+
+  const activeShardReady = useMemo(() => {
+    if (SANDBOX_CBSA.has(activeSandboxCbsa)) return true;
+    return Boolean(loadMetroShard(activeSandboxCbsa) ?? loadedShards[activeSandboxCbsa]);
+  }, [activeSandboxCbsa, loadedShards]);
 
   const sandboxDiscoveryCriteria = useMemo(
     () => discoveryCriteriaForSandbox(activeSandboxCbsa),
@@ -933,13 +943,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   }, [activeShardGeoJson, exampleZips]);
 
   const handleOpenCriteria = useCallback(() => {
-    if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
-      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, SF Bay, or San Jose) first");
+    if (isOverviewMode || !isDiscoveryMetro(activeSandboxCbsa, ingestedCbsas)) {
+      setDiscoveryMessage("Select a metro on the map, then Explore city or drill into a sandbox");
       return;
     }
     setDiscoveryMessage(null);
     setDiscoveryShellActive(true);
-  }, [isOverviewMode, activeSandboxCbsa]);
+  }, [isOverviewMode, activeSandboxCbsa, ingestedCbsas]);
 
   const handleToggleFavorite = useCallback((zip: string) => {
     setFavorites((prev) => {
@@ -1034,36 +1044,56 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     });
   }, []);
 
+  const enterDiscoveryMetro = useCallback(
+    (options?: { openDeepDive?: boolean; markTourComplete?: boolean }) => {
+      setDiscoveryMessage(null);
+      setStoryCameraActive(false);
+      setSearchFlyTarget(null);
+      setExitRestoreTarget(null);
+      setDiscoveryShellActive(true);
+
+      if (options?.markTourComplete !== false) {
+        setDiscoveryTourComplete(true);
+      }
+
+      const ranked = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
+      const results = applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
+
+      if (results.length === 0) {
+        setDiscoveryResults([]);
+        setDiscoveryMessage("No neighborhoods in this metro");
+        setDeepDiveOpen(false);
+        return;
+      }
+
+      setDiscoveryResults(results);
+      setComparePins(results.slice(0, 3).map((r) => r.zip));
+      setSandboxDrillActive(true);
+      setGeography("zip");
+      setSelectedZip(results[0].zip);
+      setDeepDiveOpen(options?.openDeepDive !== false);
+    },
+    [activeShardGeoJson, discoveryCriteria, exampleZips],
+  );
+
   const runDiscoveryRanking = useCallback(() => {
     setDiscoveryMessage(null);
     setDiscoveryTourComplete(false);
     prevFlyoverRef.current = false;
 
-    if (isOverviewMode || !SANDBOX_CBSA.has(activeSandboxCbsa)) {
-      setDiscoveryMessage("Open a sandbox metro (DC, Orlando, SF Bay, or San Jose) first");
+    if (isOverviewMode || !isDiscoveryMetro(activeSandboxCbsa, ingestedCbsas)) {
+      setDiscoveryMessage("Select a metro on the map, then Explore city or drill into a sandbox");
       return;
     }
 
-    setStoryCameraActive(false);
-    setSearchFlyTarget(null);
-    setExitRestoreTarget(null);
-    setDiscoveryShellActive(true);
-
-    const ranked = rankNeighborhoods(activeShardGeoJson, discoveryCriteria, 0);
-    const results = applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
-
-    if (results.length === 0) {
-      setDiscoveryResults([]);
-      setDiscoveryMessage("No neighborhoods in this sandbox");
-      return;
-    }
-
-    setDiscoveryResults(results);
-    setComparePins(results.slice(0, 3).map((r) => r.zip));
-    setSandboxDrillActive(true);
-    setGeography("zip");
-    setSelectedZip(results[0].zip);
-  }, [isOverviewMode, activeSandboxCbsa, activeShardGeoJson, discoveryCriteria, exampleZips]);
+    enterDiscoveryMetro({ openDeepDive: deepDiveOpen, markTourComplete: false });
+  }, [
+    isOverviewMode,
+    activeSandboxCbsa,
+    ingestedCbsas,
+    enterDiscoveryMetro,
+    deepDiveOpen,
+  ]);
 
   useEffect(() => {
     if (!discoveryShellVisible) return;
@@ -1072,6 +1102,30 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setActiveMetric(metric);
     }
   }, [discoveryCriteria, discoveryShellVisible]);
+
+  useEffect(() => {
+    if (!sandboxDrillActive || isOverviewMode) {
+      discoveryActivatedRef.current = null;
+      return;
+    }
+
+    const cbsa = activeSandboxCbsa;
+    if (!isDiscoveryMetro(cbsa, ingestedCbsas)) return;
+    if (!activeShardReady) return;
+    if (discoveryActivatedRef.current === cbsa) return;
+    if (activeShardGeoJson.features.length === 0) return;
+
+    discoveryActivatedRef.current = cbsa;
+    enterDiscoveryMetro({ openDeepDive: true, markTourComplete: true });
+  }, [
+    sandboxDrillActive,
+    isOverviewMode,
+    activeSandboxCbsa,
+    ingestedCbsas,
+    activeShardReady,
+    activeShardGeoJson,
+    enterDiscoveryMetro,
+  ]);
 
   const handleDiscover = useCallback(() => {
     runDiscoveryRanking();
@@ -1305,7 +1359,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: "Discovery",
         title: discoveryMessage,
-        detail: "Adjust criteria or drill into a sandbox metro (DC, Orlando, SF Bay, San Jose)",
+        detail: "Adjust criteria or select a metro, then Explore city",
         canOpen: true,
         action: { label: "Your criteria", onClick: handleOpenCriteria },
       };
@@ -1698,6 +1752,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
               onStoryMode={
                 activeSandboxCbsa === DC_METRO_CBSA ? handleResumeDcStory : undefined
               }
+              optional
             />
           )}
           {isOverviewMode && geography === "national" && !exploreMode && (
