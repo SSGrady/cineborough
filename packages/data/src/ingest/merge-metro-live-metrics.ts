@@ -70,9 +70,32 @@ function primaryCity(name: string): string {
   return name.split("-")[0].split(",")[0].trim().toLowerCase();
 }
 
-function stateFromCbsaName(name: string): string {
+/** Primary two-letter state from CBSA suffix — handles multi-state (e.g. "RI-MA" → "RI"). */
+export function stateFromCbsaName(name: string): string {
   const parts = name.split(",");
-  return parts.length > 1 ? parts[parts.length - 1].trim().toUpperCase() : "";
+  if (parts.length <= 1) return "";
+  const suffix = parts[parts.length - 1].trim().toUpperCase();
+  const primary = suffix.split("-")[0]?.trim() ?? "";
+  if (primary.length === 2) return primary;
+  return suffix.length === 2 ? suffix : "";
+}
+
+/** All state tokens from CBSA suffix — e.g. "Providence-Warwick, RI-MA" → ["RI", "MA"]. */
+export function stateTokensFromCbsaName(name: string, stateHint = ""): string[] {
+  const tokens = new Set<string>();
+  if (stateHint.trim().length === 2) tokens.add(stateHint.trim().toUpperCase());
+
+  const fromPrimary = stateFromCbsaName(name);
+  if (fromPrimary) tokens.add(fromPrimary);
+
+  const parts = name.split(",");
+  if (parts.length > 1) {
+    for (const part of parts[parts.length - 1].trim().toUpperCase().split("-")) {
+      if (part.length === 2) tokens.add(part);
+    }
+  }
+
+  return [...tokens];
 }
 
 function round1(n: number): number {
@@ -108,17 +131,23 @@ export function resolveZhviForCbsa(
     return bundle.records[mappedId] as ZhviMetroRecord;
   }
 
-  const st = (stateHint || stateFromCbsaName(cbsaName)).toUpperCase();
   const city = primaryCity(cbsaName);
-  if (!st || !city) return undefined;
+  if (!city) return undefined;
 
-  const direct = lookup.get(`${city}|${st}`);
-  if (direct) return direct;
+  const stateTokens = stateTokensFromCbsaName(cbsaName, stateHint);
+  if (stateTokens.length === 0) return undefined;
 
-  for (const [key, rec] of lookup) {
-    if (!key.endsWith(`|${st}`)) continue;
-    const zhviCity = key.split("|")[0];
-    if (zhviCity.startsWith(city) || city.startsWith(zhviCity)) return rec;
+  for (const st of stateTokens) {
+    const direct = lookup.get(`${city}|${st}`);
+    if (direct) return direct;
+  }
+
+  for (const st of stateTokens) {
+    for (const [key, rec] of lookup) {
+      if (!key.endsWith(`|${st}`)) continue;
+      const zhviCity = key.split("|")[0];
+      if (zhviCity.startsWith(city) || city.startsWith(zhviCity)) return rec;
+    }
   }
   return undefined;
 }

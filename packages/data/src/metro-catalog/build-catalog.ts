@@ -15,6 +15,7 @@ import {
   SANDBOX_METRO_CONFIGS,
 } from "./sandbox-config.ts";
 import { buildZhviMetroRegionMap, resolveZhviMetroRegionId } from "./zhvi-lookup.ts";
+import { cityNameCounts, resolveZipDisplayName } from "./zip-neighborhood-names.ts";
 
 interface CbsaFeature {
   type: "Feature";
@@ -109,10 +110,11 @@ function zipsFromZhviMetro(
   if (!key) return [];
 
   const direct = zhviByMetro.get(key) ?? [];
+  const counts = cityNameCounts(direct);
   return direct
     .map((r) => ({
       zip: r.zipCode,
-      name: r.city || `ZCTA ${r.zipCode}`,
+      name: resolveZipDisplayName(r, cbsaName, counts),
       state: r.state,
     }))
     .sort((a, b) => a.zip.localeCompare(b.zip));

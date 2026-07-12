@@ -1,15 +1,31 @@
 /**
  * Shared metro shard build: mock financials + live Census/ZHVI overlay (ADR-012).
  */
-import { readFileSync, writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { buildMetroShardGeoJson, type MetroShardBuildInput } from "./build-metro-shard.ts";
 import { mergeLiveMetricsIntoZips } from "./ingest/merge-shard-metrics.ts";
+import { CATALOG_DIR } from "./metro-catalog/paths.ts";
 import type { ZipMetricsInput } from "./validation.ts";
 import type { PolygonGeometry } from "./types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
+const CROSSWALK_PATH = resolve(CATALOG_DIR, "zip-neighborhood-crosswalk.json");
+
+function applyZipNeighborhoodCrosswalk(zips: ZipMetricsInput[]): ZipMetricsInput[] {
+  if (!existsSync(CROSSWALK_PATH)) return zips;
+
+  const { records } = JSON.parse(readFileSync(CROSSWALK_PATH, "utf8")) as {
+    records?: Record<string, string>;
+  };
+  if (!records) return zips;
+
+  return zips.map((zip) => {
+    const name = records[zip.zip];
+    return name ? { ...zip, name } : zip;
+  });
+}
 
 export interface MetroShardBuildFiles {
   outputPath: string;
@@ -39,12 +55,14 @@ export function runMetroShardBuild(files: MetroShardBuildFiles): void {
     cbsaName: metrics.metro,
   });
 
+  const zips = applyZipNeighborhoodCrosswalk(merged.zips);
+
   const collection = buildMetroShardGeoJson({
     metro: metrics.metro,
     cbsaCode: files.cbsaCode,
     dataAsOf: merged.dataAsOf,
     dataAsOfLabel: merged.dataAsOfLabel,
-    zips: merged.zips,
+    zips,
     boundaries,
     quotes,
   });
