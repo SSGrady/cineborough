@@ -11,6 +11,7 @@ interface TopBarProps {
   searchIndex: SearchResult[];
   onSearchSelect: (result: SearchResult) => void;
   onOpenCriteria?: () => void;
+  criteriaActive?: boolean;
   onDiscover?: () => void;
   discoverDisabled?: boolean;
   discoverLabel?: string;
@@ -24,6 +25,7 @@ export function TopBar({
   searchIndex,
   onSearchSelect,
   onOpenCriteria,
+  criteriaActive = false,
   onDiscover,
   discoverDisabled = false,
   discoverLabel = "Find matches",
@@ -45,7 +47,12 @@ export function TopBar({
       {(onOpenCriteria || onDiscover) && (
         <div className="top-bar__what" role="group" aria-label="Discovery filters">
           {onOpenCriteria && (
-            <button type="button" className="top-bar__criteria-btn" onClick={onOpenCriteria}>
+            <button
+              type="button"
+              className={`top-bar__criteria-btn${criteriaActive ? " top-bar__criteria-btn--active" : ""}`}
+              onClick={onOpenCriteria}
+              aria-pressed={criteriaActive}
+            >
               Your criteria
             </button>
           )}

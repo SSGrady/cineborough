@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { forwardRef, useMemo, useState } from "react";
 import {
   type DcMetroGeoJson,
   type DiscoveryCriteria,
@@ -32,6 +32,7 @@ interface CriteriaPanelProps {
   zipLabels?: Map<string, string>;
   onAddExample?: (zip: string) => void;
   onRemoveExample?: (zip: string) => void;
+  needsMetroSelection?: boolean;
 }
 
 function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
@@ -54,7 +55,8 @@ function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
   };
 }
 
-export function CriteriaPanel({
+export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(function CriteriaPanel(
+  {
   criteria,
   resetCriteria = DEFAULT_DISCOVERY_CRITERIA,
   geoJson,
@@ -67,7 +69,10 @@ export function CriteriaPanel({
   zipLabels = new Map(),
   onAddExample,
   onRemoveExample,
-}: CriteriaPanelProps) {
+  needsMetroSelection = false,
+  },
+  ref,
+) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<CriteriaPanelTab>("criteria");
 
@@ -140,7 +145,12 @@ export function CriteriaPanel({
 
   return (
     <>
-      <aside className="criteria-panel" aria-label="Your criteria">
+      <aside
+        ref={ref}
+        className="criteria-panel"
+        aria-label="Your criteria"
+        tabIndex={-1}
+      >
         <header className="criteria-panel__header">
           <h2>Your criteria</h2>
           {onToggleCollapse && (
@@ -186,9 +196,15 @@ export function CriteriaPanel({
           />
         ) : (
           <>
-            <p className="criteria-panel__intro">
-              Set what matters to you. Every neighborhood gets a Match&nbsp;%.
-            </p>
+            {needsMetroSelection ? (
+              <p className="criteria-panel__metro-hint" role="status">
+                Select a metro on the map to preview match counts and rank neighborhoods.
+              </p>
+            ) : (
+              <p className="criteria-panel__intro">
+                Set what matters to you. Every neighborhood gets a Match&nbsp;%.
+              </p>
+            )}
 
             {matchPreview !== null && (
               <p className="criteria-panel__preview" aria-live="polite">
@@ -274,7 +290,12 @@ export function CriteriaPanel({
           >
             Reset
           </button>
-          <button type="button" className="criteria-panel__find" onClick={handleFindMatches}>
+          <button
+            type="button"
+            className="criteria-panel__find"
+            onClick={handleFindMatches}
+            disabled={needsMetroSelection}
+          >
             Find matches
           </button>
         </div>
@@ -288,7 +309,7 @@ export function CriteriaPanel({
       />
     </>
   );
-}
+});
 
 /** @deprecated Use CriteriaPanel — shim for one sprint */
 export { CriteriaPanel as DiscoveryCriteriaPanelShim };

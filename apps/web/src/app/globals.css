@@ -156,6 +156,12 @@ body {
   color: var(--accent);
 }
 
+.top-bar__criteria-btn--active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
 .top-bar__discover-btn {
   background: var(--accent);
   border: 1px solid var(--accent);
@@ -1284,6 +1290,10 @@ body {
 
 /* ── Discovery shell (three-pane hybrid) ── */
 
+.cinematic--criteria .cinematic__map {
+  left: var(--discovery-rail-width);
+}
+
 .cinematic--discovery .cinematic__map {
   left: var(--discovery-rail-width);
   right: var(--matches-rail-width);
@@ -1358,6 +1368,17 @@ body {
   color: var(--discovery-rail-muted);
   padding: 0 1rem 0.75rem;
   flex-shrink: 0;
+}
+
+.criteria-panel__metro-hint {
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--discovery-rail-text);
+  padding: 0.5rem 1rem;
+  margin: 0;
+  flex-shrink: 0;
+  background: var(--accent-soft);
+  border-bottom: 1px solid rgba(225, 29, 72, 0.15);
 }
 
 .criteria-panel__preview {
@@ -1626,8 +1647,13 @@ body {
   cursor: pointer;
 }
 
-.criteria-panel__find:hover {
+.criteria-panel__find:hover:not(:disabled) {
   filter: brightness(1.05);
+}
+
+.criteria-panel__find:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .criterion-picker {
