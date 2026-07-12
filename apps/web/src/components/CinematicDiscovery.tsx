@@ -39,7 +39,6 @@ import {
   isOverviewGeography,
   buildOverviewRestoreCamera,
   buildSandboxFlatRestore,
-  buildBackgroundClickRestore,
   centroidFromGeoJsonGeometry,
   isFiniteLngLat,
   isValidCameraTarget,
@@ -514,28 +513,51 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
   }, [activeSection, exploreMode, isOverviewMode]);
 
-  const handleGeographyChange = useCallback((level: GeographyLevel) => {
-    if (level === "zip" && !sandboxDrillActive) return;
+  const resetToGeographyOverview = useCallback(
+    (targetLevel: GeographyLevel, options?: { closeCriteria?: boolean }) => {
+      if (options?.closeCriteria) {
+        setCriteriaPanelOpen(false);
+      }
 
-    setGeography(level);
-    setSearchFlyTarget(null);
-    setSelectedOverviewMetro(null);
-    setSelectedMetroCamera(null);
-
-    if (isOverviewGeography(level)) {
-      setDiscoveryFlyover(null);
-      setSandboxDrillActive(false);
-      setStoryCameraActive(false);
+      setSearchFlyTarget(null);
+      setSelectedOverviewMetro(null);
+      setSelectedMetroCamera(null);
       setSelectedZip(null);
       setSelectedPropertyId(null);
-      if (level === "national") setUsInsetRegion("continental");
-      return;
-    }
+      setDiscoveryFlyover(null);
+      setComparePins([]);
+      setComparePinOfferZip(null);
+      setDeepDiveOpen(false);
+      setDrawerOpen(false);
+      setStoryCameraActive(false);
+      setDiscoveryTourComplete(false);
+      setDiscoveryMessage(null);
 
-    if (level === "zip") {
-      setSelectedZip((prev) => prev ?? "22201");
-    }
-  }, [sandboxDrillActive]);
+      if (targetLevel === "zip" && sandboxDrillActive) {
+        setGeography("zip");
+        setActiveSection("metro");
+        setExitRestoreTarget(
+          buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
+        );
+        return;
+      }
+
+      if (!isOverviewGeography(targetLevel)) return;
+
+      setSandboxDrillActive(false);
+      setGeography(targetLevel);
+      if (targetLevel === "national") setUsInsetRegion("continental");
+    },
+    [sandboxDrillActive, activeSandboxCbsa, mergedMetroCameras],
+  );
+
+  const handleGeographyChange = useCallback(
+    (level: GeographyLevel) => {
+      if (level === "zip" && !sandboxDrillActive) return;
+      resetToGeographyOverview(level);
+    },
+    [sandboxDrillActive, resetToGeographyOverview],
+  );
 
   const handleUserMapMove = useCallback(() => {
     if (exploreMode) return;
@@ -709,56 +731,28 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   };
 
   const handleBackgroundClick = useCallback(() => {
+    if (exploreMode) return;
+
+    if (sandboxDrillActive) {
+      const overviewLevel: GeographyLevel = geography === "zip" ? "metro" : geography;
+      resetToGeographyOverview(overviewLevel);
+      return;
+    }
+
     if (isOverviewMode) {
       setSelectedOverviewMetro(null);
       setSelectedMetroCamera(null);
-      return;
-    }
-    if (exploreMode) return;
-
-    const restore = buildBackgroundClickRestore({
-      isOverviewMode,
-      sandboxDrillActive,
-      storyCameraActive,
-      selectedZip,
-      geography,
-      discoveryFlyoverActive,
-      activeSandboxCbsa,
-      sandboxCameras: mergedMetroCameras,
-      savedOverviewCamera: savedOverviewCameraRef.current,
-      usInsetRegion,
-    });
-
-    if (discoveryFlyoverActive) {
-      setDiscoveryFlyover(null);
-      setDiscoveryTourComplete(true);
-    }
-
-    if (selectedZip || geography === "zip") {
-      setSelectedZip(null);
-      setSelectedPropertyId(null);
-      setGeography("metro");
-      setDeepDiveOpen(false);
-    }
-
-    if (storyCameraActive || discoveryFlyoverActive) {
-      setStoryCameraActive(false);
-    }
-
-    if (restore) {
-      setExitRestoreTarget(restore);
+      setExitRestoreTarget(
+        buildOverviewRestoreCamera(savedOverviewCameraRef.current, usInsetRegion),
+      );
     }
   }, [
     exploreMode,
     isOverviewMode,
     sandboxDrillActive,
-    storyCameraActive,
-    selectedZip,
     geography,
-    discoveryFlyoverActive,
-    activeSandboxCbsa,
-    mergedMetroCameras,
     usInsetRegion,
+    resetToGeographyOverview,
   ]);
 
   const handleEvaluateProperty = useCallback((propertyId: string) => {
@@ -1189,17 +1183,17 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     enterDiscoveryMetro,
   ]);
 
+  const handleMapOverview = useCallback(() => {
+    resetToGeographyOverview("metro", { closeCriteria: true });
+  }, [resetToGeographyOverview]);
+
   const handleCriteriaToggle = useCallback(() => {
     if (criteriaPanelOpen) {
-      setCriteriaPanelOpen(false);
+      handleMapOverview();
       return;
     }
     handleOpenCriteria();
-  }, [criteriaPanelOpen, handleOpenCriteria]);
-
-  const handleMapOverview = useCallback(() => {
-    setCriteriaPanelOpen(false);
-  }, []);
+  }, [criteriaPanelOpen, handleOpenCriteria, handleMapOverview]);
 
   const runDiscoveryRanking = useCallback(() => {
     setDiscoveryMessage(null);
