@@ -63,6 +63,7 @@ import { UsMapInsets } from "./UsMapInsets";
 import { AnalyticsOverlay } from "./AnalyticsOverlay";
 import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
 import { NeighborhoodPhotoHero } from "./NeighborhoodPhotoHero";
+import { CinematicEntryBar } from "./CinematicEntryBar";
 import { Google3DTilesBadge } from "./Google3DTilesBadge";
 import {
   is3DTilesFlagEnabled,
@@ -182,6 +183,32 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const cinematicTourActive = dcStoryActive || discoveryFlyoverActive;
 
+  const showCinematicEntry =
+    sandboxDrillActive &&
+    !isOverviewMode &&
+    !discoveryFlyoverActive &&
+    !dcStoryActive &&
+    !discoveryTourComplete &&
+    !exploreMode;
+
+  const labelHighlightZip = useMemo((): string | null => {
+    if (!cinematicTourActive || isOverviewMode) return null;
+    if (discoveryFlyover) {
+      return discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null;
+    }
+    if (dcStoryActive && activeSection !== "metro") {
+      return selectedZip;
+    }
+    return null;
+  }, [
+    cinematicTourActive,
+    isOverviewMode,
+    discoveryFlyover,
+    dcStoryActive,
+    activeSection,
+    selectedZip,
+  ]);
+
   const enable3DTiles = is3DTilesActive();
   const use3DCameraPath = is3DTilesFlagEnabled() && dcStoryActive;
   const tilesStatus = getGoogle3DTilesStatus();
@@ -252,7 +279,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return OVERVIEW_HINTS[geography] ?? "United States overview";
     }
     if (!storyCameraActive && sandboxDrillActive) {
-      return `${activeShardGeoJson.metadata.metro} · flat view — resume story or pick National`;
+      return `${activeShardGeoJson.metadata.metro} · start a guided tour below`;
     }
     return `${activeShardGeoJson.metadata.metro} · scroll to explore`;
   }, [
@@ -388,14 +415,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         if (countyCbsa) {
           setActiveSandboxCbsa(countyCbsa);
           setSandboxDrillActive(true);
-          setStoryCameraActive(countyCbsa === DC_METRO_CBSA);
+          setStoryCameraActive(false);
           setSelectedZip(null);
           setSelectedPropertyId(null);
           setUsInsetRegion("continental");
-          if (countyCbsa === DC_METRO_CBSA) {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            requestAnimationFrame(() => ScrollTrigger.refresh());
-          }
           return;
         }
 
@@ -407,14 +430,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         ) {
           setActiveSandboxCbsa(regionId);
           setSandboxDrillActive(true);
-          setStoryCameraActive(regionId === DC_METRO_CBSA);
+          setStoryCameraActive(false);
           setSelectedZip(null);
           setSelectedPropertyId(null);
           setUsInsetRegion("continental");
-          if (regionId === DC_METRO_CBSA) {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-            requestAnimationFrame(() => ScrollTrigger.refresh());
-          }
           return;
         }
 
@@ -452,7 +471,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         if (shard && !sandboxDrillActive) {
           setActiveSandboxCbsa(shard);
           setSandboxDrillActive(true);
-          setStoryCameraActive(shard === DC_METRO_CBSA);
+          setStoryCameraActive(false);
           setGeography("metro");
         }
         handleZipSelect(result.id);
@@ -839,23 +858,32 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeDiscoveryNeighborhood !== null &&
     (discoveryFlyover?.phase === "highlight" || discoveryTourComplete);
 
-  const photoHeroZip =
-    discoveryFlyover?.phase === "highlight"
-      ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
-      : dcStoryActive && activeSection === "detail"
-        ? (selectedZip ?? "22201")
-        : null;
+  const photoHeroZip = useMemo((): string | null => {
+    if (discoveryFlyover) {
+      return discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null;
+    }
+    if (discoveryTourComplete && activeDiscoveryNeighborhood) {
+      return activeDiscoveryNeighborhood.zip;
+    }
+    if (dcStoryActive && activeSection === "detail" && selectedZip) {
+      return selectedZip;
+    }
+    return null;
+  }, [discoveryFlyover, discoveryTourComplete, activeDiscoveryNeighborhood, dcStoryActive, activeSection, selectedZip]);
 
   const photoHeroVisible =
     photoHeroEnabled &&
     photoHeroZip !== null &&
-    (discoveryFlyover?.phase === "highlight" || (dcStoryActive && activeSection === "detail"));
+    ((discoveryFlyover?.phase === "highlight") ||
+      (discoveryTourComplete && !discoveryFlyover) ||
+      (dcStoryActive && activeSection === "detail"));
 
   const neighborhoodPhoto = photoHeroZip ? getNeighborhoodPhoto(photoHeroZip) : null;
 
-  const metroDescription =
-    !storyCameraActive && sandboxDrillActive
-      ? "Story camera paused while you explore. Resume the DC guided tour or switch to National for the US map."
+  const metroDescription = showCinematicEntry
+    ? "Start a guided tour of top-ranked neighborhoods, or enter Story mode for a scroll-driven DC descent."
+    : !storyCameraActive && sandboxDrillActive
+      ? "Story camera paused while you explore. Use the banner below to restart a tour or story."
       : SCROLL_SECTIONS[0].description;
 
   const overviewFeatureCount = activeGeoJson.features.filter(
@@ -917,10 +945,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         title: activeScrollSection?.title ?? "DC Story",
         detail: activeScrollSection?.description,
         canOpen: true,
-        action:
-          !storyCameraActive && sandboxDrillActive
-            ? { label: "Resume", onClick: handleResumeDcStory }
-            : undefined,
       };
     }
 
@@ -936,12 +960,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return {
       stepLabel: "Sandbox",
       title: activeShardGeoJson.metadata.metro,
-      detail: storyCameraActive ? "Guided story · scroll to explore" : "Flat view",
+      detail: showCinematicEntry
+        ? "Guided tour & story mode available"
+        : storyCameraActive
+          ? "Guided story · scroll to explore"
+          : "Flat view",
       canOpen: true,
-      action:
-        !storyCameraActive && sandboxDrillActive && activeSandboxCbsa === DC_METRO_CBSA
-          ? { label: "Resume", onClick: handleResumeDcStory }
-          : undefined,
     };
   }, [
     isOverviewMode,
@@ -956,7 +980,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     selected,
     activeShardGeoJson.metadata.metro,
     activeSandboxCbsa,
-    handleResumeDcStory,
+    showCinematicEntry,
     discoveryFlyover,
     discoveryMessage,
     handleSkipFlyover,
@@ -1067,11 +1091,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return (
       <>
         <p>{section.id === "metro" ? metroDescription : section.description}</p>
-        {!storyCameraActive && sandboxDrillActive && activeSandboxCbsa === DC_METRO_CBSA && (
-          <button type="button" className="cinematic__resume-btn" onClick={handleResumeDcStory}>
-            Resume DC story
-          </button>
-        )}
         {(section.id === "neighborhood" || section.id === "detail") && (
           <div className="zip-chips" role="group" aria-label="Quick ZIP compare">
             {zips.map((z) => (
@@ -1126,7 +1145,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         onOpenCriteria={() => setCriteriaPanelOpen(true)}
         onDiscover={handleDiscover}
         discoverDisabled={discoveryFlyoverActive}
-        discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Find neighborhoods"}
+        discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Tour top neighborhoods"}
       />
 
       <div
@@ -1173,7 +1192,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             overviewMode={isOverviewMode}
             fitNationalBounds={fitNationalBounds}
             cinematicOnSelect={!isOverviewMode}
+            cinematicTourActive={cinematicTourActive}
+            labelHighlightZip={labelHighlightZip}
           />
+          {showCinematicEntry && (
+            <CinematicEntryBar
+              metroName={activeShardGeoJson.metadata.metro}
+              showStoryMode={activeSandboxCbsa === DC_METRO_CBSA}
+              onTourTopNeighborhoods={handleDiscover}
+              onStoryMode={
+                activeSandboxCbsa === DC_METRO_CBSA ? handleResumeDcStory : undefined
+              }
+            />
+          )}
           {isOverviewMode && geography === "national" && !exploreMode && (
             <UsMapInsets activeRegion={usInsetRegion} onSelectRegion={handleInsetSelect} />
           )}

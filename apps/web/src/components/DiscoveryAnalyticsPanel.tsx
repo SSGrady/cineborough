@@ -1,7 +1,7 @@
 "use client";
 
-import type { RankedNeighborhood } from "@cineborough/data";
-import { METRIC_PROVENANCE } from "@cineborough/data";
+import type { DiscoveryFilterMetric, RankedNeighborhood } from "@cineborough/data";
+import { METRIC_PROVENANCE, getDiscoveryMetricLabel } from "@cineborough/data";
 import { formatCurrency, formatPercent } from "@/lib/format";
 
 interface DiscoveryAnalyticsPanelProps {
@@ -121,21 +121,12 @@ export function DiscoveryAnalyticsPanel({
         <section className="discovery-analytics__breakdown" aria-label="Score breakdown">
           <h4>Hybrid score breakdown</h4>
           <ul>
-            <li>
-              Cap rate <strong>{neighborhood.breakdown.capRate.toFixed(0)}</strong>
-            </li>
-            <li>
-              Overvaluation <strong>{neighborhood.breakdown.overvaluation.toFixed(0)}</strong>
-            </li>
-            <li>
-              Walkability <strong>{neighborhood.breakdown.walkability.toFixed(0)}</strong>
-            </li>
-            <li>
-              Remote work <strong>{neighborhood.breakdown.remoteWork.toFixed(0)}</strong>
-            </li>
-            <li>
-              Forecast <strong>{neighborhood.breakdown.forecast.toFixed(0)}</strong>
-            </li>
+            {Object.entries(neighborhood.breakdown.byMetric).map(([metric, score]) => (
+              <li key={metric}>
+                {getDiscoveryMetricLabel(metric as DiscoveryFilterMetric)}{" "}
+                <strong>{score?.toFixed(0)}</strong>
+              </li>
+            ))}
           </ul>
         </section>
       )}

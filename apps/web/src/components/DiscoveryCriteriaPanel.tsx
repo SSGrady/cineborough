@@ -1,8 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import type { DiscoveryCriteria } from "@cineborough/data";
-import { DEFAULT_DISCOVERY_CRITERIA } from "@cineborough/data";
+import { useEffect, useMemo, useState } from "react";
+import {
+  type DiscoveryCriteria,
+  type DiscoveryFilter,
+  type DiscoveryFilterMetric,
+  DEFAULT_DISCOVERY_CRITERIA,
+  DISCOVERY_FILTER_METRICS,
+  createDiscoveryFilter,
+  getDiscoveryMetricDef,
+  getDiscoveryMetricLabel,
+  getDiscoveryMetricUnit,
+} from "@cineborough/data";
 import { StoryDrawer } from "./StoryDrawer";
 
 interface DiscoveryCriteriaPanelProps {
@@ -19,6 +28,26 @@ function formatBudget(value: number): string {
     : `${Math.round(value / 1000)}k`;
 }
 
+function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
+  return {
+    filters: criteria.filters.map((filter) => {
+      const def = getDiscoveryMetricDef(filter.metric);
+      const next: DiscoveryFilter = { id: filter.id, metric: filter.metric };
+      if (def.kind === "range" || def.kind === "min") {
+        next.min = filter.min ?? def.defaultMin;
+      }
+      if (def.kind === "range" || def.kind === "max") {
+        next.max = filter.max ?? def.defaultMax;
+      }
+      if (def.kind === "range" && next.min !== undefined && next.max !== undefined) {
+        next.min = Math.min(next.min, next.max);
+        next.max = Math.max(next.min, next.max);
+      }
+      return next;
+    }),
+  };
+}
+
 export function DiscoveryCriteriaPanel({
   open,
   criteria,
@@ -27,114 +56,172 @@ export function DiscoveryCriteriaPanel({
   onApply,
 }: DiscoveryCriteriaPanelProps) {
   const [draft, setDraft] = useState<DiscoveryCriteria>(criteria);
+  const [addMenuOpen, setAddMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (open) setDraft(criteria);
+    if (open) {
+      setDraft(criteria);
+      setAddMenuOpen(false);
+    }
   }, [open, criteria]);
 
-  const update = <K extends keyof DiscoveryCriteria>(key: K, value: DiscoveryCriteria[K]) => {
-    setDraft((prev) => ({ ...prev, [key]: value }));
+  const activeMetrics = useMemo(
+    () => new Set(draft.filters.map((f) => f.metric)),
+    [draft.filters],
+  );
+
+  const availableMetrics = useMemo(
+    () => DISCOVERY_FILTER_METRICS.filter((metric) => !activeMetrics.has(metric)),
+    [activeMetrics],
+  );
+
+  const updateFilter = (id: string, patch: Partial<Pick<DiscoveryFilter, "min" | "max">>) => {
+    setDraft((prev) => ({
+      filters: prev.filters.map((f) => (f.id === id ? { ...f, ...patch } : f)),
+    }));
+  };
+
+  const removeFilter = (id: string) => {
+    setDraft((prev) => ({
+      filters: prev.filters.filter((f) => f.id !== id),
+    }));
+  };
+
+  const addFilter = (metric: DiscoveryFilterMetric) => {
+    setDraft((prev) => ({
+      filters: [...prev.filters, createDiscoveryFilter(metric, crypto.randomUUID())],
+    }));
+    setAddMenuOpen(false);
   };
 
   const handleApply = () => {
-    const normalized: DiscoveryCriteria = {
-      ...draft,
-      budgetMin: Math.min(draft.budgetMin, draft.budgetMax),
-      budgetMax: Math.max(draft.budgetMin, draft.budgetMax),
-    };
-    onApply(normalized);
+    onApply(normalizeCriteria(draft));
     onClose();
   };
 
   return (
     <StoryDrawer open={open} title="Discovery criteria" onClose={onClose}>
       <p className="discovery-criteria__intro">
-        Set your hybrid filters — financial upside plus hope-core livability. Criteria persist for
-        this session and feed the scoring engine.
+        Add the metrics that matter to you. Each active filter narrows results and contributes to
+        the hybrid score.
       </p>
 
-      <fieldset className="discovery-criteria__group">
-        <legend>Budget range</legend>
-        <div className="discovery-criteria__range">
-          <label>
-            Min ($)
-            <input
-              type="number"
-              min={0}
-              step={10_000}
-              value={draft.budgetMin}
-              onChange={(e) => update("budgetMin", Number(e.target.value))}
-            />
-            <span className="discovery-criteria__hint">{formatBudget(draft.budgetMin)}</span>
-          </label>
-          <label>
-            Max ($)
-            <input
-              type="number"
-              min={0}
-              step={10_000}
-              value={draft.budgetMax}
-              onChange={(e) => update("budgetMax", Number(e.target.value))}
-            />
-            <span className="discovery-criteria__hint">{formatBudget(draft.budgetMax)}</span>
-          </label>
-        </div>
-      </fieldset>
+      {draft.filters.length === 0 ? (
+        <p className="discovery-criteria__empty">No active filters — all neighborhoods qualify.</p>
+      ) : (
+        <ul className="discovery-criteria__list">
+          {draft.filters.map((filter) => {
+            const def = getDiscoveryMetricDef(filter.metric);
+            const label = getDiscoveryMetricLabel(filter.metric);
+            const unit = getDiscoveryMetricUnit(filter.metric);
 
-      <fieldset className="discovery-criteria__group">
-        <legend>Financial filters</legend>
-        <label>
-          Min cap rate (%)
-          <input
-            type="number"
-            min={0}
-            max={20}
-            step={0.1}
-            value={draft.minCapRate}
-            onChange={(e) => update("minCapRate", Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Max overvaluation (%)
-          <input
-            type="number"
-            min={-50}
-            max={100}
-            step={0.5}
-            value={draft.maxOvervaluationPct}
-            onChange={(e) => update("maxOvervaluationPct", Number(e.target.value))}
-          />
-        </label>
-      </fieldset>
+            return (
+              <li key={filter.id} className="discovery-criteria__row">
+                <div className="discovery-criteria__row-header">
+                  <span className="discovery-criteria__chip">{label}</span>
+                  <button
+                    type="button"
+                    className="discovery-criteria__remove"
+                    aria-label={`Remove ${label} filter`}
+                    onClick={() => removeFilter(filter.id)}
+                  >
+                    ×
+                  </button>
+                </div>
 
-      <fieldset className="discovery-criteria__group">
-        <legend>Hope-core filters</legend>
-        <label>
-          Min walkability (0–100)
-          <input
-            type="number"
-            min={0}
-            max={100}
-            step={1}
-            value={draft.minWalkability}
-            onChange={(e) => update("minWalkability", Number(e.target.value))}
-          />
-        </label>
-        <label>
-          Min remote work (%)
-          <input
-            type="number"
-            min={0}
-            max={100}
-            step={0.5}
-            value={draft.minRemoteWorkPct}
-            onChange={(e) => update("minRemoteWorkPct", Number(e.target.value))}
-          />
-        </label>
-      </fieldset>
+                {def.kind === "range" ? (
+                  <div className="discovery-criteria__range">
+                    <label>
+                      Min ({unit || "$"})
+                      <input
+                        type="number"
+                        min={0}
+                        step={def.step}
+                        value={filter.min ?? ""}
+                        onChange={(e) =>
+                          updateFilter(filter.id, { min: Number(e.target.value) })
+                        }
+                      />
+                      {filter.metric === "medianHomeValue" && filter.min !== undefined && (
+                        <span className="discovery-criteria__hint">
+                          {formatBudget(filter.min)}
+                        </span>
+                      )}
+                    </label>
+                    <label>
+                      Max ({unit || "$"})
+                      <input
+                        type="number"
+                        min={0}
+                        step={def.step}
+                        value={filter.max ?? ""}
+                        onChange={(e) =>
+                          updateFilter(filter.id, { max: Number(e.target.value) })
+                        }
+                      />
+                      {filter.metric === "medianHomeValue" && filter.max !== undefined && (
+                        <span className="discovery-criteria__hint">
+                          {formatBudget(filter.max)}
+                        </span>
+                      )}
+                    </label>
+                  </div>
+                ) : def.kind === "min" ? (
+                  <label>
+                    Min {unit && `(${unit})`}
+                    <input
+                      type="number"
+                      step={def.step}
+                      value={filter.min ?? ""}
+                      onChange={(e) => updateFilter(filter.id, { min: Number(e.target.value) })}
+                    />
+                  </label>
+                ) : (
+                  <label>
+                    Max {unit && `(${unit})`}
+                    <input
+                      type="number"
+                      step={def.step}
+                      value={filter.max ?? ""}
+                      onChange={(e) => updateFilter(filter.id, { max: Number(e.target.value) })}
+                    />
+                  </label>
+                )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <div className="discovery-criteria__add">
+        <button
+          type="button"
+          className="discovery-criteria__add-btn"
+          aria-expanded={addMenuOpen}
+          disabled={availableMetrics.length === 0}
+          onClick={() => setAddMenuOpen((v) => !v)}
+        >
+          + Add filter
+        </button>
+        {addMenuOpen && availableMetrics.length > 0 && (
+          <ul className="discovery-criteria__add-menu" role="listbox">
+            {availableMetrics.map((metric) => (
+              <li key={metric}>
+                <button type="button" onClick={() => addFilter(metric)}>
+                  {getDiscoveryMetricLabel(metric)}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
 
       <div className="discovery-criteria__actions">
-        <button type="button" className="discovery-criteria__reset" onClick={() => setDraft(resetCriteria)}>
+        <button
+          type="button"
+          className="discovery-criteria__reset"
+          onClick={() => setDraft(resetCriteria)}
+        >
           Reset defaults
         </button>
         <button type="button" className="discovery-criteria__apply" onClick={handleApply}>
