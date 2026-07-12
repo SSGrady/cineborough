@@ -169,18 +169,21 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        {
-          color: "#22c55e",
-          label: tercileBounds?.low ?? "Younger",
-        },
-        {
-          color: "#eab308",
-          label: tercileBounds?.mid ?? "Mid-range",
-        },
-        {
-          color: "#ef4444",
-          label: tercileBounds?.high ?? "Older",
-        },
+        { color: "#22c55e", label: "< 37.0 — Younger" },
+        { color: "#eab308", label: "37.0 – 38.6 — Mid-range" },
+        { color: "#ef4444", label: "> 38.6 — Older" },
+      ],
+    };
+  }
+
+  if (metricKey === "walkabilityScore") {
+    return {
+      style: "tercile",
+      gradientCss: "",
+      stops: [
+        { color: "#ef4444", label: "< 50.0 — Car-dependent" },
+        { color: "#eab308", label: "50.0 – 60.9 — Moderate" },
+        { color: "#22c55e", label: "≥ 61 — Highly walkable" },
       ],
     };
   }

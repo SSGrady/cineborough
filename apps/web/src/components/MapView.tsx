@@ -86,6 +86,10 @@ interface MapViewProps {
   /** Limit transit paths to a ZIP (discovery flyover) */
   pathFilterZip?: string | null;
   enable3DTiles?: boolean;
+  /** Discovery flyover or scroll story — larger, centered ZIP labels */
+  cinematicTourActive?: boolean;
+  /** When set, only this ZIP gets a map label (flyover / story focus) */
+  labelHighlightZip?: string | null;
 }
 
 interface LabelPoint {
@@ -304,6 +308,8 @@ export function MapView({
   pathTraceProgress = 1,
   pathFilterZip = null,
   enable3DTiles = false,
+  cinematicTourActive = false,
+  labelHighlightZip = null,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -363,18 +369,12 @@ export function MapView({
       min: formatLabelValue(activeMetric, min),
       max: formatLabelValue(activeMetric, max),
       tercile: bounds
-        ? activeMetric === "medianAge"
             ? {
-                low: `≤ ${formatLabelValue(activeMetric, bounds.p33)} — Younger`,
-                mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
-                high: `≥ ${formatLabelValue(activeMetric, bounds.p66)} — Older`,
-              }
-            : {
                 low: `≤ ${formatLabelValue(activeMetric, bounds.p33)}`,
                 mid: `${formatLabelValue(activeMetric, bounds.p33)} – ${formatLabelValue(activeMetric, bounds.p66)}`,
                 high: `≥ ${formatLabelValue(activeMetric, bounds.p66)}`,
               }
-        : undefined,
+            : undefined,
     };
   }, [geoJson, activeMetric, choroplethSpec.tercileBounds]);
 
@@ -580,10 +580,16 @@ export function MapView({
     selectionPathReady,
   ]);
 
+  const visibleLabelData = useMemo((): LabelPoint[] => {
+    if (!labelHighlightZip) return labelData;
+    return labelData.filter((d) => d.zipCode === labelHighlightZip);
+  }, [labelData, labelHighlightZip]);
+
   const labelLayers = useMemo((): Layer[] => {
-    if (!labelsVisible || labelData.length === 0) return [];
+    if (!labelsVisible || visibleLabelData.length === 0) return [];
 
     const overview = isOverviewView;
+    const cinematicLabels = cinematicTourActive && !overview;
     const isMetroOverview = overview && geographyLevel === "metro";
     const isCountyOverview = overview && geographyLevel === "county";
     const showMetroValues = !isMetroOverview || mapZoom >= METRO_VALUE_LABEL_MIN_ZOOM;
@@ -597,20 +603,22 @@ export function MapView({
           : mapZoom < 7
             ? 12
             : 13
-      : mapZoom < 6
-        ? 11
-        : 13;
-    const valueSize = Math.max(10, nameSize - 1);
-    // Split name + metric into two layers — deck.gl multiline `\n` was clipping the value line.
-    const lineGap = Math.round(nameSize * 0.72);
-    const outlineWidth = overview ? 4 : 3;
+      : cinematicLabels
+        ? 15
+        : mapZoom < 6
+          ? 11
+          : 13;
+    const valueSize = cinematicLabels ? Math.max(12, nameSize - 1) : Math.max(10, nameSize - 1);
+    const lineGap = Math.round(nameSize * (cinematicLabels ? 0.65 : 0.72));
+    const outlineWidth = cinematicLabels ? 5 : overview ? 4 : 3;
 
     const shared = {
-      data: labelData,
+      data: visibleLabelData,
       pickable: false,
       getPosition: (d: LabelPoint) => d.position,
       getTextAnchor: "middle" as const,
-      getAlignmentBaseline: "center" as const,
+      billboard: true,
+      sizeUnits: "pixels" as const,
       fontFamily: "Arial, Helvetica, sans-serif",
       fontWeight: 700,
       outlineWidth,
@@ -623,11 +631,16 @@ export function MapView({
       id: overview ? "overview-labels-name" : "zip-labels-name",
       getText: (d: LabelPoint) => d.name,
       getSize: nameSize,
-      getColor: [15, 23, 42, 255],
-      getPixelOffset: [0, showMetricValues ? -lineGap / 2 : 0],
+      getColor: cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+      getAlignmentBaseline: cinematicLabels ? "bottom" : "center",
+      getPixelOffset: cinematicLabels
+        ? ([0, -Math.round(lineGap / 2)] as [number, number])
+        : ([0, showMetricValues ? -lineGap / 2 : 0] as [number, number]),
       updateTriggers: {
-        getSize: [geographyLevel, mapZoom],
-        getPixelOffset: [nameSize, showMetricValues],
+        getSize: [geographyLevel, mapZoom, cinematicTourActive],
+        getPixelOffset: [nameSize, showMetricValues, cinematicTourActive],
+        getColor: [cinematicTourActive],
+        getAlignmentBaseline: [cinematicTourActive],
       },
     });
 
@@ -638,17 +651,30 @@ export function MapView({
       id: overview ? "overview-labels-value" : "zip-labels-value",
       getText: (d: LabelPoint) => formatLabelValue(activeMetric, d.value),
       getSize: valueSize,
-      getColor: [15, 23, 42, 255],
-      getPixelOffset: [0, lineGap / 2],
+      getColor: cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+      getAlignmentBaseline: cinematicLabels ? "top" : "center",
+      getPixelOffset: cinematicLabels
+        ? ([0, Math.round(lineGap / 2)] as [number, number])
+        : ([0, lineGap / 2] as [number, number]),
       updateTriggers: {
         getText: [activeMetric],
-        getSize: [geographyLevel, mapZoom, activeMetric],
-        getPixelOffset: [nameSize],
+        getSize: [geographyLevel, mapZoom, activeMetric, cinematicTourActive],
+        getPixelOffset: [nameSize, cinematicTourActive],
+        getColor: [cinematicTourActive],
+        getAlignmentBaseline: [cinematicTourActive],
       },
     });
 
     return [nameLayer, valueLayer];
-  }, [labelData, activeMetric, labelsVisible, isOverviewView, geographyLevel, mapZoom]);
+  }, [
+    visibleLabelData,
+    activeMetric,
+    labelsVisible,
+    isOverviewView,
+    geographyLevel,
+    mapZoom,
+    cinematicTourActive,
+  ]);
 
   const pathLayer = useMemo(() => {
     const collection = loadTransitPaths(pathFilterZip ?? undefined);

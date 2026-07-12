@@ -78,6 +78,45 @@ export function normalizeHomeValueToFixedScore(homeValue: number): number {
   return 20;
 }
 
+/**
+ * Fixed buyer-semantics buckets for median age choropleth.
+ * Maps to OPPORTUNITY_COLOR_STOPS scores (85 / 55 / 20) for green / yellow / red.
+ * Younger residents = green (inverted vs typical "high is good" terciles).
+ *
+ * Edge cases: 37.0 and 38.6 are yellow (inclusive middle band).
+ */
+export const MEDIAN_AGE_COLOR_THRESHOLDS = {
+  /** Values below this are green (younger residents). */
+  greenMax: 37.0,
+  /** Values at or below this (and >= greenMax) are yellow. */
+  yellowMax: 38.6,
+} as const;
+
+export function normalizeMedianAgeToFixedScore(age: number): number {
+  if (age < MEDIAN_AGE_COLOR_THRESHOLDS.greenMax) return 85;
+  if (age <= MEDIAN_AGE_COLOR_THRESHOLDS.yellowMax) return 55;
+  return 20;
+}
+
+/**
+ * Fixed buckets for walkability score choropleth.
+ * Maps to OPPORTUNITY_COLOR_STOPS scores (20 / 55 / 85) for red / yellow / green.
+ *
+ * Edge cases: 50.0 and 60.9 are yellow (inclusive middle band).
+ */
+export const WALKABILITY_COLOR_THRESHOLDS = {
+  /** Values below this are red (car-dependent). */
+  redMax: 50.0,
+  /** Values at or above this are green (highly walkable). */
+  greenMin: 61,
+} as const;
+
+export function normalizeWalkabilityToFixedScore(score: number): number {
+  if (score < WALKABILITY_COLOR_THRESHOLDS.redMax) return 20;
+  if (score < WALKABILITY_COLOR_THRESHOLDS.greenMin) return 55;
+  return 85;
+}
+
 export function normalizeToTercileScores(
   values: number[],
   options?: TercileScoreOptions,

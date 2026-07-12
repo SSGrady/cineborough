@@ -9,8 +9,10 @@ import type {
 import {
   normalizeForecastToFixedScore,
   normalizeHomeValueToFixedScore,
+  normalizeMedianAgeToFixedScore,
   normalizeScores,
   normalizeToTercileScores,
+  normalizeWalkabilityToFixedScore,
 } from "./opportunity-index";
 
 /** @deprecated Use loadDcMetroGeoJson() — boundaries are embedded in data/metros/47900.geojson */
@@ -94,16 +96,18 @@ export function getRawMetricFromFeature(
 }
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
-/** Low raw values map to green (younger residents). */
-const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>(["medianAge"]);
 /** Absolute thresholds — not data-driven terciles. */
 const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>([
   "homePriceForecast1yr",
   "medianHomeValue",
+  "medianAge",
+  "walkabilityScore",
 ]);
 
 function normalizeToFixedScore(key: MetricLayerKey, value: number): number {
   if (key === "medianHomeValue") return normalizeHomeValueToFixedScore(value);
+  if (key === "medianAge") return normalizeMedianAgeToFixedScore(value);
+  if (key === "walkabilityScore") return normalizeWalkabilityToFixedScore(value);
   return normalizeForecastToFixedScore(value);
 }
 
@@ -162,9 +166,7 @@ export function getChoroplethSpecFromGeoJson(
 
   const dataMask = features.map((f) => f.properties.medianHomeValue > 0);
   const dataValues = raw.filter((_, i) => dataMask[i]);
-  const { scores: dataScores, p33, p66 } = normalizeToTercileScores(dataValues, {
-    invert: AFFORDABILITY_TERCILE_METRICS.has(key),
-  });
+  const { scores: dataScores, p33, p66 } = normalizeToTercileScores(dataValues);
   let dataIndex = 0;
   const scores = raw.map((_, i) => {
     if (!dataMask[i]) return 0;

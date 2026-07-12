@@ -121,10 +121,6 @@ export function ZipDetailPanel({
               <dd>{formatPercent(zip.populationGrowthRate)}</dd>
             </div>
             <div>
-              <dt>Income Growth</dt>
-              <dd>{formatPercent(zip.incomeGrowthRate)}</dd>
-            </div>
-            <div>
               <dt>College Degree Rate</dt>
               <dd>{zip.collegeDegreeRate.toFixed(1)}%</dd>
             </div>

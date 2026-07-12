@@ -297,13 +297,6 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     helperText: "People moving in",
   },
   {
-    key: "incomeGrowthRate",
-    label: "Income Growth",
-    unit: "%",
-    category: "demographics",
-    helperText: "Earning power trend",
-  },
-  {
     key: "medianAge",
     label: "Median Age",
     unit: "years",

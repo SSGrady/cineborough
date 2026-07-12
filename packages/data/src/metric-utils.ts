@@ -1,22 +1,26 @@
 import {
   normalizeForecastToFixedScore,
   normalizeHomeValueToFixedScore,
+  normalizeMedianAgeToFixedScore,
   normalizeScores,
   normalizeToTercileScores,
+  normalizeWalkabilityToFixedScore,
 } from "./opportunity-index";
 import type { MetricLayerKey, ZipMetrics } from "./types";
 
 const VALUE_GRADIENT_METRICS = new Set<MetricLayerKey>(["marketPsf"]);
-/** Low raw values map to green (younger residents). */
-const AFFORDABILITY_TERCILE_METRICS = new Set<MetricLayerKey>(["medianAge"]);
 /** Absolute thresholds — not data-driven terciles. */
 const FIXED_THRESHOLD_METRICS = new Set<MetricLayerKey>([
   "homePriceForecast1yr",
   "medianHomeValue",
+  "medianAge",
+  "walkabilityScore",
 ]);
 
 function normalizeToFixedScore(key: MetricLayerKey, value: number): number {
   if (key === "medianHomeValue") return normalizeHomeValueToFixedScore(value);
+  if (key === "medianAge") return normalizeMedianAgeToFixedScore(value);
+  if (key === "walkabilityScore") return normalizeWalkabilityToFixedScore(value);
   return normalizeForecastToFixedScore(value);
 }
 
@@ -47,8 +51,6 @@ export function getNormalizedMetricValues(
     return new Map(zips.map((z, i) => [z.zip, normalizeToFixedScore(key, raw[i])]));
   }
 
-  const { scores } = normalizeToTercileScores(raw, {
-    invert: AFFORDABILITY_TERCILE_METRICS.has(key),
-  });
+  const { scores } = normalizeToTercileScores(raw);
   return new Map(zips.map((z, i) => [z.zip, scores[i]]));
 }

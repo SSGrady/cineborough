@@ -1,64 +1,176 @@
-import type { DcMetroGeoJson, DcMetroFeatureProperties, ZipMetrics } from "./types";
-import { featurePropertiesToZipMetrics } from "./dc-metro-geojson";
+import { featurePropertiesToZipMetrics, getRawMetricFromFeature } from "./dc-metro-geojson";
+import type {
+  DcMetroGeoJson,
+  DcMetroFeatureProperties,
+  MetricLayerKey,
+  ZipMetrics,
+} from "./types";
+import { METRIC_LAYERS } from "./types";
 
-/** User criteria for hybrid neighborhood discovery — E007 step A */
+/** Metrics available as discovery filters (excludes composite opportunity score and hidden metrics). */
+export type DiscoveryFilterMetric = Exclude<
+  MetricLayerKey,
+  "opportunityScore" | "incomeGrowthRate"
+>;
+
+export type DiscoveryFilterKind = "range" | "min" | "max";
+
+export interface DiscoveryMetricDef {
+  metric: DiscoveryFilterMetric;
+  kind: DiscoveryFilterKind;
+  higherIsBetter: boolean;
+  defaultMin?: number;
+  defaultMax?: number;
+  step: number;
+}
+
+export interface DiscoveryFilter {
+  id: string;
+  metric: DiscoveryFilterMetric;
+  min?: number;
+  max?: number;
+}
+
+/** User criteria for hybrid neighborhood discovery — dynamic add/remove filters. */
 export interface DiscoveryCriteria {
-  budgetMin: number;
-  budgetMax: number;
-  minCapRate: number;
-  maxOvervaluationPct: number;
-  minWalkability: number;
-  minRemoteWorkPct: number;
+  filters: DiscoveryFilter[];
 }
 
 export const DISCOVERY_CRITERIA_STORAGE_KEY = "cineborough:discovery-criteria";
+export const DISCOVERY_CRITERIA_STORAGE_VERSION = 2;
 
-/** Tuned so DC, Orlando, and SF Bay sandboxes each yield ≥3 matches on live ingest. */
+const METRIC_FILTER_KIND: Record<
+  DiscoveryFilterMetric,
+  Omit<DiscoveryMetricDef, "metric">
+> = {
+  medianHomeValue: {
+    kind: "range",
+    higherIsBetter: false,
+    defaultMin: 300_000,
+    defaultMax: 1_500_000,
+    step: 10_000,
+  },
+  homePriceForecast1yr: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 0,
+    step: 0.5,
+  },
+  overvaluationPct: {
+    kind: "max",
+    higherIsBetter: false,
+    defaultMax: 40,
+    step: 0.5,
+  },
+  capRate: { kind: "min", higherIsBetter: true, defaultMin: 2.5, step: 0.1 },
+  daysOnMarket: { kind: "max", higherIsBetter: false, defaultMax: 60, step: 1 },
+  sellerDesperationScore: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 30,
+    step: 1,
+  },
+  marketPsf: { kind: "min", higherIsBetter: true, defaultMin: 100, step: 5 },
+  homeValueGrowthYoy: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 0,
+    step: 0.5,
+  },
+  remoteWorkPct: { kind: "min", higherIsBetter: true, defaultMin: 15, step: 0.5 },
+  homeowners25to44Pct: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 20,
+    step: 0.5,
+  },
+  populationGrowthRate: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 0,
+    step: 0.5,
+  },
+  medianAge: { kind: "max", higherIsBetter: false, defaultMax: 45, step: 1 },
+  collegeDegreeRate: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 30,
+    step: 0.5,
+  },
+  walkabilityScore: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 35,
+    step: 1,
+  },
+};
+
+export const DISCOVERY_FILTER_METRICS: DiscoveryFilterMetric[] = Object.keys(
+  METRIC_FILTER_KIND,
+) as DiscoveryFilterMetric[];
+
+/** Permissive hope-core defaults — no financial hard filters. */
 export const DEFAULT_DISCOVERY_CRITERIA: DiscoveryCriteria = {
-  budgetMin: 300_000,
-  budgetMax: 1_200_000,
-  minCapRate: 3.2,
-  maxOvervaluationPct: 30,
-  minWalkability: 35,
-  minRemoteWorkPct: 20,
+  filters: [
+    { id: "default-walk", metric: "walkabilityScore", min: 0 },
+    { id: "default-forecast", metric: "homePriceForecast1yr", min: -100 },
+  ],
 };
 
-/** Silicon Valley price/cap-rate profile — yields ≥3 matches on live 41940 shard. */
-export const SAN_JOSE_DISCOVERY_CRITERIA: DiscoveryCriteria = {
-  budgetMin: 500_000,
-  budgetMax: 1_500_000,
-  minCapRate: 2.0,
-  maxOvervaluationPct: 35,
-  minWalkability: 35,
-  minRemoteWorkPct: 15,
-};
+const FALLBACK_SCORING_METRICS: DiscoveryFilterMetric[] = [
+  "walkabilityScore",
+  "homePriceForecast1yr",
+];
 
-const SANDBOX_DISCOVERY_CRITERIA: Record<string, DiscoveryCriteria> = {
-  "41940": SAN_JOSE_DISCOVERY_CRITERIA,
-};
-
-export function discoveryCriteriaEqual(a: DiscoveryCriteria, b: DiscoveryCriteria): boolean {
-  return (
-    a.budgetMin === b.budgetMin &&
-    a.budgetMax === b.budgetMax &&
-    a.minCapRate === b.minCapRate &&
-    a.maxOvervaluationPct === b.maxOvervaluationPct &&
-    a.minWalkability === b.minWalkability &&
-    a.minRemoteWorkPct === b.minRemoteWorkPct
-  );
+export function getDiscoveryMetricDef(metric: DiscoveryFilterMetric): DiscoveryMetricDef {
+  return { metric, ...METRIC_FILTER_KIND[metric] };
 }
 
-/** Default criteria for a sandbox CBSA; falls back to global defaults. */
-export function discoveryCriteriaForSandbox(cbsaCode: string): DiscoveryCriteria {
-  return SANDBOX_DISCOVERY_CRITERIA[cbsaCode] ?? DEFAULT_DISCOVERY_CRITERIA;
+export function getDiscoveryMetricLabel(metric: DiscoveryFilterMetric): string {
+  return METRIC_LAYERS.find((m) => m.key === metric)?.label ?? metric;
+}
+
+export function getDiscoveryMetricUnit(metric: DiscoveryFilterMetric): string {
+  return METRIC_LAYERS.find((m) => m.key === metric)?.unit ?? "";
+}
+
+export function createDiscoveryFilter(metric: DiscoveryFilterMetric, id?: string): DiscoveryFilter {
+  const def = getDiscoveryMetricDef(metric);
+  const filter: DiscoveryFilter = {
+    id: id ?? `${metric}-${Date.now()}`,
+    metric,
+  };
+  if (def.kind === "range" || def.kind === "min") {
+    filter.min = def.defaultMin;
+  }
+  if (def.kind === "range" || def.kind === "max") {
+    filter.max = def.defaultMax;
+  }
+  return filter;
+}
+
+function normalizeFilters(filters: DiscoveryFilter[]): DiscoveryFilter[] {
+  return [...filters]
+    .map((f) => ({
+      id: f.id,
+      metric: f.metric,
+      ...(f.min !== undefined ? { min: f.min } : {}),
+      ...(f.max !== undefined ? { max: f.max } : {}),
+    }))
+    .sort((a, b) => a.metric.localeCompare(b.metric) || a.id.localeCompare(b.id));
+}
+
+export function discoveryCriteriaEqual(a: DiscoveryCriteria, b: DiscoveryCriteria): boolean {
+  return JSON.stringify(normalizeFilters(a.filters)) === JSON.stringify(normalizeFilters(b.filters));
+}
+
+/** Default criteria for a sandbox CBSA — same permissive hope-core set for all sandboxes. */
+export function discoveryCriteriaForSandbox(_cbsaCode: string): DiscoveryCriteria {
+  return DEFAULT_DISCOVERY_CRITERIA;
 }
 
 export interface ScoreBreakdown {
-  capRate: number;
-  overvaluation: number;
-  walkability: number;
-  remoteWork: number;
-  forecast: number;
+  byMetric: Partial<Record<DiscoveryFilterMetric, number>>;
   composite: number;
 }
 
@@ -75,14 +187,6 @@ export interface RankedNeighborhood {
   filterReasons: string[];
 }
 
-const SCORE_WEIGHTS = {
-  capRate: 0.25,
-  overvaluation: 0.2,
-  walkability: 0.2,
-  remoteWork: 0.2,
-  forecast: 0.15,
-} as const;
-
 function normalizeWithin(values: number[], higherIsBetter: boolean): number[] {
   if (values.length === 0) return [];
   const min = Math.min(...values);
@@ -94,37 +198,49 @@ function normalizeWithin(values: number[], higherIsBetter: boolean): number[] {
   });
 }
 
+function formatFilterValue(metric: DiscoveryFilterMetric, value: number): string {
+  if (metric === "medianHomeValue") return `$${value.toLocaleString()}`;
+  const unit = getDiscoveryMetricUnit(metric);
+  if (unit === "%") return `${value}%`;
+  if (unit === "$") return `$${value.toLocaleString()}`;
+  return `${value}${unit ? ` ${unit}` : ""}`;
+}
+
 function evaluateFilters(
   props: DcMetroFeatureProperties,
   criteria: DiscoveryCriteria,
 ): { passed: boolean; reasons: string[] } {
   const reasons: string[] = [];
 
-  if (props.medianHomeValue < criteria.budgetMin) {
-    reasons.push(`Below budget min ($${criteria.budgetMin.toLocaleString()})`);
-  }
-  if (props.medianHomeValue > criteria.budgetMax) {
-    reasons.push(`Above budget max ($${criteria.budgetMax.toLocaleString()})`);
-  }
-  if (props.capRatePct < criteria.minCapRate) {
-    reasons.push(`Cap rate ${props.capRatePct}% below ${criteria.minCapRate}% floor`);
-  }
-  if (props.overvaluationPct > criteria.maxOvervaluationPct) {
-    reasons.push(`Overvalued ${props.overvaluationPct}% above ${criteria.maxOvervaluationPct}% cap`);
-  }
-  if (props.walkScore < criteria.minWalkability) {
-    reasons.push(`Walk score ${props.walkScore} below ${criteria.minWalkability} floor`);
-  }
-  if (props.remoteWorkPct < criteria.minRemoteWorkPct) {
-    reasons.push(`Remote work ${props.remoteWorkPct}% below ${criteria.minRemoteWorkPct}% floor`);
+  for (const filter of criteria.filters) {
+    const value = getRawMetricFromFeature(props, filter.metric);
+    const label = getDiscoveryMetricLabel(filter.metric);
+
+    if (filter.min !== undefined && value < filter.min) {
+      reasons.push(
+        `${label} ${formatFilterValue(filter.metric, value)} below ${formatFilterValue(filter.metric, filter.min)} floor`,
+      );
+    }
+    if (filter.max !== undefined && value > filter.max) {
+      reasons.push(
+        `${label} ${formatFilterValue(filter.metric, value)} above ${formatFilterValue(filter.metric, filter.max)} cap`,
+      );
+    }
   }
 
   return { passed: reasons.length === 0, reasons };
 }
 
+function scoringMetricsForCriteria(criteria: DiscoveryCriteria): DiscoveryFilterMetric[] {
+  if (criteria.filters.length > 0) {
+    return criteria.filters.map((f) => f.metric);
+  }
+  return FALLBACK_SCORING_METRICS;
+}
+
 /**
- * Weighted hybrid rank across financial + hope-core metrics for sandbox ZIPs.
- * Uses live shard geojson properties (ADR-012 ingest).
+ * Weighted hybrid rank across active user criteria for sandbox ZIPs.
+ * Hard filters and scoring weights follow the same dynamic filter set.
  */
 export function rankNeighborhoods(
   geoJson: DcMetroGeoJson,
@@ -132,6 +248,7 @@ export function rankNeighborhoods(
   topN = 3,
 ): RankedNeighborhood[] {
   const features = geoJson.features;
+  const scoringMetrics = scoringMetricsForCriteria(criteria);
 
   const eligible = features
     .map((f) => {
@@ -144,33 +261,29 @@ export function rankNeighborhoods(
     return [];
   }
 
-  const capRates = eligible.map(({ feature }) => feature.properties.capRatePct);
-  const overvals = eligible.map(({ feature }) => feature.properties.overvaluationPct);
-  const walks = eligible.map(({ feature }) => feature.properties.walkScore);
-  const remotes = eligible.map(({ feature }) => feature.properties.remoteWorkPct);
-  const forecasts = eligible.map(({ feature }) => feature.properties.oneYearForecastPct);
+  const normalizedByMetric = new Map<DiscoveryFilterMetric, number[]>();
+  for (const metric of scoringMetrics) {
+    const def = getDiscoveryMetricDef(metric);
+    const raw = eligible.map(({ feature }) =>
+      getRawMetricFromFeature(feature.properties, metric),
+    );
+    normalizedByMetric.set(metric, normalizeWithin(raw, def.higherIsBetter));
+  }
 
-  const normCap = normalizeWithin(capRates, true);
-  const normOver = normalizeWithin(overvals, false);
-  const normWalk = normalizeWithin(walks, true);
-  const normRemote = normalizeWithin(remotes, true);
-  const normForecast = normalizeWithin(forecasts, true);
+  const weight = scoringMetrics.length > 0 ? 1 / scoringMetrics.length : 1;
 
   const scored = eligible.map(({ feature }, i) => {
-    const breakdown: ScoreBreakdown = {
-      capRate: normCap[i],
-      overvaluation: normOver[i],
-      walkability: normWalk[i],
-      remoteWork: normRemote[i],
-      forecast: normForecast[i],
-      composite: 0,
-    };
-    breakdown.composite =
-      breakdown.capRate * SCORE_WEIGHTS.capRate +
-      breakdown.overvaluation * SCORE_WEIGHTS.overvaluation +
-      breakdown.walkability * SCORE_WEIGHTS.walkability +
-      breakdown.remoteWork * SCORE_WEIGHTS.remoteWork +
-      breakdown.forecast * SCORE_WEIGHTS.forecast;
+    const byMetric: Partial<Record<DiscoveryFilterMetric, number>> = {};
+    let composite = 0;
+
+    for (const metric of scoringMetrics) {
+      const norm = normalizedByMetric.get(metric)?.[i] ?? 0;
+      byMetric[metric] = norm;
+      composite += norm * weight;
+    }
+
+    const breakdown: ScoreBreakdown = { byMetric, composite: 0 };
+    breakdown.composite = composite;
 
     return buildRankedEntry(feature, breakdown.composite, breakdown);
   });
