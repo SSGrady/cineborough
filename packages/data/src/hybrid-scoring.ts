@@ -334,6 +334,9 @@ function formatFilterValue(metric: DiscoveryFilterMetric, value: number): string
 /**
  * Per-criterion partial match (0–100).
  * 100 = inside target; linear decay outside over a soft margin (~50% of target span).
+ *
+ * Median home price uses WMIL upper-bound semantics: min is "typical" reference only;
+ * values at or below max fully match; values above max decay.
  */
 function criterionMatchScore(
   value: number,
@@ -352,6 +355,13 @@ function criterionMatchScore(
     if (value <= target) return 100;
     const margin = Math.max(Math.abs(target) * 0.5, 1);
     return Math.max(0, 100 * (1 - (value - target) / margin));
+  }
+
+  if (def.kind === "range" && filter.metric === "medianHomeValue" && filter.max !== undefined) {
+    const max = filter.max;
+    if (value <= max) return 100;
+    const margin = Math.max(Math.abs(max) * 0.5, 1);
+    return Math.max(0, 100 * (1 - (value - max) / margin));
   }
 
   if (def.kind === "range") {
@@ -381,6 +391,10 @@ function describeCriterionGap(
 
   const label = getDiscoveryMetricLabel(metric);
   const formatted = formatFilterValue(metric, value);
+
+  if (metric === "medianHomeValue" && filter.max !== undefined) {
+    return `${label} ${formatted} above ${formatFilterValue(metric, filter.max)} cap (${Math.round(criterionScore)}% match)`;
+  }
 
   if (filter.min !== undefined && filter.max !== undefined) {
     return `${label} ${formatted} outside ${formatFilterValue(metric, filter.min)}–${formatFilterValue(metric, filter.max)} (${Math.round(criterionScore)}% match)`;

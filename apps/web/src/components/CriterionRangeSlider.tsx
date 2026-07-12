@@ -205,7 +205,11 @@ export function CriterionRangeSlider({
         />
         <div className="criterion-range__labels">
           <span>{formatValue(filter.metric, currentMin)}</span>
-          <span>{formatValue(filter.metric, currentMax)}</span>
+          <span>
+            {filter.metric === "medianHomeValue"
+              ? `Up to ${formatValue(filter.metric, currentMax)}`
+              : formatValue(filter.metric, currentMax)}
+          </span>
         </div>
       </div>
     </div>
