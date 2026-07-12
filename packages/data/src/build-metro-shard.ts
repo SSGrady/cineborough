@@ -27,8 +27,8 @@ function hexToRgb(hex: string): [number, number, number] {
 
 function colorForNormalizedScore(score: number): string {
   const clamped = Math.max(0, Math.min(100, score));
-  if (clamped >= 70) return "#6BA3D6";
-  if (clamped >= 40) return "#F0EDE6";
+  if (clamped >= 70) return "#2563EB";
+  if (clamped >= 40) return "#F5D547";
   return "#ef4444";
 }
 

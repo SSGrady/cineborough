@@ -51,10 +51,10 @@ export interface ColorStop {
   label: string;
 }
 
-/** Soft blue — positive / high tier (replaces green). */
-export const CHOROPLETH_COLOR_HIGH = "#6BA3D6";
-/** Warm off-white — neutral / middle tier (replaces yellow). */
-export const CHOROPLETH_COLOR_MID = "#F0EDE6";
+/** Rich blue — positive / high tier (affordable, opportunity). */
+export const CHOROPLETH_COLOR_HIGH = "#2563EB";
+/** Soft yellow — neutral / middle tier; reads on light map basemaps. */
+export const CHOROPLETH_COLOR_MID = "#F5D547";
 /** Red — low / caution tier. */
 export const CHOROPLETH_COLOR_LOW = "#ef4444";
 

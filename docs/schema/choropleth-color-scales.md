@@ -21,8 +21,8 @@ Buyer-semantics buckets (blue tint = more affordable):
 
 | Raw value | Normalized score | Color | Legend label |
 |-----------|------------------|-------|--------------|
-| < $315,000 | 85 | Blue tint (`#6BA3D6`) | More affordable |
-| $315,000 – $600,000 | 55 | White tint (`#F0EDE6`) | Middle range |
+| < $315,000 | 85 | Blue tint (`#2563EB`) | More affordable |
+| $315,000 – $600,000 | 55 | Yellow tint (`#F5D547`) | Middle range |
 | > $600,000 | 20 | Red | Higher cost |
 
 Constants: `HOME_VALUE_COLOR_THRESHOLDS` in `opportunity-index.ts`.
@@ -32,8 +32,8 @@ Constants: `HOME_VALUE_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 | Raw value | Normalized score | Color | Legend label |
 |-----------|------------------|-------|--------------|
 | < 0% | 20 | Red | Declining |
-| 0% – 2.9% | 55 | White tint (`#F0EDE6`) | Moderate |
-| ≥ 3% | 85 | Blue tint (`#6BA3D6`) | Strong growth |
+| 0% – 2.9% | 55 | Yellow tint (`#F5D547`) | Moderate |
+| ≥ 3% | 85 | Blue tint (`#2563EB`) | Strong growth |
 
 Constants: `FORECAST_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 
@@ -41,8 +41,8 @@ Constants: `FORECAST_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 
 | Range | Color | Meaning |
 |-------|-------|---------|
-| 70–100 | `#6BA3D6` (blue tint) | High opportunity |
-| 40–69 | `#F0EDE6` (white tint) | Moderate |
+| 70–100 | `#2563EB` (blue tint) | High opportunity |
+| 40–69 | `#F5D547` (yellow tint) | Moderate |
 | 0–39 | `#ef4444` | Low / caution |
 
 ## Tercile metrics (default)

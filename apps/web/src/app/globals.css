@@ -3801,6 +3801,8 @@ body {
   height: 0.75rem;
   border-radius: 2px;
   flex-shrink: 0;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  box-sizing: border-box;
 }
 
 .map-tooltip .mapboxgl-popup-content {

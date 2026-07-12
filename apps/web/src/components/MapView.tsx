@@ -363,6 +363,15 @@ export function MapView({
   const isStateGeography = overviewMode && geographyLevel === "state";
   const isCountyGeography = overviewMode && geographyLevel === "county";
 
+  /** Purple hover in criteria/discovery — metro, county, and drilled ZIP; not during flyover/story. */
+  const criteriaHoverActive =
+    criteriaMode &&
+    !cinematicTourActive &&
+    (geographyLevel === "metro" ||
+      geographyLevel === "county" ||
+      geographyLevel === "zip" ||
+      !isOverviewView);
+
   const choroplethSpec = useMemo(
     () => getChoroplethSpecFromGeoJson(geoJson, activeMetric),
     [geoJson, activeMetric],
@@ -431,7 +440,7 @@ export function MapView({
         const props = feature?.properties as Record<string, unknown> | undefined;
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
-        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        const isHovered = criteriaHoverActive && zip === hoveredZip;
         if (isHovered) return [157, 0, 255, 180];
 
         const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
@@ -458,7 +467,7 @@ export function MapView({
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        const isHovered = criteriaHoverActive && zip === hoveredZip;
         if (isHovered) return [126, 29, 251, 255];
         if (zip === selectedZip) return [255, 255, 255, 110];
         if (isNationalGeography) return [255, 255, 255, 60];
@@ -470,7 +479,7 @@ export function MapView({
       },
       getLineWidth: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
-        const isHovered = criteriaMode && !isOverviewView && zip === hoveredZip;
+        const isHovered = criteriaHoverActive && zip === hoveredZip;
         if (isHovered) return 2;
         if (zip === selectedZip) return 1.25;
         if (isNationalGeography) return 0.5;
@@ -480,12 +489,12 @@ export function MapView({
       lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
       lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
-        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, criteriaMode, hoveredZip],
-        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaMode, hoveredZip],
-        getLineWidth: [selectedZip, isOverviewView, geographyLevel, criteriaMode, hoveredZip],
+        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, criteriaHoverActive, hoveredZip],
+        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaHoverActive, hoveredZip],
+        getLineWidth: [selectedZip, isOverviewView, geographyLevel, criteriaHoverActive, hoveredZip],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaMode, hoveredZip]);
+  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaHoverActive, hoveredZip]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
