@@ -31,6 +31,7 @@ import {
   type DiscoveryFilterMetric,
   type RankedNeighborhood,
   discoveryCriteriaForSandbox,
+  dedupeRankedMatchesByDisplayName,
   getDiscoveryMetricLabel,
   getRawMetricFromFeature,
   getCriteriaChoroplethMetric,
@@ -72,9 +73,7 @@ import { AnalyticsOverlay } from "./AnalyticsOverlay";
 import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
 import { DiscoveryDeepDivePanel } from "./DiscoveryDeepDivePanel";
 import { NeighborhoodPhotoHero } from "./NeighborhoodPhotoHero";
-import { CinematicEntryBar } from "./CinematicEntryBar";
 import { CinematicTourDeck } from "./CinematicTourDeck";
-import { ExploreCityBar } from "./ExploreCityBar";
 import { Google3DTilesBadge } from "./Google3DTilesBadge";
 import {
   is3DTilesFlagEnabled,
@@ -357,14 +356,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const cinematicTourActive = dcStoryActive || discoveryFlyoverActive;
 
-  const showCinematicEntry =
-    sandboxDrillActive &&
-    !isOverviewMode &&
-    !discoveryFlyoverActive &&
-    !dcStoryActive &&
-    discoveryShellActive &&
-    !exploreMode;
-
   const labelHighlightZip = useMemo((): string | null => {
     if (!cinematicTourActive || isOverviewMode) return null;
     if (discoveryFlyover) {
@@ -461,12 +452,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     );
   }, [selectedOverviewMetro]);
 
-  const showExploreCityBar =
-    isOverviewMode &&
-    selectedOverviewMetro !== null &&
-    !SANDBOX_CBSA.has(selectedOverviewMetro) &&
-    ingestedCbsas.has(selectedOverviewMetro);
-
   const zips = useMemo(
     () => zipMetricsFromGeoJson(isOverviewMode ? activeGeoJson : activeShardGeoJson),
     [isOverviewMode, activeGeoJson, activeShardGeoJson],
@@ -504,7 +489,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return OVERVIEW_HINTS[geography] ?? "United States overview";
     }
     if (!storyCameraActive && sandboxDrillActive) {
-      return `${activeShardGeoJson.metadata.metro} · start a guided tour below`;
+      return `${activeShardGeoJson.metadata.metro} · flat discovery view`;
     }
     return `${activeShardGeoJson.metadata.metro} · scroll to explore`;
   }, [
@@ -673,52 +658,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return () => window.clearTimeout(timer);
   }, [explicitFlyTarget]);
 
-  const handleResumeDcStory = useCallback(() => {
-    setActiveSandboxCbsa(DC_METRO_CBSA);
-    setSandboxDrillActive(true);
-    setStoryCameraActive(true);
-    setGeography("metro");
-    setUsInsetRegion("continental");
-    setActiveSection("metro");
-    setScrollProgress(0);
-    setDrawerOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    requestAnimationFrame(() => ScrollTrigger.refresh());
-  }, []);
-
   const handleInsetSelect = useCallback((region: UsInsetRegion) => {
     setUsInsetRegion(region);
     setGeography("national");
     setDiscoveryFlyover(null);
     setSandboxDrillActive(false);
     setStoryCameraActive(false);
-    setSelectedOverviewMetro(null);
-    setSelectedMetroCamera(null);
-  }, []);
-
-  const handleExploreCity = useCallback(() => {
-    if (!selectedOverviewMetro) return;
-
-    setExploreCityLoading(true);
-    void ensureMetroShard(selectedOverviewMetro)
-      .then((shard) => {
-        if (!shard) return;
-        setActiveSandboxCbsa(selectedOverviewMetro);
-        setSandboxDrillActive(true);
-        setStoryCameraActive(false);
-        setSelectedZip(null);
-        setSelectedPropertyId(null);
-        setSelectedOverviewMetro(null);
-        setSelectedMetroCamera(null);
-        setSearchFlyTarget(null);
-        setGeography("metro");
-      })
-      .finally(() => {
-        setExploreCityLoading(false);
-      });
-  }, [selectedOverviewMetro, ensureMetroShard]);
-
-  const handleDismissExploreCity = useCallback(() => {
     setSelectedOverviewMetro(null);
     setSelectedMetroCamera(null);
   }, []);
@@ -797,8 +742,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         }
 
         if (ingestedCbsas.has(regionId)) {
-          setSelectedOverviewMetro(regionId);
-          setSelectedMetroCamera(metroOverviewCamera(regionId));
+          overviewMetroToCriteriaRef.current(regionId);
           return;
         }
 
@@ -855,14 +799,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
 
       if (ingestedCbsas.has(result.id)) {
-        setGeography("metro");
-        setSandboxDrillActive(false);
-        setStoryCameraActive(false);
-        setSelectedZip(null);
-        setSelectedPropertyId(null);
-        setSelectedOverviewMetro(result.id);
-        setSelectedMetroCamera(metroOverviewCamera(result.id));
         setUsInsetRegion("continental");
+        overviewMetroToCriteriaRef.current(result.id);
         return;
       }
 
@@ -1165,13 +1103,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       scope: DiscoveryScope,
       criteria: DiscoveryCriteria,
     ) => {
+      const normalized =
+        scope === "national" ? dedupeRankedMatchesByDisplayName(results) : results;
       setDiscoveryScope(scope);
       setDiscoveryShellActive(true);
       setDiscoveryCriteria(criteria);
       saveDiscoveryCriteria(criteria);
-      setDiscoveryResults(results);
+      setDiscoveryResults(normalized);
       setDiscoveryMessage(null);
-      if (results.length > 0) {
+      if (normalized.length > 0) {
         setMatchesDeckOpen(true);
         setMatchesDeckCollapsed(true);
       } else {
@@ -1378,54 +1318,53 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     (key: string, match: RankedNeighborhood) => {
       setSelectedMatchKey(key);
       cameraLockedByUserRef.current = false;
+      setDiscoveryMessage(null);
 
       const targetCbsa = resolveMatchMetroCbsa(match);
-      if (!targetCbsa) {
-        setDiscoveryMessage("Metro unavailable for this match — try another");
-        return;
+      const existingShard = targetCbsa
+        ? loadMetroShard(targetCbsa) ?? loadedShards[targetCbsa] ?? null
+        : null;
+
+      if (discoveryScope === "national") {
+        setDiscoveryScope("metro");
       }
 
-      const needsDrill =
-        !sandboxDrillActive ||
-        targetCbsa !== activeSandboxCbsa ||
-        (!SANDBOX_CBSA.has(targetCbsa) && !loadedShards[targetCbsa]);
+      if (targetCbsa) {
+        setActiveSandboxCbsa(targetCbsa);
+        setSandboxDrillActive(true);
+        setStoryCameraActive(false);
+        setSelectedOverviewMetro(null);
+        setSelectedMetroCamera(null);
+        setSearchFlyTarget(null);
+      }
 
-      const finish = (shard: DcMetroGeoJson | null) => {
-        if (discoveryScope === "national") {
-          setDiscoveryScope("metro");
-        }
-        activateDiscoveryMatch(match, shard);
-      };
+      activateDiscoveryMatch(match, existingShard);
 
-      if (needsDrill) {
+      if (targetCbsa && !existingShard) {
         setExploreCityLoading(true);
-        void drillIntoDiscoveryMetro(targetCbsa)
+        void ensureMetroShard(targetCbsa)
           .then((shard) => {
             if (!shard) {
-              setDiscoveryMessage("Metro data unavailable — try another match");
-              return;
+              setDiscoveryMessage(
+                `${match.name} — metro boundaries unavailable; match details shown below`,
+              );
             }
-            finish(shard);
           })
           .finally(() => {
             setExploreCityLoading(false);
           });
-        return;
+      } else if (!targetCbsa) {
+        setDiscoveryMessage(
+          `${match.name} — metro unknown; showing ranked match at map center`,
+        );
       }
-
-      finish(
-        loadMetroShard(targetCbsa) ?? loadedShards[targetCbsa] ?? activeShardGeoJson,
-      );
     },
     [
       resolveMatchMetroCbsa,
-      sandboxDrillActive,
-      activeSandboxCbsa,
       loadedShards,
       discoveryScope,
-      drillIntoDiscoveryMetro,
       activateDiscoveryMatch,
-      activeShardGeoJson,
+      ensureMetroShard,
     ],
   );
 
@@ -1553,7 +1492,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         return;
       }
 
-      const ranked = rankNeighborhoods(shard, criteria, { topN: 0 });
+      const ranked = rankNeighborhoods(shard, criteria, { topN: 0 }).map((entry) => ({
+        ...entry,
+        cbsaCode: activeSandboxCbsa,
+        metroName: shard.metadata.metro,
+      }));
       const results = applySimilarityScores(ranked, shard, exampleZips);
 
       if (results.length === 0) {
@@ -1597,7 +1540,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setDeepDiveOpen(false);
       setSelectedZip(null);
       setDrawerOpen(false);
-      setDiscoveryResults(results);
+      setDiscoveryResults(dedupeRankedMatchesByDisplayName(results));
 
       if (results.length === 0) {
         setDiscoveryMessage(
@@ -1919,10 +1862,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const neighborhoodPhoto = photoHeroZip ? getNeighborhoodPhoto(photoHeroZip) : null;
 
-  const metroDescription = showCinematicEntry
-    ? "Start a guided tour of top-ranked neighborhoods, or enter Story mode for a scroll-driven DC descent."
-    : !storyCameraActive && sandboxDrillActive
-      ? "Story camera paused while you explore. Use the banner below to restart a tour or story."
+  const metroDescription =
+    !storyCameraActive && sandboxDrillActive
+      ? "Story camera paused while you explore the map."
       : SCROLL_SECTIONS[0].description;
 
   const overviewFeatureCount = activeGeoJson.features.filter(
@@ -1975,7 +1917,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return {
         stepLabel: "Discovery",
         title: discoveryMessage,
-        detail: "Adjust criteria or select a metro, then Explore city",
+        detail: "Adjust criteria or select a metro on the map",
         canOpen: true,
         action: { label: "Your criteria", onClick: handleOpenCriteria },
       };
@@ -1992,7 +1934,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         return {
           stepLabel: "Metro",
           title: selectedOverviewMetroFeature.properties.neighborhoodName,
-          detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)} · tap Explore city for ZIP detail`,
+          detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)} · click metro to open ZIP detail`,
           canOpen: true,
         };
       }
@@ -2031,11 +1973,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return {
       stepLabel: "Sandbox",
       title: activeShardGeoJson.metadata.metro,
-      detail: showCinematicEntry
-        ? "Guided tour & story mode available"
-        : storyCameraActive
-          ? "Guided story · scroll to explore"
-          : "Flat view",
+      detail: storyCameraActive
+        ? "Guided story · scroll to explore"
+        : "Flat view",
       canOpen: true,
     };
   }, [
@@ -2053,7 +1993,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeMetric,
     activeShardGeoJson.metadata.metro,
     activeSandboxCbsa,
-    showCinematicEntry,
     discoveryFlyover,
     discoveryMessage,
     handleSkipFlyover,
@@ -2220,7 +2159,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeSandboxCbsa,
     zips,
     selectedZip,
-    handleResumeDcStory,
     handleZipSelect,
     handleEvaluateProperty,
     discoveryResults,
@@ -2385,25 +2323,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             onStateSelect={handleStateSelect}
             fitBoundsTarget={stateFitBounds}
           />
-          {showExploreCityBar && selectedOverviewMetroFeature && (
-            <ExploreCityBar
-              metroName={selectedOverviewMetroFeature.properties.neighborhoodName}
-              loading={exploreCityLoading}
-              onExploreCity={handleExploreCity}
-              onDismiss={handleDismissExploreCity}
-            />
-          )}
-          {showCinematicEntry && (
-            <CinematicEntryBar
-              metroName={activeShardGeoJson.metadata.metro}
-              showStoryMode={activeSandboxCbsa === DC_METRO_CBSA}
-              onTourTopNeighborhoods={handleStartFlyoverTour}
-              onStoryMode={
-                activeSandboxCbsa === DC_METRO_CBSA ? handleResumeDcStory : undefined
-              }
-              optional
-            />
-          )}
           {isOverviewMode && geography === "national" && !exploreMode && (
             <UsMapInsets activeRegion={usInsetRegion} onSelectRegion={handleInsetSelect} />
           )}
