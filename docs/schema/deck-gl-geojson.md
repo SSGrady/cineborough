@@ -88,8 +88,8 @@ Flat camelCase aligned with Deerfield / Reventure enriched GeoJSON:
     "primaryVibe": "Walkable nightlife hub",
     "opportunityScore": 32.4,
     "opportunityScoreNormalized": 67.8,
-    "fillColor": "#eab308",
-    "fillColorRgb": [234, 179, 8],
+    "fillColor": "#F0EDE6",
+    "fillColorRgb": [240, 237, 230],
     "labelLng": -77.096,
     "labelLat": 38.886
   },
@@ -124,8 +124,8 @@ Map `opportunityScoreNormalized` to stops in [`opportunity-index.md`](./opportun
 
 | Range | Color |
 |-------|-------|
-| 70–100 | `#22c55e` |
-| 40–69 | `#eab308` |
+| 70–100 | `#6BA3D6` |
+| 40–69 | `#F0EDE6` |
 | 0–39 | `#ef4444` |
 
 ### Active metric coloring (runtime)

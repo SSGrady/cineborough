@@ -3771,6 +3771,8 @@ body {
   height: 0.875rem;
   border-radius: 2px;
   flex-shrink: 0;
+  border: 1px solid rgba(15, 23, 42, 0.18);
+  box-sizing: border-box;
 }
 
 /* Level 3 — Property Valuation */

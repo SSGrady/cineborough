@@ -17,12 +17,12 @@ See ADR-009 (UI contract) and [opportunity-index.md](./opportunity-index.md).
 
 ### Median home value
 
-Buyer-semantics buckets (green = more affordable):
+Buyer-semantics buckets (blue tint = more affordable):
 
 | Raw value | Normalized score | Color | Legend label |
 |-----------|------------------|-------|--------------|
-| < $300,000 | 85 | Green | More affordable |
-| $300,000 – $750,000 | 55 | Yellow | Middle range |
+| < $300,000 | 85 | Blue tint (`#6BA3D6`) | More affordable |
+| $300,000 – $750,000 | 55 | White tint (`#F0EDE6`) | Middle range |
 | > $750,000 | 20 | Red | Higher cost |
 
 Constants: `HOME_VALUE_COLOR_THRESHOLDS` in `opportunity-index.ts`.
@@ -32,8 +32,8 @@ Constants: `HOME_VALUE_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 | Raw value | Normalized score | Color | Legend label |
 |-----------|------------------|-------|--------------|
 | < 0% | 20 | Red | Declining |
-| 0% – 2.9% | 55 | Yellow | Moderate |
-| ≥ 3% | 85 | Green | Strong growth |
+| 0% – 2.9% | 55 | White tint (`#F0EDE6`) | Moderate |
+| ≥ 3% | 85 | Blue tint (`#6BA3D6`) | Strong growth |
 
 Constants: `FORECAST_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 
@@ -41,13 +41,13 @@ Constants: `FORECAST_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 
 | Range | Color | Meaning |
 |-------|-------|---------|
-| 70–100 | `#22c55e` | High opportunity |
-| 40–69 | `#eab308` | Moderate |
+| 70–100 | `#6BA3D6` (blue tint) | High opportunity |
+| 40–69 | `#F0EDE6` (white tint) | Moderate |
 | 0–39 | `#ef4444` | Low / caution |
 
 ## Tercile metrics (default)
 
-For metrics without fixed thresholds, legend labels show computed p33/p66 bounds when available (`tercileBounds` prop on `ColorLegend` / `BottomBar`). `medianAge` inverts semantics (younger = green).
+For metrics without fixed thresholds, legend labels show computed p33/p66 bounds when available (`tercileBounds` prop on `ColorLegend` / `BottomBar`). `medianAge` inverts semantics (younger = blue tint).
 
 ## Non-goals
 

@@ -51,11 +51,18 @@ export interface ColorStop {
   label: string;
 }
 
+/** Soft blue — positive / high tier (replaces green). */
+export const CHOROPLETH_COLOR_HIGH = "#6BA3D6";
+/** Warm off-white — neutral / middle tier (replaces yellow). */
+export const CHOROPLETH_COLOR_MID = "#F0EDE6";
+/** Red — low / caution tier. */
+export const CHOROPLETH_COLOR_LOW = "#ef4444";
+
 /** Choropleth color scale — see docs/schema/opportunity-index.md */
 export const OPPORTUNITY_COLOR_STOPS: ColorStop[] = [
-  { min: 70, max: 100, color: "#22c55e", label: "High opportunity" },
-  { min: 40, max: 69, color: "#eab308", label: "Moderate opportunity" },
-  { min: 0, max: 39, color: "#ef4444", label: "Low opportunity" },
+  { min: 70, max: 100, color: CHOROPLETH_COLOR_HIGH, label: "High opportunity" },
+  { min: 40, max: 69, color: CHOROPLETH_COLOR_MID, label: "Moderate opportunity" },
+  { min: 0, max: 39, color: CHOROPLETH_COLOR_LOW, label: "Low opportunity" },
 ];
 
 export function colorForNormalizedScore(score: number): string {
@@ -157,9 +164,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: "#22c55e", label: "< $300,000 — More affordable" },
-        { color: "#eab308", label: "$300,000 – $750,000 — Middle range" },
-        { color: "#ef4444", label: "> $750,000 — Higher cost" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "< $300,000 — More affordable" },
+        { color: CHOROPLETH_COLOR_MID, label: "$300,000 – $750,000 — Middle range" },
+        { color: CHOROPLETH_COLOR_LOW, label: "> $750,000 — Higher cost" },
       ],
     };
   }
@@ -169,9 +176,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: "#22c55e", label: "< 37.0 — Younger" },
-        { color: "#eab308", label: "37.0 – 38.6 — Mid-range" },
-        { color: "#ef4444", label: "> 38.6 — Older" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "< 37.0 — Younger" },
+        { color: CHOROPLETH_COLOR_MID, label: "37.0 – 38.6 — Mid-range" },
+        { color: CHOROPLETH_COLOR_LOW, label: "> 38.6 — Older" },
       ],
     };
   }
@@ -181,9 +188,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: "#ef4444", label: "< 50.0 — Car-dependent" },
-        { color: "#eab308", label: "50.0 – 60.9 — Moderate" },
-        { color: "#22c55e", label: "≥ 61 — Highly walkable" },
+        { color: CHOROPLETH_COLOR_LOW, label: "< 50.0 — Car-dependent" },
+        { color: CHOROPLETH_COLOR_MID, label: "50.0 – 60.9 — Moderate" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "≥ 61 — Highly walkable" },
       ],
     };
   }
@@ -193,9 +200,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: "#ef4444", label: "< 0%" },
-        { color: "#eab308", label: "0% – 2.9%" },
-        { color: "#22c55e", label: "≥ 3%" },
+        { color: CHOROPLETH_COLOR_LOW, label: "< 0%" },
+        { color: CHOROPLETH_COLOR_MID, label: "0% – 2.9%" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "≥ 3%" },
       ],
     };
   }
@@ -205,15 +212,15 @@ export function legendStops(
     gradientCss: "",
     stops: [
       {
-        color: "#ef4444",
+        color: CHOROPLETH_COLOR_LOW,
         label: tercileBounds?.low ?? "Low (bottom third)",
       },
       {
-        color: "#eab308",
+        color: CHOROPLETH_COLOR_MID,
         label: tercileBounds?.mid ?? "Moderate (middle third)",
       },
       {
-        color: "#22c55e",
+        color: CHOROPLETH_COLOR_HIGH,
         label: tercileBounds?.high ?? "High (top third)",
       },
     ],
