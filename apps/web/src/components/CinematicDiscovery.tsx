@@ -22,8 +22,6 @@ import {
   fetchMetroShard,
   sandboxCbsaForZip,
   sandboxCbsaForCounty,
-  mergeMetroOverviewWithShards,
-  cbsasInViewport,
   METRIC_LAYERS,
   rankNeighborhoods,
   applySimilarityScores,
@@ -73,6 +71,7 @@ import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
 import { DiscoveryDeepDivePanel } from "./DiscoveryDeepDivePanel";
 import { NeighborhoodPhotoHero } from "./NeighborhoodPhotoHero";
 import { CinematicEntryBar } from "./CinematicEntryBar";
+import { ExploreCityBar } from "./ExploreCityBar";
 import { Google3DTilesBadge } from "./Google3DTilesBadge";
 import {
   is3DTilesFlagEnabled,
@@ -137,12 +136,25 @@ const SEARCH_INDEX = buildSearchIndex(US_METROS_GEOJSON);
 const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · click a metro to drill in",
   state: "State view · metric label per state",
-  metro: "All metros · green outline = ingested · click to drill in",
+  metro: "All metros · green outline = ingested · click to select",
   county: "County view · national counties · click sandbox county to drill in",
 };
 
-const OVERVIEW_SHARD_MIN_ZOOM = 6;
-const MAX_VIEWPORT_SHARD_LOADS = 8;
+const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
+
+function metroOverviewCamera(cbsa: string): MapCameraTarget | null {
+  const feature = US_METROS_GEOJSON.features.find((f) => f.properties.zipCode === cbsa);
+  if (!feature) return null;
+  const { labelLng, labelLat } = feature.properties;
+  if (!isFiniteLngLat([labelLng, labelLat])) return null;
+  return {
+    center: [labelLng, labelLat],
+    zoom: 8.5,
+    pitch: 0,
+    bearing: 0,
+    duration: 900,
+  };
+}
 
 function metroCameraFromShard(shard: DcMetroGeoJson): MapCameraTarget {
   let sumLng = 0;
@@ -168,14 +180,7 @@ function metroCameraFromShard(shard: DcMetroGeoJson): MapCameraTarget {
   };
 }
 
-const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
-
 type DiscoveryFlyoverPhase = "flying" | "highlight";
-
-interface MapViewport {
-  zoom: number;
-  bounds: [[number, number], [number, number]];
-}
 
 interface DiscoveryFlyoverState {
   results: RankedNeighborhood[];
@@ -234,12 +239,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const pathTraceRafRef = useRef<number | null>(null);
   const prevFlyoverRef = useRef(false);
   const [loadedShards, setLoadedShards] = useState<Record<string, DcMetroGeoJson>>({});
-  const [overviewShards, setOverviewShards] = useState<Record<string, DcMetroGeoJson>>({});
   const [ingestedCbsas, setIngestedCbsas] = useState<Set<string>>(new Set());
-  const [mapViewport, setMapViewport] = useState<MapViewport | null>(null);
   const [metroCameras, setMetroCameras] = useState<Record<string, MapCameraTarget>>({});
+  const [selectedOverviewMetro, setSelectedOverviewMetro] = useState<string | null>(null);
+  const [selectedMetroCamera, setSelectedMetroCamera] = useState<MapCameraTarget | null>(null);
+  const [exploreCityLoading, setExploreCityLoading] = useState(false);
   const loadingShardsRef = useRef<Set<string>>(new Set());
-  const overviewShardsRef = useRef<Record<string, DcMetroGeoJson>>({});
 
   const discoveryFlyoverActive = discoveryFlyover !== null;
 
@@ -348,9 +353,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (geography === "county") {
       return buildCountyChoropleth(US_METROS_GEOJSON, SANDBOX_SHARDS_GEOJSON, activeMetric);
     }
-    const overviewShardMap = new Map(Object.entries(overviewShards));
-    return mergeMetroOverviewWithShards(US_METROS_GEOJSON, overviewShardMap);
-  }, [geography, activeMetric, overviewShards]);
+    return US_METROS_GEOJSON;
+  }, [geography, activeMetric]);
 
   const activeGeoJson = useMemo(
     () => (isOverviewMode ? overviewGeoJson : activeShardGeoJson),
@@ -362,55 +366,20 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [metroCameras],
   );
 
-  const handleViewportChange = useCallback((viewport: MapViewport) => {
-    setMapViewport(viewport);
-  }, []);
+  const selectedOverviewMetroFeature = useMemo(() => {
+    if (!selectedOverviewMetro) return null;
+    return (
+      US_METROS_GEOJSON.features.find(
+        (f) => f.properties.zipCode === selectedOverviewMetro,
+      ) ?? null
+    );
+  }, [selectedOverviewMetro]);
 
-  useEffect(() => {
-    overviewShardsRef.current = overviewShards;
-  }, [overviewShards]);
-
-  useEffect(() => {
-    if (!isOverviewMode || geography !== "metro" || !mapViewport) return;
-
-    if (mapViewport.zoom < OVERVIEW_SHARD_MIN_ZOOM) {
-      setOverviewShards({});
-      return;
-    }
-
-    const eligible = new Set([...ingestedCbsas, ...SANDBOX_CBSA]);
-    const inView = cbsasInViewport(US_METROS_GEOJSON, mapViewport.bounds, eligible);
-
-    const sandboxUpdates: Record<string, DcMetroGeoJson> = {};
-    for (const cbsa of inView) {
-      if (!SANDBOX_CBSA.has(cbsa)) continue;
-      const shard = loadMetroShard(cbsa);
-      if (shard) sandboxUpdates[cbsa] = shard;
-    }
-    if (Object.keys(sandboxUpdates).length > 0) {
-      setOverviewShards((prev) => ({ ...prev, ...sandboxUpdates }));
-    }
-
-    const toLoad = inView
-      .filter(
-        (cbsa) =>
-          ingestedCbsas.has(cbsa) &&
-          !SANDBOX_CBSA.has(cbsa) &&
-          !overviewShardsRef.current[cbsa] &&
-          !loadingShardsRef.current.has(`overview-${cbsa}`),
-      )
-      .slice(0, MAX_VIEWPORT_SHARD_LOADS);
-
-    for (const cbsa of toLoad) {
-      loadingShardsRef.current.add(`overview-${cbsa}`);
-      void ensureMetroShard(cbsa).then((shard) => {
-        loadingShardsRef.current.delete(`overview-${cbsa}`);
-        if (shard) {
-          setOverviewShards((prev) => ({ ...prev, [cbsa]: shard }));
-        }
-      });
-    }
-  }, [isOverviewMode, geography, mapViewport, ingestedCbsas, ensureMetroShard]);
+  const showExploreCityBar =
+    isOverviewMode &&
+    selectedOverviewMetro !== null &&
+    !SANDBOX_CBSA.has(selectedOverviewMetro) &&
+    ingestedCbsas.has(selectedOverviewMetro);
 
   const zips = useMemo(
     () => zipMetricsFromGeoJson(isOverviewMode ? activeGeoJson : activeShardGeoJson),
@@ -522,6 +491,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
     setGeography(level);
     setSearchFlyTarget(null);
+    setSelectedOverviewMetro(null);
+    setSelectedMetroCamera(null);
 
     if (isOverviewGeography(level)) {
       setDiscoveryFlyover(null);
@@ -565,6 +536,35 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setDiscoveryFlyover(null);
     setSandboxDrillActive(false);
     setStoryCameraActive(false);
+    setSelectedOverviewMetro(null);
+    setSelectedMetroCamera(null);
+  }, []);
+
+  const handleExploreCity = useCallback(() => {
+    if (!selectedOverviewMetro) return;
+
+    setExploreCityLoading(true);
+    void ensureMetroShard(selectedOverviewMetro)
+      .then((shard) => {
+        if (!shard) return;
+        setActiveSandboxCbsa(selectedOverviewMetro);
+        setSandboxDrillActive(true);
+        setStoryCameraActive(false);
+        setSelectedZip(null);
+        setSelectedPropertyId(null);
+        setSelectedOverviewMetro(null);
+        setSelectedMetroCamera(null);
+        setSearchFlyTarget(null);
+        setGeography("metro");
+      })
+      .finally(() => {
+        setExploreCityLoading(false);
+      });
+  }, [selectedOverviewMetro, ensureMetroShard]);
+
+  const handleDismissExploreCity = useCallback(() => {
+    setSelectedOverviewMetro(null);
+    setSelectedMetroCamera(null);
   }, []);
 
   const handleZipSelect = useCallback(
@@ -584,6 +584,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       if (isOverviewMode) {
         const countyCbsa = sandboxCbsaForCounty(regionId);
         if (countyCbsa) {
+          setSelectedOverviewMetro(null);
+          setSelectedMetroCamera(null);
           setActiveSandboxCbsa(countyCbsa);
           setSandboxDrillActive(true);
           setStoryCameraActive(false);
@@ -599,6 +601,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           regionId === SF_METRO_CBSA ||
           regionId === SAN_JOSE_METRO_CBSA
         ) {
+          setSelectedOverviewMetro(null);
+          setSelectedMetroCamera(null);
           setActiveSandboxCbsa(regionId);
           setSandboxDrillActive(true);
           setStoryCameraActive(false);
@@ -608,15 +612,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           return;
         }
 
-        void ensureMetroShard(regionId).then((shard) => {
-          if (!shard) return;
-          setActiveSandboxCbsa(regionId);
-          setSandboxDrillActive(true);
-          setStoryCameraActive(false);
-          setSelectedZip(null);
-          setSelectedPropertyId(null);
-          setUsInsetRegion("continental");
-        });
+        if (ingestedCbsas.has(regionId)) {
+          setSelectedOverviewMetro(regionId);
+          setSelectedMetroCamera(metroOverviewCamera(regionId));
+          return;
+        }
+
         return;
       }
 
@@ -630,7 +631,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setStoryCameraActive(true);
       setScrollProgress(1);
     },
-    [isOverviewMode, sandboxDrillActive, ensureMetroShard],
+    [isOverviewMode, sandboxDrillActive, ingestedCbsas],
   );
 
   const handleSearchSelect = useCallback(
@@ -653,19 +654,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
 
       if (ingestedCbsas.has(result.id)) {
-        void ensureMetroShard(result.id).then((shard) => {
-          if (!shard) {
-            setSearchFlyTarget([result.lng, result.lat]);
-            return;
-          }
-          setActiveSandboxCbsa(result.id);
-          setSandboxDrillActive(true);
-          setStoryCameraActive(false);
-          setGeography("metro");
-          setSelectedZip(null);
-          setSelectedPropertyId(null);
-          setUsInsetRegion("continental");
-        });
+        setGeography("metro");
+        setSandboxDrillActive(false);
+        setStoryCameraActive(false);
+        setSelectedZip(null);
+        setSelectedPropertyId(null);
+        setSelectedOverviewMetro(result.id);
+        setSelectedMetroCamera(metroOverviewCamera(result.id));
+        setUsInsetRegion("continental");
         return;
       }
 
@@ -676,7 +672,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSelectedPropertyId(null);
       setSearchFlyTarget([result.lng, result.lat]);
     },
-    [handleZipSelect, sandboxDrillActive, ingestedCbsas, ensureMetroShard],
+    [handleZipSelect, sandboxDrillActive, ingestedCbsas],
   );
 
   const handleCloseDetail = () => {
@@ -685,7 +681,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   };
 
   const handleBackgroundClick = useCallback(() => {
-    if (exploreMode || isOverviewMode) return;
+    if (isOverviewMode) {
+      setSelectedOverviewMetro(null);
+      setSelectedMetroCamera(null);
+      return;
+    }
+    if (exploreMode) return;
 
     const restore = buildBackgroundClickRestore({
       isOverviewMode,
@@ -796,6 +797,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       };
     }
 
+    if (
+      selectedMetroCamera &&
+      isValidCameraTarget(selectedMetroCamera) &&
+      isOverviewMode
+    ) {
+      return selectedMetroCamera;
+    }
+
     if (isOverviewMode) {
       if (geography === "national" && usInsetRegion !== "continental") {
         return { ...US_INSET_CAMERAS[usInsetRegion], duration: 800 };
@@ -843,6 +852,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryResults,
     selectedZip,
     metroCameras,
+    selectedMetroCamera,
   ]);
 
   const pathVisible =
@@ -1302,6 +1312,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
 
     if (isOverviewMode) {
+      if (selectedOverviewMetroFeature) {
+        const metricLabel =
+          METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
+        const metricValue = getRawMetricFromFeature(
+          selectedOverviewMetroFeature.properties,
+          activeMetric,
+        );
+        return {
+          stepLabel: "Metro",
+          title: selectedOverviewMetroFeature.properties.neighborhoodName,
+          detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)} · tap Explore city for ZIP detail`,
+          canOpen: true,
+        };
+      }
+
       const metricLabel =
         METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
       return {
@@ -1368,6 +1393,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeDiscoveryNeighborhood,
     discoveryResults,
     selectedZip,
+    selectedOverviewMetroFeature,
   ]);
 
   const drawerContent = useMemo(() => {
@@ -1438,7 +1464,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             {overviewFeatureCount} metros with live home values ·{" "}
             {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"} layer.
             {ingestedCbsas.size > 0
-              ? ` ${ingestedCbsas.size} ingested metros (green outline) — zoom in or click to open neighborhood detail.`
+              ? ` ${ingestedCbsas.size} ingested metros (green outline) — click a metro, then Explore city to load ZIP boundaries.`
               : " Click Washington-Arlington-Alexandria, Orlando, SF Bay, or San Jose to open ZIP sandbox detail."}
           </p>
         </>
@@ -1632,7 +1658,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           <MapView
             geoJson={activeGeoJson}
             activeMetric={activeMetric}
-            selectedZip={selectedZip}
+            selectedZip={isOverviewMode ? selectedOverviewMetro : selectedZip}
             onZipSelect={discoveryShellVisible ? handleMapZipSelect : handleZipSelect}
             onBackgroundClick={handleBackgroundClick}
             cameraTarget={cameraTarget}
@@ -1655,8 +1681,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             cinematicTourActive={cinematicTourActive}
             labelHighlightZip={labelHighlightZip}
             ingestedCbsas={ingestedCbsas}
-            onViewportChange={handleViewportChange}
           />
+          {showExploreCityBar && selectedOverviewMetroFeature && (
+            <ExploreCityBar
+              metroName={selectedOverviewMetroFeature.properties.neighborhoodName}
+              loading={exploreCityLoading}
+              onExploreCity={handleExploreCity}
+              onDismiss={handleDismissExploreCity}
+            />
+          )}
           {showCinematicEntry && (
             <CinematicEntryBar
               metroName={activeShardGeoJson.metadata.metro}

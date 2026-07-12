@@ -93,11 +93,6 @@ interface MapViewProps {
   labelHighlightZip?: string | null;
   /** CBSAs with ingested neighborhood shards — highlighted in overview metro view */
   ingestedCbsas?: ReadonlySet<string>;
-  /** Fired when zoom or pan changes (for lazy shard loading in overview) */
-  onViewportChange?: (viewport: {
-    zoom: number;
-    bounds: [[number, number], [number, number]];
-  }) => void;
 }
 
 interface LabelPoint {
@@ -331,7 +326,6 @@ export function MapView({
   cinematicTourActive = false,
   labelHighlightZip = null,
   ingestedCbsas,
-  onViewportChange,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -967,17 +961,6 @@ export function MapView({
 
     const onMoveEnd = () => {
       programmaticMoveRef.current = false;
-      if (onViewportChange) {
-        const b = map.getBounds();
-        if (!b) return;
-        onViewportChange({
-          zoom: map.getZoom(),
-          bounds: [
-            [b.getWest(), b.getSouth()],
-            [b.getEast(), b.getNorth()],
-          ],
-        });
-      }
     };
 
     map.on("dragend", onUserGestureEnd);
