@@ -32,22 +32,22 @@ export const CRITERION_CATEGORIES: CriterionCategoryDef[] = [
   {
     id: "education",
     label: "Education",
-    metrics: ["collegeDegreeRate"],
+    metrics: ["collegeDegreeRate", "schoolRatingPlaceholder"],
   },
   {
     id: "environment",
     label: "Environment",
-    metrics: ["walkabilityScore"],
+    metrics: ["walkabilityScore", "parkScoreProxy"],
   },
   {
     id: "health",
     label: "Health",
-    metrics: [],
+    metrics: ["physiciansPer10k"],
   },
   {
     id: "commute-access",
     label: "Commute & Access",
-    metrics: [],
+    metrics: ["airportDriveMin"],
   },
   {
     id: "investor-signals",

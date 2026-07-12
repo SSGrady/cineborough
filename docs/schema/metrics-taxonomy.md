@@ -69,6 +69,30 @@ Model confidence: 0.75 with income, 0.55 with metro ZHVI anchor, 0.45 zip-only.
 | `medianAge` | Median Age | years | Demographics | Census ACS |
 | `walkabilityScore` | Walkability Score | 0–100 | Urban Fabric | OSM proxy (sandbox) |
 | `collegeDegreeRate` | College Degree Rate | % | Demographics | Census ACS |
+| `parkScoreProxy` | Park Score | 0–100 | Urban Fabric | OSM proxy (sandbox) |
+| `physiciansPer10k` | Physicians / 10k | per 10k | Health | ACS B08124-derived (mock) |
+| `schoolRatingPlaceholder` | School Rating | 1–10 | Education | Placeholder mock |
+| `airportDriveMin` | Airport Drive Time | min | Commute | OSRM mock per sandbox |
+
+### Park Score proxy (T089)
+
+```
+parkScoreProxy = min(100, parkCount × 15 + parkAreaHa × 2)
+```
+
+Sandbox MVP uses deterministic mock from ZIP + walk score until live OSM ingest.
+
+### Physicians per 10k (T089)
+
+Healthcare practitioners per 10,000 population from Census ACS table B08124 (mock in sandbox).
+
+### School Rating placeholder (T089)
+
+Static 1–10 mock per ZIP until GreatSchools ADR unlocks live integration.
+
+### Airport drive time (T089)
+
+OSRM driving minutes to nearest major airport per sandbox CBSA (mock).
 
 ## Composite
 

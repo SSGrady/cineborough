@@ -8,6 +8,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { SANDBOX_ZIPS, ORLANDO_SANDBOX_ZIPS, SF_BAY_SANDBOX_ZIPS, SAN_JOSE_SANDBOX_ZIPS } from "../validation.ts";
 import type { ZipMetricsInput } from "../validation.ts";
+import { deriveExtendedMetrics } from "../extended-metrics.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const MOCK_DIR = resolve(__dirname, "../../../../data/mock");
@@ -181,6 +182,10 @@ function buildZip(seed: ZipSeed): ZipMetricsInput {
     medianAge: jitter(d.medianAge, 2),
     walkabilityScore: Math.round(d.walkabilityScore + (seed.zip.charCodeAt(4) % 12)),
     collegeDegreeRate: jitter(d.collegeDegreeRate, 6),
+    ...deriveExtendedMetrics(
+      seed.zip,
+      Math.round(d.walkabilityScore + (seed.zip.charCodeAt(4) % 12)),
+    ),
   };
 }
 

@@ -115,6 +115,30 @@ const METRIC_FILTER_KIND: Record<
     defaultMin: 35,
     step: 1,
   },
+  parkScoreProxy: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 30,
+    step: 1,
+  },
+  physiciansPer10k: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 20,
+    step: 0.5,
+  },
+  schoolRatingPlaceholder: {
+    kind: "min",
+    higherIsBetter: true,
+    defaultMin: 5,
+    step: 0.1,
+  },
+  airportDriveMin: {
+    kind: "max",
+    higherIsBetter: false,
+    defaultMax: 45,
+    step: 1,
+  },
 };
 
 export const DISCOVERY_FILTER_METRICS: DiscoveryFilterMetric[] = Object.keys(
@@ -229,6 +253,8 @@ export interface RankedNeighborhood {
   state: string;
   /** Weighted criteria match percentage (0–100). Primary discovery rank key. */
   matchPercent: number;
+  /** Cosine similarity to pinned example ZIPs (0–100), when By Example mode is active. */
+  similarityPercent?: number;
   /** Display score — equals matchPercent when filters are active, else relative metro rank. */
   score: number;
   rank: number;

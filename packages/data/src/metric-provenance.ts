@@ -25,6 +25,10 @@ export const METRIC_PROVENANCE: Record<MetricLayerKey, MetricProvenanceInfo> = {
   walkabilityScore: { provenance: "live", shortLabel: "OSM" },
   collegeDegreeRate: { provenance: "live", shortLabel: "ACS" },
   incomeGrowthRate: { provenance: "live", shortLabel: "ACS" },
+  parkScoreProxy: { provenance: "mock", shortLabel: "OSM proxy" },
+  physiciansPer10k: { provenance: "mock", shortLabel: "ACS B08124" },
+  schoolRatingPlaceholder: { provenance: "mock", shortLabel: "placeholder" },
+  airportDriveMin: { provenance: "mock", shortLabel: "OSRM mock" },
 };
 
 export function provenanceBadgeClass(provenance: MetricProvenance): string {

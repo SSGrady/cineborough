@@ -6,6 +6,7 @@ import type {
   ZipMetrics,
   ZipMetricsCollection,
 } from "./types";
+import { deriveExtendedMetrics } from "./extended-metrics";
 import {
   normalizeForecastToFixedScore,
   normalizeHomeValueToFixedScore,
@@ -44,6 +45,13 @@ export function featurePropertiesToZipMetrics(props: DcMetroFeatureProperties): 
     medianAge: props.medianAge,
     walkabilityScore: props.walkScore,
     collegeDegreeRate: props.collegeDegreeRate,
+    parkScoreProxy: props.parkScoreProxy ?? deriveExtendedMetrics(props.zipCode, props.walkScore).parkScoreProxy,
+    physiciansPer10k: props.physiciansPer10k ?? deriveExtendedMetrics(props.zipCode, props.walkScore).physiciansPer10k,
+    schoolRatingPlaceholder:
+      props.schoolRatingPlaceholder ??
+      deriveExtendedMetrics(props.zipCode, props.walkScore).schoolRatingPlaceholder,
+    airportDriveMin:
+      props.airportDriveMin ?? deriveExtendedMetrics(props.zipCode, props.walkScore).airportDriveMin,
     opportunityScore: props.opportunityScore,
     opportunityScoreNormalized: props.opportunityScoreNormalized,
   };
@@ -91,6 +99,16 @@ export function getRawMetricFromFeature(
     medianAge: props.medianAge,
     walkabilityScore: props.walkScore,
     collegeDegreeRate: props.collegeDegreeRate,
+    parkScoreProxy:
+      props.parkScoreProxy ?? deriveExtendedMetrics(props.zipCode, props.walkScore).parkScoreProxy,
+    physiciansPer10k:
+      props.physiciansPer10k ??
+      deriveExtendedMetrics(props.zipCode, props.walkScore).physiciansPer10k,
+    schoolRatingPlaceholder:
+      props.schoolRatingPlaceholder ??
+      deriveExtendedMetrics(props.zipCode, props.walkScore).schoolRatingPlaceholder,
+    airportDriveMin:
+      props.airportDriveMin ?? deriveExtendedMetrics(props.zipCode, props.walkScore).airportDriveMin,
   };
   return map[key];
 }

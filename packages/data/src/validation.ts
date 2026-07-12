@@ -126,7 +126,11 @@ export function isHopeCoreMetrics(value: unknown): value is HopeCoreMetrics {
     isFiniteNumber(m.incomeGrowthRate) &&
     isFiniteNumber(m.medianAge) &&
     isFiniteNumber(m.walkabilityScore) &&
-    isFiniteNumber(m.collegeDegreeRate)
+    isFiniteNumber(m.collegeDegreeRate) &&
+    isFiniteNumber(m.parkScoreProxy) &&
+    isFiniteNumber(m.physiciansPer10k) &&
+    isFiniteNumber(m.schoolRatingPlaceholder) &&
+    isFiniteNumber(m.airportDriveMin)
   );
 }
 

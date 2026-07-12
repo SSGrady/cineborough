@@ -23,6 +23,14 @@ export interface HopeCoreMetrics {
   medianAge: number;
   walkabilityScore: number;
   collegeDegreeRate: number;
+  /** OSM park proxy — min(100, parkCount × 15 + parkAreaHa × 2) per ZCTA (T089) */
+  parkScoreProxy: number;
+  /** Healthcare practitioners per 10k — ACS B08124-derived (T089) */
+  physiciansPer10k: number;
+  /** Static 1–10 mock until GreatSchools ADR (T089) */
+  schoolRatingPlaceholder: number;
+  /** OSRM driving minutes to nearest major airport per sandbox (T089 mock) */
+  airportDriveMin: number;
 }
 
 export interface ZipMetrics extends InvestorMetrics, HopeCoreMetrics {
@@ -75,6 +83,10 @@ export interface DcMetroFeatureProperties {
   medianAge: number;
   walkScore: number;
   collegeDegreeRate: number;
+  parkScoreProxy?: number;
+  physiciansPer10k?: number;
+  schoolRatingPlaceholder?: number;
+  airportDriveMin?: number;
   localQuote: string;
   primaryVibe: string;
   opportunityScore: number;
@@ -123,7 +135,11 @@ export type MetricLayerKey =
   | "incomeGrowthRate"
   | "medianAge"
   | "walkabilityScore"
-  | "collegeDegreeRate";
+  | "collegeDegreeRate"
+  | "parkScoreProxy"
+  | "physiciansPer10k"
+  | "schoolRatingPlaceholder"
+  | "airportDriveMin";
 
 /** Choropleth sidebar categories — WMIL visual polish (T074). */
 export type MetricLayerCategory =
@@ -358,5 +374,37 @@ export const METRIC_LAYERS: MetricLayerDefinition[] = [
     category: "education-schools",
     criterionCategory: "education",
     helperText: "College-educated %",
+  },
+  {
+    key: "parkScoreProxy",
+    label: "Park Score",
+    unit: "0–100",
+    category: "lifestyle-walkability",
+    criterionCategory: "environment",
+    helperText: "Parks & green space",
+  },
+  {
+    key: "physiciansPer10k",
+    label: "Physicians / 10k",
+    unit: "per 10k",
+    category: "demographics",
+    criterionCategory: "health",
+    helperText: "Healthcare access",
+  },
+  {
+    key: "schoolRatingPlaceholder",
+    label: "School Rating",
+    unit: "1–10",
+    category: "education-schools",
+    criterionCategory: "education",
+    helperText: "Placeholder mock",
+  },
+  {
+    key: "airportDriveMin",
+    label: "Airport Drive Time",
+    unit: "min",
+    category: "lifestyle-walkability",
+    criterionCategory: "commute-access",
+    helperText: "Minutes to airport",
   },
 ];
