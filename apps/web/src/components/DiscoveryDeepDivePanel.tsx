@@ -98,6 +98,7 @@ export function DiscoveryDeepDivePanel({
         <figure className="deep-dive__hero" aria-label={`Photo for ${neighborhood.zip}`}>
           {photo ? (
             <img
+              key={neighborhood.zip}
               src={photo.url}
               alt={photo.alt}
               className="deep-dive__hero-img"
@@ -105,7 +106,7 @@ export function DiscoveryDeepDivePanel({
               decoding="async"
             />
           ) : (
-            <div className="deep-dive__hero-placeholder" aria-hidden="true" />
+            <div key={neighborhood.zip} className="deep-dive__hero-placeholder" aria-hidden="true" />
           )}
           <figcaption className="deep-dive__hero-caption">
             <span className="deep-dive__hero-zip">{neighborhood.zip}</span>
@@ -117,7 +118,7 @@ export function DiscoveryDeepDivePanel({
         </figure>
 
         <div className="deep-dive__match-row">
-          <div>
+          <div className="deep-dive__match-copy">
             <h2 className="deep-dive__title">
               {neighborhood.zip} — {neighborhood.name}
             </h2>
