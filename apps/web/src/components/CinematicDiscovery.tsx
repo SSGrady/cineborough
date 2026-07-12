@@ -29,6 +29,7 @@ import {
   type RankedNeighborhood,
   discoveryCriteriaForSandbox,
   getDiscoveryMetricLabel,
+  getRawMetricFromFeature,
 } from "@cineborough/data";
 import {
   resolveMapCamera,
@@ -72,7 +73,7 @@ import {
 } from "@/lib/cinematic-flags";
 import { getGoogle3DTilesStatus } from "@/lib/google-3d-tiles";
 import { buildSearchIndex, type SearchResult } from "@/lib/search-index";
-import { formatPercent } from "@/lib/format";
+import { formatCurrency, formatPercent } from "@/lib/format";
 import {
   loadDiscoveryCriteria,
   saveDiscoveryCriteria,
@@ -136,6 +137,17 @@ interface DiscoveryFlyoverState {
 
 const FLYOVER_HIGHLIGHT_MS = 2800;
 const FLYOVER_CAMERA_MS = 2200;
+
+function formatActiveMetricValue(key: MetricLayerKey, value: number): string {
+  const layer = METRIC_LAYERS.find((m) => m.key === key);
+  if (!layer) return String(value);
+  if (layer.unit === "$") return formatCurrency(value);
+  if (layer.unit === "%") return formatPercent(value, 1);
+  if (layer.unit === "days") return `${Math.round(value)}d`;
+  if (layer.unit === "$/sqft") return `$${value}`;
+  if (layer.unit === "0–100") return `${Math.round(value)}`;
+  return value.toFixed(1);
+}
 
 export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -560,12 +572,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       (feat) => feat.properties.zipCode === selectedZip,
     );
     if (!f) return null;
+    const centroid = centroidFromGeoJsonGeometry(f.geometry);
+    if (centroid && isFiniteLngLat(centroid)) return centroid;
     const { labelLng, labelLat } = f.properties;
     if (isFiniteLngLat([labelLng, labelLat])) {
       return [labelLng, labelLat];
     }
-    const centroid = centroidFromGeoJsonGeometry(f.geometry);
-    return centroid ?? null;
+    return null;
   }, [activeShardGeoJson, selectedZip]);
 
   const cameraTarget = useMemo(() => {
@@ -948,11 +961,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       };
     }
 
-    if (selected) {
+    if (selected && selectedFeature) {
+      const metricLabel =
+        METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? activeMetric;
+      const metricValue = getRawMetricFromFeature(selectedFeature, activeMetric);
       return {
         stepLabel: "ZIP",
         title: `${selected.zip} — ${selected.name}`,
-        detail: activeShardGeoJson.metadata.metro,
+        detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)}`,
         canOpen: true,
       };
     }
@@ -978,6 +994,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     storyCameraActive,
     sandboxDrillActive,
     selected,
+    selectedFeature,
+    activeMetric,
     activeShardGeoJson.metadata.metro,
     activeSandboxCbsa,
     showCinematicEntry,

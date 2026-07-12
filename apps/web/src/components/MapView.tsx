@@ -27,6 +27,7 @@ import {
   US_FULL_BOUNDS,
   US_MAP_PROJECTION,
   US_NATIONAL_FIT_PADDING,
+  centroidFromGeoJsonGeometry,
   isFiniteLngLat,
   isValidCameraTarget,
   sanitizeLngLatPath,
@@ -153,7 +154,7 @@ function buildMetroLabelData(
     .flatMap((f) => {
       const area = metroGeometryArea(f.geometry);
       if (mapZoom < minMetroLabelZoom(area)) return [];
-      const point = featureToLabelPoint(f.properties, activeMetric);
+      const point = featureToLabelPoint(f, activeMetric);
       return point ? [{ point, area }] : [];
     });
 
@@ -170,7 +171,7 @@ function buildStateLabelData(
   activeMetric: MetricLayerKey,
 ): LabelPoint[] {
   return geoJson.features
-    .map((f) => featureToLabelPoint(f.properties, activeMetric))
+    .map((f) => featureToLabelPoint(f, activeMetric))
     .filter((point): point is LabelPoint => point !== null);
 }
 
@@ -188,7 +189,7 @@ function buildCountyLabelData(
     .filter((f) => f.properties.medianHomeValue > 0)
     .map((f) => {
       const area = metroGeometryArea(f.geometry);
-      const point = featureToLabelPoint(f.properties, activeMetric);
+      const point = featureToLabelPoint(f, activeMetric);
       return point ? { point, area } : null;
     })
     .filter((entry): entry is { point: LabelPoint; area: number } => entry !== null);
@@ -241,17 +242,29 @@ function isValidLabelPosition(lng: number, lat: number): boolean {
   return Number.isFinite(lng) && Number.isFinite(lat);
 }
 
+function labelPositionForFeature(
+  feature: DcMetroGeoJson["features"][number],
+): [number, number] | null {
+  const { labelLng, labelLat } = feature.properties;
+  if (isValidLabelPosition(labelLng, labelLat)) {
+    return [labelLng, labelLat];
+  }
+  const centroid = centroidFromGeoJsonGeometry(feature.geometry);
+  return centroid && isFiniteLngLat(centroid) ? centroid : null;
+}
+
 function featureToLabelPoint(
-  properties: DcMetroGeoJson["features"][number]["properties"],
+  feature: DcMetroGeoJson["features"][number],
   activeMetric: MetricLayerKey,
 ): LabelPoint | null {
-  const { labelLng, labelLat, zipCode, neighborhoodName } = properties;
-  if (!isValidLabelPosition(labelLng, labelLat)) return null;
+  const position = labelPositionForFeature(feature);
+  if (!position) return null;
+  const { zipCode, neighborhoodName } = feature.properties;
   return {
-    position: [labelLng, labelLat] as [number, number],
+    position,
     zipCode,
     name: neighborhoodName,
-    value: getRawMetricFromFeature(properties, activeMetric),
+    value: getRawMetricFromFeature(feature.properties, activeMetric),
   };
 }
 
@@ -381,7 +394,7 @@ export function MapView({
   const labelData = useMemo((): LabelPoint[] => {
     if (!overviewMode) {
       return geoJson.features
-        .map((f) => featureToLabelPoint(f.properties, activeMetric))
+        .map((f) => featureToLabelPoint(f, activeMetric))
         .filter((point): point is LabelPoint => point !== null);
     }
     if (geographyLevel === "national") {
@@ -580,16 +593,36 @@ export function MapView({
     selectionPathReady,
   ]);
 
+  const focusZip =
+    labelHighlightZip ?? (selectedZip && !isOverviewView ? selectedZip : null);
+  const tourLabelOnly = Boolean(labelHighlightZip);
+
   const visibleLabelData = useMemo((): LabelPoint[] => {
-    if (!labelHighlightZip) return labelData;
-    return labelData.filter((d) => d.zipCode === labelHighlightZip);
-  }, [labelData, labelHighlightZip]);
+    let data = labelData;
+
+    if (focusZip) {
+      data = labelData.map((d) => {
+        if (d.zipCode !== focusZip) return d;
+        const feature = geoJson.features.find((f) => f.properties.zipCode === focusZip);
+        if (!feature) return d;
+        const position = labelPositionForFeature(feature);
+        return position ? { ...d, position } : d;
+      });
+    }
+
+    if (tourLabelOnly && labelHighlightZip) {
+      return data.filter((d) => d.zipCode === labelHighlightZip);
+    }
+
+    return data;
+  }, [labelData, focusZip, tourLabelOnly, labelHighlightZip, geoJson]);
 
   const labelLayers = useMemo((): Layer[] => {
     if (!labelsVisible || visibleLabelData.length === 0) return [];
 
     const overview = isOverviewView;
-    const cinematicLabels = cinematicTourActive && !overview;
+    const attachedLabels = Boolean(focusZip) && !overview;
+    const cinematicLabels = (cinematicTourActive || attachedLabels) && !overview;
     const isMetroOverview = overview && geographyLevel === "metro";
     const isCountyOverview = overview && geographyLevel === "county";
     const showMetroValues = !isMetroOverview || mapZoom >= METRO_VALUE_LABEL_MIN_ZOOM;
@@ -612,6 +645,18 @@ export function MapView({
     const lineGap = Math.round(nameSize * (cinematicLabels ? 0.65 : 0.72));
     const outlineWidth = cinematicLabels ? 5 : overview ? 4 : 3;
 
+    const labelColor = (
+      d: LabelPoint,
+      focused: [number, number, number, number],
+      dimmed: [number, number, number, number],
+      normal: [number, number, number, number],
+    ): [number, number, number, number] => {
+      if (!focusZip) return normal;
+      return d.zipCode === focusZip ? focused : dimmed;
+    };
+
+    const isAttachedZip = (d: LabelPoint) => attachedLabels && d.zipCode === focusZip;
+
     const shared = {
       data: visibleLabelData,
       pickable: false,
@@ -630,17 +675,25 @@ export function MapView({
       ...shared,
       id: overview ? "overview-labels-name" : "zip-labels-name",
       getText: (d: LabelPoint) => d.name,
-      getSize: nameSize,
-      getColor: cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
-      getAlignmentBaseline: cinematicLabels ? "bottom" : "center",
-      getPixelOffset: cinematicLabels
-        ? ([0, -Math.round(lineGap / 2)] as [number, number])
-        : ([0, showMetricValues ? -lineGap / 2 : 0] as [number, number]),
+      getSize: (d: LabelPoint) => (isAttachedZip(d) ? nameSize + 1 : nameSize),
+      getColor: (d: LabelPoint) =>
+        labelColor(
+          d,
+          cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+          cinematicLabels ? [255, 255, 255, 130] : [15, 23, 42, 85],
+          cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+        ),
+      getAlignmentBaseline: (d: LabelPoint) =>
+        isAttachedZip(d) ? "bottom" : "center",
+      getPixelOffset: (d: LabelPoint) =>
+        isAttachedZip(d)
+          ? ([0, -Math.round(lineGap / 2)] as [number, number])
+          : ([0, showMetricValues ? -lineGap / 2 : 0] as [number, number]),
       updateTriggers: {
-        getSize: [geographyLevel, mapZoom, cinematicTourActive],
-        getPixelOffset: [nameSize, showMetricValues, cinematicTourActive],
-        getColor: [cinematicTourActive],
-        getAlignmentBaseline: [cinematicTourActive],
+        getSize: [geographyLevel, mapZoom, cinematicTourActive, focusZip],
+        getPixelOffset: [nameSize, showMetricValues, cinematicTourActive, focusZip],
+        getColor: [cinematicTourActive, focusZip],
+        getAlignmentBaseline: [cinematicTourActive, focusZip],
       },
     });
 
@@ -650,18 +703,25 @@ export function MapView({
       ...shared,
       id: overview ? "overview-labels-value" : "zip-labels-value",
       getText: (d: LabelPoint) => formatLabelValue(activeMetric, d.value),
-      getSize: valueSize,
-      getColor: cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
-      getAlignmentBaseline: cinematicLabels ? "top" : "center",
-      getPixelOffset: cinematicLabels
-        ? ([0, Math.round(lineGap / 2)] as [number, number])
-        : ([0, lineGap / 2] as [number, number]),
+      getSize: (d: LabelPoint) => (isAttachedZip(d) ? valueSize + 1 : valueSize),
+      getColor: (d: LabelPoint) =>
+        labelColor(
+          d,
+          cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+          cinematicLabels ? [255, 255, 255, 130] : [15, 23, 42, 85],
+          cinematicLabels ? [255, 255, 255, 255] : [15, 23, 42, 255],
+        ),
+      getAlignmentBaseline: (d: LabelPoint) => (isAttachedZip(d) ? "top" : "center"),
+      getPixelOffset: (d: LabelPoint) =>
+        isAttachedZip(d)
+          ? ([0, Math.round(lineGap / 2)] as [number, number])
+          : ([0, lineGap / 2] as [number, number]),
       updateTriggers: {
         getText: [activeMetric],
-        getSize: [geographyLevel, mapZoom, activeMetric, cinematicTourActive],
-        getPixelOffset: [nameSize, cinematicTourActive],
-        getColor: [cinematicTourActive],
-        getAlignmentBaseline: [cinematicTourActive],
+        getSize: [geographyLevel, mapZoom, activeMetric, cinematicTourActive, focusZip],
+        getPixelOffset: [nameSize, cinematicTourActive, focusZip],
+        getColor: [cinematicTourActive, focusZip],
+        getAlignmentBaseline: [cinematicTourActive, focusZip],
       },
     });
 
@@ -674,6 +734,7 @@ export function MapView({
     geographyLevel,
     mapZoom,
     cinematicTourActive,
+    focusZip,
   ]);
 
   const pathLayer = useMemo(() => {
@@ -783,13 +844,21 @@ export function MapView({
       onZipSelect?.(zip);
 
       const map = mapRef.current;
-      if (!map || !info.coordinate || !cinematicOnSelect) return;
-      if (!isFiniteLngLat([info.coordinate[0], info.coordinate[1]])) return;
+      if (!map || !cinematicOnSelect) return;
+
+      const feature = geoJson.features.find((f) => f.properties.zipCode === zip);
+      const centroid = feature ? labelPositionForFeature(feature) : null;
+      const flyCenter =
+        centroid ??
+        (info.coordinate && isFiniteLngLat([info.coordinate[0], info.coordinate[1]])
+          ? ([info.coordinate[0], info.coordinate[1]] as [number, number])
+          : null);
+      if (!flyCenter) return;
 
       applyCamera(
         map,
         {
-          center: [info.coordinate[0], info.coordinate[1]],
+          center: flyCenter,
           zoom: 12.5,
           pitch: exploreModeRef.current ? 0 : 60,
           bearing: exploreModeRef.current ? 0 : -15,
@@ -799,7 +868,7 @@ export function MapView({
         programmaticMoveRef,
       );
     },
-    [onZipSelect, onBackgroundClick, cinematicOnSelect, isOverviewView, geographyLevel],
+    [onZipSelect, onBackgroundClick, cinematicOnSelect, isOverviewView, geographyLevel, geoJson],
   );
 
   const syncOverlay = useCallback(() => {
