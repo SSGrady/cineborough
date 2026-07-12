@@ -113,6 +113,15 @@ export function colorForChoropleth(palette: ChoroplethPalette, normalizedScore: 
     : colorForNormalizedScore(normalizedScore);
 }
 
+/** Darken RGB channels by factor (0–1); e.g. 0.18 = 18% darker. */
+export function darkenRgb(
+  [r, g, b]: [number, number, number],
+  factor: number,
+): [number, number, number] {
+  const scale = 1 - Math.max(0, Math.min(1, factor));
+  return [Math.round(r * scale), Math.round(g * scale), Math.round(b * scale)];
+}
+
 export type LegendStyle = "tercile" | "gradient";
 
 export interface LegendStop {

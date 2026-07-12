@@ -22,6 +22,7 @@ import {
 import {
   colorForChoropleth,
   choroplethPaletteForMetric,
+  darkenRgb,
   US_NATIONAL_CAMERA,
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
@@ -91,8 +92,29 @@ interface MapViewProps {
   labelHighlightZip?: string | null;
   /** CBSAs with ingested neighborhood shards — highlighted in overview metro view */
   ingestedCbsas?: ReadonlySet<string>;
-  /** Criteria/discovery mode — purple hover highlight on ZIP polygons */
+  /** Criteria/discovery mode — metric-matched hover highlight on polygons */
   criteriaMode?: boolean;
+}
+
+const CRITERIA_HOVER_FILL_ALPHA = 200;
+const CRITERIA_HOVER_BORDER_DARKEN = 0.18;
+const CRITERIA_HOVER_FALLBACK_RGB: [number, number, number] = [148, 163, 184];
+
+function baseChoroplethRgb(
+  featureId: string,
+  props: Record<string, unknown> | undefined,
+  colorByZip: Map<string, number>,
+  choroplethPalette: ReturnType<typeof choroplethPaletteForMetric>,
+  activeMetric: MetricLayerKey,
+  isOverviewView: boolean,
+): [number, number, number] {
+  if (!isOverviewView && activeMetric === "opportunityScore" && props?.fillColorRgb) {
+    return props.fillColorRgb as [number, number, number];
+  }
+  const score = colorByZip.get(featureId) ?? 0;
+  const hex = colorForChoropleth(choroplethPalette, score);
+  const [r, g, b] = hexToRgb(hex);
+  return [r, g, b];
 }
 
 interface LabelPoint {
@@ -363,7 +385,7 @@ export function MapView({
   const isStateGeography = overviewMode && geographyLevel === "state";
   const isCountyGeography = overviewMode && geographyLevel === "county";
 
-  /** Purple hover in criteria/discovery — metro, county, and drilled ZIP; not during flyover/story. */
+  /** Metric-matched hover in criteria/discovery — metro, county, and drilled ZIP; not during flyover/story. */
   const criteriaHoverActive =
     criteriaMode &&
     !cinematicTourActive &&
@@ -377,6 +399,27 @@ export function MapView({
     [geoJson, activeMetric],
   );
   const colorByZip = choroplethSpec.colorByZip;
+
+  /** O(1) feature id → base choropleth RGB; rebuilt when geoJson or metric changes (lazy shards). */
+  const choroplethRgbByFeatureId = useMemo(() => {
+    const map = new Map<string, [number, number, number]>();
+    for (const feature of geoJson.features) {
+      const featureId = feature.properties.zipCode;
+      if (!featureId) continue;
+      map.set(
+        featureId,
+        baseChoroplethRgb(
+          featureId,
+          feature.properties as unknown as Record<string, unknown>,
+          colorByZip,
+          choroplethPalette,
+          activeMetric,
+          isOverviewView,
+        ),
+      );
+    }
+    return map;
+  }, [geoJson, colorByZip, choroplethPalette, activeMetric, isOverviewView]);
 
   const legendValueRange = useMemo(() => {
     const values = geoJson.features.map((f) =>
@@ -441,7 +484,11 @@ export function MapView({
         const zip = props?.zipCode as string | undefined;
         const isSelected = zip === selectedZip;
         const isHovered = criteriaHoverActive && zip === hoveredZip;
-        if (isHovered) return [157, 0, 255, 180];
+        if (isHovered) {
+          const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
+          const [r, g, b] = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
+          return [r, g, b, CRITERIA_HOVER_FILL_ALPHA];
+        }
 
         const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
 
@@ -451,9 +498,8 @@ export function MapView({
           return [...rgb, alpha];
         }
 
-        const score = zip ? (colorByZip.get(zip) ?? 0) : 0;
-        const hex = colorForChoropleth(choroplethPalette, score);
-        const [r, g, b] = hexToRgb(hex);
+        const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
+        const [r, g, b] = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
         const fillAlpha = isNationalGeography
           ? 200
           : isStateGeography
@@ -468,7 +514,12 @@ export function MapView({
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
         const isHovered = criteriaHoverActive && zip === hoveredZip;
-        if (isHovered) return [126, 29, 251, 255];
+        if (isHovered) {
+          const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
+          const base = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
+          const [r, g, b] = darkenRgb(base, CRITERIA_HOVER_BORDER_DARKEN);
+          return [r, g, b, 255];
+        }
         if (zip === selectedZip) return [255, 255, 255, 110];
         if (isNationalGeography) return [255, 255, 255, 60];
         if (isStateGeography || isCountyGeography) return [15, 23, 42, 200];
@@ -489,12 +540,12 @@ export function MapView({
       lineWidthMinPixels: isNationalGeography ? 0.35 : isOverviewView ? 0.85 : 0.5,
       lineWidthMaxPixels: isOverviewView ? 2.5 : 1.5,
       updateTriggers: {
-        getFillColor: [colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, criteriaHoverActive, hoveredZip],
-        getLineColor: [selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaHoverActive, hoveredZip],
+        getFillColor: [choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, criteriaHoverActive, hoveredZip],
+        getLineColor: [choroplethRgbByFeatureId, selectedZip, isOverviewView, geographyLevel, ingestedCbsas, criteriaHoverActive, hoveredZip],
         getLineWidth: [selectedZip, isOverviewView, geographyLevel, criteriaHoverActive, hoveredZip],
       },
     });
-  }, [geoJson, colorByZip, selectedZip, activeMetric, isOverviewView, choroplethPalette, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaHoverActive, hoveredZip]);
+  }, [geoJson, choroplethRgbByFeatureId, selectedZip, activeMetric, isOverviewView, geographyLevel, isNationalGeography, isStateGeography, isCountyGeography, ingestedCbsas, criteriaHoverActive, hoveredZip]);
 
   const metroMvtLayer = useMemo(() => {
     if (!useMetroTiles || !metroTileConfig) return null;
