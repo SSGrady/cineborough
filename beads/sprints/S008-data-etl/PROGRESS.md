@@ -12,7 +12,7 @@
 - [x] **T049** — Derived `sellerDesperationScore` from live market signals
 - [x] **T056** — SF Bay sandbox live ingest + FHFA MSAD proxy
 - [x] **T057** — San Jose metro sandbox (CBSA 41940, 16 ZIPs, live ingest)
-- [ ] **T047** — Zillow Research market metrics ingest (optional cross-check) → **closed** (Redfin T046 satisfies MVP)
+- [x] **T047** — Zillow Research market metrics ingest (optional cross-check) → `19ee5b1`
 - [ ] **T050** — Realtor.com monthly inventory CSV ingest (optional fallback) → **deferred**
 
 ## Blockers

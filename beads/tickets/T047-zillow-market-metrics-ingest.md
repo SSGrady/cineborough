@@ -1,7 +1,7 @@
 ---
 id: T047
 title: Zillow Research market metrics ingest (DOM, price cuts, inventory)
-status: closed
+status: done
 type: feature
 priority: P2
 epic: E007
@@ -14,8 +14,8 @@ acceptance:
 
 # T047 — Zillow Market Metrics Ingest
 
-Optional cross-check source. Not implemented in MVP slice — Redfin ingest (T046) satisfies DOM, PSF, and price-drop signals for seller desperation (T049).
+Optional cross-check source for Redfin DOM/price-cut validation. Redfin (T046) remains primary for display metrics.
 
-## Closure (2026-07-12)
+## Done (2026-07-12)
 
-Closed with E007 epic. Re-open only if Redfin data quality gaps require Zillow Research cross-validation.
+Implemented in `19ee5b1`: `ingest:zillow-market` ingests median days-to-pending, price-cut share, and inventory for 68 sandbox ZIPs. `crossCheckRedfinWithZillow()` logs misalignments at shard build; display metrics unchanged.

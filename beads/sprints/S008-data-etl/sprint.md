@@ -24,7 +24,7 @@ Replace mock metrics with periodic real ingest starting with Census ACS demograp
 | [T035](../../tickets/T035-derived-metrics-refresh.md) | Derived metrics + refresh cron | done |
 | [T036](../../tickets/T036-income-growth-metric.md) | Income growth schema + layer | done |
 | [T046](../../tickets/T046-redfin-market-tracker-ingest.md) | Redfin market tracker ingest | done |
-| [T047](../../tickets/T047-zillow-market-metrics-ingest.md) | Zillow market metrics (optional) | closed |
+| [T047](../../tickets/T047-zillow-market-metrics-ingest.md) | Zillow market metrics (optional) | done |
 | [T048](../../tickets/T048-osm-walkability-proxy.md) | OSM walkability proxy | done |
 | [T049](../../tickets/T049-derived-seller-desperation.md) | Derived seller desperation | done |
 | [T056](../../tickets/T056-sf-bay-live-ingest-cinematic.md) | SF Bay live ingest | done |
