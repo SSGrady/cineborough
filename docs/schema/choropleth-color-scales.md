@@ -21,9 +21,9 @@ Buyer-semantics buckets (blue tint = more affordable):
 
 | Raw value | Normalized score | Color | Legend label |
 |-----------|------------------|-------|--------------|
-| < $300,000 | 85 | Blue tint (`#6BA3D6`) | More affordable |
-| $300,000 – $750,000 | 55 | White tint (`#F0EDE6`) | Middle range |
-| > $750,000 | 20 | Red | Higher cost |
+| < $315,000 | 85 | Blue tint (`#6BA3D6`) | More affordable |
+| $315,000 – $600,000 | 55 | White tint (`#F0EDE6`) | Middle range |
+| > $600,000 | 20 | Red | Higher cost |
 
 Constants: `HOME_VALUE_COLOR_THRESHOLDS` in `opportunity-index.ts`.
 

@@ -63,13 +63,13 @@ export function normalizeForecastToFixedScore(forecastPct: number): number {
  * Fixed buyer-semantics buckets for median home value choropleth.
  * Maps to OPPORTUNITY_COLOR_STOPS scores (85 / 55 / 20) for blue tint / white tint / red.
  *
- * Edge cases: $300,000 and $750,000 are white tint (inclusive middle band).
+ * Edge cases: $315,000 and $600,000 are white tint (inclusive middle band).
  */
 export const HOME_VALUE_COLOR_THRESHOLDS = {
   /** Values below this are blue tint (more affordable). */
-  greenMax: 300_000,
+  greenMax: 315_000,
   /** Values at or below this (and >= greenMax) are white tint (middle range). */
-  yellowMax: 750_000,
+  yellowMax: 600_000,
 } as const;
 
 export function normalizeHomeValueToFixedScore(homeValue: number): number {

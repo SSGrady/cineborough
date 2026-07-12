@@ -164,9 +164,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: CHOROPLETH_COLOR_HIGH, label: "< $300,000 — More affordable" },
-        { color: CHOROPLETH_COLOR_MID, label: "$300,000 – $750,000 — Middle range" },
-        { color: CHOROPLETH_COLOR_LOW, label: "> $750,000 — Higher cost" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "< $315,000 — More affordable" },
+        { color: CHOROPLETH_COLOR_MID, label: "$315,000 – $600,000 — Middle range" },
+        { color: CHOROPLETH_COLOR_LOW, label: "> $600,000 — Higher cost" },
       ],
     };
   }
