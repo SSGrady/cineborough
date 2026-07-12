@@ -30,7 +30,9 @@ export function is3DTilesActive(): boolean {
 
 /** Phase 2b photography hero transitions (no paid API — uses mock/Unsplash assets). */
 export function isPhotoHeroEnabled(): boolean {
-  return envFlag("NEXT_PUBLIC_ENABLE_PHOTO_HERO") || !is3DTilesFlagEnabled();
+  const raw = process.env.NEXT_PUBLIC_ENABLE_PHOTO_HERO?.trim().toLowerCase();
+  if (raw === "false" || raw === "0" || raw === "off") return false;
+  return true;
 }
 
 /** Mapbox satellite backdrop on locale quote cards (uses existing MAPBOX token). */

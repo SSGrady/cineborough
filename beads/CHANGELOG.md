@@ -270,3 +270,12 @@ Aggregated progress log for Cineborough development.
 - ADR-008 amended with Phase 2b gating
 
 **Status:** S013 → `done`.
+
+### S013 — Cinematic UX discoverability polish
+
+- CinematicEntryBar on sandbox drill-in (`Tour top neighborhoods` + DC `Story mode`)
+- Photo hero decoupled from 3D tiles flag; shows on flyover highlight automatically
+- MapView label centering fix during cinematic tour (billboard + focused ZIP)
+- 3D scaffold badge when tiles flag enabled without API key
+
+**Status:** S013 polish → `done`.

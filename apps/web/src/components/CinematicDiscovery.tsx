@@ -25,11 +25,10 @@ import {
   METRIC_LAYERS,
   rankNeighborhoods,
   type DiscoveryCriteria,
+  type DiscoveryFilterMetric,
   type RankedNeighborhood,
-  DEFAULT_DISCOVERY_CRITERIA,
-  SAN_JOSE_DISCOVERY_CRITERIA,
   discoveryCriteriaForSandbox,
-  discoveryCriteriaEqual,
+  getDiscoveryMetricLabel,
 } from "@cineborough/data";
 import {
   resolveMapCamera,
@@ -197,22 +196,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     () => discoveryCriteriaForSandbox(activeSandboxCbsa),
     [activeSandboxCbsa],
   );
-
-  const discoveryCriteriaPresets = useMemo(
-    () => [DEFAULT_DISCOVERY_CRITERIA, SAN_JOSE_DISCOVERY_CRITERIA],
-    [],
-  );
-
-  useEffect(() => {
-    if (!SANDBOX_CBSA.has(activeSandboxCbsa)) return;
-    setDiscoveryCriteria((prev) => {
-      const isPreset = discoveryCriteriaPresets.some((preset) =>
-        discoveryCriteriaEqual(prev, preset),
-      );
-      if (!isPreset) return prev;
-      return sandboxDiscoveryCriteria;
-    });
-  }, [activeSandboxCbsa, sandboxDiscoveryCriteria, discoveryCriteriaPresets]);
 
   const overviewGeoJson = useMemo(() => {
     if (geography === "national") {
@@ -1025,11 +1008,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
                 </button>
                 <span className="discovery-results__score">Score {r.score}</span>
                 <ul className="discovery-results__breakdown">
-                  <li>Cap rate norm: {r.breakdown.capRate.toFixed(0)}</li>
-                  <li>Overvaluation norm: {r.breakdown.overvaluation.toFixed(0)}</li>
-                  <li>Walkability norm: {r.breakdown.walkability.toFixed(0)}</li>
-                  <li>Remote work norm: {r.breakdown.remoteWork.toFixed(0)}</li>
-                  <li>Forecast norm: {r.breakdown.forecast.toFixed(0)}</li>
+                  {Object.entries(r.breakdown.byMetric).map(([metric, score]) => (
+                    <li key={metric}>
+                      {getDiscoveryMetricLabel(metric as DiscoveryFilterMetric)} norm:{" "}
+                      {score?.toFixed(0)}
+                    </li>
+                  ))}
                 </ul>
                 {r.filterReasons.length > 0 && (
                   <p className="discovery-results__reasons">{r.filterReasons.join(" · ")}</p>
