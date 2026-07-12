@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "updatedAt": "2026-07-12T13:21:58.614Z",
+  "updatedAt": "2026-07-12T16:33:03.396Z",
   "totalMetros": 918,
-  "completedMetros": 29,
-  "failedMetros": 0,
-  "totalNeighborhoods": 543,
+  "completedMetros": 338,
+  "failedMetros": 4,
+  "totalNeighborhoods": 7172,
   "entries": {
     "10100": {
       "cbsaCode": "10100",
@@ -2674,123 +2674,194 @@
     },
     "31540": {
       "cbsaCode": "31540",
-      "status": "pending",
-      "zipCount": 58
+      "status": "done",
+      "zipCount": 58,
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31540.geojson",
+      "completedAt": "2026-07-12T15:33:17.061Z"
     },
     "31580": {
       "cbsaCode": "31580",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:33:17.093Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31580.geojson",
+      "completedAt": "2026-07-12T15:33:22.717Z"
     },
     "31620": {
       "cbsaCode": "31620",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:33:22.738Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31620.geojson",
+      "completedAt": "2026-07-12T15:33:24.957Z"
     },
     "31660": {
       "cbsaCode": "31660",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T15:33:24.982Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31660.geojson",
+      "completedAt": "2026-07-12T15:33:33.896Z"
     },
     "31680": {
       "cbsaCode": "31680",
-      "status": "pending",
-      "zipCount": 2
+      "status": "done",
+      "zipCount": 2,
+      "startedAt": "2026-07-12T15:33:33.915Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31680.geojson",
+      "completedAt": "2026-07-12T15:33:35.129Z"
     },
     "31700": {
       "cbsaCode": "31700",
-      "status": "pending",
-      "zipCount": 34
+      "status": "done",
+      "zipCount": 34,
+      "startedAt": "2026-07-12T15:33:35.149Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31700.geojson",
+      "completedAt": "2026-07-12T15:33:49.679Z"
     },
     "31740": {
       "cbsaCode": "31740",
-      "status": "pending",
-      "zipCount": 18
+      "status": "done",
+      "zipCount": 18,
+      "startedAt": "2026-07-12T15:33:49.712Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31740.geojson",
+      "completedAt": "2026-07-12T15:33:58.092Z"
     },
     "31820": {
       "cbsaCode": "31820",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:33:58.148Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31820.geojson",
+      "completedAt": "2026-07-12T15:34:02.538Z"
     },
     "31860": {
       "cbsaCode": "31860",
-      "status": "pending",
-      "zipCount": 22
+      "status": "done",
+      "zipCount": 22,
+      "startedAt": "2026-07-12T15:34:02.552Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31860.geojson",
+      "completedAt": "2026-07-12T15:34:12.047Z"
     },
     "31900": {
       "cbsaCode": "31900",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:34:12.064Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31900.geojson",
+      "completedAt": "2026-07-12T15:34:17.470Z"
     },
     "31930": {
       "cbsaCode": "31930",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T15:34:17.484Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31930.geojson",
+      "completedAt": "2026-07-12T15:34:24.190Z"
     },
     "31940": {
       "cbsaCode": "31940",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T15:34:24.204Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31940.geojson",
+      "completedAt": "2026-07-12T15:34:32.792Z"
     },
     "31980": {
       "cbsaCode": "31980",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:34:32.802Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/31980.geojson",
+      "completedAt": "2026-07-12T15:34:37.506Z"
     },
     "32000": {
       "cbsaCode": "32000",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T15:34:37.518Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32000.geojson",
+      "completedAt": "2026-07-12T15:34:39.153Z"
     },
     "32020": {
       "cbsaCode": "32020",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:34:39.167Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32020.geojson",
+      "completedAt": "2026-07-12T15:34:42.691Z"
     },
     "32100": {
       "cbsaCode": "32100",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:34:42.701Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32100.geojson",
+      "completedAt": "2026-07-12T15:34:47.711Z"
     },
     "32140": {
       "cbsaCode": "32140",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:34:47.728Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32140.geojson",
+      "completedAt": "2026-07-12T15:34:52.320Z"
     },
     "32180": {
       "cbsaCode": "32180",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:34:52.345Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32180.geojson",
+      "completedAt": "2026-07-12T15:34:54.526Z"
     },
     "32220": {
       "cbsaCode": "32220",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:34:54.547Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32220.geojson",
+      "completedAt": "2026-07-12T15:34:59.260Z"
     },
     "32260": {
       "cbsaCode": "32260",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:34:59.280Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32260.geojson",
+      "completedAt": "2026-07-12T15:35:04.028Z"
     },
     "32280": {
       "cbsaCode": "32280",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:35:04.038Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32280.geojson",
+      "completedAt": "2026-07-12T15:35:07.988Z"
     },
     "32300": {
       "cbsaCode": "32300",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:35:07.999Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32300.geojson",
+      "completedAt": "2026-07-12T15:35:11.314Z"
     },
     "32340": {
       "cbsaCode": "32340",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:35:11.326Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32340.geojson",
+      "completedAt": "2026-07-12T15:35:13.185Z"
     },
     "32380": {
       "cbsaCode": "32380",
-      "status": "pending",
-      "zipCount": 20
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T15:35:13.195Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32380.geojson",
+      "completedAt": "2026-07-12T15:35:21.539Z"
     },
     "32420": {
       "cbsaCode": "32420",
@@ -2799,68 +2870,107 @@
     },
     "32460": {
       "cbsaCode": "32460",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:35:21.549Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32460.geojson",
+      "completedAt": "2026-07-12T15:35:27.191Z"
     },
     "32500": {
       "cbsaCode": "32500",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T15:35:27.207Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32500.geojson",
+      "completedAt": "2026-07-12T15:35:28.807Z"
     },
     "32540": {
       "cbsaCode": "32540",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:35:28.821Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32540.geojson",
+      "completedAt": "2026-07-12T15:35:33.708Z"
     },
     "32580": {
       "cbsaCode": "32580",
-      "status": "pending",
-      "zipCount": 25
+      "status": "done",
+      "zipCount": 25,
+      "startedAt": "2026-07-12T15:35:33.721Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32580.geojson",
+      "completedAt": "2026-07-12T15:35:44.133Z"
     },
     "32620": {
       "cbsaCode": "32620",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:35:44.148Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32620.geojson",
+      "completedAt": "2026-07-12T15:35:46.742Z"
     },
     "32660": {
       "cbsaCode": "32660",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T15:35:46.753Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32660.geojson",
+      "completedAt": "2026-07-12T15:35:48.443Z"
     },
     "32700": {
       "cbsaCode": "32700",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:35:48.459Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32700.geojson",
+      "completedAt": "2026-07-12T15:35:51.951Z"
     },
     "32740": {
       "cbsaCode": "32740",
-      "status": "pending",
-      "zipCount": 18
+      "status": "done",
+      "zipCount": 18,
+      "startedAt": "2026-07-12T15:35:51.968Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32740.geojson",
+      "completedAt": "2026-07-12T15:36:00.221Z"
     },
     "32780": {
       "cbsaCode": "32780",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:36:00.236Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32780.geojson",
+      "completedAt": "2026-07-12T15:36:07.156Z"
     },
     "32820": {
       "cbsaCode": "32820",
-      "status": "pending",
-      "zipCount": 71
+      "status": "done",
+      "zipCount": 71,
+      "startedAt": "2026-07-12T15:36:07.165Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32820.geojson",
+      "completedAt": "2026-07-12T15:36:38.320Z"
     },
     "32860": {
       "cbsaCode": "32860",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:36:38.333Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32860.geojson",
+      "completedAt": "2026-07-12T15:36:43.232Z"
     },
     "32900": {
       "cbsaCode": "32900",
-      "status": "pending",
-      "zipCount": 17
+      "status": "done",
+      "zipCount": 17,
+      "startedAt": "2026-07-12T15:36:43.246Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32900.geojson",
+      "completedAt": "2026-07-12T15:36:50.787Z"
     },
     "32940": {
       "cbsaCode": "32940",
-      "status": "pending",
-      "zipCount": 17
+      "status": "done",
+      "zipCount": 17,
+      "startedAt": "2026-07-12T15:36:50.798Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/32940.geojson",
+      "completedAt": "2026-07-12T15:36:59.379Z"
     },
     "32980": {
       "cbsaCode": "32980",
@@ -2869,293 +2979,467 @@
     },
     "33020": {
       "cbsaCode": "33020",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:36:59.390Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33020.geojson",
+      "completedAt": "2026-07-12T15:37:01.444Z"
     },
     "33060": {
       "cbsaCode": "33060",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:37:01.457Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33060.geojson",
+      "completedAt": "2026-07-12T15:37:04.583Z"
     },
     "33100": {
       "cbsaCode": "33100",
-      "status": "pending",
-      "zipCount": 181
+      "status": "done",
+      "zipCount": 181,
+      "startedAt": "2026-07-12T15:37:04.600Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33100.geojson",
+      "completedAt": "2026-07-12T15:38:18.994Z"
     },
     "33140": {
       "cbsaCode": "33140",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:38:19.009Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33140.geojson",
+      "completedAt": "2026-07-12T15:38:23.694Z"
     },
     "33180": {
       "cbsaCode": "33180",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:38:23.704Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33180.geojson",
+      "completedAt": "2026-07-12T15:38:26.967Z"
     },
     "33220": {
       "cbsaCode": "33220",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T15:38:26.981Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33220.geojson",
+      "completedAt": "2026-07-12T15:38:29.239Z"
     },
     "33260": {
       "cbsaCode": "33260",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:38:29.250Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33260.geojson",
+      "completedAt": "2026-07-12T15:38:31.986Z"
     },
     "33300": {
       "cbsaCode": "33300",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:38:32.003Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33300.geojson",
+      "completedAt": "2026-07-12T15:38:34.303Z"
     },
     "33340": {
       "cbsaCode": "33340",
-      "status": "pending",
-      "zipCount": 79
+      "status": "done",
+      "zipCount": 79,
+      "startedAt": "2026-07-12T15:38:34.314Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33340.geojson",
+      "completedAt": "2026-07-12T15:39:07.130Z"
     },
     "33420": {
       "cbsaCode": "33420",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:39:07.159Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33420.geojson",
+      "completedAt": "2026-07-12T15:39:10.223Z"
     },
     "33460": {
       "cbsaCode": "33460",
-      "status": "pending",
-      "zipCount": 225
+      "status": "done",
+      "zipCount": 225,
+      "startedAt": "2026-07-12T15:39:10.244Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33460.geojson",
+      "completedAt": "2026-07-12T15:40:43.533Z"
     },
     "33500": {
       "cbsaCode": "33500",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:40:43.549Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33500.geojson",
+      "completedAt": "2026-07-12T15:40:48.881Z"
     },
     "33540": {
       "cbsaCode": "33540",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:40:48.900Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33540.geojson",
+      "completedAt": "2026-07-12T15:40:55.823Z"
     },
     "33580": {
       "cbsaCode": "33580",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T15:40:55.837Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33580.geojson",
+      "completedAt": "2026-07-12T15:40:57.374Z"
     },
     "33620": {
       "cbsaCode": "33620",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:40:57.386Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33620.geojson",
+      "completedAt": "2026-07-12T15:41:00.356Z"
     },
     "33660": {
       "cbsaCode": "33660",
-      "status": "pending",
-      "zipCount": 33
+      "status": "done",
+      "zipCount": 33,
+      "startedAt": "2026-07-12T15:41:00.374Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33660.geojson",
+      "completedAt": "2026-07-12T15:41:14.719Z"
     },
     "33700": {
       "cbsaCode": "33700",
-      "status": "pending",
-      "zipCount": 24
+      "status": "done",
+      "zipCount": 24,
+      "startedAt": "2026-07-12T15:41:14.736Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33700.geojson",
+      "completedAt": "2026-07-12T15:41:24.810Z"
     },
     "33740": {
       "cbsaCode": "33740",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T15:41:24.821Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33740.geojson",
+      "completedAt": "2026-07-12T15:41:33.676Z"
     },
     "33780": {
       "cbsaCode": "33780",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:41:33.688Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33780.geojson",
+      "completedAt": "2026-07-12T15:41:40.080Z"
     },
     "33860": {
       "cbsaCode": "33860",
-      "status": "pending",
-      "zipCount": 36
+      "status": "done",
+      "zipCount": 36,
+      "startedAt": "2026-07-12T15:41:40.090Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33860.geojson",
+      "completedAt": "2026-07-12T15:41:56.956Z"
     },
     "33940": {
       "cbsaCode": "33940",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:41:56.969Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33940.geojson",
+      "completedAt": "2026-07-12T15:42:03.148Z"
     },
     "33980": {
       "cbsaCode": "33980",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:42:03.160Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/33980.geojson",
+      "completedAt": "2026-07-12T15:42:09.503Z"
     },
     "34020": {
       "cbsaCode": "34020",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:42:09.514Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34020.geojson",
+      "completedAt": "2026-07-12T15:42:11.321Z"
     },
     "34060": {
       "cbsaCode": "34060",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T15:42:11.331Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34060.geojson",
+      "completedAt": "2026-07-12T15:42:20.927Z"
     },
     "34100": {
       "cbsaCode": "34100",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T15:42:20.938Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34100.geojson",
+      "completedAt": "2026-07-12T15:42:27.185Z"
     },
     "34140": {
       "cbsaCode": "34140",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:42:27.196Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34140.geojson",
+      "completedAt": "2026-07-12T15:42:31.021Z"
     },
     "34180": {
       "cbsaCode": "34180",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:42:31.032Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34180.geojson",
+      "completedAt": "2026-07-12T15:42:35.848Z"
     },
     "34220": {
       "cbsaCode": "34220",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:42:35.862Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34220.geojson",
+      "completedAt": "2026-07-12T15:42:39.030Z"
     },
     "34260": {
       "cbsaCode": "34260",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:42:39.040Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34260.geojson",
+      "completedAt": "2026-07-12T15:42:43.535Z"
     },
     "34300": {
       "cbsaCode": "34300",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:42:43.544Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34300.geojson",
+      "completedAt": "2026-07-12T15:42:45.753Z"
     },
     "34340": {
       "cbsaCode": "34340",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:42:45.763Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34340.geojson",
+      "completedAt": "2026-07-12T15:42:50.173Z"
     },
     "34380": {
       "cbsaCode": "34380",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:42:50.184Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34380.geojson",
+      "completedAt": "2026-07-12T15:42:53.558Z"
     },
     "34420": {
       "cbsaCode": "34420",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:42:53.568Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34420.geojson",
+      "completedAt": "2026-07-12T15:42:55.773Z"
     },
     "34460": {
       "cbsaCode": "34460",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:42:55.782Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34460.geojson",
+      "completedAt": "2026-07-12T15:43:00.153Z"
     },
     "34500": {
       "cbsaCode": "34500",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:43:00.164Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34500.geojson",
+      "completedAt": "2026-07-12T15:43:02.099Z"
     },
     "34540": {
       "cbsaCode": "34540",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:43:02.114Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34540.geojson",
+      "completedAt": "2026-07-12T15:43:06.108Z"
     },
     "34580": {
       "cbsaCode": "34580",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:43:06.119Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34580.geojson",
+      "completedAt": "2026-07-12T15:43:11.440Z"
     },
     "34620": {
       "cbsaCode": "34620",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:43:11.466Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34620.geojson",
+      "completedAt": "2026-07-12T15:43:16.906Z"
     },
     "34660": {
       "cbsaCode": "34660",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:43:16.916Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34660.geojson",
+      "completedAt": "2026-07-12T15:43:19.680Z"
     },
     "34700": {
       "cbsaCode": "34700",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:43:19.689Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34700.geojson",
+      "completedAt": "2026-07-12T15:43:23.905Z"
     },
     "34740": {
       "cbsaCode": "34740",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T15:43:23.918Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34740.geojson",
+      "completedAt": "2026-07-12T15:43:29.399Z"
     },
     "34780": {
       "cbsaCode": "34780",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:43:29.411Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34780.geojson",
+      "completedAt": "2026-07-12T15:43:34.248Z"
     },
     "34820": {
       "cbsaCode": "34820",
-      "status": "pending",
-      "zipCount": 28
+      "status": "done",
+      "zipCount": 28,
+      "startedAt": "2026-07-12T15:43:34.261Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34820.geojson",
+      "completedAt": "2026-07-12T15:43:46.146Z"
     },
     "34860": {
       "cbsaCode": "34860",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:43:46.156Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34860.geojson",
+      "completedAt": "2026-07-12T15:43:50.412Z"
     },
     "34900": {
       "cbsaCode": "34900",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:43:50.422Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34900.geojson",
+      "completedAt": "2026-07-12T15:43:54.466Z"
     },
     "34940": {
       "cbsaCode": "34940",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T15:43:54.480Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34940.geojson",
+      "completedAt": "2026-07-12T15:44:02.458Z"
     },
     "34980": {
       "cbsaCode": "34980",
-      "status": "pending",
-      "zipCount": 102
+      "status": "done",
+      "zipCount": 102,
+      "startedAt": "2026-07-12T15:44:02.468Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/34980.geojson",
+      "completedAt": "2026-07-12T15:44:47.572Z"
     },
     "35020": {
       "cbsaCode": "35020",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:44:47.611Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35020.geojson",
+      "completedAt": "2026-07-12T15:44:50.814Z"
     },
     "35060": {
       "cbsaCode": "35060",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:44:50.827Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35060.geojson",
+      "completedAt": "2026-07-12T15:44:52.977Z"
     },
     "35100": {
       "cbsaCode": "35100",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:44:52.987Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35100.geojson",
+      "completedAt": "2026-07-12T15:44:59.617Z"
     },
     "35140": {
       "cbsaCode": "35140",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T15:44:59.632Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35140.geojson",
+      "completedAt": "2026-07-12T15:45:02.221Z"
     },
     "35220": {
       "cbsaCode": "35220",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T15:45:02.243Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35220.geojson",
+      "completedAt": "2026-07-12T15:45:07.762Z"
     },
     "35260": {
       "cbsaCode": "35260",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T15:45:07.777Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35260.geojson",
+      "completedAt": "2026-07-12T15:45:13.343Z"
     },
     "35300": {
       "cbsaCode": "35300",
-      "status": "pending",
-      "zipCount": 40
+      "status": "done",
+      "zipCount": 40,
+      "startedAt": "2026-07-12T15:45:13.353Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35300.geojson",
+      "completedAt": "2026-07-12T15:45:29.660Z"
     },
     "35380": {
       "cbsaCode": "35380",
-      "status": "pending",
-      "zipCount": 72
+      "status": "done",
+      "zipCount": 72,
+      "startedAt": "2026-07-12T15:45:29.676Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35380.geojson",
+      "completedAt": "2026-07-12T15:46:00.264Z"
     },
     "35420": {
       "cbsaCode": "35420",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T15:46:00.277Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35420.geojson",
+      "completedAt": "2026-07-12T15:46:06.575Z"
     },
     "35440": {
       "cbsaCode": "35440",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T15:46:06.589Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35440.geojson",
+      "completedAt": "2026-07-12T15:46:14.174Z"
     },
     "35460": {
       "cbsaCode": "35460",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:46:14.188Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35460.geojson",
+      "completedAt": "2026-07-12T15:46:17.081Z"
     },
     "35500": {
       "cbsaCode": "35500",
@@ -3164,185 +3448,290 @@
     },
     "35580": {
       "cbsaCode": "35580",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:46:17.091Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35580.geojson",
+      "completedAt": "2026-07-12T15:46:20.197Z"
     },
     "35620": {
       "cbsaCode": "35620",
-      "status": "pending",
-      "zipCount": 830
+      "status": "failed",
+      "zipCount": 830,
+      "startedAt": "2026-07-12T15:46:20.208Z",
+      "error": "Missing boundary for ZIP 08739",
+      "completedAt": "2026-07-12T15:51:58.914Z"
     },
     "35660": {
       "cbsaCode": "35660",
-      "status": "pending",
-      "zipCount": 20
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T15:51:58.930Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35660.geojson",
+      "completedAt": "2026-07-12T15:52:07.404Z"
     },
     "35700": {
       "cbsaCode": "35700",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T15:52:07.423Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35700.geojson",
+      "completedAt": "2026-07-12T15:52:09.932Z"
     },
     "35740": {
       "cbsaCode": "35740",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:52:10.612Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35740.geojson",
+      "completedAt": "2026-07-12T15:52:17.175Z"
     },
     "35820": {
       "cbsaCode": "35820",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:52:17.184Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35820.geojson",
+      "completedAt": "2026-07-12T15:52:21.468Z"
     },
     "35840": {
       "cbsaCode": "35840",
-      "status": "pending",
-      "zipCount": 43
+      "status": "done",
+      "zipCount": 43,
+      "startedAt": "2026-07-12T15:52:21.478Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35840.geojson",
+      "completedAt": "2026-07-12T15:52:38.985Z"
     },
     "35860": {
       "cbsaCode": "35860",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:52:38.994Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35860.geojson",
+      "completedAt": "2026-07-12T15:52:41.581Z"
     },
     "35900": {
       "cbsaCode": "35900",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:52:41.592Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35900.geojson",
+      "completedAt": "2026-07-12T15:52:46.883Z"
     },
     "35940": {
       "cbsaCode": "35940",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:52:46.894Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35940.geojson",
+      "completedAt": "2026-07-12T15:52:50.947Z"
     },
     "35980": {
       "cbsaCode": "35980",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T15:52:50.958Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/35980.geojson",
+      "completedAt": "2026-07-12T15:53:01.714Z"
     },
     "36020": {
       "cbsaCode": "36020",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:53:01.728Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36020.geojson",
+      "completedAt": "2026-07-12T15:53:04.668Z"
     },
     "36100": {
       "cbsaCode": "36100",
-      "status": "pending",
-      "zipCount": 23
+      "status": "done",
+      "zipCount": 23,
+      "startedAt": "2026-07-12T15:53:04.678Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36100.geojson",
+      "completedAt": "2026-07-12T15:53:14.364Z"
     },
     "36140": {
       "cbsaCode": "36140",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T15:53:14.374Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36140.geojson",
+      "completedAt": "2026-07-12T15:53:20.209Z"
     },
     "36220": {
       "cbsaCode": "36220",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:53:20.218Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36220.geojson",
+      "completedAt": "2026-07-12T15:53:23.235Z"
     },
     "36260": {
       "cbsaCode": "36260",
-      "status": "pending",
-      "zipCount": 32
+      "status": "done",
+      "zipCount": 32,
+      "startedAt": "2026-07-12T15:53:23.245Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36260.geojson",
+      "completedAt": "2026-07-12T15:53:37.167Z"
     },
     "36300": {
       "cbsaCode": "36300",
-      "status": "pending",
-      "zipCount": 33
+      "status": "done",
+      "zipCount": 33,
+      "startedAt": "2026-07-12T15:53:37.183Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36300.geojson",
+      "completedAt": "2026-07-12T15:53:52.325Z"
     },
     "36340": {
       "cbsaCode": "36340",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T15:53:52.335Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36340.geojson",
+      "completedAt": "2026-07-12T15:53:58.130Z"
     },
     "36380": {
       "cbsaCode": "36380",
-      "status": "pending",
-      "zipCount": 2
+      "status": "done",
+      "zipCount": 2,
+      "startedAt": "2026-07-12T15:53:58.140Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36380.geojson",
+      "completedAt": "2026-07-12T15:53:59.414Z"
     },
     "36420": {
       "cbsaCode": "36420",
-      "status": "pending",
-      "zipCount": 105
+      "status": "done",
+      "zipCount": 105,
+      "startedAt": "2026-07-12T15:53:59.435Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36420.geojson",
+      "completedAt": "2026-07-12T15:54:42.796Z"
     },
     "36460": {
       "cbsaCode": "36460",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T15:54:42.807Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36460.geojson",
+      "completedAt": "2026-07-12T15:54:53.890Z"
     },
     "36500": {
       "cbsaCode": "36500",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:54:53.901Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36500.geojson",
+      "completedAt": "2026-07-12T15:54:58.959Z"
     },
     "36540": {
       "cbsaCode": "36540",
-      "status": "pending",
-      "zipCount": 110
+      "status": "done",
+      "zipCount": 110,
+      "startedAt": "2026-07-12T15:54:58.967Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36540.geojson",
+      "completedAt": "2026-07-12T15:55:43.711Z"
     },
     "36580": {
       "cbsaCode": "36580",
-      "status": "pending",
-      "zipCount": 25
+      "status": "done",
+      "zipCount": 25,
+      "startedAt": "2026-07-12T15:55:43.723Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36580.geojson",
+      "completedAt": "2026-07-12T15:55:54.788Z"
     },
     "36620": {
       "cbsaCode": "36620",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T15:55:54.799Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36620.geojson",
+      "completedAt": "2026-07-12T15:55:58.899Z"
     },
     "36660": {
       "cbsaCode": "36660",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:55:58.910Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36660.geojson",
+      "completedAt": "2026-07-12T15:56:02.938Z"
     },
     "36700": {
       "cbsaCode": "36700",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T15:56:02.948Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36700.geojson",
+      "completedAt": "2026-07-12T15:56:09.424Z"
     },
     "36740": {
       "cbsaCode": "36740",
       "status": "done",
       "zipCount": 16,
       "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36740.geojson",
-      "completedAt": "2026-07-12T13:17:51.142Z"
+      "completedAt": "2026-07-12T15:56:09.437Z"
     },
     "36780": {
       "cbsaCode": "36780",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:56:09.447Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36780.geojson",
+      "completedAt": "2026-07-12T15:56:14.607Z"
     },
     "36820": {
       "cbsaCode": "36820",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:56:14.619Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36820.geojson",
+      "completedAt": "2026-07-12T15:56:19.293Z"
     },
     "36830": {
       "cbsaCode": "36830",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:56:19.304Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36830.geojson",
+      "completedAt": "2026-07-12T15:56:21.202Z"
     },
     "36840": {
       "cbsaCode": "36840",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T15:56:21.214Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36840.geojson",
+      "completedAt": "2026-07-12T15:56:25.083Z"
     },
     "36860": {
       "cbsaCode": "36860",
-      "status": "pending",
-      "zipCount": 32
+      "status": "done",
+      "zipCount": 32,
+      "startedAt": "2026-07-12T15:56:25.095Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36860.geojson",
+      "completedAt": "2026-07-12T15:56:38.302Z"
     },
     "36900": {
       "cbsaCode": "36900",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T15:56:38.315Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36900.geojson",
+      "completedAt": "2026-07-12T15:56:40.691Z"
     },
     "36940": {
       "cbsaCode": "36940",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:56:40.703Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36940.geojson",
+      "completedAt": "2026-07-12T15:56:42.448Z"
     },
     "36980": {
       "cbsaCode": "36980",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:56:42.457Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/36980.geojson",
+      "completedAt": "2026-07-12T15:56:49.104Z"
     },
     "37020": {
       "cbsaCode": "37020",
@@ -3351,193 +3740,307 @@
     },
     "37060": {
       "cbsaCode": "37060",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:56:49.114Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37060.geojson",
+      "completedAt": "2026-07-12T15:56:52.172Z"
     },
     "37080": {
       "cbsaCode": "37080",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:56:52.193Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37080.geojson",
+      "completedAt": "2026-07-12T15:56:55.186Z"
     },
     "37100": {
       "cbsaCode": "37100",
-      "status": "pending",
-      "zipCount": 24
+      "status": "done",
+      "zipCount": 24,
+      "startedAt": "2026-07-12T15:56:55.198Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37100.geojson",
+      "completedAt": "2026-07-12T15:57:05.982Z"
     },
     "37120": {
       "cbsaCode": "37120",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T15:57:06.021Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37120.geojson",
+      "completedAt": "2026-07-12T15:57:08.524Z"
     },
     "37140": {
       "cbsaCode": "37140",
-      "status": "pending",
-      "zipCount": 18
+      "status": "done",
+      "zipCount": 18,
+      "startedAt": "2026-07-12T15:57:08.540Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37140.geojson",
+      "completedAt": "2026-07-12T15:57:16.600Z"
     },
     "37220": {
       "cbsaCode": "37220",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:57:16.611Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37220.geojson",
+      "completedAt": "2026-07-12T15:57:20.072Z"
     },
     "37260": {
       "cbsaCode": "37260",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:57:20.082Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37260.geojson",
+      "completedAt": "2026-07-12T15:57:24.435Z"
     },
     "37300": {
       "cbsaCode": "37300",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:57:24.445Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37300.geojson",
+      "completedAt": "2026-07-12T15:57:27.765Z"
     },
     "37340": {
       "cbsaCode": "37340",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T15:57:27.776Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37340.geojson",
+      "completedAt": "2026-07-12T15:57:38.550Z"
     },
     "37420": {
       "cbsaCode": "37420",
-      "status": "pending",
-      "zipCount": 2
+      "status": "done",
+      "zipCount": 2,
+      "startedAt": "2026-07-12T15:57:38.559Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37420.geojson",
+      "completedAt": "2026-07-12T15:57:39.687Z"
     },
     "37460": {
       "cbsaCode": "37460",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T15:57:39.697Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37460.geojson",
+      "completedAt": "2026-07-12T15:57:44.474Z"
     },
     "37500": {
       "cbsaCode": "37500",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T15:57:44.484Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37500.geojson",
+      "completedAt": "2026-07-12T15:57:46.525Z"
     },
     "37540": {
       "cbsaCode": "37540",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:57:46.534Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37540.geojson",
+      "completedAt": "2026-07-12T15:57:49.629Z"
     },
     "37580": {
       "cbsaCode": "37580",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T15:57:49.642Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37580.geojson",
+      "completedAt": "2026-07-12T15:57:54.523Z"
     },
     "37620": {
       "cbsaCode": "37620",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T15:57:54.535Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37620.geojson",
+      "completedAt": "2026-07-12T15:58:01.545Z"
     },
     "37660": {
       "cbsaCode": "37660",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:58:01.557Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37660.geojson",
+      "completedAt": "2026-07-12T15:58:04.692Z"
     },
     "37740": {
       "cbsaCode": "37740",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T15:58:04.710Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37740.geojson",
+      "completedAt": "2026-07-12T15:58:08.862Z"
     },
     "37780": {
       "cbsaCode": "37780",
-      "status": "pending",
-      "zipCount": 1
+      "status": "done",
+      "zipCount": 1,
+      "startedAt": "2026-07-12T15:58:08.872Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37780.geojson",
+      "completedAt": "2026-07-12T15:58:09.700Z"
     },
     "37800": {
       "cbsaCode": "37800",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T15:58:09.710Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37800.geojson",
+      "completedAt": "2026-07-12T15:58:15.037Z"
     },
     "37860": {
       "cbsaCode": "37860",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T15:58:15.048Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37860.geojson",
+      "completedAt": "2026-07-12T15:58:24.523Z"
     },
     "37900": {
       "cbsaCode": "37900",
-      "status": "pending",
-      "zipCount": 69
+      "status": "done",
+      "zipCount": 69,
+      "startedAt": "2026-07-12T15:58:24.532Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37900.geojson",
+      "completedAt": "2026-07-12T15:58:52.781Z"
     },
     "37940": {
       "cbsaCode": "37940",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T15:58:52.794Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/37940.geojson",
+      "completedAt": "2026-07-12T15:58:55.510Z"
     },
     "37980": {
       "cbsaCode": "37980",
-      "status": "pending",
-      "zipCount": 334
+      "status": "failed",
+      "zipCount": 334,
+      "startedAt": "2026-07-12T15:58:55.520Z",
+      "error": "Missing boundary for ZIP 18934",
+      "completedAt": "2026-07-12T16:01:13.706Z"
     },
     "38060": {
       "cbsaCode": "38060",
-      "status": "pending",
-      "zipCount": 149
+      "status": "done",
+      "zipCount": 149,
+      "startedAt": "2026-07-12T16:01:13.729Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38060.geojson",
+      "completedAt": "2026-07-12T16:02:15.282Z"
     },
     "38100": {
       "cbsaCode": "38100",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:02:15.296Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38100.geojson",
+      "completedAt": "2026-07-12T16:02:17.144Z"
     },
     "38180": {
       "cbsaCode": "38180",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:02:17.160Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38180.geojson",
+      "completedAt": "2026-07-12T16:02:19.060Z"
     },
     "38220": {
       "cbsaCode": "38220",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:02:19.070Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38220.geojson",
+      "completedAt": "2026-07-12T16:02:24.126Z"
     },
     "38240": {
       "cbsaCode": "38240",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T16:02:24.140Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38240.geojson",
+      "completedAt": "2026-07-12T16:02:29.343Z"
     },
     "38260": {
       "cbsaCode": "38260",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:02:29.355Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38260.geojson",
+      "completedAt": "2026-07-12T16:02:33.263Z"
     },
     "38300": {
       "cbsaCode": "38300",
-      "status": "pending",
-      "zipCount": 295
+      "status": "done",
+      "zipCount": 295,
+      "startedAt": "2026-07-12T16:02:33.277Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38300.geojson",
+      "completedAt": "2026-07-12T16:04:35.622Z"
     },
     "38340": {
       "cbsaCode": "38340",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T16:04:35.638Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38340.geojson",
+      "completedAt": "2026-07-12T16:04:46.520Z"
     },
     "38380": {
       "cbsaCode": "38380",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T16:04:46.535Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38380.geojson",
+      "completedAt": "2026-07-12T16:04:48.810Z"
     },
     "38420": {
       "cbsaCode": "38420",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:04:48.821Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38420.geojson",
+      "completedAt": "2026-07-12T16:04:55.923Z"
     },
     "38460": {
       "cbsaCode": "38460",
-      "status": "pending",
-      "zipCount": 23
+      "status": "done",
+      "zipCount": 23,
+      "startedAt": "2026-07-12T16:04:55.936Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38460.geojson",
+      "completedAt": "2026-07-12T16:05:05.765Z"
     },
     "38500": {
       "cbsaCode": "38500",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:05:05.777Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38500.geojson",
+      "completedAt": "2026-07-12T16:05:08.751Z"
     },
     "38540": {
       "cbsaCode": "38540",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:05:08.762Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38540.geojson",
+      "completedAt": "2026-07-12T16:05:13.012Z"
     },
     "38580": {
       "cbsaCode": "38580",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T16:05:13.023Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38580.geojson",
+      "completedAt": "2026-07-12T16:05:22.558Z"
     },
     "38620": {
       "cbsaCode": "38620",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:05:22.570Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38620.geojson",
+      "completedAt": "2026-07-12T16:05:25.762Z"
     },
     "38660": {
       "cbsaCode": "38660",
@@ -3546,23 +4049,35 @@
     },
     "38700": {
       "cbsaCode": "38700",
-      "status": "pending",
-      "zipCount": 17
+      "status": "done",
+      "zipCount": 17,
+      "startedAt": "2026-07-12T16:05:25.773Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38700.geojson",
+      "completedAt": "2026-07-12T16:05:33.116Z"
     },
     "38740": {
       "cbsaCode": "38740",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:05:33.129Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38740.geojson",
+      "completedAt": "2026-07-12T16:05:37.102Z"
     },
     "38780": {
       "cbsaCode": "38780",
-      "status": "pending",
-      "zipCount": 1
+      "status": "done",
+      "zipCount": 1,
+      "startedAt": "2026-07-12T16:05:37.125Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38780.geojson",
+      "completedAt": "2026-07-12T16:05:37.784Z"
     },
     "38820": {
       "cbsaCode": "38820",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:05:37.798Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38820.geojson",
+      "completedAt": "2026-07-12T16:05:41.013Z"
     },
     "38840": {
       "cbsaCode": "38840",
@@ -3571,353 +4086,562 @@
     },
     "38860": {
       "cbsaCode": "38860",
-      "status": "pending",
-      "zipCount": 73
+      "status": "done",
+      "zipCount": 73,
+      "startedAt": "2026-07-12T16:05:41.027Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38860.geojson",
+      "completedAt": "2026-07-12T16:06:11.204Z"
     },
     "38900": {
       "cbsaCode": "38900",
-      "status": "pending",
-      "zipCount": 121
+      "status": "done",
+      "zipCount": 121,
+      "startedAt": "2026-07-12T16:06:11.220Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38900.geojson",
+      "completedAt": "2026-07-12T16:07:02.940Z"
     },
     "38920": {
       "cbsaCode": "38920",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T16:07:02.954Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38920.geojson",
+      "completedAt": "2026-07-12T16:07:05.492Z"
     },
     "38940": {
       "cbsaCode": "38940",
-      "status": "pending",
-      "zipCount": 22
+      "status": "done",
+      "zipCount": 22,
+      "startedAt": "2026-07-12T16:07:05.504Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/38940.geojson",
+      "completedAt": "2026-07-12T16:07:14.577Z"
     },
     "39020": {
       "cbsaCode": "39020",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T16:07:14.589Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39020.geojson",
+      "completedAt": "2026-07-12T16:07:20.076Z"
     },
     "39060": {
       "cbsaCode": "39060",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T16:07:20.089Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39060.geojson",
+      "completedAt": "2026-07-12T16:07:31.024Z"
     },
     "39140": {
       "cbsaCode": "39140",
-      "status": "pending",
-      "zipCount": 24
+      "status": "done",
+      "zipCount": 24,
+      "startedAt": "2026-07-12T16:07:31.038Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39140.geojson",
+      "completedAt": "2026-07-12T16:07:43.001Z"
     },
     "39220": {
       "cbsaCode": "39220",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:07:43.014Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39220.geojson",
+      "completedAt": "2026-07-12T16:07:44.884Z"
     },
     "39260": {
       "cbsaCode": "39260",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:07:44.900Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39260.geojson",
+      "completedAt": "2026-07-12T16:07:46.884Z"
     },
     "39300": {
       "cbsaCode": "39300",
-      "status": "pending",
-      "zipCount": 101
+      "status": "done",
+      "zipCount": 101,
+      "startedAt": "2026-07-12T16:07:46.897Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39300.geojson",
+      "completedAt": "2026-07-12T16:08:28.324Z"
     },
     "39340": {
       "cbsaCode": "39340",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T16:08:28.344Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39340.geojson",
+      "completedAt": "2026-07-12T16:08:40.150Z"
     },
     "39380": {
       "cbsaCode": "39380",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:08:40.165Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39380.geojson",
+      "completedAt": "2026-07-12T16:08:45.924Z"
     },
     "39420": {
       "cbsaCode": "39420",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:08:45.936Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39420.geojson",
+      "completedAt": "2026-07-12T16:08:51.922Z"
     },
     "39460": {
       "cbsaCode": "39460",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:08:51.934Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39460.geojson",
+      "completedAt": "2026-07-12T16:08:57.733Z"
     },
     "39500": {
       "cbsaCode": "39500",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T16:08:57.746Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39500.geojson",
+      "completedAt": "2026-07-12T16:09:03.908Z"
     },
     "39540": {
       "cbsaCode": "39540",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T16:09:03.921Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39540.geojson",
+      "completedAt": "2026-07-12T16:09:08.978Z"
     },
     "39580": {
       "cbsaCode": "39580",
-      "status": "pending",
-      "zipCount": 47
+      "status": "done",
+      "zipCount": 47,
+      "startedAt": "2026-07-12T16:09:08.995Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39580.geojson",
+      "completedAt": "2026-07-12T16:09:30.654Z"
     },
     "39660": {
       "cbsaCode": "39660",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T16:09:30.669Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39660.geojson",
+      "completedAt": "2026-07-12T16:09:37.995Z"
     },
     "39700": {
       "cbsaCode": "39700",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T16:09:38.007Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39700.geojson",
+      "completedAt": "2026-07-12T16:09:40.354Z"
     },
     "39740": {
       "cbsaCode": "39740",
-      "status": "pending",
-      "zipCount": 39
+      "status": "done",
+      "zipCount": 39,
+      "startedAt": "2026-07-12T16:09:40.365Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39740.geojson",
+      "completedAt": "2026-07-12T16:09:56.942Z"
     },
     "39780": {
       "cbsaCode": "39780",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:09:56.955Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39780.geojson",
+      "completedAt": "2026-07-12T16:10:01.654Z"
     },
     "39820": {
       "cbsaCode": "39820",
-      "status": "pending",
-      "zipCount": 20
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T16:10:01.664Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39820.geojson",
+      "completedAt": "2026-07-12T16:10:24.541Z"
     },
     "39860": {
       "cbsaCode": "39860",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:10:24.554Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39860.geojson",
+      "completedAt": "2026-07-12T16:10:29.941Z"
     },
     "39900": {
       "cbsaCode": "39900",
-      "status": "pending",
-      "zipCount": 23
+      "status": "done",
+      "zipCount": 23,
+      "startedAt": "2026-07-12T16:10:29.952Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39900.geojson",
+      "completedAt": "2026-07-12T16:10:42.069Z"
     },
     "39940": {
       "cbsaCode": "39940",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:10:42.084Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39940.geojson",
+      "completedAt": "2026-07-12T16:10:49.957Z"
     },
     "39980": {
       "cbsaCode": "39980",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:10:49.972Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/39980.geojson",
+      "completedAt": "2026-07-12T16:10:54.584Z"
     },
     "40060": {
       "cbsaCode": "40060",
-      "status": "pending",
-      "zipCount": 88
+      "status": "done",
+      "zipCount": 88,
+      "startedAt": "2026-07-12T16:10:55.200Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40060.geojson",
+      "completedAt": "2026-07-12T16:13:56.066Z"
     },
     "40080": {
       "cbsaCode": "40080",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:13:56.079Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40080.geojson",
+      "completedAt": "2026-07-12T16:13:59.303Z"
     },
     "40100": {
       "cbsaCode": "40100",
-      "status": "pending",
-      "zipCount": 1
+      "status": "done",
+      "zipCount": 1,
+      "startedAt": "2026-07-12T16:13:59.315Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40100.geojson",
+      "completedAt": "2026-07-12T16:14:00.043Z"
     },
     "40140": {
       "cbsaCode": "40140",
-      "status": "pending",
-      "zipCount": 146
+      "status": "done",
+      "zipCount": 146,
+      "startedAt": "2026-07-12T16:14:00.054Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40140.geojson",
+      "completedAt": "2026-07-12T16:15:01.799Z"
     },
     "40180": {
       "cbsaCode": "40180",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:15:01.815Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40180.geojson",
+      "completedAt": "2026-07-12T16:15:05.845Z"
     },
     "40220": {
       "cbsaCode": "40220",
-      "status": "pending",
-      "zipCount": 30
+      "status": "done",
+      "zipCount": 30,
+      "startedAt": "2026-07-12T16:15:05.856Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40220.geojson",
+      "completedAt": "2026-07-12T16:15:19.436Z"
     },
     "40260": {
       "cbsaCode": "40260",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T16:15:19.461Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40260.geojson",
+      "completedAt": "2026-07-12T16:15:27.849Z"
     },
     "40300": {
       "cbsaCode": "40300",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T16:15:27.871Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40300.geojson",
+      "completedAt": "2026-07-12T16:15:34.074Z"
     },
     "40340": {
       "cbsaCode": "40340",
-      "status": "pending",
-      "zipCount": 35
+      "status": "done",
+      "zipCount": 35,
+      "startedAt": "2026-07-12T16:15:34.087Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40340.geojson",
+      "completedAt": "2026-07-12T16:15:49.308Z"
     },
     "40380": {
       "cbsaCode": "40380",
-      "status": "pending",
-      "zipCount": 104
+      "status": "done",
+      "zipCount": 104,
+      "startedAt": "2026-07-12T16:15:49.326Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40380.geojson",
+      "completedAt": "2026-07-12T16:16:33.020Z"
     },
     "40420": {
       "cbsaCode": "40420",
-      "status": "pending",
-      "zipCount": 22
+      "status": "done",
+      "zipCount": 22,
+      "startedAt": "2026-07-12T16:16:33.035Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40420.geojson",
+      "completedAt": "2026-07-12T16:16:42.166Z"
     },
     "40460": {
       "cbsaCode": "40460",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:16:42.177Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40460.geojson",
+      "completedAt": "2026-07-12T16:16:44.085Z"
     },
     "40540": {
       "cbsaCode": "40540",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:16:44.097Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40540.geojson",
+      "completedAt": "2026-07-12T16:16:47.534Z"
     },
     "40580": {
       "cbsaCode": "40580",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T16:16:47.559Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40580.geojson",
+      "completedAt": "2026-07-12T16:16:54.381Z"
     },
     "40620": {
       "cbsaCode": "40620",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:16:54.393Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40620.geojson",
+      "completedAt": "2026-07-12T16:16:56.560Z"
     },
     "40660": {
       "cbsaCode": "40660",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:16:56.572Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40660.geojson",
+      "completedAt": "2026-07-12T16:16:59.360Z"
     },
     "40700": {
       "cbsaCode": "40700",
-      "status": "pending",
-      "zipCount": 17
+      "status": "done",
+      "zipCount": 17,
+      "startedAt": "2026-07-12T16:16:59.372Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40700.geojson",
+      "completedAt": "2026-07-12T16:17:08.983Z"
     },
     "40740": {
       "cbsaCode": "40740",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:17:08.997Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40740.geojson",
+      "completedAt": "2026-07-12T16:17:10.639Z"
     },
     "40760": {
       "cbsaCode": "40760",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:17:10.651Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40760.geojson",
+      "completedAt": "2026-07-12T16:17:13.563Z"
     },
     "40780": {
       "cbsaCode": "40780",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T16:17:13.577Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40780.geojson",
+      "completedAt": "2026-07-12T16:17:18.725Z"
     },
     "40820": {
       "cbsaCode": "40820",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:17:18.742Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40820.geojson",
+      "completedAt": "2026-07-12T16:17:21.683Z"
     },
     "40860": {
       "cbsaCode": "40860",
-      "status": "pending",
-      "zipCount": 25
+      "status": "done",
+      "zipCount": 25,
+      "startedAt": "2026-07-12T16:17:21.698Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40860.geojson",
+      "completedAt": "2026-07-12T16:17:32.216Z"
     },
     "40900": {
       "cbsaCode": "40900",
-      "status": "pending",
-      "zipCount": 116
+      "status": "done",
+      "zipCount": 116,
+      "startedAt": "2026-07-12T16:17:32.231Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40900.geojson",
+      "completedAt": "2026-07-12T16:18:21.990Z"
     },
     "40940": {
       "cbsaCode": "40940",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:18:22.003Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40940.geojson",
+      "completedAt": "2026-07-12T16:18:24.100Z"
     },
     "40980": {
       "cbsaCode": "40980",
-      "status": "pending",
-      "zipCount": 20
+      "status": "done",
+      "zipCount": 20,
+      "startedAt": "2026-07-12T16:18:24.118Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/40980.geojson",
+      "completedAt": "2026-07-12T16:18:32.292Z"
     },
     "41060": {
       "cbsaCode": "41060",
-      "status": "pending",
-      "zipCount": 29
+      "status": "done",
+      "zipCount": 29,
+      "startedAt": "2026-07-12T16:18:32.312Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41060.geojson",
+      "completedAt": "2026-07-12T16:18:44.681Z"
     },
     "41100": {
       "cbsaCode": "41100",
-      "status": "pending",
-      "zipCount": 18
+      "status": "done",
+      "zipCount": 18,
+      "startedAt": "2026-07-12T16:18:44.694Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41100.geojson",
+      "completedAt": "2026-07-12T16:18:52.835Z"
     },
     "41140": {
       "cbsaCode": "41140",
-      "status": "pending",
-      "zipCount": 35
+      "status": "done",
+      "zipCount": 35,
+      "startedAt": "2026-07-12T16:18:52.846Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41140.geojson",
+      "completedAt": "2026-07-12T16:19:08.016Z"
     },
     "41180": {
       "cbsaCode": "41180",
-      "status": "pending",
-      "zipCount": 223
+      "status": "done",
+      "zipCount": 223,
+      "startedAt": "2026-07-12T16:19:08.028Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41180.geojson",
+      "completedAt": "2026-07-12T16:20:40.651Z"
     },
     "41220": {
       "cbsaCode": "41220",
-      "status": "pending",
-      "zipCount": 5
+      "status": "done",
+      "zipCount": 5,
+      "startedAt": "2026-07-12T16:20:40.674Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41220.geojson",
+      "completedAt": "2026-07-12T16:20:43.179Z"
     },
     "41260": {
       "cbsaCode": "41260",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:20:43.190Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41260.geojson",
+      "completedAt": "2026-07-12T16:20:47.743Z"
     },
     "41400": {
       "cbsaCode": "41400",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:20:47.762Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41400.geojson",
+      "completedAt": "2026-07-12T16:20:54.796Z"
     },
     "41420": {
       "cbsaCode": "41420",
-      "status": "pending",
-      "zipCount": 28
+      "status": "done",
+      "zipCount": 28,
+      "startedAt": "2026-07-12T16:20:54.809Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41420.geojson",
+      "completedAt": "2026-07-12T16:21:06.965Z"
     },
     "41460": {
       "cbsaCode": "41460",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T16:21:06.976Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41460.geojson",
+      "completedAt": "2026-07-12T16:21:11.723Z"
     },
     "41500": {
       "cbsaCode": "41500",
-      "status": "pending",
-      "zipCount": 24
+      "status": "done",
+      "zipCount": 24,
+      "startedAt": "2026-07-12T16:21:11.742Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41500.geojson",
+      "completedAt": "2026-07-12T16:21:22.245Z"
     },
     "41540": {
       "cbsaCode": "41540",
-      "status": "pending",
-      "zipCount": 52
+      "status": "done",
+      "zipCount": 52,
+      "startedAt": "2026-07-12T16:21:22.259Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41540.geojson",
+      "completedAt": "2026-07-12T16:21:44.452Z"
     },
     "41620": {
       "cbsaCode": "41620",
-      "status": "pending",
-      "zipCount": 39
+      "status": "done",
+      "zipCount": 39,
+      "startedAt": "2026-07-12T16:21:44.467Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41620.geojson",
+      "completedAt": "2026-07-12T16:22:01.181Z"
     },
     "41660": {
       "cbsaCode": "41660",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:22:01.193Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41660.geojson",
+      "completedAt": "2026-07-12T16:22:05.609Z"
     },
     "41700": {
       "cbsaCode": "41700",
-      "status": "pending",
-      "zipCount": 106
+      "status": "done",
+      "zipCount": 106,
+      "startedAt": "2026-07-12T16:22:05.621Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41700.geojson",
+      "completedAt": "2026-07-12T16:22:50.025Z"
     },
     "41740": {
       "cbsaCode": "41740",
-      "status": "pending",
-      "zipCount": 95
+      "status": "done",
+      "zipCount": 95,
+      "startedAt": "2026-07-12T16:22:50.043Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41740.geojson",
+      "completedAt": "2026-07-12T16:23:30.099Z"
     },
     "41760": {
       "cbsaCode": "41760",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:23:30.115Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41760.geojson",
+      "completedAt": "2026-07-12T16:23:37.016Z"
     },
     "41780": {
       "cbsaCode": "41780",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:23:37.029Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41780.geojson",
+      "completedAt": "2026-07-12T16:23:40.044Z"
     },
     "41820": {
       "cbsaCode": "41820",
-      "status": "pending",
-      "zipCount": 2
+      "status": "done",
+      "zipCount": 2,
+      "startedAt": "2026-07-12T16:23:40.054Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41820.geojson",
+      "completedAt": "2026-07-12T16:23:41.164Z"
     },
     "41860": {
       "cbsaCode": "41860",
-      "status": "pending",
-      "zipCount": 18
+      "status": "done",
+      "zipCount": 18,
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41860.geojson",
+      "completedAt": "2026-07-12T16:23:41.176Z"
     },
     "41900": {
       "cbsaCode": "41900",
@@ -3926,8 +4650,10 @@
     },
     "41940": {
       "cbsaCode": "41940",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/41940.geojson",
+      "completedAt": "2026-07-12T16:23:41.190Z"
     },
     "41980": {
       "cbsaCode": "41980",
@@ -3936,18 +4662,27 @@
     },
     "42020": {
       "cbsaCode": "42020",
-      "status": "pending",
-      "zipCount": 19
+      "status": "done",
+      "zipCount": 19,
+      "startedAt": "2026-07-12T16:23:41.203Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42020.geojson",
+      "completedAt": "2026-07-12T16:23:50.412Z"
     },
     "42100": {
       "cbsaCode": "42100",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:23:50.423Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42100.geojson",
+      "completedAt": "2026-07-12T16:23:57.491Z"
     },
     "42140": {
       "cbsaCode": "42140",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T16:23:57.503Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42140.geojson",
+      "completedAt": "2026-07-12T16:24:03.151Z"
     },
     "42180": {
       "cbsaCode": "42180",
@@ -3956,323 +4691,515 @@
     },
     "42200": {
       "cbsaCode": "42200",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T16:24:03.162Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42200.geojson",
+      "completedAt": "2026-07-12T16:24:12.923Z"
     },
     "42220": {
       "cbsaCode": "42220",
-      "status": "pending",
-      "zipCount": 32
+      "status": "failed",
+      "zipCount": 32,
+      "startedAt": "2026-07-12T16:24:12.934Z",
+      "error": "Missing boundary for ZIP 95433",
+      "completedAt": "2026-07-12T16:24:27.704Z"
     },
     "42300": {
       "cbsaCode": "42300",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:24:27.716Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42300.geojson",
+      "completedAt": "2026-07-12T16:24:33.384Z"
     },
     "42340": {
       "cbsaCode": "42340",
-      "status": "pending",
-      "zipCount": 23
+      "status": "done",
+      "zipCount": 23,
+      "startedAt": "2026-07-12T16:24:33.394Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42340.geojson",
+      "completedAt": "2026-07-12T16:24:43.034Z"
     },
     "42380": {
       "cbsaCode": "42380",
-      "status": "pending",
-      "zipCount": 23
+      "status": "done",
+      "zipCount": 23,
+      "startedAt": "2026-07-12T16:24:43.047Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42380.geojson",
+      "completedAt": "2026-07-12T16:24:53.504Z"
     },
     "42420": {
       "cbsaCode": "42420",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:24:53.519Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42420.geojson",
+      "completedAt": "2026-07-12T16:24:59.301Z"
     },
     "42460": {
       "cbsaCode": "42460",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T16:24:59.312Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42460.geojson",
+      "completedAt": "2026-07-12T16:25:04.111Z"
     },
     "42540": {
       "cbsaCode": "42540",
-      "status": "pending",
-      "zipCount": 62
+      "status": "done",
+      "zipCount": 62,
+      "startedAt": "2026-07-12T16:25:04.124Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42540.geojson",
+      "completedAt": "2026-07-12T16:25:30.340Z"
     },
     "42620": {
       "cbsaCode": "42620",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:25:30.356Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42620.geojson",
+      "completedAt": "2026-07-12T16:25:35.593Z"
     },
     "42660": {
       "cbsaCode": "42660",
-      "status": "pending",
-      "zipCount": 155
+      "status": "failed",
+      "zipCount": 155,
+      "startedAt": "2026-07-12T16:25:35.605Z",
+      "error": "Missing boundary for ZIP 98206",
+      "completedAt": "2026-07-12T16:26:39.398Z"
     },
     "42680": {
       "cbsaCode": "42680",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:26:39.412Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42680.geojson",
+      "completedAt": "2026-07-12T16:26:42.961Z"
     },
     "42700": {
       "cbsaCode": "42700",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:26:42.991Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42700.geojson",
+      "completedAt": "2026-07-12T16:26:46.883Z"
     },
     "42740": {
       "cbsaCode": "42740",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:26:46.896Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42740.geojson",
+      "completedAt": "2026-07-12T16:26:50.594Z"
     },
     "42780": {
       "cbsaCode": "42780",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:26:50.617Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42780.geojson",
+      "completedAt": "2026-07-12T16:26:55.066Z"
     },
     "42820": {
       "cbsaCode": "42820",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:26:55.079Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42820.geojson",
+      "completedAt": "2026-07-12T16:26:59.028Z"
     },
     "42860": {
       "cbsaCode": "42860",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:26:59.040Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42860.geojson",
+      "completedAt": "2026-07-12T16:27:03.721Z"
     },
     "42900": {
       "cbsaCode": "42900",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:27:03.734Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42900.geojson",
+      "completedAt": "2026-07-12T16:27:06.929Z"
     },
     "42940": {
       "cbsaCode": "42940",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:27:06.942Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42940.geojson",
+      "completedAt": "2026-07-12T16:27:09.974Z"
     },
     "42980": {
       "cbsaCode": "42980",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:27:09.986Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/42980.geojson",
+      "completedAt": "2026-07-12T16:27:12.784Z"
     },
     "43020": {
       "cbsaCode": "43020",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:27:12.795Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43020.geojson",
+      "completedAt": "2026-07-12T16:27:18.757Z"
     },
     "43060": {
       "cbsaCode": "43060",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:27:18.768Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43060.geojson",
+      "completedAt": "2026-07-12T16:27:23.318Z"
     },
     "43100": {
       "cbsaCode": "43100",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:27:23.329Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43100.geojson",
+      "completedAt": "2026-07-12T16:27:29.137Z"
     },
     "43140": {
       "cbsaCode": "43140",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:27:29.149Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43140.geojson",
+      "completedAt": "2026-07-12T16:27:33.133Z"
     },
     "43180": {
       "cbsaCode": "43180",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:27:33.145Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43180.geojson",
+      "completedAt": "2026-07-12T16:27:35.309Z"
     },
     "43220": {
       "cbsaCode": "43220",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:27:35.320Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43220.geojson",
+      "completedAt": "2026-07-12T16:27:38.998Z"
     },
     "43260": {
       "cbsaCode": "43260",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:27:39.009Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43260.geojson",
+      "completedAt": "2026-07-12T16:27:42.785Z"
     },
     "43300": {
       "cbsaCode": "43300",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T16:27:42.796Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43300.geojson",
+      "completedAt": "2026-07-12T16:27:49.149Z"
     },
     "43320": {
       "cbsaCode": "43320",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:27:49.159Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43320.geojson",
+      "completedAt": "2026-07-12T16:27:53.492Z"
     },
     "43340": {
       "cbsaCode": "43340",
-      "status": "pending",
-      "zipCount": 30
+      "status": "done",
+      "zipCount": 30,
+      "startedAt": "2026-07-12T16:27:53.503Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43340.geojson",
+      "completedAt": "2026-07-12T16:28:07.015Z"
     },
     "43380": {
       "cbsaCode": "43380",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:28:07.027Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43380.geojson",
+      "completedAt": "2026-07-12T16:28:11.278Z"
     },
     "43420": {
       "cbsaCode": "43420",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:28:11.288Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43420.geojson",
+      "completedAt": "2026-07-12T16:28:18.661Z"
     },
     "43460": {
       "cbsaCode": "43460",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:28:18.672Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43460.geojson",
+      "completedAt": "2026-07-12T16:28:21.726Z"
     },
     "43500": {
       "cbsaCode": "43500",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T16:28:21.737Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43500.geojson",
+      "completedAt": "2026-07-12T16:28:26.990Z"
     },
     "43580": {
       "cbsaCode": "43580",
-      "status": "pending",
-      "zipCount": 39
+      "status": "done",
+      "zipCount": 39,
+      "startedAt": "2026-07-12T16:28:27.003Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43580.geojson",
+      "completedAt": "2026-07-12T16:28:43.473Z"
     },
     "43620": {
       "cbsaCode": "43620",
-      "status": "pending",
-      "zipCount": 36
+      "status": "done",
+      "zipCount": 36,
+      "startedAt": "2026-07-12T16:28:43.486Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43620.geojson",
+      "completedAt": "2026-07-12T16:28:59.350Z"
     },
     "43660": {
       "cbsaCode": "43660",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:28:59.362Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43660.geojson",
+      "completedAt": "2026-07-12T16:29:01.036Z"
     },
     "43700": {
       "cbsaCode": "43700",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:29:01.047Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43700.geojson",
+      "completedAt": "2026-07-12T16:29:04.645Z"
     },
     "43740": {
       "cbsaCode": "43740",
-      "status": "pending",
-      "zipCount": 24
+      "status": "done",
+      "zipCount": 24,
+      "startedAt": "2026-07-12T16:29:04.656Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43740.geojson",
+      "completedAt": "2026-07-12T16:29:15.642Z"
     },
     "43760": {
       "cbsaCode": "43760",
-      "status": "pending",
-      "zipCount": 14
+      "status": "done",
+      "zipCount": 14,
+      "startedAt": "2026-07-12T16:29:15.654Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43760.geojson",
+      "completedAt": "2026-07-12T16:29:22.683Z"
     },
     "43780": {
       "cbsaCode": "43780",
-      "status": "pending",
-      "zipCount": 26
+      "status": "done",
+      "zipCount": 26,
+      "startedAt": "2026-07-12T16:29:22.700Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43780.geojson",
+      "completedAt": "2026-07-12T16:29:33.335Z"
     },
     "43900": {
       "cbsaCode": "43900",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T16:29:33.347Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43900.geojson",
+      "completedAt": "2026-07-12T16:29:42.474Z"
     },
     "43940": {
       "cbsaCode": "43940",
-      "status": "pending",
-      "zipCount": 4
+      "status": "done",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:29:42.487Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43940.geojson",
+      "completedAt": "2026-07-12T16:29:44.454Z"
     },
     "43980": {
       "cbsaCode": "43980",
-      "status": "pending",
-      "zipCount": 10
+      "status": "done",
+      "zipCount": 10,
+      "startedAt": "2026-07-12T16:29:44.466Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/43980.geojson",
+      "completedAt": "2026-07-12T16:29:48.795Z"
     },
     "44020": {
       "cbsaCode": "44020",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:29:48.808Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44020.geojson",
+      "completedAt": "2026-07-12T16:29:51.924Z"
     },
     "44060": {
       "cbsaCode": "44060",
-      "status": "pending",
-      "zipCount": 48
+      "status": "done",
+      "zipCount": 48,
+      "startedAt": "2026-07-12T16:29:51.937Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44060.geojson",
+      "completedAt": "2026-07-12T16:30:12.263Z"
     },
     "44100": {
       "cbsaCode": "44100",
-      "status": "pending",
-      "zipCount": 27
+      "status": "done",
+      "zipCount": 27,
+      "startedAt": "2026-07-12T16:30:12.278Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44100.geojson",
+      "completedAt": "2026-07-12T16:30:23.983Z"
     },
     "44140": {
       "cbsaCode": "44140",
-      "status": "pending",
-      "zipCount": 82
+      "status": "done",
+      "zipCount": 82,
+      "startedAt": "2026-07-12T16:30:23.995Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44140.geojson",
+      "completedAt": "2026-07-12T16:30:57.336Z"
     },
     "44180": {
       "cbsaCode": "44180",
-      "status": "pending",
-      "zipCount": 42
+      "status": "done",
+      "zipCount": 42,
+      "startedAt": "2026-07-12T16:30:57.358Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44180.geojson",
+      "completedAt": "2026-07-12T16:31:15.952Z"
     },
     "44220": {
       "cbsaCode": "44220",
-      "status": "pending",
-      "zipCount": 13
+      "status": "done",
+      "zipCount": 13,
+      "startedAt": "2026-07-12T16:31:16.028Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44220.geojson",
+      "completedAt": "2026-07-12T16:31:22.087Z"
     },
     "44260": {
       "cbsaCode": "44260",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:31:22.125Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44260.geojson",
+      "completedAt": "2026-07-12T16:31:27.166Z"
     },
     "44300": {
       "cbsaCode": "44300",
-      "status": "pending",
-      "zipCount": 27
+      "status": "done",
+      "zipCount": 27,
+      "startedAt": "2026-07-12T16:31:27.198Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44300.geojson",
+      "completedAt": "2026-07-12T16:31:38.539Z"
     },
     "44340": {
       "cbsaCode": "44340",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:31:38.551Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44340.geojson",
+      "completedAt": "2026-07-12T16:31:41.474Z"
     },
     "44420": {
       "cbsaCode": "44420",
-      "status": "pending",
-      "zipCount": 21
+      "status": "done",
+      "zipCount": 21,
+      "startedAt": "2026-07-12T16:31:42.158Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44420.geojson",
+      "completedAt": "2026-07-12T16:31:52.189Z"
     },
     "44460": {
       "cbsaCode": "44460",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:31:52.201Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44460.geojson",
+      "completedAt": "2026-07-12T16:31:55.724Z"
     },
     "44500": {
       "cbsaCode": "44500",
-      "status": "pending",
-      "zipCount": 6
+      "status": "done",
+      "zipCount": 6,
+      "startedAt": "2026-07-12T16:31:55.736Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44500.geojson",
+      "completedAt": "2026-07-12T16:31:58.877Z"
     },
     "44540": {
       "cbsaCode": "44540",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:31:58.894Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44540.geojson",
+      "completedAt": "2026-07-12T16:32:02.383Z"
     },
     "44580": {
       "cbsaCode": "44580",
-      "status": "pending",
-      "zipCount": 11
+      "status": "done",
+      "zipCount": 11,
+      "startedAt": "2026-07-12T16:32:02.394Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44580.geojson",
+      "completedAt": "2026-07-12T16:32:07.207Z"
     },
     "44620": {
       "cbsaCode": "44620",
-      "status": "pending",
-      "zipCount": 12
+      "status": "done",
+      "zipCount": 12,
+      "startedAt": "2026-07-12T16:32:07.221Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44620.geojson",
+      "completedAt": "2026-07-12T16:32:12.562Z"
     },
     "44660": {
       "cbsaCode": "44660",
-      "status": "pending",
-      "zipCount": 7
+      "status": "done",
+      "zipCount": 7,
+      "startedAt": "2026-07-12T16:32:12.573Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44660.geojson",
+      "completedAt": "2026-07-12T16:32:15.605Z"
     },
     "44700": {
       "cbsaCode": "44700",
-      "status": "pending",
-      "zipCount": 30
+      "status": "done",
+      "zipCount": 30,
+      "startedAt": "2026-07-12T16:32:15.615Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44700.geojson",
+      "completedAt": "2026-07-12T16:32:28.235Z"
     },
     "44740": {
       "cbsaCode": "44740",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:32:28.246Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44740.geojson",
+      "completedAt": "2026-07-12T16:32:32.094Z"
     },
     "44780": {
       "cbsaCode": "44780",
-      "status": "pending",
-      "zipCount": 9
+      "status": "done",
+      "zipCount": 9,
+      "startedAt": "2026-07-12T16:32:32.105Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44780.geojson",
+      "completedAt": "2026-07-12T16:32:35.883Z"
     },
     "44860": {
       "cbsaCode": "44860",
-      "status": "pending",
-      "zipCount": 8
+      "status": "done",
+      "zipCount": 8,
+      "startedAt": "2026-07-12T16:32:35.895Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44860.geojson",
+      "completedAt": "2026-07-12T16:32:39.836Z"
     },
     "44900": {
       "cbsaCode": "44900",
-      "status": "pending",
-      "zipCount": 3
+      "status": "done",
+      "zipCount": 3,
+      "startedAt": "2026-07-12T16:32:39.848Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44900.geojson",
+      "completedAt": "2026-07-12T16:32:41.390Z"
     },
     "44920": {
       "cbsaCode": "44920",
@@ -4281,23 +5208,33 @@
     },
     "44940": {
       "cbsaCode": "44940",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T16:32:41.402Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44940.geojson",
+      "completedAt": "2026-07-12T16:32:48.113Z"
     },
     "44980": {
       "cbsaCode": "44980",
-      "status": "pending",
-      "zipCount": 16
+      "status": "done",
+      "zipCount": 16,
+      "startedAt": "2026-07-12T16:32:48.126Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/44980.geojson",
+      "completedAt": "2026-07-12T16:32:55.038Z"
     },
     "45000": {
       "cbsaCode": "45000",
-      "status": "pending",
-      "zipCount": 15
+      "status": "done",
+      "zipCount": 15,
+      "startedAt": "2026-07-12T16:32:55.048Z",
+      "shardPath": "/Users/gradys/workspace/github-ps/cineborough/data/metros/45000.geojson",
+      "completedAt": "2026-07-12T16:33:03.371Z"
     },
     "45020": {
       "cbsaCode": "45020",
-      "status": "pending",
-      "zipCount": 4
+      "status": "in_progress",
+      "zipCount": 4,
+      "startedAt": "2026-07-12T16:33:03.393Z"
     },
     "45060": {
       "cbsaCode": "45060",
