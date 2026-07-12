@@ -64,5 +64,5 @@ When completing a ticket:
 
 ## Current Active Work
 
-- **Epic:** [E002 — Cinematic UX](./epics/E002-cinematic-ux.md)
-- **Sprint:** [S002 — Phase 2 Cinematic UX](./sprints/S002-cinematic-ux/sprint.md)
+- **Epic:** [E008 — Wishlist Discovery](./epics/E008-wishlist-discovery.md)
+- **Sprint:** [S014 — Wishlist Discovery](./sprints/S014-wishlist-discovery/sprint.md)

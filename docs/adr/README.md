@@ -21,6 +21,7 @@ Architecture Decision Records (ADRs) for Cineborough — a hope-core real estate
 | [011](./011-national-metro-tile-strategy.md) | National Metro Tile Strategy (3,100+ CBSAs) | Accepted | 2026-07-11 |
 | [012](./012-public-bulk-data-ingest.md) | Data Sourcing: Public Bulk Ingest | Accepted | 2026-07-11 |
 | [013](./013-multi-metro-sandbox-expansion.md) | Multi-Metro Sandbox Expansion | Accepted | 2026-07-12 |
+| [014](./014-wishlist-discovery-engine.md) | Wishlist Discovery Engine | Accepted | 2026-07-12 |
 
 ---
 
@@ -143,3 +144,13 @@ Amends ADR-004 for E007 validation sandboxes:
 - Four CBSAs: DC (47900), Orlando (36740), SF Bay (41860), San Jose (41940) — 68 ZCTAs
 - Live ingest + enriched shards; hybrid discovery journey sandbox-only
 - Choropleth fixed thresholds documented in `docs/schema/choropleth-color-scales.md`
+
+### ADR 014 — Wishlist Discovery Engine
+
+Grill-me session (WMIL benchmark) replaces E007 hard-filter discovery with wish cards and partial Match %:
+
+- **Wishes** replace filters — category browser, histogram range sliders, per-wish Heatmap / High Priority / Just This
+- **Partial matches** — all sandbox ZIPs ranked 0–100%; pass / close / no-match per wish
+- **Results UX** — matches list, compare chips, My Wishes vs All Data tabs
+- **Taxonomy v2** — WMIL-aligned wish categories + cleaner labels (Median Home Price, Park & Walk Score)
+- Spec: [`docs/specifications/wishlist-discovery.md`](../specifications/wishlist-discovery.md); Epic E008 / Sprint S014

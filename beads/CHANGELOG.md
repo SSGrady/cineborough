@@ -279,3 +279,15 @@ Aggregated progress log for Cineborough development.
 - 3D scaffold badge when tiles flag enabled without API key
 
 **Status:** S013 polish → `done`.
+
+## 2026-07-12
+
+### E008 / S014 — Wishlist Discovery grill-me (ADR-014)
+
+- **ADR-014** Wishlist Discovery Engine — partial Match %, wish cards, priority weights, heatmap-per-metric, compare mode, taxonomy v2
+- **UX spec:** `docs/specifications/wishlist-discovery.md` (WMIL benchmark: wheremightilive.com)
+- **Epic E008** Wishlist Discovery (Where-Might-I-Live parity)
+- **Sprint S014** with 11 tickets T066–T076: scoring engine, wish UI, matches list, compare chips, breakdown tabs, new metrics, By Example
+- Root cause documented: E007 `evaluateFilters()` hard exclusion + permissive defaults → criteria feels like no-op
+
+**Status:** E008 → `open`. S014 → `open`. T066–T076 → `open`.
