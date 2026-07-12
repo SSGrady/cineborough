@@ -235,6 +235,25 @@ Aggregated progress log for Cineborough development.
 
 **Status:** T058 → `done`. S012 → `done`.
 
+### T060 — County drill-in, labels, fixed thresholds (S012)
+
+- `COUNTY_FIPS_TO_CBSA` maps 10 sandbox counties to nearest metro shard
+- County click drills into DC/Orlando/SF Bay/San Jose sandbox (replaces blocked clicks)
+- Zoom-gated county labels: names ≥5.5, metric values ≥6.5
+- County choropleth: data-only features, `opportunityScoreNormalized`, fixed $300k/$750k + forecast buckets
+
+**Status:** T060 → `done`. S012 county geography expansion complete.
+
+### T061 — National county tiles layer (S012)
+
+- `data/boundaries/us-counties-20m.geojson` — 3,109 continental counties from Census TIGERweb (simplified)
+- `buildCountyChoropleth` merges national metro centroid aggregation with sandbox shard ZIP overrides
+- Rural counties without metro coverage inherit state-level metro average as fallback
+- `build-us-county-tiles.ts` + `county-tiles.ts` stub for optional PMTiles (ADR-011 county tier)
+- County labels zoom-gated with area budget (40/120/280 caps by zoom)
+
+**Status:** T061 → `done`. S012 national county geography complete.
+
 ### T059 — San Jose Phase 2a QA (S011)
 
 - Default discovery criteria yielded 0 matches for CBSA 41940 on live ingest; added `SAN_JOSE_DISCOVERY_CRITERIA` with auto-apply on sandbox drill-in
@@ -242,3 +261,12 @@ Aggregated progress log for Cineborough development.
 - Playwright headless QA + API verification pass
 
 **Status:** T059 → `done`. All four sandboxes (DC, Orlando, SF Bay, San Jose) Phase 2a QA complete.
+
+## 2026-07-12 (continued)
+
+### S013 — Phase 2b Cinematic Scaffold (E002)
+
+- T061–T065: 3D tiles flag stub, 3D camera paths, CSS motion, photo hero, satellite locale quotes
+- ADR-008 amended with Phase 2b gating
+
+**Status:** S013 → `done`.

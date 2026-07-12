@@ -3,6 +3,7 @@ import {
   CINEMATIC_CAMERAS,
   type MapCameraTarget,
 } from "./color-scales";
+import { interpolateCinematic3DCamera } from "./cinematic-3d-cameras";
 import { isFiniteLngLat, isValidCameraTarget, sanitizeCameraTarget } from "./camera-utils";
 import { US_INSET_CAMERAS, US_NATIONAL_CAMERA, type UsInsetRegion } from "./us-map";
 
@@ -36,6 +37,8 @@ export interface GeographyCameraOptions {
   /** DC sandbox story scroll — disabled when user pans away */
   dcStoryActive?: boolean;
   scrollProgress?: number | null;
+  /** Phase 2b — steeper GSAP path when 3D tiles flag is on */
+  use3DCameraPath?: boolean;
 }
 
 const GEOGRAPHY_PRESETS: Record<GeographyLevel, MapCameraTarget> = {
@@ -179,6 +182,7 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
     sandboxCinematicActive = false,
     dcStoryActive = false,
     scrollProgress = null,
+    use3DCameraPath = false,
   } = options;
 
   if (geography === "zip" && zipCenter && isFiniteLngLat(zipCenter)) {
@@ -186,7 +190,9 @@ export function resolveMapCamera(options: GeographyCameraOptions): MapCameraTarg
   }
 
   if (dcStoryActive && scrollProgress !== null && scrollProgress !== undefined) {
-    return interpolateCinematicCamera(scrollProgress);
+    return use3DCameraPath
+      ? interpolateCinematic3DCamera(scrollProgress)
+      : interpolateCinematicCamera(scrollProgress);
   }
 
   if (sandboxCinematicActive) {

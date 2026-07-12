@@ -17,6 +17,7 @@ import {
   getMetroTileConfig,
   METRIC_PROVENANCE,
   metricSourceDetail,
+  sandboxCbsaForCounty,
 } from "@cineborough/data";
 import {
   colorForChoropleth,
@@ -37,6 +38,7 @@ import { BottomBar } from "./BottomBar";
 import { buildTrailPaths, extractOuterRings, ringToPath } from "@/lib/selection-border";
 import { truncateLinePath } from "@/lib/path-trace";
 import { createPmtilesFetch } from "@/lib/pmtiles-fetch";
+import { createGoogle3DTilesLayer } from "@/lib/google-3d-tiles";
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 const METRO_TILES_URL = process.env.NEXT_PUBLIC_METRO_TILES_URL ?? null;
@@ -83,6 +85,7 @@ interface MapViewProps {
   pathTraceProgress?: number;
   /** Limit transit paths to a ZIP (discovery flyover) */
   pathFilterZip?: string | null;
+  enable3DTiles?: boolean;
 }
 
 interface LabelPoint {
@@ -94,6 +97,8 @@ interface LabelPoint {
 
 /** Zoom at which metric values appear beneath metro names (Reventure-style two-line labels). */
 const METRO_VALUE_LABEL_MIN_ZOOM = 5.75;
+const MIN_COUNTY_LABEL_ZOOM = 5.5;
+const MIN_COUNTY_VALUE_LABEL_ZOOM = 6.5;
 
 function ringAreaSqDeg(ring: number[][]): number {
   let area = 0;
@@ -168,8 +173,28 @@ function buildStateLabelData(
 function buildCountyLabelData(
   geoJson: DcMetroGeoJson,
   activeMetric: MetricLayerKey,
+  mapZoom: number,
 ): LabelPoint[] {
-  return buildStateLabelData(geoJson, activeMetric);
+  if (mapZoom < MIN_COUNTY_LABEL_ZOOM) return [];
+
+  const cap =
+    mapZoom < 7 ? 40 : mapZoom < 8 ? 120 : mapZoom < 9 ? 280 : Number.POSITIVE_INFINITY;
+
+  const candidates = geoJson.features
+    .filter((f) => f.properties.medianHomeValue > 0)
+    .map((f) => {
+      const area = metroGeometryArea(f.geometry);
+      const point = featureToLabelPoint(f.properties, activeMetric);
+      return point ? { point, area } : null;
+    })
+    .filter((entry): entry is { point: LabelPoint; area: number } => entry !== null);
+
+  if (!Number.isFinite(cap)) return candidates.map(({ point }) => point);
+
+  return candidates
+    .sort((a, b) => b.area - a.area)
+    .slice(0, cap)
+    .map(({ point }) => point);
 }
 
 function buildNationalLabelData(
@@ -278,6 +303,7 @@ export function MapView({
   amenityHighlightZip = null,
   pathTraceProgress = 1,
   pathFilterZip = null,
+  enable3DTiles = false,
 }: MapViewProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<mapboxgl.Map | null>(null);
@@ -365,7 +391,7 @@ export function MapView({
       return buildStateLabelData(geoJson, activeMetric);
     }
     if (geographyLevel === "county") {
-      return buildCountyLabelData(geoJson, activeMetric);
+      return buildCountyLabelData(geoJson, activeMetric, mapZoom);
     }
     return buildMetroLabelData(geoJson, activeMetric, mapZoom);
   }, [geoJson, activeMetric, overviewMode, geographyLevel, mapZoom]);
@@ -559,7 +585,10 @@ export function MapView({
 
     const overview = isOverviewView;
     const isMetroOverview = overview && geographyLevel === "metro";
+    const isCountyOverview = overview && geographyLevel === "county";
     const showMetroValues = !isMetroOverview || mapZoom >= METRO_VALUE_LABEL_MIN_ZOOM;
+    const showCountyValues = !isCountyOverview || mapZoom >= MIN_COUNTY_VALUE_LABEL_ZOOM;
+    const showMetricValues = showMetroValues && showCountyValues;
     const nameSize = overview
       ? geographyLevel === "national"
         ? 18
@@ -595,14 +624,14 @@ export function MapView({
       getText: (d: LabelPoint) => d.name,
       getSize: nameSize,
       getColor: [15, 23, 42, 255],
-      getPixelOffset: [0, showMetroValues ? -lineGap / 2 : 0],
+      getPixelOffset: [0, showMetricValues ? -lineGap / 2 : 0],
       updateTriggers: {
         getSize: [geographyLevel, mapZoom],
-        getPixelOffset: [nameSize, showMetroValues],
+        getPixelOffset: [nameSize, showMetricValues],
       },
     });
 
-    if (!showMetroValues) return [nameLayer];
+    if (!showMetricValues) return [nameLayer];
 
     const valueLayer = new TextLayer({
       ...shared,
@@ -689,14 +718,20 @@ export function MapView({
     return [glow, dots];
   }, [amenityHighlightZip]);
 
+  const google3DTilesLayer = useMemo(() => {
+    if (!enable3DTiles) return null;
+    return createGoogle3DTilesLayer();
+  }, [enable3DTiles]);
+
   const layers = useMemo(() => {
     const base = useMetroTiles && metroMvtLayer ? metroMvtLayer : choroplethLayer;
     const stack: Layer[] = [base, ...selectionBorderLayers];
+    if (google3DTilesLayer) stack.push(google3DTilesLayer);
     if (pathVisible && pathLayer) stack.push(pathLayer);
     stack.push(...amenityLayers);
     stack.push(...labelLayers);
     return stack;
-  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, pathLayer, amenityLayers, labelLayers, pathVisible]);
+  }, [choroplethLayer, metroMvtLayer, useMetroTiles, selectionBorderLayers, google3DTilesLayer, pathLayer, amenityLayers, labelLayers, pathVisible]);
 
   const handleClick = useCallback(
     (info: PickingInfo) => {
@@ -713,6 +748,9 @@ export function MapView({
         return;
       }
       if (isOverviewView && (geographyLevel === "state" || geographyLevel === "county")) {
+        if (geographyLevel === "county" && sandboxCbsaForCounty(zip)) {
+          onZipSelect?.(zip);
+        }
         return;
       }
 

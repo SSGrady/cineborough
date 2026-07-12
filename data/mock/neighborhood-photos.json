@@ -1,0 +1,70 @@
+{
+  "photos": [
+    {
+      "zip": "22201",
+      "url": "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=1920&q=85&auto=format",
+      "alt": "Clarendon streetscape at dusk",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "22202",
+      "url": "https://images.unsplash.com/photo-1480712319146-aef32e5e1571?w=1920&q=85&auto=format",
+      "alt": "Crystal City urban corridor",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "22204",
+      "url": "https://images.unsplash.com/photo-1514565131-fce0801e5785?w=1920&q=85&auto=format",
+      "alt": "Arlington residential tree-lined street",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "20001",
+      "url": "https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=1920&q=85&auto=format",
+      "alt": "DC row houses and skyline",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "20814",
+      "url": "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1920&q=85&auto=format",
+      "alt": "Bethesda suburban neighborhood",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "32801",
+      "url": "https://images.unsplash.com/photo-1516253597115-45e0d02302b3?w=1920&q=85&auto=format",
+      "alt": "Downtown Orlando lakefront",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "32803",
+      "url": "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&q=85&auto=format",
+      "alt": "Orlando bungalow neighborhood",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "94102",
+      "url": "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=1920&q=85&auto=format",
+      "alt": "San Francisco Golden Gate vista",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "94110",
+      "url": "https://images.unsplash.com/photo-1506973035872-a4ec16b8ece8?w=1920&q=85&auto=format",
+      "alt": "Mission District street life",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "95110",
+      "url": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85&auto=format",
+      "alt": "San Jose tech campus neighborhood",
+      "credit": "Unsplash"
+    },
+    {
+      "zip": "95112",
+      "url": "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1920&q=85&auto=format",
+      "alt": "San Jose residential street",
+      "credit": "Unsplash"
+    }
+  ]
+}

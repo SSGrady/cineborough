@@ -1,14 +1,16 @@
 "use client";
 
 import { getLocaleQuote } from "@cineborough/data";
+import { buildMapboxStaticImageUrl } from "@/lib/mapbox-static-image";
+import { isSatelliteQuoteBgEnabled } from "@/lib/cinematic-flags";
 
 interface LocaleQuoteCardProps {
   zip: string;
-  /** Override from unified GeoJSON feature properties */
   quoteText?: string;
   primaryVibe?: string;
   source?: string;
   neighborhood?: string;
+  mapCenter?: [number, number] | null;
 }
 
 export function LocaleQuoteCard({
@@ -17,6 +19,7 @@ export function LocaleQuoteCard({
   primaryVibe,
   source,
   neighborhood,
+  mapCenter,
 }: LocaleQuoteCardProps) {
   const fallback = getLocaleQuote(zip);
   const text = quoteText ?? fallback?.text;
@@ -26,9 +29,25 @@ export function LocaleQuoteCard({
 
   if (!text) return null;
 
+  const satelliteUrl =
+    isSatelliteQuoteBgEnabled() && mapCenter
+      ? buildMapboxStaticImageUrl({ center: mapCenter, zoom: 15, pitch: 45 })
+      : null;
+
   return (
-    <article className="locale-quote" aria-label={`Community quote for ${hood}`}>
-      <div className="locale-quote__bg" aria-hidden="true" />
+    <article
+      className={`locale-quote${satelliteUrl ? " locale-quote--satellite" : ""}`}
+      aria-label={`Community quote for ${hood}`}
+    >
+      {satelliteUrl ? (
+        <div
+          className="locale-quote__bg locale-quote__bg--satellite"
+          style={{ backgroundImage: `url(${satelliteUrl})` }}
+          aria-hidden="true"
+        />
+      ) : (
+        <div className="locale-quote__bg" aria-hidden="true" />
+      )}
       <div className="locale-quote__content">
         {vibe && <p className="locale-quote__vibe">{vibe}</p>}
         <blockquote>

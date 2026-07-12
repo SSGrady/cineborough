@@ -298,6 +298,134 @@ body {
   box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.12), var(--shadow);
 }
 
+.cinematic-motion > * {
+  opacity: 0;
+  transform: translateY(0.75rem);
+}
+
+.cinematic-motion--active > * {
+  animation: cinematic-motion-enter 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.cinematic-motion--active > *:nth-child(1) {
+  animation-delay: calc(var(--motion-stagger, 0.07s) * 0);
+}
+
+.cinematic-motion--active > *:nth-child(2) {
+  animation-delay: calc(var(--motion-stagger, 0.07s) * 1);
+}
+
+.cinematic-motion--active > *:nth-child(3) {
+  animation-delay: calc(var(--motion-stagger, 0.07s) * 2);
+}
+
+@keyframes cinematic-motion-enter {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.photo-hero {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 4.5rem;
+  z-index: 6;
+  width: min(420px, calc(100% - 1.5rem));
+  border-radius: 0.75rem;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.35);
+  opacity: 0;
+  transform: translateY(1rem) scale(0.98);
+  transition:
+    opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.photo-hero--visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.photo-hero--fading {
+  opacity: 0;
+  transform: translateY(0.5rem) scale(0.99);
+}
+
+.photo-hero__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.photo-hero__caption {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  align-items: baseline;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.82);
+  color: #f8fafc;
+  font-size: 0.6875rem;
+}
+
+.photo-hero__zip {
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.photo-hero__label {
+  flex: 1;
+  color: rgba(248, 250, 252, 0.85);
+}
+
+.photo-hero__credit {
+  color: rgba(248, 250, 252, 0.55);
+  font-size: 0.625rem;
+}
+
+.tiles-badge {
+  position: absolute;
+  top: 3.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 8;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  padding: 0.35rem 0.75rem;
+  background: rgba(15, 23, 42, 0.88);
+  color: #f8fafc;
+  border-radius: 0.5rem;
+  font-size: 0.6875rem;
+  pointer-events: none;
+}
+
+.tiles-badge__label {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #fbbf24;
+}
+
+.tiles-badge__hint code {
+  font-size: 0.625rem;
+  color: #93c5fd;
+}
+
+.cinematic--tour .photo-hero {
+  bottom: 5.5rem;
+}
+
 .analytics-overlay__chrome {
   display: flex;
   align-items: center;
@@ -965,6 +1093,16 @@ body {
     linear-gradient(160deg, #fef2f2 0%, #ffffff 45%, #f8fafc 100%);
   filter: blur(16px);
   transform: scale(1.1);
+}
+
+.locale-quote__bg--satellite {
+  background-size: cover;
+  background-position: center;
+  filter: blur(12px) saturate(1.1);
+}
+
+.locale-quote--satellite .locale-quote__content {
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .locale-quote__content {

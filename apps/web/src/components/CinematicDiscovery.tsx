@@ -8,9 +8,10 @@ import {
   getPropertiesByZip,
   getPropertyById,
   zipMetricsFromGeoJson,
+  getNeighborhoodPhoto,
   loadUsMetrosGeoJson,
   buildStateChoroplethFromMetros,
-  buildCountyChoroplethFromShards,
+  buildCountyChoropleth,
   buildNationalChoroplethFromMetros,
   loadMetroShardsGeoJson,
   DC_METRO_CBSA,
@@ -20,6 +21,7 @@ import {
   loadMetroShard,
   fetchMetroShard,
   sandboxCbsaForZip,
+  sandboxCbsaForCounty,
   METRIC_LAYERS,
   rankNeighborhoods,
   type DiscoveryCriteria,
@@ -61,6 +63,14 @@ import { PropertyValuationPanel } from "./PropertyValuationPanel";
 import { UsMapInsets } from "./UsMapInsets";
 import { AnalyticsOverlay } from "./AnalyticsOverlay";
 import { DiscoveryAnalyticsPanel } from "./DiscoveryAnalyticsPanel";
+import { NeighborhoodPhotoHero } from "./NeighborhoodPhotoHero";
+import { Google3DTilesBadge } from "./Google3DTilesBadge";
+import {
+  is3DTilesFlagEnabled,
+  is3DTilesActive,
+  isPhotoHeroEnabled,
+} from "@/lib/cinematic-flags";
+import { getGoogle3DTilesStatus } from "@/lib/google-3d-tiles";
 import { buildSearchIndex, type SearchResult } from "@/lib/search-index";
 import { formatPercent } from "@/lib/format";
 import {
@@ -111,7 +121,7 @@ const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · click a metro to drill in",
   state: "State view · metric label per state",
   metro: "All metros · click a region to open sandbox detail",
-  county: "County view · sandbox states (VA, MD, DC, FL, CA)",
+  county: "County view · national counties · click sandbox county to drill in",
 };
 
 const SANDBOX_CBSA = new Set([DC_METRO_CBSA, ORLANDO_METRO_CBSA, SF_METRO_CBSA, SAN_JOSE_METRO_CBSA]);
@@ -173,6 +183,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const cinematicTourActive = dcStoryActive || discoveryFlyoverActive;
 
+  const enable3DTiles = is3DTilesActive();
+  const use3DCameraPath = is3DTilesFlagEnabled() && dcStoryActive;
+  const tilesStatus = getGoogle3DTilesStatus();
+  const photoHeroEnabled = isPhotoHeroEnabled();
+
   const activeShardGeoJson = useMemo(
     () => loadMetroShard(activeSandboxCbsa) ?? geoJson,
     [activeSandboxCbsa, geoJson],
@@ -207,7 +222,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return buildStateChoroplethFromMetros(US_METROS_GEOJSON, activeMetric);
     }
     if (geography === "county") {
-      return buildCountyChoroplethFromShards(SANDBOX_SHARDS_GEOJSON, activeMetric);
+      return buildCountyChoropleth(US_METROS_GEOJSON, SANDBOX_SHARDS_GEOJSON, activeMetric);
     }
     return US_METROS_GEOJSON;
   }, [geography, activeMetric]);
@@ -386,6 +401,21 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSearchFlyTarget(null);
 
       if (isOverviewMode) {
+        const countyCbsa = sandboxCbsaForCounty(regionId);
+        if (countyCbsa) {
+          setActiveSandboxCbsa(countyCbsa);
+          setSandboxDrillActive(true);
+          setStoryCameraActive(countyCbsa === DC_METRO_CBSA);
+          setSelectedZip(null);
+          setSelectedPropertyId(null);
+          setUsInsetRegion("continental");
+          if (countyCbsa === DC_METRO_CBSA) {
+            window.scrollTo({ top: 0, behavior: "smooth" });
+            requestAnimationFrame(() => ScrollTrigger.refresh());
+          }
+          return;
+        }
+
         if (
           regionId === DC_METRO_CBSA ||
           regionId === ORLANDO_METRO_CBSA ||
@@ -584,6 +614,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       sandboxCinematicActive: storyCameraActive && sandboxDrillActive,
       dcStoryActive,
       scrollProgress: dcStoryActive ? scrollProgress : null,
+      use3DCameraPath,
     });
   }, [
     geography,
@@ -600,6 +631,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     searchFlyTarget,
     discoveryFlyover,
     exitRestoreTarget,
+    use3DCameraPath,
   ]);
 
   const pathVisible =
@@ -824,6 +856,20 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeDiscoveryNeighborhood !== null &&
     (discoveryFlyover?.phase === "highlight" || discoveryTourComplete);
 
+  const photoHeroZip =
+    discoveryFlyover?.phase === "highlight"
+      ? (discoveryFlyover.results[discoveryFlyover.index]?.zip ?? null)
+      : dcStoryActive && activeSection === "detail"
+        ? (selectedZip ?? "22201")
+        : null;
+
+  const photoHeroVisible =
+    photoHeroEnabled &&
+    photoHeroZip !== null &&
+    (discoveryFlyover?.phase === "highlight" || (dcStoryActive && activeSection === "detail"));
+
+  const neighborhoodPhoto = photoHeroZip ? getNeighborhoodPhoto(photoHeroZip) : null;
+
   const metroDescription =
     !storyCameraActive && sandboxDrillActive
       ? "Story camera paused while you explore. Resume the DC guided tour or switch to National for the US map."
@@ -1027,6 +1073,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             quoteText={selectedFeature?.localQuote}
             primaryVibe={selectedFeature?.primaryVibe}
             neighborhood={selectedFeature?.neighborhoodName}
+            mapCenter={zipCenter}
           />
         </>
       );
@@ -1080,6 +1127,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     activeDiscoveryNeighborhood,
     discoveryFlyover,
     discoveryTourComplete,
+    zipCenter,
   ]);
 
   return (
@@ -1130,6 +1178,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             pathTraceProgress={discoveryFlyoverActive ? pathTraceProgress : 1}
             pathFilterZip={pathFilterZip}
             amenityHighlightZip={amenityHighlightZip}
+            enable3DTiles={enable3DTiles}
             selectionBorderVisible={!discoveryFlyoverActive}
             exploreMode={exploreMode}
             onToggleExploreMode={handleToggleExplore}
@@ -1144,6 +1193,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           {isOverviewMode && geography === "national" && !exploreMode && (
             <UsMapInsets activeRegion={usInsetRegion} onSelectRegion={handleInsetSelect} />
           )}
+          {photoHeroEnabled && (
+            <NeighborhoodPhotoHero
+              photo={neighborhoodPhoto}
+              visible={photoHeroVisible}
+              zip={photoHeroZip ?? undefined}
+              neighborhood={activeDiscoveryNeighborhood?.name}
+            />
+          )}
+          <Google3DTilesBadge status={tilesStatus} />
           {showAnalyticsOverlay && activeDiscoveryNeighborhood && (
             <AnalyticsOverlay
               neighborhood={activeDiscoveryNeighborhood}

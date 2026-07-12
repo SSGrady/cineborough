@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted
+Accepted — **Amended 2026-07-12** (Phase 2b scaffolding)
 
 ## Date
 
@@ -45,6 +45,21 @@ The north-star vision includes Google Earth-style cinematic fly-throughs, scroll
 - Phase 1 map is a flat 2D choropleth — this is the product, not a placeholder.
 - Deck.gl + Mapbox chosen in ADR-002 specifically to avoid rewrite for Phase 2.
 - Phase 2 start requires new beads epic and ADR amendment if stack changes.
+
+## Amendment (2026-07-12) — Phase 2b Gating
+
+Phase 2a shipped on Mapbox 2D + pitch (S011). Phase 2b adds optional Google 3D Photorealistic Tiles behind feature flags:
+
+| Flag | Default | Purpose |
+|------|---------|---------|
+| `NEXT_PUBLIC_ENABLE_3D_TILES` | `false` | Master switch for Google 3D tiles |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | unset | Required when 3D flag is on |
+
+**Fail-safe:** Flag off or key missing → Mapbox outdoors + pitched 2D camera. Dev badge surfaces missing-key state.
+
+**No-API polish (Phase 2b scaffold):** mock photo hero, Mapbox satellite locale quotes, CSS stagger motion.
+
+**Cost gate:** Production 3D tiles require billing approval per E002.
 
 ## Alternatives Considered
 
