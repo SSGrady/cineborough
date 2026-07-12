@@ -6,6 +6,14 @@ Aggregated progress log for Cineborough development.
 
 ## 2026-07-12
 
+### Find matches — discovery shell wiring (T066/T073)
+
+- `rankNeighborhoods` applies `DISCOVERY_MATCH_THRESHOLD` (40%) before returning ranked matches
+- Find matches passes normalized criteria synchronously (fixes stale state on button click)
+- `runDiscoveryRanking` drills selected/ingested metros via `resolveSelectedDiscoveryCbsa`
+- Criteria preview uses correct metro shard when overview metro is selected
+- ContextChip shows explicit hint when no neighborhoods meet threshold
+
 ### Nationwide metro ingest pipeline
 
 - CBSA catalog: 945 CBSAs, 918 with ZCTAs, 20,793 neighborhoods (`build:metro-catalog`)

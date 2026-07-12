@@ -4,7 +4,7 @@
 
 ## Phase 1 — WMIL Parity MVP
 
-- [ ] T066 — Partial match % scoring engine *(S014 prerequisite)*
+- [x] T066 — Partial match % scoring engine *(threshold + Find matches wiring; unit tests pending)*
 - [ ] T067 — Criteria storage v3 *(S014 prerequisite)*
 - [x] T080 — Criterion priority toggles (Heatmap / High Priority / Just This)
 - [x] T078 — State-grouped fly-to matches sidebar

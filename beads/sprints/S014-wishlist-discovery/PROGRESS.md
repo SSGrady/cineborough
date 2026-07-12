@@ -4,7 +4,7 @@
 
 ## Tickets
 
-- [ ] T066 — Partial match % scoring engine
+- [x] T066 — Partial match % scoring engine *(threshold wired in rankNeighborhoods + Find matches; unit tests pending)*
 - [ ] T067 — Wishlist types + storage v3
 - [x] T074 — Metric taxonomy v2 + criterion categories
 - [x] T068 — Criterion card UI + histogram slider *(terminology refresh: T077)*
@@ -23,6 +23,14 @@
 - E007 hard filters identified as root cause of "criteria no-op" perception
 - WMIL benchmark: partial matches, criterion cards, compare chips
 - **T077 (2026-07-12):** Renamed Wish* → Criteria*; spec at `docs/specifications/discovery-criteria-ux-v2.md`
+
+## Session 2026-07-12 (Find matches fix)
+
+- `rankNeighborhoods` filters by `DISCOVERY_MATCH_THRESHOLD` (40%) before returning matches
+- Find matches passes normalized criteria synchronously (fixes stale React state on click)
+- `runDiscoveryRanking` drills into selected/ingested metro via `resolveSelectedDiscoveryCbsa`
+- Criteria panel preview uses `criteriaShardGeoJson` for overview-selected metros
+- Empty-match ContextChip hint when all neighborhoods fall below threshold
 
 ## Session 2026-07-12 (WMIL shell)
 

@@ -25,6 +25,7 @@ import {
   METRIC_LAYERS,
   rankNeighborhoods,
   applySimilarityScores,
+  DISCOVERY_MATCH_THRESHOLD,
   MAX_EXAMPLE_ZIPS,
   type DiscoveryCriteria,
   type DiscoveryFilterMetric,
@@ -851,6 +852,29 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const criteriaNeedsMetroSelection = criteriaPanelVisible && selectedDiscoveryCbsa === null;
 
+  const criteriaShardGeoJson = useMemo((): DcMetroGeoJson | null => {
+    if (!selectedDiscoveryCbsa) return null;
+    const bundled = loadMetroShard(selectedDiscoveryCbsa);
+    if (bundled) return bundled;
+    if (loadedShards[selectedDiscoveryCbsa]) return loadedShards[selectedDiscoveryCbsa];
+    if (sandboxDrillActive && activeSandboxCbsa === selectedDiscoveryCbsa) {
+      return activeShardGeoJson;
+    }
+    return null;
+  }, [
+    selectedDiscoveryCbsa,
+    loadedShards,
+    sandboxDrillActive,
+    activeSandboxCbsa,
+    activeShardGeoJson,
+  ]);
+
+  useEffect(() => {
+    if (!criteriaPanelVisible || !selectedDiscoveryCbsa) return;
+    if (criteriaShardGeoJson) return;
+    void ensureMetroShard(selectedDiscoveryCbsa);
+  }, [criteriaPanelVisible, selectedDiscoveryCbsa, criteriaShardGeoJson, ensureMetroShard]);
+
   const deepDiveNeighborhood = useMemo((): RankedNeighborhood | null => {
     if (!deepDiveOpen || !selectedZip || !discoveryResults) return null;
     return discoveryResults.find((r) => r.zip === selectedZip) ?? null;
@@ -1017,7 +1041,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     saveDiscoveryCriteria(criteria);
     setDiscoveryResults((prev) => {
       if (prev === null) return prev;
-      const ranked = rankNeighborhoods(activeShardGeoJson, criteria, 0);
+      const ranked = rankNeighborhoods(activeShardGeoJson, criteria, { topN: 0 });
       return applySimilarityScores(ranked, activeShardGeoJson, exampleZips);
     });
   }, [activeShardGeoJson, exampleZips]);
@@ -1142,6 +1166,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       openDeepDive?: boolean;
       markTourComplete?: boolean;
       geoJson?: DcMetroGeoJson;
+      criteria?: DiscoveryCriteria;
     }) => {
       setDiscoveryMessage(null);
       setStoryCameraActive(false);
@@ -1156,13 +1181,28 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setDiscoveryTourComplete(false);
       }
 
+      const criteria = options?.criteria ?? discoveryCriteria;
+      if (options?.criteria) {
+        setDiscoveryCriteria(criteria);
+        saveDiscoveryCriteria(criteria);
+      }
+
       const shard = options?.geoJson ?? activeShardGeoJson;
-      const ranked = rankNeighborhoods(shard, discoveryCriteria, 0);
+      if (shard.features.length === 0) {
+        setDiscoveryResults([]);
+        setDiscoveryMessage("No neighborhoods in this metro");
+        setDeepDiveOpen(false);
+        return;
+      }
+
+      const ranked = rankNeighborhoods(shard, criteria, { topN: 0 });
       const results = applySimilarityScores(ranked, shard, exampleZips);
 
       if (results.length === 0) {
         setDiscoveryResults([]);
-        setDiscoveryMessage("No neighborhoods in this metro");
+        setDiscoveryMessage(
+          `No neighborhoods match your criteria (below ${DISCOVERY_MATCH_THRESHOLD}% match)`,
+        );
         setDeepDiveOpen(false);
         return;
       }
@@ -1271,23 +1311,69 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     handleOpenCriteria();
   }, [criteriaPanelOpen, handleOpenCriteria, handleMapOverview]);
 
-  const runDiscoveryRanking = useCallback(() => {
-    setDiscoveryMessage(null);
-    setDiscoveryTourComplete(false);
-    prevFlyoverRef.current = false;
+  const runDiscoveryRanking = useCallback(
+    (criteriaOverride?: DiscoveryCriteria) => {
+      setDiscoveryMessage(null);
+      setDiscoveryTourComplete(false);
+      prevFlyoverRef.current = false;
 
-    if (isOverviewMode || !isDiscoveryMetro(activeSandboxCbsa, ingestedCbsas)) {
-      setDiscoveryMessage("Select a metro on the map, then Explore city or drill into a sandbox");
-      return;
-    }
+      const selectedCbsa = resolveSelectedDiscoveryCbsa(
+        sandboxDrillActive,
+        activeSandboxCbsa,
+        selectedOverviewMetro,
+        ingestedCbsas,
+      );
 
-    enterDiscoveryMetro({ openDeepDive: false, markTourComplete: false });
-  }, [
-    isOverviewMode,
-    activeSandboxCbsa,
-    ingestedCbsas,
-    enterDiscoveryMetro,
-  ]);
+      if (!selectedCbsa) {
+        setDiscoveryMessage("Select a metro on the map to rank neighborhoods");
+        return;
+      }
+
+      if (!isDiscoveryMetro(selectedCbsa, ingestedCbsas)) {
+        setDiscoveryMessage("Metro data unavailable — try another metro");
+        return;
+      }
+
+      setDiscoveryShellActive(true);
+
+      const rankInShard = (shard: DcMetroGeoJson) => {
+        enterDiscoveryMetro({
+          openDeepDive: false,
+          markTourComplete: false,
+          geoJson: shard,
+          criteria: criteriaOverride,
+        });
+      };
+
+      if (sandboxDrillActive && activeSandboxCbsa === selectedCbsa && activeShardReady) {
+        rankInShard(activeShardGeoJson);
+        return;
+      }
+
+      setExploreCityLoading(true);
+      void drillIntoDiscoveryMetro(selectedCbsa)
+        .then((shard) => {
+          if (!shard) {
+            setDiscoveryMessage("Metro data unavailable — try another metro");
+            return;
+          }
+          rankInShard(shard);
+        })
+        .finally(() => {
+          setExploreCityLoading(false);
+        });
+    },
+    [
+      sandboxDrillActive,
+      activeSandboxCbsa,
+      selectedOverviewMetro,
+      ingestedCbsas,
+      activeShardReady,
+      activeShardGeoJson,
+      enterDiscoveryMetro,
+      drillIntoDiscoveryMetro,
+    ],
+  );
 
   useEffect(() => {
     if (!discoveryShellVisible) return;
@@ -1336,9 +1422,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     enterDiscoveryMetro,
   ]);
 
-  const handleDiscover = useCallback(() => {
-    runDiscoveryRanking();
-  }, [runDiscoveryRanking]);
+  const handleDiscover = useCallback(
+    (criteria?: DiscoveryCriteria) => {
+      runDiscoveryRanking(criteria);
+    },
+    [runDiscoveryRanking],
+  );
 
   const handleStartFlyoverTour = useCallback(() => {
     if (!discoveryResults || discoveryResults.length === 0) {
@@ -1884,7 +1973,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             ref={criteriaPanelRef}
             criteria={discoveryCriteria}
             resetCriteria={sandboxDiscoveryCriteria}
-            geoJson={criteriaNeedsMetroSelection ? null : activeShardGeoJson}
+            geoJson={criteriaNeedsMetroSelection ? null : criteriaShardGeoJson}
             onChange={handleApplyCriteria}
             onFindMatches={handleDiscover}
             exampleZips={exampleZips}

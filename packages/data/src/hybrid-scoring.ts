@@ -450,6 +450,13 @@ function scoringMetricsForCriteria(criteria: DiscoveryCriteria): DiscoveryFilter
   return FALLBACK_SCORING_METRICS;
 }
 
+export interface RankNeighborhoodsOptions {
+  /** Max results; 0 or negative returns all qualifying matches. */
+  topN?: number;
+  /** Minimum match % to include; 0 disables threshold filtering. */
+  threshold?: number;
+}
+
 /**
  * Rank sandbox ZIPs by weighted criteria match % (partial matches included).
  * Each active filter contributes equally; score decays linearly outside the target range.
@@ -457,8 +464,18 @@ function scoringMetricsForCriteria(criteria: DiscoveryCriteria): DiscoveryFilter
 export function rankNeighborhoods(
   geoJson: DcMetroGeoJson,
   criteria: DiscoveryCriteria = DEFAULT_DISCOVERY_CRITERIA,
-  topN = DEFAULT_DISCOVERY_TOP_N,
+  topNOrOptions: number | RankNeighborhoodsOptions = DEFAULT_DISCOVERY_TOP_N,
+  legacyThreshold?: number,
 ): RankedNeighborhood[] {
+  const options: RankNeighborhoodsOptions =
+    typeof topNOrOptions === "number"
+      ? { topN: topNOrOptions, threshold: legacyThreshold ?? DISCOVERY_MATCH_THRESHOLD }
+      : {
+          topN: topNOrOptions.topN ?? DEFAULT_DISCOVERY_TOP_N,
+          threshold: topNOrOptions.threshold ?? DISCOVERY_MATCH_THRESHOLD,
+        };
+  const topN = options.topN ?? DEFAULT_DISCOVERY_TOP_N;
+  const threshold = options.threshold ?? DISCOVERY_MATCH_THRESHOLD;
   const features = geoJson.features;
   const hasActiveFilters = criteria.filters.length > 0;
   const scoringMetrics = scoringMetricsForCriteria(criteria);
@@ -506,8 +523,12 @@ export function rankNeighborhoods(
     return b.matchPercent - a.matchPercent || b.score - a.score;
   });
 
-  const limit = topN <= 0 ? scored.length : Math.min(topN, scored.length);
-  return scored.slice(0, limit).map((entry, i) => ({ ...entry, rank: i + 1 }));
+  const qualifying =
+    threshold > 0
+      ? scored.filter((entry) => entry.matchPercent >= threshold)
+      : scored;
+  const limit = topN <= 0 ? qualifying.length : Math.min(topN, qualifying.length);
+  return qualifying.slice(0, limit).map((entry, i) => ({ ...entry, rank: i + 1 }));
 }
 
 function isFiniteLngLat(coord: unknown): coord is [number, number] {

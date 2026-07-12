@@ -25,7 +25,7 @@ interface CriteriaPanelProps {
   resetCriteria?: DiscoveryCriteria;
   geoJson: DcMetroGeoJson | null;
   onChange: (criteria: DiscoveryCriteria) => void;
-  onFindMatches: () => void;
+  onFindMatches: (criteria: DiscoveryCriteria) => void;
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   exampleZips?: string[];
@@ -119,8 +119,9 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
   };
 
   const handleFindMatches = () => {
-    onChange(normalizeCriteria(criteria));
-    onFindMatches();
+    const normalized = normalizeCriteria(criteria);
+    onChange(normalized);
+    onFindMatches(normalized);
   };
 
   if (collapsed) {
