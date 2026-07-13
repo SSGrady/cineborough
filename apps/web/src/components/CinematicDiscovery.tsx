@@ -733,11 +733,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
       setSelectedZip(regionId);
       setSelectedPropertyId(null);
+
+      // Matching mode keeps criteria/deep-dive chrome — map overview is explicit only.
+      if (criteriaPanelOpen || discoveryShellActive) {
+        return;
+      }
+
       setActiveSection("detail");
       setGeography("zip");
-      setStoryCameraActive(
-        !discoveryShellActive && targetCbsa === DC_METRO_CBSA,
-      );
+      setStoryCameraActive(targetCbsa === DC_METRO_CBSA);
       setScrollProgress(targetCbsa === DC_METRO_CBSA ? 1 : 0);
     },
     [
@@ -1012,7 +1016,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return map;
   }, [activeShardGeoJson]);
 
-  const showMetricSidebar = !criteriaPanelVisible;
+  const showMetricSidebar = !criteriaPanelOpen;
 
   const sidebarMode =
     isOverviewMode || (activeSection === "metro" && dcStoryActive) ? "full" : "slim";
@@ -1282,19 +1286,24 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setSearchFlyTarget(null);
       setSelectedZip(match.zip);
       setSelectedPropertyId(null);
-      setGeography("zip");
-      setActiveSection("detail");
       setStoryCameraActive(false);
-      setScrollProgress(0);
-      if (discoveryShellActive) {
+      if (criteriaPanelOpen) {
         setDeepDiveOpen(true);
         setDrawerOpen(false);
       } else {
-        setDrawerOpen(true);
+        setGeography("zip");
+        setActiveSection("detail");
+        setScrollProgress(0);
+        if (discoveryShellActive) {
+          setDeepDiveOpen(true);
+          setDrawerOpen(false);
+        } else {
+          setDrawerOpen(true);
+        }
       }
       requestFlyTo(resolveMatchCenter(match, shard));
     },
-    [discoveryShellActive, requestFlyTo, resolveMatchCenter],
+    [criteriaPanelOpen, discoveryShellActive, requestFlyTo, resolveMatchCenter],
   );
 
   const handleMatchSelect = useCallback(
@@ -1362,19 +1371,51 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const handleMapZipSelect = useCallback(
     (regionId: string | null) => {
-      handleZipSelect(regionId);
-      if (!regionId || !discoveryShellActive || !sandboxDrillActive || isOverviewMode) {
+      if (!regionId) {
+        setSelectedZip(null);
+        setSelectedPropertyId(null);
+        setSelectedMatchKey(null);
+        setDeepDiveOpen(false);
         return;
       }
-      flyToZip(regionId);
-      setDeepDiveOpen(true);
-      setDrawerOpen(false);
+
+      if (!discoveryShellActive || !sandboxDrillActive || isOverviewMode) {
+        handleZipSelect(regionId);
+        return;
+      }
+
+      setSearchFlyTarget(null);
+      setExitRestoreTarget(null);
+
+      const discoveryMatch = discoveryResults?.find((r) => r.zip === regionId);
+      const targetCbsa = discoveryMatch?.cbsaCode ?? sandboxCbsaForZip(regionId);
+      if (targetCbsa) {
+        setActiveSandboxCbsa(targetCbsa);
+        if (!SANDBOX_CBSA.has(targetCbsa)) {
+          void ensureMetroShard(targetCbsa);
+        }
+      }
+
+      setSelectedZip(regionId);
+      setSelectedPropertyId(null);
+
+      if (discoveryMatch) {
+        setSelectedMatchKey(matchKey(discoveryMatch));
+        flyToZip(regionId);
+        setDeepDiveOpen(true);
+        setDrawerOpen(false);
+      } else {
+        setSelectedMatchKey(null);
+        setDeepDiveOpen(false);
+      }
     },
     [
       handleZipSelect,
       discoveryShellActive,
       sandboxDrillActive,
       isOverviewMode,
+      discoveryResults,
+      ensureMetroShard,
       flyToZip,
     ],
   );
