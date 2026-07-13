@@ -37,8 +37,8 @@ interface CriteriaPanelProps {
   matchCount?: number;
   matchingInFlight?: boolean;
   onApplyArchetype?: (criteria: DiscoveryCriteria) => void;
-  /** Fired when criteria should trigger a rank pass (slider release, add/remove, etc.). */
-  onCriteriaCommit?: () => void;
+  /** Fired when criteria should trigger a rank pass (slider release, sort toggles, etc.). */
+  onCriteriaCommit?: (criteria: DiscoveryCriteria) => void;
 }
 
 function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
@@ -97,8 +97,9 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
   }, [geoJson, criteria]);
 
   const emitChange = (next: DiscoveryCriteria, commit = false) => {
-    onChange(normalizeCriteria(next));
-    if (commit) onCriteriaCommit?.();
+    const normalized = normalizeCriteria(next);
+    onChange(normalized);
+    if (commit) onCriteriaCommit?.(normalized);
   };
 
   const commitChange = (next: DiscoveryCriteria) => {
@@ -269,7 +270,7 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
                       geoJson={geoJson}
                       heatmapActive={filter.heatmapActive}
                       onChange={(patch) => updateFilter(filter.id, patch)}
-                      onChangeEnd={onCriteriaCommit}
+                      onChangeEnd={() => onCriteriaCommit?.(normalizeCriteria(criteria))}
                     />
                     <div className="criterion-card__toggles" role="group" aria-label="Criterion controls">
                       <button
@@ -286,7 +287,15 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
                         type="button"
                         className={`criterion-card__toggle${filter.priority ? " criterion-card__toggle--on" : ""}`}
                         aria-pressed={filter.priority ?? false}
-                        onClick={() => updateFilter(filter.id, { priority: !filter.priority })}
+                        onClick={() =>
+                          commitChange({
+                            filters: criteria.filters.map((f) =>
+                              f.id === filter.id
+                                ? { ...f, priority: !filter.priority }
+                                : f,
+                            ),
+                          })
+                        }
                       >
                         High Priority
                       </button>
@@ -295,7 +304,17 @@ export const CriteriaPanel = forwardRef<HTMLElement, CriteriaPanelProps>(functio
                         className={`criterion-card__toggle${filter.sortMode ? " criterion-card__toggle--on" : ""}`}
                         aria-pressed={filter.sortMode ?? false}
                         onClick={() =>
-                          updateFilter(filter.id, { sortMode: !filter.sortMode })
+                          commitChange({
+                            filters: criteria.filters.map((f) => {
+                              if (f.id === filter.id) {
+                                return { ...f, sortMode: !filter.sortMode };
+                              }
+                              if (!filter.sortMode && f.sortMode) {
+                                return { ...f, sortMode: false };
+                              }
+                              return f;
+                            }),
+                          })
                         }
                       >
                         Just This

@@ -32,6 +32,7 @@ import {
   type RankedNeighborhood,
   discoveryCriteriaForSandbox,
   dedupeRankedMatchesByDisplayName,
+  sortRankedNeighborhoods,
   getDiscoveryMetricLabel,
   getRawMetricFromFeature,
   getCriteriaChoroplethMetric,
@@ -56,7 +57,7 @@ import {
   type UsInsetRegion,
   type MapCameraTarget,
 } from "@cineborough/geo";
-import { fetchDiscoveryRank, criteriaHash } from "@/lib/reactive-discovery";
+import { fetchDiscoveryRank, criteriaHash, criteriaMatchHash } from "@/lib/reactive-discovery";
 import { matchKey } from "@/lib/match-keys";
 import { MapView } from "./MapView";
 import { Sidebar } from "./Sidebar";
@@ -251,6 +252,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const rankAbortRef = useRef<AbortController | null>(null);
   const rankDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastRankedHashRef = useRef<string | null>(null);
+  const lastRankedMatchHashRef = useRef<string | null>(null);
   const cameraLockedByUserRef = useRef(false);
   const [explicitFlyTarget, setExplicitFlyTarget] = useState<MapCameraTarget | null>(null);
   const [rankCriteria, setRankCriteria] = useState<DiscoveryCriteria>(() => loadDiscoveryCriteria());
@@ -1055,7 +1057,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       const normalized =
         scope === "national"
           ? dedupeRankedMatchesByDisplayName(results, criteria)
-          : results;
+          : sortRankedNeighborhoods(results, criteria);
       setDiscoveryScope(scope);
       setDiscoveryShellActive(true);
       setDiscoveryCriteria(criteria);
@@ -1083,6 +1085,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setMatchesDeckOpen(false);
         setMatchingInFlight(false);
         lastRankedHashRef.current = null;
+        lastRankedMatchHashRef.current = null;
         return;
       }
 
@@ -1093,10 +1096,28 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         ingestedCbsas,
       );
       const scopeKey = selectedCbsa ?? "national";
+      const matchHash = criteriaMatchHash(criteria);
       const hash = `${criteriaHash(criteria)}|${exampleZips.join(",")}|${scopeKey}`;
       if (hash === lastRankedHashRef.current) {
         return;
       }
+
+      // Sort-only changes (High Priority / Just This) — re-order without re-scoring.
+      if (
+        matchHash === lastRankedMatchHashRef.current &&
+        discoveryResults &&
+        discoveryResults.length > 0
+      ) {
+        const resorted =
+          scopeKey === "national"
+            ? dedupeRankedMatchesByDisplayName(discoveryResults, criteria)
+            : sortRankedNeighborhoods(discoveryResults, criteria);
+        lastRankedHashRef.current = hash;
+        applyRankedResults(resorted, scopeKey === "national" ? "national" : "metro", criteria);
+        return;
+      }
+
+      lastRankedMatchHashRef.current = matchHash;
 
       rankAbortRef.current?.abort();
       const controller = new AbortController();
@@ -1164,12 +1185,24 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       exampleZips,
       applyRankedResults,
       viewportBounds,
+      discoveryResults,
+      discoveryScope,
     ],
   );
 
-  const handleCriteriaCommit = useCallback(() => {
-    setRankCriteria(discoveryCriteria);
-  }, [discoveryCriteria]);
+  const handleCriteriaCommit = useCallback(
+    (committed?: DiscoveryCriteria) => {
+      const next = committed ?? discoveryCriteria;
+      setRankCriteria(next);
+      setDiscoveryResults((prev) => {
+        if (!prev?.length) return prev;
+        return discoveryScope === "national"
+          ? dedupeRankedMatchesByDisplayName(prev, next)
+          : sortRankedNeighborhoods(prev, next);
+      });
+    },
+    [discoveryCriteria, discoveryScope],
+  );
 
   useEffect(() => {
     if (!criteriaPanelOpen) return;

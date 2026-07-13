@@ -379,6 +379,20 @@ export function compareRankedNeighborhoods(
   return b.score - a.score;
 }
 
+/** Re-apply Just This flags and discovery sort order without recomputing match %. */
+export function sortRankedNeighborhoods(
+  results: RankedNeighborhood[],
+  criteria: DiscoveryCriteria,
+): RankedNeighborhood[] {
+  const justThisMetrics = getJustThisMetrics(criteria);
+  const resorted = results.map((entry) => ({
+    ...entry,
+    justThisFlagged: isJustThisFlagged(entry.breakdown, justThisMetrics),
+  }));
+  resorted.sort((a, b) => compareRankedNeighborhoods(a, b, criteria));
+  return resorted.map((entry, index) => ({ ...entry, rank: index + 1 }));
+}
+
 /** Choropleth metric from criteria toggles — heatmap wins over Just This. */
 export function getCriteriaChoroplethMetric(
   criteria: DiscoveryCriteria,

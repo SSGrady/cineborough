@@ -7,17 +7,31 @@ export interface DiscoveryRankResponse {
   scope: "national" | "metro";
 }
 
-export function criteriaHash(criteria: DiscoveryCriteria): string {
+/** Hash of min/max bands — changes here alter match % and qualifying sets. */
+export function criteriaMatchHash(criteria: DiscoveryCriteria): string {
   return JSON.stringify(
     criteria.filters.map((f) => ({
       id: f.id,
       metric: f.metric,
       min: f.min,
       max: f.max,
-      priority: f.priority,
-      sortMode: f.sortMode,
     })),
   );
+}
+
+/** Hash of sort-only flags — priority / Just This affect order, not match %. */
+export function criteriaSortHash(criteria: DiscoveryCriteria): string {
+  return JSON.stringify(
+    criteria.filters.map((f) => ({
+      id: f.id,
+      priority: !!f.priority,
+      sortMode: !!f.sortMode,
+    })),
+  );
+}
+
+export function criteriaHash(criteria: DiscoveryCriteria): string {
+  return `${criteriaMatchHash(criteria)}|${criteriaSortHash(criteria)}`;
 }
 
 export async function fetchDiscoveryRank(
