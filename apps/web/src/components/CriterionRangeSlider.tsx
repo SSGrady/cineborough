@@ -90,11 +90,15 @@ export function CriterionRangeSlider({
   const bandLo = Math.min(currentMin, currentMax);
   const bandHi = Math.max(currentMin, currentMax);
 
-  const bandLeft = ((bandLo - sliderMin) / span) * 100;
-  const bandWidth = ((bandHi - bandLo) / span) * 100;
+  /** Clamp to slider bounds for visual track/band — filter values may predate shard bounds. */
+  const visualLo = Math.max(sliderMin, Math.min(bandLo, sliderMax));
+  const visualHi = Math.max(sliderMin, Math.min(bandHi, sliderMax));
 
-  const minPercent = ((currentMin - sliderMin) / span) * 100;
-  const maxPercent = ((currentMax - sliderMin) / span) * 100;
+  const bandLeft = ((visualLo - sliderMin) / span) * 100;
+  const bandWidth = ((visualHi - visualLo) / span) * 100;
+
+  const minPercent = ((visualLo - sliderMin) / span) * 100;
+  const maxPercent = ((visualHi - sliderMin) / span) * 100;
 
   const handleMinChange = (value: number) => {
     const nextMin = Math.max(sliderMin, Math.min(value, currentMax));
