@@ -256,6 +256,54 @@ export function criterionMatchStatusLabel(status: CriterionMatchStatus): string 
   return "No match";
 }
 
+/** Row tier for deep-dive head-to-head styling — 100% = neutral, else accent criteria. */
+export function criterionRowTier(score: number): "pass" | "partial" | "fail" {
+  if (score >= 100) return "pass";
+  if (score >= 70) return "partial";
+  return "fail";
+}
+
+/** Compact display value for deep-dive criterion rows. */
+export function formatCriterionDisplayValue(
+  metric: DiscoveryFilterMetric,
+  value: number,
+): string {
+  if (metric === "medianHomeValue") {
+    return value >= 1_000_000
+      ? `$${(value / 1_000_000).toFixed(1)}M`
+      : `$${Math.round(value / 1000)}k`;
+  }
+  const unit = getDiscoveryMetricUnit(metric);
+  const rounded = Math.round(value * 10) / 10;
+  if (unit === "%") return `${rounded}%`;
+  if (unit === "days") return `${Math.round(value)}d`;
+  if (unit === "$/sqft") return `$${Math.round(value)}`;
+  if (unit === "0–100") return `${Math.round(value)}`;
+  if (unit === "1–10") return rounded.toFixed(1);
+  if (unit === "min") return `${Math.round(value)} min`;
+  if (unit === "per 10k") return rounded.toFixed(1);
+  return `${rounded}`;
+}
+
+/** User-facing criteria target for head-to-head comparison rows. */
+export function formatCriterionRequirement(filter: DiscoveryFilter): string {
+  const fmt = (v: number) => formatCriterionDisplayValue(filter.metric, v);
+
+  if (filter.metric === "medianHomeValue" && filter.max !== undefined) {
+    return `Up to ${fmt(filter.max)}`;
+  }
+  if (filter.min !== undefined && filter.max !== undefined) {
+    return `${fmt(filter.min)} – ${fmt(filter.max)}`;
+  }
+  if (filter.min !== undefined) {
+    return `At least ${fmt(filter.min)}`;
+  }
+  if (filter.max !== undefined) {
+    return `Up to ${fmt(filter.max)}`;
+  }
+  return "Any";
+}
+
 /** Active heatmap criterion metric, if any. */
 export function getActiveHeatmapMetric(
   criteria: DiscoveryCriteria,

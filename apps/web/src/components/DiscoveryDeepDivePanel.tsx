@@ -5,6 +5,9 @@ import type { DcMetroFeatureProperties, DcMetroGeoJson, DiscoveryCriteria } from
 import {
   criterionMatchStatus,
   criterionMatchStatusLabel,
+  criterionRowTier,
+  formatCriterionDisplayValue,
+  formatCriterionRequirement,
   getDiscoveryMetricLabel,
   getNeighborhoodPhoto,
   getRawMetricFromFeature,
@@ -31,15 +34,6 @@ function matchTierClass(pct: number): string {
   return "deep-dive__match--partial";
 }
 
-function formatCriterionValue(metric: string, value: number): string {
-  if (metric === "medianHomeValue") {
-    return value >= 1_000_000
-      ? `$${(value / 1_000_000).toFixed(1)}M`
-      : `$${Math.round(value / 1000)}k`;
-  }
-  return `${Math.round(value * 10) / 10}`;
-}
-
 export function DiscoveryDeepDivePanel({
   neighborhood,
   criteria,
@@ -63,12 +57,16 @@ export function DiscoveryDeepDivePanel({
       const rawValue = feature
         ? getRawMetricFromFeature(feature.properties, filter.metric)
         : 0;
+      const tier = criterionRowTier(score);
       return {
         filter,
         score,
         status,
+        tier,
         statusLabel: criterionMatchStatusLabel(status),
         label: getDiscoveryMetricLabel(filter.metric),
+        actualValue: formatCriterionDisplayValue(filter.metric, rawValue),
+        requirement: formatCriterionRequirement(filter),
         rawValue,
       };
     });
@@ -164,7 +162,10 @@ export function DiscoveryDeepDivePanel({
             ) : (
               <ul className="deep-dive__criterion-list">
                 {criterionRows.map((row) => (
-                  <li key={row.filter.id} className="deep-dive__criterion-row">
+                  <li
+                    key={row.filter.id}
+                    className={`deep-dive__criterion-row criterion-row--${row.tier}`}
+                  >
                     <div className="deep-dive__criterion-head">
                       <span className="deep-dive__criterion-label">{row.label}</span>
                       <span
@@ -173,10 +174,20 @@ export function DiscoveryDeepDivePanel({
                         {row.statusLabel}
                       </span>
                     </div>
-                    <div className="deep-dive__criterion-meta">
-                      <span className="deep-dive__criterion-value">
-                        {formatCriterionValue(row.filter.metric, row.rawValue)}
+                    <div className="criterion-row__compare">
+                      <div className="criterion-row__side criterion-row__side--actual">
+                        <span className="criterion-row__side-label">Neighborhood</span>
+                        <span className="criterion-row__value">{row.actualValue}</span>
+                      </div>
+                      <span className="criterion-row__vs" aria-hidden="true">
+                        vs
                       </span>
+                      <div className="criterion-row__side criterion-row__side--target">
+                        <span className="criterion-row__side-label">Your criteria</span>
+                        <span className="criterion-row__target">{row.requirement}</span>
+                      </div>
+                    </div>
+                    <div className="deep-dive__criterion-meta">
                       <span className="deep-dive__criterion-score">{Math.round(row.score)}%</span>
                     </div>
                     <div
@@ -185,7 +196,7 @@ export function DiscoveryDeepDivePanel({
                       aria-valuenow={row.score}
                       aria-valuemin={0}
                       aria-valuemax={100}
-                      aria-label={`${row.label} match ${Math.round(row.score)}%`}
+                      aria-label={`${row.label}: neighborhood ${row.actualValue}, your criteria ${row.requirement}, ${Math.round(row.score)}% match`}
                     >
                       <div
                         className={`deep-dive__criterion-fill deep-dive__criterion-fill--${row.status}`}
