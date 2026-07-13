@@ -625,12 +625,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   useEffect(() => {
     if (!explicitFlyTarget) return;
+    // Hold fly target while deep-dive match is selected — clearing lets sandbox metro camera win.
+    if (deepDiveOpen && (selectedMatchKey || selectedZip)) return;
     const timer = window.setTimeout(
       () => setExplicitFlyTarget(null),
       (explicitFlyTarget.duration ?? FLYOVER_CAMERA_MS) + 100,
     );
     return () => window.clearTimeout(timer);
-  }, [explicitFlyTarget]);
+  }, [explicitFlyTarget, deepDiveOpen, selectedMatchKey, selectedZip]);
 
   const handleInsetSelect = useCallback((region: UsInsetRegion) => {
     setUsInsetRegion(region);
@@ -850,6 +852,18 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return null;
   }, [activeShardGeoJson, selectedZip]);
 
+  const discoveryMatchCenter = useMemo((): [number, number] | null => {
+    if (!selectedZip) return null;
+    if (zipCenter) return zipCenter;
+    const match =
+      discoveryResults?.find((r) => r.zip === selectedZip) ??
+      (selectedMatchKey
+        ? discoveryResults?.find((r) => matchKey(r) === selectedMatchKey)
+        : undefined);
+    if (match && isFiniteLngLat(match.center)) return match.center;
+    return null;
+  }, [selectedZip, zipCenter, discoveryResults, selectedMatchKey]);
+
   const discoveryShellVisible = criteriaPanelOpen;
   const criteriaPanelVisible = criteriaPanelOpen && !deepDiveOpen;
   const criteriaGeographyRestricted = criteriaPanelOpen;
@@ -927,6 +941,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return explicitFlyTarget;
     }
 
+    if (
+      deepDiveOpen &&
+      discoveryMatchCenter &&
+      !cameraLockedByUserRef.current &&
+      sandboxDrillActive
+    ) {
+      return discoveryFlyoverCamera(discoveryMatchCenter);
+    }
+
     if (searchFlyTarget && isFiniteLngLat(searchFlyTarget)) {
       return {
         center: searchFlyTarget,
@@ -955,7 +978,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     if (
       sandboxDrillActive &&
       !dcStoryActive &&
-      geography !== "zip"
+      geography !== "zip" &&
+      !(deepDiveOpen && selectedZip)
     ) {
       const sandboxCamera =
         SANDBOX_METRO_CAMERAS[activeSandboxCbsa] ?? metroCameras[activeSandboxCbsa];
@@ -996,6 +1020,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     explicitFlyTarget,
     metroCameras,
     selectedMetroCamera,
+    deepDiveOpen,
+    discoveryMatchCenter,
+    selectedZip,
   ]);
 
   const pathVisible =
