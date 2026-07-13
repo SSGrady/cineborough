@@ -77,26 +77,8 @@ export function MatchesList({
   const stateGroups = groupMatchesByState(results);
   const rootClass =
     variant === "deck"
-      ? `match-deck${collapsed ? " match-deck--collapsed" : ""}`
+      ? "match-deck"
       : `matches-list${collapsed ? " matches-list--collapsed" : ""}`;
-
-  if (collapsed) {
-    return (
-      <aside className={rootClass} aria-label="Matches">
-        <button
-          type="button"
-          className="match-deck__expand match-deck__expand--pill"
-          onClick={onToggleCollapse}
-          aria-label={`${resolvedMatchCount} matches found — expand list`}
-        >
-          <span aria-hidden="true">🍿</span>
-          <span className="match-deck__expand-label">
-            {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
-          </span>
-        </button>
-      </aside>
-    );
-  }
 
   return (
     <aside className={rootClass} aria-label="Ranked matches">

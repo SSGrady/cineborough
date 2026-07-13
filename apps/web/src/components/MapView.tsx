@@ -1235,7 +1235,6 @@ export function MapView({
       {mapReady && (
         <BottomBar
           activeMetric={activeMetric}
-          dataAsOfLabel={geoJson.metadata.dataAsOfLabel}
           metricLabel={metricLabel}
           valueMin={legendValueRange.min}
           valueMax={legendValueRange.max}

@@ -884,10 +884,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return dedupeRankedMatchesByDisplayName(discoveryResults);
   }, [discoveryResults]);
 
-  const showMatchDeckPill =
+  const showMatchDeckControls =
     criteriaPanelOpen && displayMatchResults.length > 0 && !deepDiveOpen;
   const showMatchDeckExpanded =
-    showMatchDeckPill && matchesDeckOpen && !matchesDeckCollapsed;
+    showMatchDeckControls && matchesDeckOpen && !matchesDeckCollapsed;
   const matchCount = displayMatchResults.length;
 
   const scorableMetroCount = ingestedCbsas.size > 0 ? ingestedCbsas.size : SANDBOX_CBSA.size;
@@ -1619,6 +1619,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     handleOpenCriteria();
   }, [criteriaPanelOpen, handleOpenCriteria, handleMapOverview]);
 
+  const handleToggleMatchDeck = useCallback(() => {
+    if (showMatchDeckExpanded) {
+      setMatchesDeckCollapsed(true);
+      return;
+    }
+    setMatchesDeckOpen(true);
+    setMatchesDeckCollapsed(false);
+  }, [showMatchDeckExpanded]);
+
   const runDiscoveryRanking = useCallback(
     (criteriaOverride?: DiscoveryCriteria) => {
       setDiscoveryTourComplete(false);
@@ -2190,6 +2199,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         showMatchTicker={criteriaPanelOpen}
         matchCount={matchCount}
         matchingInFlight={matchingInFlight}
+        matchDeckExpanded={showMatchDeckExpanded}
+        onToggleMatchDeck={showMatchDeckControls ? handleToggleMatchDeck : undefined}
         onDiscover={!criteriaPanelOpen ? handleStartFlyoverTour : undefined}
         discoverDisabled={discoveryFlyoverActive}
         discoverLabel={discoveryFlyoverActive ? "Tour in progress…" : "Tour top neighborhoods"}
@@ -2232,7 +2243,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           />
         )}
 
-        {showMatchDeckPill && (
+        {showMatchDeckExpanded && (
           <MatchesList
             results={displayMatchResults}
             matchCount={matchCount}
@@ -2240,11 +2251,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             favorites={favorites}
             onSelect={handleMatchSelect}
             onToggleFavorite={handleToggleFavorite}
-            collapsed={matchesDeckCollapsed}
-            onToggleCollapse={() => {
-              setMatchesDeckOpen(true);
-              setMatchesDeckCollapsed((v) => !v);
-            }}
+            onToggleCollapse={handleToggleMatchDeck}
             variant="deck"
             comparePinned={comparePinnedNeighborhoods}
             compareActiveZip={selectedZip}

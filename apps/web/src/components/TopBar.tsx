@@ -19,6 +19,8 @@ interface TopBarProps {
   matchCount?: number;
   matchingInFlight?: boolean;
   showMatchTicker?: boolean;
+  matchDeckExpanded?: boolean;
+  onToggleMatchDeck?: () => void;
 }
 
 export function TopBar({
@@ -37,6 +39,8 @@ export function TopBar({
   matchCount = 0,
   matchingInFlight = false,
   showMatchTicker = false,
+  matchDeckExpanded = false,
+  onToggleMatchDeck,
 }: TopBarProps) {
   return (
     <header className="top-bar">
@@ -66,20 +70,61 @@ export function TopBar({
             </button>
           )}
           {showMatchTicker && (
-            <span
-              className={`match-ticker${matchingInFlight ? " match-ticker--loading" : ""}`}
-              role="status"
-              aria-live="polite"
-            >
-              {matchingInFlight ? (
-                <>
-                  <span className="match-ticker__pulse" aria-hidden="true" />
-                  Matching…
-                </>
-              ) : (
-                <>🍿 {matchCount} Match{matchCount === 1 ? "" : "es"} Found</>
-              )}
-            </span>
+            onToggleMatchDeck ? (
+              <button
+                type="button"
+                className={`match-ticker match-ticker--toggle${matchingInFlight ? " match-ticker--loading" : ""}${matchDeckExpanded ? " match-ticker--expanded" : ""}`}
+                onClick={onToggleMatchDeck}
+                aria-expanded={matchDeckExpanded}
+                aria-label={
+                  matchingInFlight
+                    ? "Matching neighborhoods"
+                    : `${matchCount} match${matchCount === 1 ? "" : "es"} found — ${matchDeckExpanded ? "collapse" : "expand"} list`
+                }
+              >
+                {matchingInFlight ? (
+                  <>
+                    <span className="match-ticker__pulse" aria-hidden="true" />
+                    Matching…
+                  </>
+                ) : (
+                  <>
+                    <span aria-hidden="true">🍿</span>
+                    <span className="match-ticker__label">
+                      {matchCount} Match{matchCount === 1 ? "" : "es"} Found
+                    </span>
+                    <svg
+                      className="match-ticker__chevron"
+                      viewBox="0 0 12 12"
+                      width="12"
+                      height="12"
+                      aria-hidden="true"
+                    >
+                      {matchDeckExpanded ? (
+                        <path d="M2.5 7.5 6 4l3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                      ) : (
+                        <path d="M2.5 4.5 6 8l3.5-3.5" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+                      )}
+                    </svg>
+                  </>
+                )}
+              </button>
+            ) : (
+              <span
+                className={`match-ticker${matchingInFlight ? " match-ticker--loading" : ""}`}
+                role="status"
+                aria-live="polite"
+              >
+                {matchingInFlight ? (
+                  <>
+                    <span className="match-ticker__pulse" aria-hidden="true" />
+                    Matching…
+                  </>
+                ) : (
+                  <>🍿 {matchCount} Match{matchCount === 1 ? "" : "es"} Found</>
+                )}
+              </span>
+            )
           )}
           {onDiscover && !showMatchTicker && (
             <button

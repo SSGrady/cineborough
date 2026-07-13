@@ -1,10 +1,9 @@
 import type { MetricLayerKey } from "@cineborough/data";
-import { METRIC_PROVENANCE, metricAttributionLabel } from "@cineborough/data";
+import { METRIC_PROVENANCE } from "@cineborough/data";
 import { legendStops, type TercileLegendBounds } from "@cineborough/geo";
 
 interface BottomBarProps {
   activeMetric: MetricLayerKey;
-  dataAsOfLabel: string;
   metricLabel: string;
   valueMin?: string;
   valueMax?: string;
@@ -17,7 +16,6 @@ interface BottomBarProps {
 
 export function BottomBar({
   activeMetric,
-  dataAsOfLabel,
   metricLabel,
   valueMin,
   valueMax,
@@ -28,7 +26,6 @@ export function BottomBar({
   onToggleExploreMode,
 }: BottomBarProps) {
   const legend = legendStops(activeMetric, tercileBounds);
-  const attribution = metricAttributionLabel(activeMetric, dataAsOfLabel);
   const source = METRIC_PROVENANCE[activeMetric];
 
   return (
@@ -57,7 +54,6 @@ export function BottomBar({
         className={`bottom-bar__date bottom-bar__date--${source.provenance}`}
         title={source.provenance === "mock" ? "This metric uses mock estimates until a live source is wired" : "Sourced from public bulk ingest with schema-first derivation"}
       >
-        {attribution}
         {source.provenance === "mock" ? (
           <span className="bottom-bar__mock-tag" aria-label="mock data">
             mock
