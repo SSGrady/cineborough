@@ -13,7 +13,7 @@ import {
   getRawMetricFromFeature,
   type RankedNeighborhood,
 } from "@cineborough/data";
-import { ZipDetailPanel } from "./ZipDetailPanel";
+import { DeepDiveAllDataPanel } from "./DeepDiveAllDataPanel";
 import { LocaleQuoteCard } from "./LocaleQuoteCard";
 
 type DeepDiveTab = "criteria" | "all-data";
@@ -210,11 +210,9 @@ export function DiscoveryDeepDivePanel({
           </section>
         ) : (
           <section className="deep-dive__all-data" role="tabpanel" aria-label="All data">
-            <ZipDetailPanel
+            <DeepDiveAllDataPanel
               zip={neighborhood.metrics}
               metroAvgPsf={metroAvgPsf}
-              onClose={onBack}
-              embedded
               featureProps={featureProps}
             />
           </section>

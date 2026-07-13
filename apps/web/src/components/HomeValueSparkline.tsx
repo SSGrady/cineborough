@@ -1,16 +1,22 @@
 interface HomeValueSparklineProps {
   values: number[];
   label?: string;
+  /** Inline sparkline for metric rows — no label block. */
+  compact?: boolean;
 }
 
-export function HomeValueSparkline({ values, label = "Home Value Trend" }: HomeValueSparklineProps) {
+export function HomeValueSparkline({
+  values,
+  label = "Home Value Trend",
+  compact = false,
+}: HomeValueSparklineProps) {
   if (values.length < 2) return null;
 
   const min = Math.min(...values);
   const max = Math.max(...values);
   const range = max - min || 1;
-  const width = 120;
-  const height = 36;
+  const width = compact ? 72 : 120;
+  const height = compact ? 24 : 36;
   const padding = 2;
 
   const points = values
@@ -24,6 +30,26 @@ export function HomeValueSparkline({ values, label = "Home Value Trend" }: HomeV
   const latest = values[values.length - 1];
   const earliest = values[0];
   const changePct = earliest > 0 ? ((latest - earliest) / earliest) * 100 : 0;
+
+  if (compact) {
+    return (
+      <span
+        className="home-sparkline home-sparkline--compact"
+        aria-label={`${label}: ${changePct >= 0 ? "+" : ""}${changePct.toFixed(1)}% over period`}
+      >
+        <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height} aria-hidden="true">
+          <polyline
+            points={points}
+            fill="none"
+            stroke="var(--accent)"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </span>
+    );
+  }
 
   return (
     <div className="home-sparkline" aria-label={`${label}: ${changePct >= 0 ? "+" : ""}${changePct.toFixed(1)}% over period`}>
