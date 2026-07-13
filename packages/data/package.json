@@ -10,6 +10,7 @@
   },
   "scripts": {
     "typecheck": "tsc --noEmit",
+    "test:hp-sort": "node scripts/verify-hp-sort.mjs",
     "build:geojson": "node --experimental-strip-types src/build-geojson.ts",
     "build:orlando-geojson": "node --experimental-strip-types src/build-orlando-geojson.ts",
     "build:sf-geojson": "node --experimental-strip-types src/build-sf-geojson.ts",

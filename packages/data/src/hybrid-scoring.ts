@@ -29,7 +29,7 @@ export interface DiscoveryFilter {
   metric: DiscoveryFilterMetric;
   min?: number;
   max?: number;
-  /** High Priority — tiebreaker sort key on this criterion's per-metric match score. */
+  /** High Priority — tiebreaker sort key on raw metric value (not match %). */
   priority?: boolean;
   /** Heatmap — map choropleth uses this metric (one active at a time). */
   heatmapActive?: boolean;
@@ -316,9 +316,16 @@ export function getActiveSortMetric(criteria: DiscoveryCriteria): DiscoveryFilte
   return criteria.filters.find((f) => f.sortMode)?.metric ?? null;
 }
 
-/** Metrics marked High Priority — used as tertiary sort tuple (descending per-metric scores). */
+/** Metrics marked High Priority — used as tertiary sort tuple on raw metric values. */
 export function getHighPriorityMetrics(criteria: DiscoveryCriteria): DiscoveryFilterMetric[] {
   return criteria.filters.filter((f) => f.priority).map((f) => f.metric);
+}
+
+function getRawMetricFromZipMetrics(
+  metrics: ZipMetrics,
+  metric: DiscoveryFilterMetric,
+): number {
+  return metrics[metric];
 }
 
 /** Metrics marked Just This — strict 100% required or the match is flagged and demoted. */
@@ -338,15 +345,21 @@ export function isJustThisFlagged(
   return justThisMetrics.some((metric) => (breakdown.byMetric[metric] ?? 0) < 100);
 }
 
+/** Compare raw HP metric values — criterion match scores tie when composite match % ties. */
 function compareHighPriorityMetricScores(
   a: RankedNeighborhood,
   b: RankedNeighborhood,
   highPriorityMetrics: DiscoveryFilterMetric[],
 ): number {
   for (const metric of highPriorityMetrics) {
-    const aScore = a.breakdown.byMetric[metric] ?? 0;
-    const bScore = b.breakdown.byMetric[metric] ?? 0;
-    if (bScore !== aScore) return bScore - aScore;
+    const def = getDiscoveryMetricDef(metric);
+    const aValue = getRawMetricFromZipMetrics(a.metrics, metric);
+    const bValue = getRawMetricFromZipMetrics(b.metrics, metric);
+    if (def.higherIsBetter) {
+      if (bValue !== aValue) return bValue - aValue;
+    } else if (aValue !== bValue) {
+      return aValue - bValue;
+    }
   }
   return 0;
 }
@@ -355,7 +368,7 @@ function compareHighPriorityMetricScores(
  * Discovery match list ordering:
  * 1. Just This demotion (non-flagged first)
  * 2. Composite Match % (desc)
- * 3. High Priority per-metric scores (tuple, desc)
+ * 3. High Priority raw metric values (tuple, higher-is-better desc)
  * 4. Display score tiebreaker
  */
 export function compareRankedNeighborhoods(
