@@ -3,7 +3,6 @@
 import type { RankedNeighborhood } from "@cineborough/data";
 import { formatUsStateHeading } from "@/lib/us-state-names";
 import { matchKey } from "@/lib/match-keys";
-import { CompareChips } from "./CompareChips";
 
 interface MatchesListProps {
   results: RankedNeighborhood[];
@@ -15,11 +14,6 @@ interface MatchesListProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   variant?: "rail" | "deck";
-  comparePinned?: RankedNeighborhood[];
-  compareActiveZip?: string | null;
-  onCompareSelect?: (zip: string) => void;
-  onCompareRemove?: (zip: string) => void;
-  onCompareReorder?: (fromIndex: number, toIndex: number) => void;
 }
 
 interface StateGroup {
@@ -67,11 +61,6 @@ export function MatchesList({
   collapsed = false,
   onToggleCollapse,
   variant = "deck",
-  comparePinned = [],
-  compareActiveZip = null,
-  onCompareSelect,
-  onCompareRemove,
-  onCompareReorder,
 }: MatchesListProps) {
   const resolvedMatchCount = matchCount ?? results.length;
   const stateGroups = groupMatchesByState(results);
@@ -121,18 +110,6 @@ export function MatchesList({
           </div>
         )}
       </header>
-
-      {comparePinned.length > 0 && onCompareSelect && onCompareRemove && onCompareReorder && (
-        <div className="match-deck__compare">
-          <CompareChips
-            pinned={comparePinned}
-            activeZip={compareActiveZip}
-            onSelect={onCompareSelect}
-            onRemove={onCompareRemove}
-            onReorder={onCompareReorder}
-          />
-        </div>
-      )}
 
       <div className="match-deck__items">
         {stateGroups.map((group) => (
