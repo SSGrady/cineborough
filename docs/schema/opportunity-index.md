@@ -35,7 +35,7 @@ Where `minRaw` and `maxRaw` are computed across all loaded ZIPs.
 | Range | Color | Meaning |
 |-------|-------|---------|
 | 70–100 | `#2563EB` (blue tint) | High opportunity |
-| 40–69 | `#F5D547` (yellow tint) | Moderate opportunity |
+| 40–69 | `#8B5CF6` (purple) | Moderate opportunity |
 | 0–39 | `#ef4444` (red) | Low opportunity / caution |
 
 Colors defined in `packages/geo/src/color-scales.ts`.

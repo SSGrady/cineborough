@@ -1,4 +1,5 @@
 import { computeOpportunityScore, normalizeScores } from "./opportunity-index.ts";
+import { colorForNormalizedScore } from "../../geo/src/color-scales.ts";
 import type { ZipMetricsInput } from "./validation.ts";
 import type { DcMetroFeature, DcMetroFeatureProperties, DcMetroGeoJson, MetroGeometry } from "./types.ts";
 
@@ -23,13 +24,6 @@ function hexToRgb(hex: string): [number, number, number] {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return [r, g, b];
-}
-
-function colorForNormalizedScore(score: number): string {
-  const clamped = Math.max(0, Math.min(100, score));
-  if (clamped >= 70) return "#2563EB";
-  if (clamped >= 40) return "#F5D547";
-  return "#ef4444";
 }
 
 function exteriorRing(geometry: MetroGeometry): number[][] {

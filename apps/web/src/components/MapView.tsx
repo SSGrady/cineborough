@@ -108,15 +108,9 @@ const CRITERIA_HOVER_FALLBACK_RGB: [number, number, number] = [148, 163, 184];
 
 function baseChoroplethRgb(
   featureId: string,
-  props: Record<string, unknown> | undefined,
   colorByZip: Map<string, number>,
   choroplethPalette: ReturnType<typeof choroplethPaletteForMetric>,
-  activeMetric: MetricLayerKey,
-  isOverviewView: boolean,
 ): [number, number, number] {
-  if (!isOverviewView && activeMetric === "opportunityScore" && props?.fillColorRgb) {
-    return props.fillColorRgb as [number, number, number];
-  }
   const score = colorByZip.get(featureId) ?? 0;
   const hex = colorForChoropleth(choroplethPalette, score);
   const [r, g, b] = hexToRgb(hex);
@@ -432,18 +426,11 @@ export function MapView({
       if (!featureId) continue;
       map.set(
         featureId,
-        baseChoroplethRgb(
-          featureId,
-          feature.properties as unknown as Record<string, unknown>,
-          colorByZip,
-          choroplethPalette,
-          activeMetric,
-          isOverviewView,
-        ),
+        baseChoroplethRgb(featureId, colorByZip, choroplethPalette),
       );
     }
     return map;
-  }, [geoJson, colorByZip, choroplethPalette, activeMetric, isOverviewView]);
+  }, [geoJson, colorByZip, choroplethPalette]);
 
   const legendValueRange = useMemo(() => {
     const values = geoJson.features.map((f) =>
@@ -512,14 +499,6 @@ export function MapView({
           const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;
           const [r, g, b] = rgb ?? CRITERIA_HOVER_FALLBACK_RGB;
           return [r, g, b, CRITERIA_HOVER_FILL_ALPHA];
-        }
-
-        const alpha = isSelected ? 185 : isOverviewView ? 85 : 75;
-
-        // Baked fillColorRgb is opportunity-score only; other metrics use runtime choropleth.
-        if (!isOverviewView && activeMetric === "opportunityScore" && props?.fillColorRgb) {
-          const rgb = props.fillColorRgb as [number, number, number];
-          return [...rgb, alpha];
         }
 
         const rgb = zip ? choroplethRgbByFeatureId.get(zip) : undefined;

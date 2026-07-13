@@ -9,6 +9,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { normalizeScores } from "./opportunity-index.ts";
+import { colorForNormalizedScore } from "../../geo/src/color-scales.ts";
 import {
   buildBaselineFromBoundary,
   mergeMetroLiveMetrics,
@@ -34,13 +35,6 @@ function hexToRgb(hex: string): [number, number, number] {
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return [r, g, b];
-}
-
-function colorForNormalizedScore(score: number): string {
-  const clamped = Math.max(0, Math.min(100, score));
-  if (clamped >= 70) return "#2563EB";
-  if (clamped >= 40) return "#F5D547";
-  return "#ef4444";
 }
 
 function shortMetroName(name: string): string {

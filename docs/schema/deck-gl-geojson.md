@@ -88,8 +88,8 @@ Flat camelCase aligned with Deerfield / Reventure enriched GeoJSON:
     "primaryVibe": "Walkable nightlife hub",
     "opportunityScore": 32.4,
     "opportunityScoreNormalized": 67.8,
-    "fillColor": "#F5D547",
-    "fillColorRgb": [240, 237, 230],
+    "fillColor": "#8B5CF6",
+    "fillColorRgb": [139, 92, 246],
     "labelLng": -77.096,
     "labelLat": 38.886
   },
@@ -125,12 +125,12 @@ Map `opportunityScoreNormalized` to stops in [`opportunity-index.md`](./opportun
 | Range | Color |
 |-------|-------|
 | 70–100 | `#2563EB` |
-| 40–69 | `#F5D547` |
+| 40–69 | `#8B5CF6` |
 | 0–39 | `#ef4444` |
 
 ### Active metric coloring (runtime)
 
-When the user selects a non-opportunity metric in the sidebar, the map layer may override `fillColorRgb` by normalizing that metric across features at runtime. Default layer uses precomputed opportunity colors.
+When the user selects a non-opportunity metric in the sidebar, the map layer computes fill colors at runtime from `@cineborough/geo` color scales. Default opportunity layer uses the same runtime path (precomputed `fillColor` / `fillColorRgb` on features are kept in sync at build time for MVT tiles and exports).
 
 ## TypeScript
 
