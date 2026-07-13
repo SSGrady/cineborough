@@ -5,7 +5,12 @@ import {
 } from "./color-scales";
 import { interpolateCinematic3DCamera } from "./cinematic-3d-cameras";
 import { isFiniteLngLat, isValidCameraTarget, sanitizeCameraTarget } from "./camera-utils";
-import { US_INSET_CAMERAS, US_NATIONAL_CAMERA, type UsInsetRegion } from "./us-map";
+import {
+  SANDBOX_METRO_CAMERAS,
+  US_INSET_CAMERAS,
+  US_NATIONAL_CAMERA,
+  type UsInsetRegion,
+} from "./us-map";
 
 /** Continental US center — national explore view */
 export const US_CENTER = US_NATIONAL_CAMERA.center;
@@ -114,16 +119,26 @@ export function buildOverviewRestoreCamera(
   };
 }
 
+/**
+ * Single source of truth for sandbox metro birds-eye — known presets beat
+ * drill-time overview cameras so exit-restore and steady-state targets match.
+ */
+export function resolveSandboxMetroCamera(
+  cbsa: string,
+  metroCameras: Record<string, MapCameraTarget>,
+): MapCameraTarget | null {
+  return SANDBOX_METRO_CAMERAS[cbsa] ?? metroCameras[cbsa] ?? null;
+}
+
 /** Flat sandbox metro overview after background click or flyover exit. */
 export function buildSandboxFlatRestore(
   cbsa: string,
-  sandboxCameras: Record<string, MapCameraTarget>,
+  metroCameras: Record<string, MapCameraTarget>,
 ): MapCameraTarget {
-  const camera = sandboxCameras[cbsa];
-  if (camera) {
-    return { ...camera, pitch: 0, bearing: 0, duration: 1000 };
-  }
-  return { ...CINEMATIC_CAMERAS.metro, pitch: 0, bearing: 0, duration: 1000 };
+  const camera =
+    resolveSandboxMetroCamera(cbsa, metroCameras) ??
+    { ...CINEMATIC_CAMERAS.metro, pitch: 0, bearing: 0 };
+  return { ...camera, pitch: 0, bearing: 0, duration: 1000 };
 }
 
 export interface BackgroundClickRestoreOptions {

@@ -42,6 +42,7 @@ import {
   isOverviewGeography,
   buildOverviewRestoreCamera,
   buildSandboxFlatRestore,
+  resolveSandboxMetroCamera,
   boundsFromGeoJsonGeometry,
   centroidFromGeoJsonGeometry,
   isFiniteLngLat,
@@ -50,7 +51,6 @@ import {
   US_CONTINENTAL_BOUNDS,
   US_FULL_BOUNDS,
   US_INSET_CAMERAS,
-  SANDBOX_METRO_CAMERAS,
   CINEMATIC_CAMERAS,
   discoveryFlyoverCamera,
   type GeographyLevel,
@@ -465,10 +465,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const mapOverviewMode = isOverviewMode && !mapShowsZipShard;
 
-  const mergedMetroCameras = useMemo(
-    () => ({ ...SANDBOX_METRO_CAMERAS, ...metroCameras }),
-    [metroCameras],
-  );
+  const commitSandboxMetroRestore = useCallback(() => {
+    cameraLockedByUserRef.current = false;
+    setExplicitFlyTarget(null);
+    setSearchFlyTarget(null);
+    setExitRestoreTarget(buildSandboxFlatRestore(activeSandboxCbsa, metroCameras));
+  }, [activeSandboxCbsa, metroCameras]);
 
   const selectedOverviewMetroFeature = useMemo(() => {
     if (!selectedOverviewMetro) return null;
@@ -620,9 +622,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       ) {
         setGeography("metro");
         setActiveSection("metro");
-        setExitRestoreTarget(
-          buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
-        );
+        commitSandboxMetroRestore();
         return;
       }
 
@@ -632,7 +632,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setGeography(targetLevel);
       if (targetLevel === "national") setUsInsetRegion("continental");
     },
-    [sandboxDrillActive, activeSandboxCbsa, mergedMetroCameras],
+    [sandboxDrillActive, commitSandboxMetroRestore],
   );
 
   const handleGeographyChange = useCallback(
@@ -1058,8 +1058,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       !(deepDiveOpen && selectedZip)
     ) {
       const sandboxCamera =
-        SANDBOX_METRO_CAMERAS[activeSandboxCbsa] ??
-        metroCameras[activeSandboxCbsa] ??
+        resolveSandboxMetroCamera(activeSandboxCbsa, metroCameras) ??
         metroOverviewCamera(activeSandboxCbsa);
       if (sandboxCamera) return sandboxCamera;
     }
@@ -1505,12 +1504,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setSelectedZip(null);
     setSelectedMatchKey(null);
     setGeography("metro");
-    cameraLockedByUserRef.current = false;
-    setExplicitFlyTarget(null);
-    setExitRestoreTarget(
-      buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
-    );
-  }, [activeSandboxCbsa, mergedMetroCameras]);
+    commitSandboxMetroRestore();
+  }, [commitSandboxMetroRestore]);
 
   const handleMapZipSelect = useCallback(
     (regionId: string | null) => {
@@ -1521,11 +1516,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setDeepDiveOpen(false);
         if (sandboxDrillActive) {
           setGeography("metro");
-          cameraLockedByUserRef.current = false;
-          setExplicitFlyTarget(null);
-          setExitRestoreTarget(
-            buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
-          );
+          commitSandboxMetroRestore();
         }
         return;
       }
@@ -1564,8 +1555,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       handleZipSelect,
       discoveryShellActive,
       sandboxDrillActive,
-      activeSandboxCbsa,
-      mergedMetroCameras,
+      commitSandboxMetroRestore,
       isOverviewMode,
       discoveryResults,
       ensureMetroShard,
