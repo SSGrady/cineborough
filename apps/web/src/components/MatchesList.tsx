@@ -14,6 +14,8 @@ interface MatchesListProps {
   collapsed?: boolean;
   onToggleCollapse?: () => void;
   variant?: "rail" | "deck";
+  /** When false, omits the deck header ticker (TopBar owns the toggle). */
+  showHeader?: boolean;
 }
 
 interface StateGroup {
@@ -61,55 +63,58 @@ export function MatchesList({
   collapsed = false,
   onToggleCollapse,
   variant = "deck",
+  showHeader = variant !== "deck",
 }: MatchesListProps) {
   const resolvedMatchCount = matchCount ?? results.length;
   const stateGroups = groupMatchesByState(results);
   const rootClass =
     variant === "deck"
-      ? "match-deck"
+      ? "match-deck match-deck--dropdown"
       : `matches-list${collapsed ? " matches-list--collapsed" : ""}`;
 
   return (
     <aside className={rootClass} aria-label="Ranked matches">
-      <header className="match-deck__header">
-        {onToggleCollapse ? (
-          <button
-            type="button"
-            className="match-ticker match-ticker--toggle match-ticker--expanded match-deck__ticker"
-            onClick={onToggleCollapse}
-            aria-expanded
-            aria-label={`${resolvedMatchCount} match${resolvedMatchCount === 1 ? "" : "es"} found, collapse list`}
-          >
-            <span aria-hidden="true">🍿</span>
-            <span className="match-ticker__label">
-              {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
-            </span>
-            <svg
-              className="match-ticker__chevron"
-              viewBox="0 0 12 12"
-              width="12"
-              height="12"
-              aria-hidden="true"
+      {showHeader && (
+        <header className="match-deck__header">
+          {onToggleCollapse ? (
+            <button
+              type="button"
+              className="match-ticker match-ticker--toggle match-ticker--expanded match-deck__ticker"
+              onClick={onToggleCollapse}
+              aria-expanded
+              aria-label={`${resolvedMatchCount} match${resolvedMatchCount === 1 ? "" : "es"} found, collapse list`}
             >
-              <path
-                d="M2.5 7.5 6 4l3.5 3.5"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.75"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-        ) : (
-          <div className="match-ticker match-ticker--expanded match-deck__ticker">
-            <span aria-hidden="true">🍿</span>
-            <span className="match-ticker__label">
-              {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
-            </span>
-          </div>
-        )}
-      </header>
+              <span aria-hidden="true">🍿</span>
+              <span className="match-ticker__label">
+                {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
+              </span>
+              <svg
+                className="match-ticker__chevron"
+                viewBox="0 0 12 12"
+                width="12"
+                height="12"
+                aria-hidden="true"
+              >
+                <path
+                  d="M2.5 7.5 6 4l3.5 3.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.75"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </button>
+          ) : (
+            <div className="match-ticker match-ticker--expanded match-deck__ticker">
+              <span aria-hidden="true">🍿</span>
+              <span className="match-ticker__label">
+                {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
+              </span>
+            </div>
+          )}
+        </header>
+      )}
 
       <div className="match-deck__items">
         {stateGroups.map((group) => (

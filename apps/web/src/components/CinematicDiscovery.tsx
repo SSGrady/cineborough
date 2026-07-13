@@ -1632,6 +1632,40 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const activeScrollSection = SCROLL_SECTIONS.find((s) => s.id === activeSection);
 
+  const overviewTopBarChip = useMemo(() => {
+    if (!isOverviewMode) return undefined;
+
+    if (selectedOverviewMetroFeature) {
+      const metricLabel =
+        METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
+      const metricValue = getRawMetricFromFeature(
+        selectedOverviewMetroFeature.properties,
+        activeMetric,
+      );
+      return {
+        stepLabel: "Metro",
+        title: selectedOverviewMetroFeature.properties.neighborhoodName,
+        detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)} · click metro to open ZIP detail`,
+        onOpenDrawer: () => setDrawerOpen(true),
+      };
+    }
+
+    const metricLabel =
+      METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
+    return {
+      stepLabel: geography.charAt(0).toUpperCase() + geography.slice(1),
+      title: "US Metro Overview",
+      detail: `${overviewFeatureCount} metros · ${metricLabel}`,
+      onOpenDrawer: () => setDrawerOpen(true),
+    };
+  }, [
+    isOverviewMode,
+    selectedOverviewMetroFeature,
+    activeMetric,
+    geography,
+    overviewFeatureCount,
+  ]);
+
   const contextChip = useMemo(() => {
     if (discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && selectedZip) {
       const match =
@@ -1656,29 +1690,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
 
     if (isOverviewMode) {
-      if (selectedOverviewMetroFeature) {
-        const metricLabel =
-          METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
-        const metricValue = getRawMetricFromFeature(
-          selectedOverviewMetroFeature.properties,
-          activeMetric,
-        );
-        return {
-          stepLabel: "Metro",
-          title: selectedOverviewMetroFeature.properties.neighborhoodName,
-          detail: `${metricLabel}: ${formatActiveMetricValue(activeMetric, metricValue)} · click metro to open ZIP detail`,
-          canOpen: true,
-        };
-      }
-
-      const metricLabel =
-        METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric";
-      return {
-        stepLabel: geography.charAt(0).toUpperCase() + geography.slice(1),
-        title: "US Metro Overview",
-        detail: `${overviewFeatureCount} metros · ${metricLabel}`,
-        canOpen: true,
-      };
+      return null;
     }
 
     if (dcStoryActive) {
@@ -1711,26 +1723,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       canOpen: true,
     };
   }, [
-    isOverviewMode,
-    geography,
-    overviewFeatureCount,
-    activeMetric,
     dcStoryActive,
     activeSection,
     activeScrollSection,
     storyCameraActive,
-    sandboxDrillActive,
     selected,
     selectedFeature,
     activeMetric,
     activeShardGeoJson.metadata.metro,
-    activeSandboxCbsa,
     discoveryMessage,
     handleOpenCriteria,
     discoveryShellVisible,
     discoveryResults,
     selectedZip,
-    selectedOverviewMetroFeature,
   ]);
 
   const drawerContent = useMemo(() => {
@@ -1867,11 +1872,26 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         matchingInFlight={matchingInFlight}
         matchDeckExpanded={showMatchDeckExpanded}
         onToggleMatchDeck={showMatchDeckControls ? handleToggleMatchDeck : undefined}
+        overviewChip={overviewTopBarChip}
+        matchDeck={
+          showMatchDeckExpanded ? (
+            <MatchesList
+              results={displayMatchResults}
+              matchCount={matchCount}
+              selectedKey={selectedMatchKey}
+              favorites={favorites}
+              onSelect={handleMatchSelect}
+              onToggleFavorite={handleToggleFavorite}
+              variant="deck"
+              showHeader={false}
+            />
+          ) : undefined
+        }
       />
 
 
       <div
-        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${criteriaPanelVisible ? " cinematic--criteria" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}${showMatchDeckExpanded ? " cinematic--match-deck" : ""}${deepDiveOpen ? " cinematic--deep-dive" : ""}`}
+        className={`cinematic${exploreMode ? " cinematic--explore" : ""}${isOverviewMode ? " cinematic--national" : ""}${cinematicTourActive ? " cinematic--tour" : ""}${criteriaPanelVisible ? " cinematic--criteria" : ""}${discoveryShellVisible ? " cinematic--discovery" : ""}${deepDiveOpen ? " cinematic--deep-dive" : ""}`}
       >
         {showMetricSidebar && (
           <aside className="cinematic__sidebar">
@@ -1906,18 +1926,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
           />
         )}
 
-        {showMatchDeckExpanded && (
-          <MatchesList
-            results={displayMatchResults}
-            matchCount={matchCount}
-            selectedKey={selectedMatchKey}
-            favorites={favorites}
-            onSelect={handleMatchSelect}
-            onToggleFavorite={handleToggleFavorite}
-            onToggleCollapse={handleToggleMatchDeck}
-            variant="deck"
-          />
-        )}
 
         {discoveryShellVisible && deepDiveOpen && deepDiveNeighborhood && (
           <DiscoveryDeepDivePanel
@@ -1933,13 +1941,15 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         )}
 
         <div className="cinematic__map">
-          <ContextChip
-            stepLabel={contextChip.stepLabel}
-            title={contextChip.title}
-            detail={contextChip.detail}
-            onOpenDrawer={contextChip.canOpen ? () => setDrawerOpen(true) : undefined}
-            action={contextChip.action}
-          />
+          {contextChip && (
+            <ContextChip
+              stepLabel={contextChip.stepLabel}
+              title={contextChip.title}
+              detail={contextChip.detail}
+              onOpenDrawer={contextChip.canOpen ? () => setDrawerOpen(true) : undefined}
+              action={contextChip.action}
+            />
+          )}
           <MapView
             geoJson={activeGeoJson}
             activeMetric={activeMetric}
@@ -2017,7 +2027,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
       <StoryDrawer
         open={drawerOpen}
-        title={contextChip.title}
+        title={contextChip?.title ?? overviewTopBarChip?.title ?? "Details"}
         onClose={() => setDrawerOpen(false)}
       >
         {drawerContent}

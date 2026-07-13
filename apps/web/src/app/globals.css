@@ -72,6 +72,7 @@ body {
   justify-content: space-between;
   gap: 1rem;
   min-height: var(--header-height);
+  overflow: visible;
 }
 
 .top-bar__where {
@@ -89,6 +90,7 @@ body {
   flex-shrink: 0;
   padding-left: 0.75rem;
   border-left: 1px solid var(--border);
+  overflow: visible;
 }
 
 .top-bar__brand {
@@ -163,6 +165,69 @@ body {
 .top-bar__discover-btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.top-bar__context-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: min(22rem, 32vw);
+  padding: 0.3125rem 0.5rem 0.3125rem 0.625rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  min-width: 0;
+}
+
+.top-bar__context-chip-step {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.top-bar__context-chip-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.0625rem;
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  min-width: 0;
+  font: inherit;
+}
+
+.top-bar__context-chip-main:disabled {
+  cursor: default;
+}
+
+.top-bar__context-chip-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.top-bar__context-chip-detail {
+  font-size: 0.625rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.top-bar__match-anchor {
+  position: relative;
+  flex-shrink: 0;
 }
 
 .discovery-criteria__intro {
@@ -1120,12 +1185,6 @@ body {
 }
 
 .match-deck {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  width: min(22rem, calc(100vw - var(--discovery-rail-width) - 2rem));
-  max-height: min(42vh, 28rem);
-  z-index: 36;
   display: flex;
   flex-direction: column;
   background: var(--match-ticker-bg);
@@ -1135,6 +1194,15 @@ body {
   color: var(--match-ticker-color);
   overflow: hidden;
   animation: match-deck-slide-in 0.22s ease-out;
+}
+
+.match-deck--dropdown {
+  position: absolute;
+  top: calc(100% + 0.375rem);
+  right: 0;
+  width: min(22rem, calc(100vw - 2rem));
+  max-height: min(52vh, 28rem);
+  z-index: 45;
 }
 
 @keyframes match-deck-slide-in {
