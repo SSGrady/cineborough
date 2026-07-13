@@ -175,6 +175,29 @@ function metroOverviewCamera(cbsa: string): MapCameraTarget | null {
   };
 }
 
+/** L1 regional metro overview — state bounds containing the drilled metro (e.g. Florida metros). */
+function regionalStateOverviewForMetro(
+  cbsa: string,
+  activeMetric: MetricLayerKey,
+): { stateAbbr: string; bounds: [[number, number], [number, number]] } | null {
+  const metroFeature = US_METROS_GEOJSON.features.find(
+    (f) => f.properties.zipCode === cbsa,
+  );
+  const stateAbbr = metroFeature?.properties.state?.trim();
+  if (!stateAbbr) return null;
+
+  const stateFeature = buildStateChoroplethFromMetros(
+    US_METROS_GEOJSON,
+    activeMetric,
+  ).features.find((f) => f.properties.zipCode === stateAbbr);
+  if (!stateFeature) return null;
+
+  const bounds = boundsFromGeoJsonGeometry(stateFeature.geometry);
+  if (!bounds) return null;
+
+  return { stateAbbr, bounds };
+}
+
 function metroCameraFromShard(shard: DcMetroGeoJson): MapCameraTarget {
   let sumLng = 0;
   let sumLat = 0;
@@ -472,6 +495,38 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setExitRestoreTarget(buildSandboxFlatRestore(activeSandboxCbsa, metroCameras));
   }, [activeSandboxCbsa, metroCameras]);
 
+  /** L2/L3 → L1: exit ZIP shard drill to regional metro choropleth (keep criteria open). */
+  const exitSandboxToRegionalOverview = useCallback(() => {
+    cameraLockedByUserRef.current = false;
+    setExplicitFlyTarget(null);
+    setSearchFlyTarget(null);
+    setExitRestoreTarget(null);
+
+    setSelectedZip(null);
+    setSelectedPropertyId(null);
+    setSelectedMatchKey(null);
+    setDeepDiveOpen(false);
+    setDrawerOpen(false);
+    setStoryCameraActive(false);
+    setDiscoveryMessage(null);
+    lastRankedHashRef.current = null;
+
+    const regional = regionalStateOverviewForMetro(activeSandboxCbsa, activeMetric);
+    if (regional) {
+      setMetroStateFilter(regional.stateAbbr);
+      setStateFitBounds({ bounds: regional.bounds, token: Date.now() });
+    } else {
+      setMetroStateFilter(null);
+      setStateFitBounds(null);
+    }
+
+    setSelectedOverviewMetro(activeSandboxCbsa);
+    setSelectedMetroCamera(null);
+    setSandboxDrillActive(false);
+    setGeography("metro");
+    setActiveSection("metro");
+  }, [activeSandboxCbsa, activeMetric]);
+
   const selectedOverviewMetroFeature = useMemo(() => {
     if (!selectedOverviewMetro) return null;
     return (
@@ -614,15 +669,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setStoryCameraActive(false);
       setDiscoveryMessage(null);
 
-      // Exit ZIP/deep-dive to sandbox metro birds-eye — keep drill active.
+      // Exit ZIP/deep-dive to regional metro overview (L1) — keep criteria open.
       if (
         sandboxDrillActive &&
         !options?.closeCriteria &&
         (targetLevel === "metro" || targetLevel === "zip")
       ) {
-        setGeography("metro");
-        setActiveSection("metro");
-        commitSandboxMetroRestore();
+        exitSandboxToRegionalOverview();
         return;
       }
 
@@ -632,7 +685,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setGeography(targetLevel);
       if (targetLevel === "national") setUsInsetRegion("continental");
     },
-    [sandboxDrillActive, commitSandboxMetroRestore],
+    [sandboxDrillActive, exitSandboxToRegionalOverview],
   );
 
   const handleGeographyChange = useCallback(
@@ -1790,7 +1843,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     const wasSandbox = prevSandboxDrillRef.current;
     prevSandboxDrillRef.current = sandboxDrillActive;
 
-    if (wasSandbox && !sandboxDrillActive && isOverviewGeography(geography)) {
+    // Regional L1 exit sets metroStateFilter + stateFitBounds — skip national restore.
+    if (
+      wasSandbox &&
+      !sandboxDrillActive &&
+      isOverviewGeography(geography) &&
+      !metroStateFilter
+    ) {
       setExitRestoreTarget(
         buildOverviewRestoreCamera(savedOverviewCameraRef.current, usInsetRegion),
       );
@@ -1799,6 +1858,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     sandboxDrillActive,
     geography,
     usInsetRegion,
+    metroStateFilter,
   ]);
 
   useEffect(() => {
