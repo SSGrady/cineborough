@@ -606,13 +606,19 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setStateFitBounds(null);
       setSelectedZip(null);
       setSelectedPropertyId(null);
+      setSelectedMatchKey(null);
       setDeepDiveOpen(false);
       setDrawerOpen(false);
       setStoryCameraActive(false);
       setDiscoveryMessage(null);
 
-      if (targetLevel === "zip" && sandboxDrillActive) {
-        setGeography("zip");
+      // Exit ZIP/deep-dive to sandbox metro birds-eye — keep drill active.
+      if (
+        sandboxDrillActive &&
+        !options?.closeCriteria &&
+        (targetLevel === "metro" || targetLevel === "zip")
+      ) {
+        setGeography("metro");
         setActiveSection("metro");
         setExitRestoreTarget(
           buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
@@ -857,8 +863,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setExplicitFlyTarget(null);
 
     if (sandboxDrillActive) {
-      const overviewLevel: GeographyLevel = geography === "zip" ? "metro" : geography;
-      resetToGeographyOverview(overviewLevel);
+      resetToGeographyOverview("metro");
       return;
     }
 
@@ -874,7 +879,6 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     exploreMode,
     isOverviewMode,
     sandboxDrillActive,
-    geography,
     usInsetRegion,
     resetToGeographyOverview,
   ]);
@@ -978,6 +982,31 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     return discoveryResults.find((r) => r.zip === selectedZip) ?? null;
   }, [deepDiveOpen, selectedMatchKey, selectedZip, discoveryResults]);
 
+  const deepDiveShardGeoJson = useMemo((): DcMetroGeoJson => {
+    if (selectedMatchShardGeoJson) return selectedMatchShardGeoJson;
+    return activeShardGeoJson;
+  }, [selectedMatchShardGeoJson, activeShardGeoJson]);
+
+  const deepDiveFeatureProps = useMemo(() => {
+    if (!deepDiveNeighborhood) return undefined;
+    return deepDiveShardGeoJson.features.find(
+      (f) => f.properties.zipCode === deepDiveNeighborhood.zip,
+    )?.properties;
+  }, [deepDiveNeighborhood, deepDiveShardGeoJson]);
+
+  const deepDiveZipCenter = useMemo((): [number, number] | null => {
+    if (!deepDiveNeighborhood) return null;
+    const feature = deepDiveShardGeoJson.features.find(
+      (f) => f.properties.zipCode === deepDiveNeighborhood.zip,
+    );
+    if (!feature) return null;
+    const centroid = centroidFromGeoJsonGeometry(feature.geometry);
+    if (centroid && isFiniteLngLat(centroid)) return centroid;
+    const { labelLng, labelLat } = feature.properties;
+    if (isFiniteLngLat([labelLng, labelLat])) return [labelLng, labelLat];
+    return null;
+  }, [deepDiveNeighborhood, deepDiveShardGeoJson]);
+
   const cameraTarget = useMemo(() => {
     if (exploreMode) return null;
 
@@ -1029,7 +1058,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       !(deepDiveOpen && selectedZip)
     ) {
       const sandboxCamera =
-        SANDBOX_METRO_CAMERAS[activeSandboxCbsa] ?? metroCameras[activeSandboxCbsa];
+        SANDBOX_METRO_CAMERAS[activeSandboxCbsa] ??
+        metroCameras[activeSandboxCbsa] ??
+        metroOverviewCamera(activeSandboxCbsa);
       if (sandboxCamera) return sandboxCamera;
     }
 
@@ -1311,6 +1342,20 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const drillIntoDiscoveryMetro = useCallback(
     async (cbsa: string): Promise<DcMetroGeoJson | null> => {
+      const metroFeature = US_METROS_GEOJSON.features.find(
+        (f) => f.properties.zipCode === cbsa,
+      );
+      if (metroFeature) {
+        const bounds = boundsFromGeoJsonGeometry(metroFeature.geometry);
+        if (bounds) {
+          setStateFitBounds({ bounds, token: Date.now() });
+        }
+        const overviewCam = metroOverviewCamera(cbsa);
+        if (overviewCam) {
+          setMetroCameras((prev) => ({ ...prev, [cbsa]: overviewCam }));
+        }
+      }
+
       const shard = await ensureMetroShard(cbsa);
       if (!shard) return null;
       setActiveSandboxCbsa(cbsa);
@@ -1318,9 +1363,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setStoryCameraActive(false);
       setSelectedZip(null);
       setSelectedPropertyId(null);
+      setSelectedMatchKey(null);
       setSelectedOverviewMetro(null);
       setSelectedMetroCamera(null);
       setSearchFlyTarget(null);
+      setExitRestoreTarget(null);
       setGeography("metro");
       return shard;
     },
@@ -1460,7 +1507,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     setGeography("metro");
     cameraLockedByUserRef.current = false;
     setExplicitFlyTarget(null);
-  }, []);
+    setExitRestoreTarget(
+      buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
+    );
+  }, [activeSandboxCbsa, mergedMetroCameras]);
 
   const handleMapZipSelect = useCallback(
     (regionId: string | null) => {
@@ -1469,6 +1519,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setSelectedPropertyId(null);
         setSelectedMatchKey(null);
         setDeepDiveOpen(false);
+        if (sandboxDrillActive) {
+          setGeography("metro");
+          cameraLockedByUserRef.current = false;
+          setExplicitFlyTarget(null);
+          setExitRestoreTarget(
+            buildSandboxFlatRestore(activeSandboxCbsa, mergedMetroCameras),
+          );
+        }
         return;
       }
 
@@ -1506,6 +1564,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       handleZipSelect,
       discoveryShellActive,
       sandboxDrillActive,
+      activeSandboxCbsa,
+      mergedMetroCameras,
       isOverviewMode,
       discoveryResults,
       ensureMetroShard,
@@ -1834,9 +1894,20 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   ]);
 
   const contextChip = useMemo(() => {
+    if (deepDiveOpen && deepDiveNeighborhood) {
+      const match = deepDiveNeighborhood;
+      const { metrics: m } = match;
+      return {
+        stepLabel: "Match",
+        title: `${match.zip} — ${match.name}`,
+        detail: `${match.matchPercent}% match · forecast ${formatPercent(m.homePriceForecast1yr)} · cap ${formatPercent(m.capRate)} · walk ${Math.round(m.walkabilityScore)}`,
+        canOpen: true,
+      };
+    }
+
     if (discoveryShellVisible && discoveryResults && discoveryResults.length > 0 && selectedZip) {
-      const match =
-        discoveryResults.find((r) => r.zip === selectedZip) ?? discoveryResults[0];
+      const match = discoveryResults.find((r) => r.zip === selectedZip);
+      if (!match) return null;
       const { metrics: m } = match;
       return {
         stepLabel: "Match",
@@ -1903,6 +1974,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     discoveryShellVisible,
     discoveryResults,
     selectedZip,
+    deepDiveOpen,
+    deepDiveNeighborhood,
   ]);
 
   const drawerContent = useMemo(() => {
@@ -2096,13 +2169,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
         {discoveryShellVisible && deepDiveOpen && deepDiveNeighborhood && (
           <DiscoveryDeepDivePanel
-            key="deep-dive-panel"
+            key={`deep-dive-${deepDiveNeighborhood.zip}`}
             neighborhood={deepDiveNeighborhood}
             criteria={discoveryCriteria}
-            geoJson={activeShardGeoJson}
+            geoJson={deepDiveShardGeoJson}
             metroAvgPsf={metroAvgPsf}
-            featureProps={selectedFeature}
-            mapCenter={zipCenter}
+            featureProps={deepDiveFeatureProps}
+            mapCenter={deepDiveZipCenter}
             onBack={handleDeepDiveBack}
           />
         )}
