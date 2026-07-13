@@ -1,4 +1,5 @@
-import type { RankedNeighborhood } from "./hybrid-scoring";
+import type { DiscoveryCriteria, RankedNeighborhood } from "./hybrid-scoring";
+import { compareRankedNeighborhoods } from "./hybrid-scoring";
 
 /** Normalize a match label for dedupe — strips "(Neighborhood)" suffix and ZCTA prefix. */
 export function normalizeMatchDisplayName(name: string): string {
@@ -27,10 +28,11 @@ export function preferMatchDisplayName(name: string): string {
 
 /**
  * Collapse duplicate city names in national discovery results.
- * Keeps the highest match % per normalized display name (per state).
+ * Keeps the best-ranked row per normalized display name (per state).
  */
 export function dedupeRankedMatchesByDisplayName(
   results: RankedNeighborhood[],
+  criteria?: DiscoveryCriteria,
 ): RankedNeighborhood[] {
   const bestByKey = new Map<string, RankedNeighborhood>();
 
@@ -40,16 +42,23 @@ export function dedupeRankedMatchesByDisplayName(
     const displayName = preferMatchDisplayName(entry.name);
     const candidate = { ...entry, name: displayName };
 
-    if (
+    const candidateRanksHigher =
       !existing ||
-      candidate.matchPercent > existing.matchPercent ||
-      (candidate.matchPercent === existing.matchPercent && candidate.score > existing.score)
-    ) {
+      (criteria
+        ? compareRankedNeighborhoods(candidate, existing, criteria) < 0
+        : candidate.matchPercent > existing.matchPercent ||
+          (candidate.matchPercent === existing.matchPercent && candidate.score > existing.score));
+
+    if (candidateRanksHigher) {
       bestByKey.set(key, candidate);
     }
   }
 
   const deduped = [...bestByKey.values()];
-  deduped.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
+  if (criteria) {
+    deduped.sort((a, b) => compareRankedNeighborhoods(a, b, criteria));
+  } else {
+    deduped.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
+  }
   return deduped.map((entry, index) => ({ ...entry, rank: index + 1 }));
 }

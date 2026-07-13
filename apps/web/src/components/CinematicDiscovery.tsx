@@ -849,8 +849,8 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const criteriaGeographyRestricted = criteriaPanelOpen;
   const displayMatchResults = useMemo(() => {
     if (!discoveryResults?.length) return [];
-    return dedupeRankedMatchesByDisplayName(discoveryResults);
-  }, [discoveryResults]);
+    return dedupeRankedMatchesByDisplayName(discoveryResults, discoveryCriteria);
+  }, [discoveryResults, discoveryCriteria]);
 
   const showMatchDeckControls =
     criteriaPanelOpen && displayMatchResults.length > 0 && !deepDiveOpen;
@@ -1053,7 +1053,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       criteria: DiscoveryCriteria,
     ) => {
       const normalized =
-        scope === "national" ? dedupeRankedMatchesByDisplayName(results) : results;
+        scope === "national"
+          ? dedupeRankedMatchesByDisplayName(results, criteria)
+          : results;
       setDiscoveryScope(scope);
       setDiscoveryShellActive(true);
       setDiscoveryCriteria(criteria);
@@ -1436,7 +1438,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       setDeepDiveOpen(false);
       setSelectedZip(null);
       setDrawerOpen(false);
-      setDiscoveryResults(dedupeRankedMatchesByDisplayName(results));
+      setDiscoveryResults(dedupeRankedMatchesByDisplayName(results, criteria));
 
       if (results.length === 0) {
         setDiscoveryMessage(

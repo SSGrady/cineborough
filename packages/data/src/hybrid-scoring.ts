@@ -29,11 +29,11 @@ export interface DiscoveryFilter {
   metric: DiscoveryFilterMetric;
   min?: number;
   max?: number;
-  /** High Priority — doubles weight in composite Match %. */
+  /** High Priority — tiebreaker sort key on this criterion's per-metric match score. */
   priority?: boolean;
   /** Heatmap — map choropleth uses this metric (one active at a time). */
   heatmapActive?: boolean;
-  /** Just This — sort matches by this criterion only. */
+  /** Just This — strict (100%) match required; partial matches are flagged and demoted. */
   sortMode?: boolean;
 }
 
@@ -311,9 +311,72 @@ export function getActiveHeatmapMetric(
   return criteria.filters.find((f) => f.heatmapActive)?.metric ?? null;
 }
 
-/** Active Just This sort metric, if any. */
+/** Active Just This metric, if any — used for choropleth fallback when no heatmap is set. */
 export function getActiveSortMetric(criteria: DiscoveryCriteria): DiscoveryFilterMetric | null {
   return criteria.filters.find((f) => f.sortMode)?.metric ?? null;
+}
+
+/** Metrics marked High Priority — used as tertiary sort tuple (descending per-metric scores). */
+export function getHighPriorityMetrics(criteria: DiscoveryCriteria): DiscoveryFilterMetric[] {
+  return criteria.filters.filter((f) => f.priority).map((f) => f.metric);
+}
+
+/** Metrics marked Just This — strict 100% required or the match is flagged and demoted. */
+export function getJustThisMetrics(criteria: DiscoveryCriteria): DiscoveryFilterMetric[] {
+  return criteria.filters.filter((f) => f.sortMode).map((f) => f.metric);
+}
+
+/**
+ * Just This failed when any active Just This criterion scores below 100%
+ * (partial or no-match on that criterion). Does not affect composite Match %.
+ */
+export function isJustThisFlagged(
+  breakdown: ScoreBreakdown,
+  justThisMetrics: DiscoveryFilterMetric[],
+): boolean {
+  if (justThisMetrics.length === 0) return false;
+  return justThisMetrics.some((metric) => (breakdown.byMetric[metric] ?? 0) < 100);
+}
+
+function compareHighPriorityMetricScores(
+  a: RankedNeighborhood,
+  b: RankedNeighborhood,
+  highPriorityMetrics: DiscoveryFilterMetric[],
+): number {
+  for (const metric of highPriorityMetrics) {
+    const aScore = a.breakdown.byMetric[metric] ?? 0;
+    const bScore = b.breakdown.byMetric[metric] ?? 0;
+    if (bScore !== aScore) return bScore - aScore;
+  }
+  return 0;
+}
+
+/**
+ * Discovery match list ordering:
+ * 1. Just This demotion (non-flagged first)
+ * 2. Composite Match % (desc)
+ * 3. High Priority per-metric scores (tuple, desc)
+ * 4. Display score tiebreaker
+ */
+export function compareRankedNeighborhoods(
+  a: RankedNeighborhood,
+  b: RankedNeighborhood,
+  criteria: DiscoveryCriteria,
+): number {
+  const justThisMetrics = getJustThisMetrics(criteria);
+  const highPriorityMetrics = getHighPriorityMetrics(criteria);
+
+  const aFlagged = a.justThisFlagged ?? isJustThisFlagged(a.breakdown, justThisMetrics);
+  const bFlagged = b.justThisFlagged ?? isJustThisFlagged(b.breakdown, justThisMetrics);
+  if (aFlagged !== bFlagged) return aFlagged ? 1 : -1;
+
+  const matchDiff = b.matchPercent - a.matchPercent;
+  if (matchDiff !== 0) return matchDiff;
+
+  const hpDiff = compareHighPriorityMetricScores(a, b, highPriorityMetrics);
+  if (hpDiff !== 0) return hpDiff;
+
+  return b.score - a.score;
 }
 
 /** Choropleth metric from criteria toggles — heatmap wins over Just This. */
@@ -358,6 +421,8 @@ export interface RankedNeighborhood {
   /** True when every active criterion scores 100% (perfect match). */
   passedFilters: boolean;
   filterReasons: string[];
+  /** True when a Just This criterion failed strict (100%) match — demoted in list order. */
+  justThisFlagged?: boolean;
 }
 
 function normalizeWithin(values: number[], higherIsBetter: boolean): number[] {
@@ -481,9 +546,8 @@ function computeMatchBreakdown(
     const raw = criterionMatchScore(value, filter, def);
     const rounded = Math.round(raw * 10) / 10;
     byMetric[filter.metric] = rounded;
-    const weight = filter.priority ? 2 : 1;
-    weightedSum += raw * weight;
-    weightTotal += weight;
+    weightedSum += raw;
+    weightTotal += 1;
     if (raw < 100) allPerfect = false;
 
     const reason = describeCriterionGap(filter.metric, value, filter, raw);
@@ -579,15 +643,11 @@ export function rankNeighborhoods(
     return buildRankedEntry(feature, composite, match.matchPercent, breakdown, match);
   });
 
-  const sortMetric = getActiveSortMetric(criteria);
-  scored.sort((a, b) => {
-    if (sortMetric) {
-      const aKey = a.breakdown.byMetric[sortMetric] ?? 0;
-      const bKey = b.breakdown.byMetric[sortMetric] ?? 0;
-      return bKey - aKey || b.matchPercent - a.matchPercent || b.score - a.score;
-    }
-    return b.matchPercent - a.matchPercent || b.score - a.score;
-  });
+  const justThisMetrics = getJustThisMetrics(criteria);
+  for (const entry of scored) {
+    entry.justThisFlagged = isJustThisFlagged(entry.breakdown, justThisMetrics);
+  }
+  scored.sort((a, b) => compareRankedNeighborhoods(a, b, criteria));
 
   const qualifying =
     threshold > 0

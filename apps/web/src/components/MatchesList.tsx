@@ -149,7 +149,17 @@ export function MatchesList({
                         {isFavorite ? "♥" : "♡"}
                       </span>
                       <span className="match-deck__info">
-                        <span className="match-deck__name">{r.name}</span>
+                        <span className="match-deck__name">
+                          {r.name}
+                          {r.justThisFlagged && (
+                            <span
+                              className="match-deck__just-this-flag"
+                              title="Partial match on a Just This criterion — strict match required"
+                            >
+                              Just This
+                            </span>
+                          )}
+                        </span>
                         <span className="match-deck__zip">
                           {r.zip}
                           {r.metroName && (

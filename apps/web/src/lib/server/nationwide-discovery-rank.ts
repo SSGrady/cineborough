@@ -4,6 +4,7 @@ import {
   loadMetroShard,
   loadUsMetrosGeoJson,
   rankNeighborhoods,
+  compareRankedNeighborhoods,
   dedupeRankedMatchesByDisplayName,
   type DiscoveryCriteria,
   type DcMetroGeoJson,
@@ -163,9 +164,9 @@ export function rankNationwideNeighborhoods(
     }
   }
 
-  merged.sort((a, b) => b.matchPercent - a.matchPercent || b.score - a.score);
+  merged.sort((a, b) => compareRankedNeighborhoods(a, b, criteria));
 
-  const deduped = dedupeRankedMatchesByDisplayName(merged);
+  const deduped = dedupeRankedMatchesByDisplayName(merged, criteria);
 
   const results = deduped.slice(0, topN).map((entry, index) => ({
     ...entry,
