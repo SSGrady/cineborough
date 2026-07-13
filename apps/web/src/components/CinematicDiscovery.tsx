@@ -136,7 +136,7 @@ const SEARCH_INDEX = buildSearchIndex(US_METROS_GEOJSON);
 const OVERVIEW_HINTS: Partial<Record<GeographyLevel, string>> = {
   national: "Continental US · read-only overview",
   state: "State view · click a state to zoom to its metros",
-  metro: "All metros · click to open Your criteria",
+  metro: "All metros · click a metro to drill in",
   county: "County view · national counties · click sandbox county to drill in",
 };
 
@@ -298,7 +298,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     new Map(),
   );
   const discoveryActivatedRef = useRef<string | null>(null);
-  const overviewMetroToCriteriaRef = useRef<(cbsa: string) => void>(() => {});
+  const drillOverviewMetroRef = useRef<(cbsa: string) => void>(() => {});
 
   const ensureMetroShard = useCallback(
     async (cbsaCode: string): Promise<DcMetroGeoJson | undefined> => {
@@ -816,7 +816,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         }
 
         if (geography === "metro" && !criteriaPanelOpen) {
-          overviewMetroToCriteriaRef.current(regionId);
+          drillOverviewMetroRef.current(regionId);
           return;
         }
 
@@ -838,7 +838,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         }
 
         if (ingestedCbsas.has(regionId)) {
-          overviewMetroToCriteriaRef.current(regionId);
+          drillOverviewMetroRef.current(regionId);
           return;
         }
 
@@ -900,7 +900,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
       if (ingestedCbsas.has(result.id)) {
         setUsInsetRegion("continental");
-        overviewMetroToCriteriaRef.current(result.id);
+        drillOverviewMetroRef.current(result.id);
         return;
       }
 
@@ -1747,7 +1747,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [handleApplyCriteria],
   );
 
-  overviewMetroToCriteriaRef.current = (cbsa: string) => {
+  drillOverviewMetroRef.current = (cbsa: string) => {
     if (!isDiscoveryMetro(cbsa, ingestedCbsas)) {
       setDiscoveryMessage("Metro data unavailable — try another metro");
       return;
@@ -1758,12 +1758,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       .then((shard) => {
         if (!shard) {
           setDiscoveryMessage("Metro data unavailable — try another metro");
-          return;
         }
-        enterDiscoveryMetro({
-          openDeepDive: false,
-          geoJson: shard,
-        });
       })
       .finally(() => {
         setExploreCityLoading(false);
@@ -1827,6 +1822,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return;
     }
 
+    if (!criteriaPanelOpen) {
+      discoveryActivatedRef.current = null;
+      return;
+    }
+
     // Match navigation sets selectedMatchKey before drill — don't reset zip/deep-dive.
     if (selectedMatchKey) return;
 
@@ -1841,6 +1841,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   }, [
     sandboxDrillActive,
     isOverviewMode,
+    criteriaPanelOpen,
     activeSandboxCbsa,
     ingestedCbsas,
     activeShardReady,
@@ -2083,7 +2084,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             {overviewFeatureCount} metros with live home values ·{" "}
             {METRIC_LAYERS.find((m) => m.key === activeMetric)?.label ?? "metric"} layer.
             {ingestedCbsas.size > 0
-              ? ` ${ingestedCbsas.size} ingested metros (green outline) — click a metro, then Explore city to load ZIP boundaries.`
+              ? ` ${ingestedCbsas.size} ingested metros (green outline) — click a metro to load ZIP boundaries.`
               : " Click Washington-Arlington-Alexandria, Orlando, SF Bay, or San Jose to open ZIP sandbox detail."}
           </p>
         </>
