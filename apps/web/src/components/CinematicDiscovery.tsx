@@ -1334,15 +1334,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   );
 
   const handleMatchSelect = useCallback(
-    (key: string, match: RankedNeighborhood) => {
+    async (key: string, match: RankedNeighborhood) => {
       setSelectedMatchKey(key);
       cameraLockedByUserRef.current = false;
       setDiscoveryMessage(null);
 
       const targetCbsa = resolveMatchMetroCbsa(match);
-      const existingShard = targetCbsa
-        ? loadMetroShard(targetCbsa) ?? loadedShards[targetCbsa] ?? null
-        : null;
 
       if (discoveryScope === "national") {
         setDiscoveryScope("metro");
@@ -1357,25 +1354,32 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
         setSearchFlyTarget(null);
       }
 
-      activateDiscoveryMatch(match, existingShard);
-
-      if (targetCbsa && !existingShard) {
-        setExploreCityLoading(true);
-        void ensureMetroShard(targetCbsa)
-          .then((shard) => {
-            if (!shard) {
-              setDiscoveryMessage(
-                `${match.name} — metro boundaries unavailable; match details shown below`,
-              );
-            }
-          })
-          .finally(() => {
-            setExploreCityLoading(false);
-          });
-      } else if (!targetCbsa) {
+      if (!targetCbsa) {
         setDiscoveryMessage(
           `${match.name} — metro unknown; showing ranked match at map center`,
         );
+        activateDiscoveryMatch(match, null);
+        return;
+      }
+
+      const existingShard =
+        loadMetroShard(targetCbsa) ?? loadedShards[targetCbsa] ?? null;
+      if (existingShard) {
+        activateDiscoveryMatch(match, existingShard);
+        return;
+      }
+
+      setExploreCityLoading(true);
+      try {
+        const shard = await ensureMetroShard(targetCbsa);
+        if (!shard) {
+          setDiscoveryMessage(
+            `${match.name} — metro boundaries unavailable; match details shown below`,
+          );
+        }
+        activateDiscoveryMatch(match, shard ?? null);
+      } finally {
+        setExploreCityLoading(false);
       }
     },
     [

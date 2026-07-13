@@ -1,7 +1,6 @@
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { resolve } from "node:path";
 import {
-  loadMetroShard,
   loadUsMetrosGeoJson,
   rankNeighborhoods,
   compareRankedNeighborhoods,
@@ -42,9 +41,6 @@ export function listScorableMetroCbsas(metrosDir = METROS_DIR): string[] {
 }
 
 function loadShardForCbsa(cbsa: string, metrosDir: string): DcMetroGeoJson | undefined {
-  const bundled = loadMetroShard(cbsa);
-  if (bundled) return bundled;
-
   const path = resolve(metrosDir, `${cbsa}.geojson`);
   if (!existsSync(path)) return undefined;
 

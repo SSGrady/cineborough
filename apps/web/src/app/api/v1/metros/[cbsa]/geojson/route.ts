@@ -1,18 +1,20 @@
 import { NextResponse } from "next/server";
 import { existsSync, readFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { loadMetroShard, type DcMetroGeoJson } from "@cineborough/data";
+import type { DcMetroGeoJson } from "@cineborough/data";
 
 const CBSA_PATTERN = /^\d{5}$/;
+const METROS_DIR = resolve(process.cwd(), "../../data/metros");
 
-function metroShardPath(cbsa: string): string {
-  return resolve(process.cwd(), "../../data/metros", `${cbsa}.geojson`);
-}
-
+/** Server route reads shards from disk only — avoids bundling geojson into webpack chunks. */
 function loadShardFromDisk(cbsa: string): DcMetroGeoJson | undefined {
-  const path = metroShardPath(cbsa);
+  const path = resolve(METROS_DIR, `${cbsa}.geojson`);
   if (!existsSync(path)) return undefined;
-  return JSON.parse(readFileSync(path, "utf8")) as DcMetroGeoJson;
+  try {
+    return JSON.parse(readFileSync(path, "utf8")) as DcMetroGeoJson;
+  } catch {
+    return undefined;
+  }
 }
 
 export async function GET(
@@ -26,11 +28,6 @@ export async function GET(
       { fallback: "national-tile-only" },
       { status: 404 },
     );
-  }
-
-  const bundled = loadMetroShard(cbsa);
-  if (bundled) {
-    return NextResponse.json(bundled);
   }
 
   const onDisk = loadShardFromDisk(cbsa);

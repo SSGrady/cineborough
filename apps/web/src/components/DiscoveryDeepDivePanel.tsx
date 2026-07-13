@@ -56,7 +56,7 @@ export function DiscoveryDeepDivePanel({
       );
       const rawValue = feature
         ? getRawMetricFromFeature(feature.properties, filter.metric)
-        : 0;
+        : neighborhood.metrics[filter.metric] ?? 0;
       const tier = criterionRowTier(score);
       return {
         filter,
