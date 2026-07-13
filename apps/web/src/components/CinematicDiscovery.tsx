@@ -488,6 +488,12 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const mapOverviewMode = isOverviewMode && !mapShowsZipShard;
 
+  /** Tab highlight — decoupled from geography state so matching mode keeps criteria sidebar. */
+  const activeGeographyTab = useMemo((): GeographyLevel => {
+    if (mapShowsZipShard || selectedZip) return "zip";
+    return geography;
+  }, [mapShowsZipShard, selectedZip, geography]);
+
   const commitSandboxMetroRestore = useCallback(() => {
     cameraLockedByUserRef.current = false;
     setExplicitFlyTarget(null);
@@ -573,7 +579,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return OVERVIEW_HINTS[geography] ?? "United States overview";
     }
     if (!storyCameraActive && sandboxDrillActive) {
-      return `${activeShardGeoJson.metadata.metro} · flat discovery view`;
+      return mapShowsZipShard
+        ? `${activeShardGeoJson.metadata.metro} · zip mode`
+        : `${activeShardGeoJson.metadata.metro} · flat discovery view`;
     }
     return `${activeShardGeoJson.metadata.metro} · scroll to explore`;
   }, [
@@ -582,6 +590,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     geography,
     storyCameraActive,
     sandboxDrillActive,
+    mapShowsZipShard,
     activeShardGeoJson.metadata.metro,
   ]);
 
@@ -691,9 +700,10 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
   const handleGeographyChange = useCallback(
     (level: GeographyLevel) => {
       if (level === "zip" && !sandboxDrillActive) return;
+      if (level === activeGeographyTab) return;
       resetToGeographyOverview(level);
     },
-    [sandboxDrillActive, resetToGeographyOverview],
+    [sandboxDrillActive, activeGeographyTab, resetToGeographyOverview],
   );
 
   const handleUserMapMove = useCallback(() => {
@@ -2003,11 +2013,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     }
 
     return {
-      stepLabel: "Sandbox",
+      stepLabel: mapShowsZipShard ? "Zip" : "Sandbox",
       title: activeShardGeoJson.metadata.metro,
       detail: storyCameraActive
         ? "Guided story · scroll to explore"
-        : "Flat view",
+        : mapShowsZipShard
+          ? "Zip mode"
+          : "Flat view",
       canOpen: true,
     };
   }, [
@@ -2019,6 +2031,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     selectedFeature,
     activeMetric,
     activeShardGeoJson.metadata.metro,
+    mapShowsZipShard,
     discoveryMessage,
     handleOpenCriteria,
     discoveryShellVisible,
@@ -2149,7 +2162,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     <>
       <TopBar
         subtitle={subtitle}
-        geography={geography}
+        activeGeographyTab={activeGeographyTab}
         onGeographyChange={handleGeographyChange}
         sandboxDrillActive={sandboxDrillActive}
         criteriaMode={criteriaGeographyRestricted}

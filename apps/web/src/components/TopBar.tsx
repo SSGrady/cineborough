@@ -13,7 +13,8 @@ export interface TopBarOverviewChip {
 
 interface TopBarProps {
   subtitle: string;
-  geography: GeographyLevel;
+  /** Highlighted geography pill — may differ from internal geography state. */
+  activeGeographyTab: GeographyLevel;
   onGeographyChange: (level: GeographyLevel) => void;
   sandboxDrillActive?: boolean;
   criteriaMode?: boolean;
@@ -35,7 +36,7 @@ interface TopBarProps {
 
 export function TopBar({
   subtitle,
-  geography,
+  activeGeographyTab,
   onGeographyChange,
   sandboxDrillActive = false,
   criteriaMode = false,
@@ -67,7 +68,7 @@ export function TopBar({
         </div>
         <SearchBar index={searchIndex} onSelect={onSearchSelect} />
         <GeographyBar
-          geography={geography}
+          activeGeographyTab={activeGeographyTab}
           onGeographyChange={onGeographyChange}
           sandboxDrillActive={sandboxDrillActive}
           criteriaMode={criteriaMode}

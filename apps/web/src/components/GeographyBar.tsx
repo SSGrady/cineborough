@@ -9,7 +9,8 @@ const GEOGRAPHY_OPTIONS: { key: GeographyLevel; label: string }[] = [
 ];
 
 interface GeographyBarProps {
-  geography: GeographyLevel;
+  /** Highlighted pill — may differ from internal geography when map shows ZIP shards. */
+  activeGeographyTab: GeographyLevel;
   onGeographyChange: (level: GeographyLevel) => void;
   sandboxDrillActive?: boolean;
   /** Hide State when criteria or discovery shell is active; National stays available for nationwide find */
@@ -17,7 +18,7 @@ interface GeographyBarProps {
 }
 
 export function GeographyBar({
-  geography,
+  activeGeographyTab,
   onGeographyChange,
   sandboxDrillActive = false,
   criteriaMode = false,
@@ -33,11 +34,11 @@ export function GeographyBar({
             key={opt.key}
             type="button"
             className={`geo-bar__btn${
-              geography === opt.key ? " geo-bar__btn--active" : ""
+              activeGeographyTab === opt.key ? " geo-bar__btn--active" : ""
             }${disabled ? " geo-bar__btn--disabled" : ""}`}
             disabled={disabled}
             onClick={() => !disabled && onGeographyChange(opt.key)}
-            aria-pressed={geography === opt.key}
+            aria-pressed={activeGeographyTab === opt.key}
             title={
               zipLocked
                 ? "Open a metro sandbox to view ZIP detail"
