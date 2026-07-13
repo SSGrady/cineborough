@@ -1489,8 +1489,21 @@ body {
 
 .criterion-card__toggle--on {
   background: var(--accent-soft);
-  border-color: rgba(225, 29, 72, 0.4);
+  border-color: var(--accent);
   color: var(--accent);
+  font-weight: 700;
+  box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.15);
+}
+
+.criterion-card__toggle--on:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.criterion-card__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
 }
 
 .criterion-range {

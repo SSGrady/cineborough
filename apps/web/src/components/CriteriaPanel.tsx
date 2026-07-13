@@ -50,6 +50,9 @@ function normalizeCriteria(criteria: DiscoveryCriteria): DiscoveryCriteria {
       next.max = filter.max ?? def.defaultMax ?? next.min;
       next.min = Math.min(next.min, next.max);
       next.max = Math.max(next.min, next.max);
+      if (filter.priority) next.priority = true;
+      if (filter.heatmapActive) next.heatmapActive = true;
+      if (filter.sortMode) next.sortMode = true;
       return next;
     }),
   };
