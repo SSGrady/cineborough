@@ -413,6 +413,58 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
     [isOverviewMode, overviewGeoJson, activeShardGeoJson],
   );
 
+  /** Shard containing the selected match ZIP — may differ from activeSandboxCbsa during drill-in. */
+  const selectedMatchShardGeoJson = useMemo((): DcMetroGeoJson | null => {
+    if (!selectedZip) return null;
+    if (activeShardGeoJson.features.some((f) => f.properties.zipCode === selectedZip)) {
+      return activeShardGeoJson;
+    }
+
+    const match =
+      discoveryResults?.find((r) => r.zip === selectedZip) ??
+      (selectedMatchKey
+        ? discoveryResults?.find((r) => matchKey(r) === selectedMatchKey)
+        : undefined);
+    const matchCbsa = match?.cbsaCode ?? sandboxCbsaForZip(selectedZip);
+    if (matchCbsa) {
+      const bundled = loadMetroShard(matchCbsa);
+      if (bundled?.features.some((f) => f.properties.zipCode === selectedZip)) return bundled;
+      const loaded = loadedShards[matchCbsa];
+      if (loaded?.features.some((f) => f.properties.zipCode === selectedZip)) return loaded;
+    }
+
+    for (const shard of Object.values(loadedShards)) {
+      if (shard.features.some((f) => f.properties.zipCode === selectedZip)) return shard;
+    }
+    return null;
+  }, [
+    selectedZip,
+    selectedMatchKey,
+    discoveryResults,
+    activeShardGeoJson,
+    loadedShards,
+  ]);
+
+  /** ZIP polygons on map — decoupled from geography tab (matching mode keeps geography at metro). */
+  const mapShowsZipShard =
+    sandboxDrillActive || Boolean(selectedZip && (deepDiveOpen || criteriaPanelOpen));
+
+  const mapGeoJson = useMemo(() => {
+    if (mapShowsZipShard) {
+      if (selectedMatchShardGeoJson) return selectedMatchShardGeoJson;
+      if (activeShardGeoJson.features.length > 0) return activeShardGeoJson;
+    }
+    return isOverviewMode ? overviewGeoJson : activeShardGeoJson;
+  }, [
+    mapShowsZipShard,
+    selectedMatchShardGeoJson,
+    activeShardGeoJson,
+    isOverviewMode,
+    overviewGeoJson,
+  ]);
+
+  const mapOverviewMode = isOverviewMode && !mapShowsZipShard;
+
   const mergedMetroCameras = useMemo(
     () => ({ ...SANDBOX_METRO_CAMERAS, ...metroCameras }),
     [metroCameras],
@@ -941,12 +993,7 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       return explicitFlyTarget;
     }
 
-    if (
-      deepDiveOpen &&
-      discoveryMatchCenter &&
-      !cameraLockedByUserRef.current &&
-      sandboxDrillActive
-    ) {
+    if (deepDiveOpen && discoveryMatchCenter && !cameraLockedByUserRef.current) {
       return discoveryFlyoverCamera(discoveryMatchCenter);
     }
 
@@ -986,10 +1033,11 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       if (sandboxCamera) return sandboxCamera;
     }
 
-    const suppressZipCamera = discoveryShellVisible;
+    const suppressZipCamera =
+      discoveryShellVisible && !(deepDiveOpen && selectedZip);
 
     return resolveMapCamera({
-      geography,
+      geography: deepDiveOpen && selectedZip ? "zip" : geography,
       zipCenter: suppressZipCamera ? null : zipCenter,
       exploreMode,
       cinematicSection: activeSection,
@@ -1309,6 +1357,14 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
 
   const activateDiscoveryMatch = useCallback(
     (match: RankedNeighborhood, shard: DcMetroGeoJson | null) => {
+      const targetCbsa = resolveMatchMetroCbsa(match);
+      if (targetCbsa) {
+        setActiveSandboxCbsa(targetCbsa);
+        setSandboxDrillActive(true);
+        setSelectedOverviewMetro(null);
+        setSelectedMetroCamera(null);
+      }
+
       setExitRestoreTarget(null);
       setSearchFlyTarget(null);
       setSelectedZip(match.zip);
@@ -1330,7 +1386,13 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
       }
       requestFlyTo(resolveMatchCenter(match, shard));
     },
-    [criteriaPanelOpen, discoveryShellActive, requestFlyTo, resolveMatchCenter],
+    [
+      criteriaPanelOpen,
+      discoveryShellActive,
+      requestFlyTo,
+      resolveMatchCenter,
+      resolveMatchMetroCbsa,
+    ],
   );
 
   const handleMatchSelect = useCallback(
@@ -2056,9 +2118,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             />
           )}
           <MapView
-            geoJson={activeGeoJson}
+            geoJson={mapGeoJson}
             activeMetric={activeMetric}
-            selectedZip={isOverviewMode ? selectedOverviewMetro : selectedZip}
+            selectedZip={mapOverviewMode ? selectedOverviewMetro : selectedZip}
             onZipSelect={discoveryShellVisible ? handleMapZipSelect : handleZipSelect}
             onBackgroundClick={handleBackgroundClick}
             cameraTarget={cameraTarget}
@@ -2076,9 +2138,9 @@ export function CinematicDiscovery({ geoJson }: CinematicDiscoveryProps) {
             onViewportBoundsChange={handleViewportBoundsChange}
             mapBounds={mapBounds}
             geographyLevel={geography}
-            overviewMode={isOverviewMode}
+            overviewMode={mapOverviewMode}
             fitNationalBounds={fitNationalBounds}
-            cinematicOnSelect={!isOverviewMode}
+            cinematicOnSelect={!mapOverviewMode}
             cinematicTourActive={cinematicTourActive}
             labelHighlightZip={labelHighlightZip}
             ingestedCbsas={ingestedCbsas}

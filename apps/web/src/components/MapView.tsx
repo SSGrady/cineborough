@@ -514,7 +514,7 @@ export function MapView({
           return [r, g, b, CRITERIA_HOVER_FILL_ALPHA];
         }
 
-        const alpha = isSelected ? 150 : isOverviewView ? 85 : 75;
+        const alpha = isSelected ? 185 : isOverviewView ? 85 : 75;
 
         // Baked fillColorRgb is opportunity-score only; other metrics use runtime choropleth.
         if (!isOverviewView && activeMetric === "opportunityScore" && props?.fillColorRgb) {
@@ -533,7 +533,7 @@ export function MapView({
               : isOverviewView
                 ? 120
                 : 75;
-        return [r, g, b, isSelected ? 150 : fillAlpha];
+        return [r, g, b, isSelected ? 185 : fillAlpha];
       },
       getLineColor: (feature) => {
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
@@ -544,7 +544,7 @@ export function MapView({
           const [r, g, b] = darkenRgb(base, CRITERIA_HOVER_BORDER_DARKEN);
           return [r, g, b, 255];
         }
-        if (zip === selectedZip) return [255, 255, 255, 110];
+        if (zip === selectedZip) return [255, 255, 255, 255];
         if (isNationalGeography) return [255, 255, 255, 60];
         if (isStateGeography || isCountyGeography) return [15, 23, 42, 200];
         if (isOverviewView && geographyLevel === "metro" && ingestedCbsas?.has(zip ?? "")) {
@@ -556,7 +556,7 @@ export function MapView({
         const zip = (feature?.properties as { zipCode?: string })?.zipCode;
         const isHovered = choroplethHoverActive && zip === hoveredZip;
         if (isHovered) return 2;
-        if (zip === selectedZip) return 1.25;
+        if (zip === selectedZip) return 2.5;
         if (isNationalGeography) return 0.5;
         if (isStateGeography || isCountyGeography) return 1.1;
         return isOverviewView ? 1.1 : 0.75;
@@ -637,10 +637,10 @@ export function MapView({
       data: outlineData,
       pickable: false,
       getPath: (d) => d.path,
-      getColor: [255, 255, 255, 200],
-      getWidth: 2,
-      widthMinPixels: 2,
-      widthMaxPixels: 3,
+      getColor: [255, 255, 255, 255],
+      getWidth: 3,
+      widthMinPixels: 2.5,
+      widthMaxPixels: 4,
       capRounded: true,
       jointRounded: true,
     });
