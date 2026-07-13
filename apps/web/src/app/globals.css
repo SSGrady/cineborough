@@ -24,6 +24,13 @@
   --header-height: 4.75rem;
   --compare-bar-height: 2.75rem;
   --stack-offset: var(--header-height);
+  --match-ticker-color: #059669;
+  --match-ticker-bg: rgba(16, 185, 129, 0.12);
+  --match-ticker-border: rgba(16, 185, 129, 0.25);
+  --match-ticker-bg-hover: rgba(16, 185, 129, 0.2);
+  --match-ticker-border-hover: rgba(16, 185, 129, 0.4);
+  --match-ticker-bg-expanded: rgba(16, 185, 129, 0.22);
+  --match-ticker-border-expanded: rgba(16, 185, 129, 0.45);
 }
 
 body {
@@ -1280,9 +1287,9 @@ body {
   border-radius: 999px;
   font-size: 0.75rem;
   font-weight: 600;
-  color: #059669;
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: var(--match-ticker-color);
+  background: var(--match-ticker-bg);
+  border: 1px solid var(--match-ticker-border);
 }
 
 .match-ticker--toggle {
@@ -1291,13 +1298,13 @@ body {
 }
 
 .match-ticker--toggle:hover {
-  background: rgba(16, 185, 129, 0.2);
-  border-color: rgba(16, 185, 129, 0.4);
+  background: var(--match-ticker-bg-hover);
+  border-color: var(--match-ticker-border-hover);
 }
 
 .match-ticker--toggle.match-ticker--expanded {
-  background: rgba(16, 185, 129, 0.22);
-  border-color: rgba(16, 185, 129, 0.45);
+  background: var(--match-ticker-bg-expanded);
+  border-color: var(--match-ticker-border-expanded);
 }
 
 .match-ticker__label {
@@ -1344,11 +1351,11 @@ body {
   z-index: 36;
   display: flex;
   flex-direction: column;
-  background: var(--discovery-rail-bg);
-  border: 1px solid var(--discovery-rail-border);
-  border-radius: 12px;
-  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.28);
-  color: var(--discovery-rail-text);
+  background: var(--match-ticker-bg);
+  border: 1px solid var(--match-ticker-border);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(5, 150, 105, 0.18);
+  color: var(--match-ticker-color);
   overflow: hidden;
   animation: match-deck-slide-in 0.22s ease-out;
 }
@@ -1367,7 +1374,7 @@ body {
 .match-deck__compare {
   flex-shrink: 0;
   padding: 0.5rem 0.75rem;
-  border-bottom: 1px solid var(--discovery-rail-border);
+  border-bottom: 1px solid var(--match-ticker-border);
   overflow-x: auto;
 }
 
@@ -1387,33 +1394,16 @@ body {
 
 .match-deck__header {
   display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 0.75rem 0.875rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 0.75rem;
   flex-shrink: 0;
-  border-bottom: 1px solid var(--discovery-rail-border);
+  border-bottom: 1px solid var(--match-ticker-border);
 }
 
-.match-deck__title-row h2 {
-  font-size: 0.875rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.match-deck__count {
-  display: block;
-  font-size: 0.625rem;
-  color: var(--discovery-rail-muted);
-  margin-top: 0.125rem;
-}
-
-.match-deck__collapse {
-  background: transparent;
-  border: none;
-  color: var(--discovery-rail-muted);
-  font-size: 1rem;
-  cursor: pointer;
-  padding: 0 0.25rem;
+.match-deck__ticker {
+  width: 100%;
+  justify-content: center;
 }
 
 .match-deck__items {
@@ -1432,7 +1422,7 @@ body {
   font-size: 0.625rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: var(--discovery-rail-muted);
+  color: rgba(5, 150, 105, 0.75);
 }
 
 .match-deck__group-items {
@@ -1450,10 +1440,10 @@ body {
   gap: 0.5rem;
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid #e2e8f0;
+  border: 1px solid rgba(16, 185, 129, 0.2);
   border-radius: 8px;
   background: #ffffff;
-  color: inherit;
+  color: var(--discovery-rail-text);
   cursor: pointer;
   text-align: left;
   font: inherit;
@@ -1466,8 +1456,8 @@ body {
 }
 
 .match-deck__row--active {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 1px var(--accent-soft);
+  border-color: var(--match-ticker-border-expanded);
+  box-shadow: 0 0 0 1px var(--match-ticker-bg-expanded);
 }
 
 .match-deck__heart {
@@ -1477,7 +1467,7 @@ body {
 }
 
 .match-deck__heart--on {
-  color: var(--accent);
+  color: var(--match-ticker-color);
 }
 
 .match-deck__info {
@@ -1489,6 +1479,7 @@ body {
   display: block;
   font-size: 0.8125rem;
   font-weight: 600;
+  color: var(--discovery-rail-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1497,12 +1488,12 @@ body {
 .match-deck__zip {
   display: block;
   font-size: 0.6875rem;
-  color: var(--discovery-rail-muted);
+  color: rgba(5, 150, 105, 0.7);
 }
 
 .match-deck__metro,
 .match-deck__similarity {
-  color: var(--discovery-rail-muted);
+  color: rgba(5, 150, 105, 0.7);
 }
 
 .match-deck__badge {

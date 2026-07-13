@@ -173,9 +173,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: CHOROPLETH_COLOR_HIGH, label: "< $315,000 — More affordable" },
-        { color: CHOROPLETH_COLOR_MID, label: "$315,000 – $600,000 — Middle range" },
-        { color: CHOROPLETH_COLOR_LOW, label: "> $600,000 — Higher cost" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "< $315,000  More affordable" },
+        { color: CHOROPLETH_COLOR_MID, label: "$315,000 – $600,000  Middle range" },
+        { color: CHOROPLETH_COLOR_LOW, label: "> $600,000  Higher cost" },
       ],
     };
   }
@@ -185,9 +185,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: CHOROPLETH_COLOR_HIGH, label: "< 37.0 — Younger" },
-        { color: CHOROPLETH_COLOR_MID, label: "37.0 – 38.6 — Mid-range" },
-        { color: CHOROPLETH_COLOR_LOW, label: "> 38.6 — Older" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "< 37.0  Younger" },
+        { color: CHOROPLETH_COLOR_MID, label: "37.0 – 38.6  Mid-range" },
+        { color: CHOROPLETH_COLOR_LOW, label: "> 38.6  Older" },
       ],
     };
   }
@@ -197,9 +197,9 @@ export function legendStops(
       style: "tercile",
       gradientCss: "",
       stops: [
-        { color: CHOROPLETH_COLOR_LOW, label: "< 50.0 — Car-dependent" },
-        { color: CHOROPLETH_COLOR_MID, label: "50.0 – 60.9 — Moderate" },
-        { color: CHOROPLETH_COLOR_HIGH, label: "≥ 61 — Highly walkable" },
+        { color: CHOROPLETH_COLOR_LOW, label: "< 50.0  Car-dependent" },
+        { color: CHOROPLETH_COLOR_MID, label: "50.0 – 60.9  Moderate" },
+        { color: CHOROPLETH_COLOR_HIGH, label: "≥ 61  Highly walkable" },
       ],
     };
   }

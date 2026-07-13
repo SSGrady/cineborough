@@ -83,21 +83,42 @@ export function MatchesList({
   return (
     <aside className={rootClass} aria-label="Ranked matches">
       <header className="match-deck__header">
-        <div className="match-deck__title-row">
-          <h2>Matches</h2>
-          <span className="match-deck__count">
-            {resolvedMatchCount} neighborhood{resolvedMatchCount === 1 ? "" : "s"}
-          </span>
-        </div>
-        {onToggleCollapse && (
+        {onToggleCollapse ? (
           <button
             type="button"
-            className="match-deck__collapse"
+            className="match-ticker match-ticker--toggle match-ticker--expanded match-deck__ticker"
             onClick={onToggleCollapse}
-            aria-label="Collapse matches"
+            aria-expanded
+            aria-label={`${resolvedMatchCount} match${resolvedMatchCount === 1 ? "" : "es"} found, collapse list`}
           >
-            ↓
+            <span aria-hidden="true">🍿</span>
+            <span className="match-ticker__label">
+              {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
+            </span>
+            <svg
+              className="match-ticker__chevron"
+              viewBox="0 0 12 12"
+              width="12"
+              height="12"
+              aria-hidden="true"
+            >
+              <path
+                d="M2.5 7.5 6 4l3.5 3.5"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.75"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
           </button>
+        ) : (
+          <div className="match-ticker match-ticker--expanded match-deck__ticker">
+            <span aria-hidden="true">🍿</span>
+            <span className="match-ticker__label">
+              {resolvedMatchCount} Match{resolvedMatchCount === 1 ? "" : "es"} Found
+            </span>
+          </div>
         )}
       </header>
 
